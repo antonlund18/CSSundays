@@ -11,6 +11,7 @@ class Team(
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     var id: Long? = null,
 
+    @Column(unique = true)
     var name: String,
 
     var picture: String = "",
@@ -23,7 +24,6 @@ class Team(
         name = "player_on_team",
         joinColumns = [JoinColumn(name = "team_id")],
         inverseJoinColumns = [JoinColumn(name = "player_id")]
-
     )
     var players: MutableList<Player> = mutableListOf(),
 
