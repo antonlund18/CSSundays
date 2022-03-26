@@ -1,5 +1,7 @@
 package com.antonl.cssundays.controllers
 
+import com.antonl.cssundays.controllers.dtos.TeamConverter
+import com.antonl.cssundays.controllers.dtos.TeamDTO
 import com.antonl.cssundays.model.Team
 import com.antonl.cssundays.services.PlayerService
 import com.antonl.cssundays.services.TeamService
@@ -13,13 +15,15 @@ import org.springframework.web.bind.annotation.RestController
 @RequestMapping("/api/teams")
 class TeamController(private val teamService: TeamService, private val playerService: PlayerService) {
     @GetMapping("/slug/{slug}")
-    fun getTeamBySlug(@PathVariable slug: String): Team? {
-        return teamService.findTeamBySlug(slug);
+    fun getTeamBySlug(@PathVariable slug: String): TeamDTO? {
+        val team = teamService.findTeamBySlug(slug);
+        return TeamConverter.toDTO(team)
     }
 
     @GetMapping("/id/{id}")
-    fun getTeamById(@PathVariable id: Long): Team? {
-        return teamService.findTeamById(id);
+    fun getTeamById(@PathVariable id: Long): TeamDTO? {
+        val team = teamService.findTeamById(id)
+        return TeamConverter.toDTO(team)
     }
 
     @PostMapping("/create/{name}/{playerId}")
