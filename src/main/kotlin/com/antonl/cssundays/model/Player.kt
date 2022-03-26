@@ -1,6 +1,7 @@
 package com.antonl.cssundays.model
 
 import com.antonl.cssundays.extensions.toSlug
+import com.fasterxml.jackson.annotation.JsonIgnore
 import java.time.LocalDateTime
 import javax.persistence.*
 
@@ -8,7 +9,7 @@ import javax.persistence.*
 @Table(name = "players")
 class Player(
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     var id: Long? = null,
 
     @Column(unique = true)
@@ -24,6 +25,7 @@ class Player(
 
     var slug: String = username.toSlug(),
 
-    @ManyToMany
-    var teams: List<Team> = listOf()
+    @JsonIgnore
+    @ManyToMany(mappedBy = "players")
+    var teams: MutableList<Team> = mutableListOf()
 )

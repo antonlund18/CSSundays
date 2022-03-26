@@ -7,11 +7,27 @@ import javax.persistence.*
 @Entity
 @Table(name = "teams")
 class Team(
-    @Id @GeneratedValue var id: Long? = null,
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    var id: Long? = null,
+
     var name: String,
+
     var picture: String = "",
-    @ManyToOne var owner: Player,
-    @ManyToMany var players: List<Player> = listOf(),
+
+    @ManyToOne
+    var owner: Player,
+
+    @ManyToMany
+    @JoinTable(
+        name = "player_on_team",
+        joinColumns = [JoinColumn(name = "team_id")],
+        inverseJoinColumns = [JoinColumn(name = "player_id")]
+
+    )
+    var players: MutableList<Player> = mutableListOf(),
+
     var slug: String = name.toSlug(),
+
     var createdTs: LocalDateTime = LocalDateTime.now()
 )

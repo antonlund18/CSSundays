@@ -4,5 +4,6 @@ import com.antonl.cssundays.model.Team
 import org.springframework.data.repository.CrudRepository
 
 interface TeamRepository : CrudRepository<Team, Long> {
-    fun findTeamBySlug(slug: String): Team?
+    fun findTeamBySlug(slug: String): Team
+    fun findTeamById(id: Long): Team
 }
