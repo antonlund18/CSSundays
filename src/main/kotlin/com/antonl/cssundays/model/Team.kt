@@ -2,6 +2,7 @@ package com.antonl.cssundays.model
 
 import com.antonl.cssundays.extensions.toSlug
 import java.time.LocalDateTime
+import java.util.UUID
 import javax.persistence.*
 
 @Entity
@@ -9,7 +10,7 @@ import javax.persistence.*
 class Team(
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    var id: Long? = null,
+    var id: Int? = null,
 
     @Column(unique = true)
     var name: String,
@@ -29,5 +30,5 @@ class Team(
 
     var slug: String = name.toSlug(),
 
-    var createdTs: LocalDateTime = LocalDateTime.now()
+    var createdTs: String = LocalDateTime.now().toString()
 )

@@ -1,8 +1,8 @@
 package com.antonl.cssundays.model
 
 import com.antonl.cssundays.extensions.toSlug
-import com.fasterxml.jackson.annotation.JsonIgnore
 import java.time.LocalDateTime
+import java.util.*
 import javax.persistence.*
 
 @Entity
@@ -10,7 +10,7 @@ import javax.persistence.*
 class Player(
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    var id: Long? = null,
+    var id: Int? = null,
 
     @Column(unique = true)
     var username: String,
@@ -21,11 +21,10 @@ class Player(
     var picture: String = "",
 
     @GeneratedValue
-    var createdTs: LocalDateTime = LocalDateTime.now(),
+    var createdTs: String = LocalDateTime.now().toString(),
 
     var slug: String = username.toSlug(),
 
-    @JsonIgnore
     @ManyToMany(mappedBy = "players")
     var teams: MutableList<Team> = mutableListOf()
 )

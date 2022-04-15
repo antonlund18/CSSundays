@@ -17,7 +17,7 @@ class TeamService(val teamRepository: TeamRepository) {
         return teamRepository.findTeamBySlug(slug);
     }
 
-    fun findTeamById(id: Long): Team {
+    fun findTeamById(id: Int): Team {
         return teamRepository.findTeamById(id);
     }
 

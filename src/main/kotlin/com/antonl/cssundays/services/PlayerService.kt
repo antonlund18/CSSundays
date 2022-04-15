@@ -13,11 +13,17 @@ class PlayerService(val playerRepository: PlayerRepository) {
         playerRepository.save(player);
     }
 
+    fun createPlayer(username: String, email: String): Player {
+        val player: Player = Player(username = username, email = email);
+        savePlayer(player);
+        return player;
+    }
+
     fun findPlayerBySlug(slug: String): Player {
         return playerRepository.findPlayerBySlug(slug)
     }
 
-    fun findPlayerById(id: Long): Player {
+    fun findPlayerById(id: Int): Player {
         return playerRepository.findPlayerById(id)
     }
 
