@@ -2,7 +2,6 @@ package com.antonl.cssundays.model
 
 import com.antonl.cssundays.extensions.toSlug
 import java.time.LocalDateTime
-import java.util.UUID
 import javax.persistence.*
 
 @Entity
@@ -20,7 +19,7 @@ class Team(
     @ManyToOne
     var owner: Player,
 
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
         name = "player_on_team",
         joinColumns = [JoinColumn(name = "team_id")],

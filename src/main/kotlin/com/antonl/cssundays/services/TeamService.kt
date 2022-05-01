@@ -13,6 +13,12 @@ class TeamService(val teamRepository: TeamRepository) {
         teamRepository.save(team);
     }
 
+    fun createTeam(name: String, owner: Player): Team {
+        val team = Team(name = name, owner = owner);
+        saveTeam(team);
+        return team;
+    }
+
     fun findTeamBySlug(slug: String): Team {
         return teamRepository.findTeamBySlug(slug);
     }

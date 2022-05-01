@@ -5,6 +5,7 @@ import {useAuth} from "../firebase/authentication/AuthContext";
 import {theme} from "../theme/theme";
 import {usePlayersCollection} from "../firebase/database/database";
 import {CreatePlayerResponse} from "../firebase/database/PlayersHandler";
+import {useCreatePlayer} from "../hooks/api/usePlayer";
 
 const useStyles = makeStyles(theme => ({
     inputLabel: {
@@ -46,6 +47,7 @@ export const RegisterForm = (props: RegisterFormProps): JSX.Element => {
     const classes = useStyles();
     const auth = useAuth();
     const playersDatabase = usePlayersCollection();
+    const [createPlayer, {data, loading}] = useCreatePlayer();
 
     const [email, setEmail] = useState<string>("");
     const [username, setUsername] = useState<string>("");
@@ -86,31 +88,13 @@ export const RegisterForm = (props: RegisterFormProps): JSX.Element => {
 
         auth.signup(email, password)
             .then(async (data) => {
-                if (await createPlayer(data.user.uid)) {
-                    props.setDialogOpen(false);
-                }
-                ;
+                await createPlayer()
+                props.setDialogOpen(false);
             })
             .catch((authError) => {
                 validateCredentials(authError);
             })
     };
-
-    const createPlayer = (userId: string): Promise<boolean> => {
-        return playersDatabase.createPlayer(userId, email, username).then(response => {
-            if (response === CreatePlayerResponse.USERNAME_IN_USE) {
-                setError("Der findes allerede en bruger med dette brugernavn")
-                return false;
-            }
-            if (response === CreatePlayerResponse.USER_DOES_NOT_EXIST) {
-                setError("Der skete en fejl. Prøv igen.");
-                return false;
-            }
-            return true;
-        }).catch(error => {
-            return false;
-        });
-    }
 
     return <React.Fragment>
         <Typography variant={"subtitle2"}>E-mail</Typography>

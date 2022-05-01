@@ -21,6 +21,7 @@ dependencies {
     implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
     implementation("org.jetbrains.kotlin:kotlin-reflect")
     implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
+	implementation("aws.sdk.kotlin:s3:0.9.4-beta")
     implementation("com.expediagroup:graphql-kotlin-spring-server:5.3.2")
     implementation("com.expediagroup:graphql-kotlin-schema-generator:5.3.2")
     runtimeOnly("com.microsoft.sqlserver:mssql-jdbc")
