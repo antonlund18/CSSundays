@@ -39,7 +39,6 @@ export const NavBarProfile = (): JSX.Element => {
     const {currentUser} = useAuth();
     const playerDatabase = usePlayersCollection();
 
-
     const [loginDialogIsOpen, setLoginDialogIsOpen] = useState<boolean>(false);
     const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
     const [player, setPlayer] = useState<Player | null>(null);
@@ -76,6 +75,6 @@ export const NavBarProfile = (): JSX.Element => {
         {loginDialogIsOpen &&
             <LoginDialog setOpen={handleOpenLoginDialog}/>}
         {player &&
-        <PlayerDropdown closeDropdown={handleClosePlayerDropdown} anchorEl={anchorEl} player={player}/>}
+            <PlayerDropdown closeDropdown={handleClosePlayerDropdown} anchorEl={anchorEl} player={player}/>}
     </div>
 }

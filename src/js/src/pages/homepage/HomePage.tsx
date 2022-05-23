@@ -23,7 +23,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 export const HomePage = () => {
-    const {getPlayerById} = usePlayer(1);
+    const getPlayerById = usePlayer(1);
     const [createTeam] = useCreateTeam();
     console.log(getPlayerById.data);
 

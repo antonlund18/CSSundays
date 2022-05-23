@@ -3,9 +3,7 @@ import {useState} from "react";
 import {Button, makeStyles, TextField, Typography} from "@material-ui/core";
 import {useAuth} from "../firebase/authentication/AuthContext";
 import {theme} from "../theme/theme";
-import {usePlayersCollection} from "../firebase/database/database";
-import {CreatePlayerResponse} from "../firebase/database/PlayersHandler";
-import {useCreatePlayer} from "../hooks/api/usePlayer";
+import {useMutatePlayer} from "../hooks/api/usePlayer";
 
 const useStyles = makeStyles(theme => ({
     inputLabel: {
@@ -46,8 +44,7 @@ interface RegisterFormProps {
 export const RegisterForm = (props: RegisterFormProps): JSX.Element => {
     const classes = useStyles();
     const auth = useAuth();
-    const playersDatabase = usePlayersCollection();
-    const [createPlayer, {data, loading}] = useCreatePlayer();
+    const {createPlayer} = useMutatePlayer();
 
     const [email, setEmail] = useState<string>("");
     const [username, setUsername] = useState<string>("");
@@ -72,10 +69,6 @@ export const RegisterForm = (props: RegisterFormProps): JSX.Element => {
     }
 
     const handleRegistration = () => {
-        setError("");
-        setPassword("");
-        setConfirmPassword("");
-
         if (password !== confirmPassword) {
             setError("De to passwords er ikke ens");
             return;
@@ -86,15 +79,25 @@ export const RegisterForm = (props: RegisterFormProps): JSX.Element => {
             return;
         }
 
+
         auth.signup(email, password)
-            .then(async (data) => {
-                await createPlayer()
-                props.setDialogOpen(false);
+            .then((data) => {
+                createPlayer(username, email, data.user.uid).then(() => {
+                    props.setDialogOpen(false);
+                });
             })
             .catch((authError) => {
                 validateCredentials(authError);
             })
+
+        clearFields();
     };
+
+    const clearFields = () => {
+        setError("");
+        setPassword("");
+        setConfirmPassword("");
+    }
 
     return <React.Fragment>
         <Typography variant={"subtitle2"}>E-mail</Typography>
