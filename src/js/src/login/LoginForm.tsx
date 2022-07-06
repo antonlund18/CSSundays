@@ -3,6 +3,7 @@ import {Button, makeStyles, TextField, Typography} from "@material-ui/core";
 import {useState} from "react";
 import {useAuth} from "../firebase/authentication/AuthContext";
 import {theme} from "../theme/theme";
+import {useMutateUser} from "../hooks/api/useUser";
 
 const useStyles = makeStyles(theme => ({
     loginTextField: {
@@ -35,36 +36,19 @@ interface LoginFormProps {
 
 export const LoginForm = (props: LoginFormProps): JSX.Element => {
     const classes = useStyles();
-    const auth = useAuth();
+    const {loginUser} = useMutateUser();
 
     const [email, setEmail] = useState<string>("");
     const [password, setPassword] = useState<string>("");
     const [error, setError] = useState<string>("");
 
-    const getErrorMessage = (authError: any) => {
-        if (authError.code === "auth/invalid-email") {
-            setError("Ugyldig e-mail");
-            return;
-        }
-        if (authError.code === "auth/too-many-requests") {
-            setError("For mange forsøg. Vent venligst, og prøv igen");
-            return;
-        }
-        setError("Login mislykkedes. Prøv igen!");
-    }
-
     const signUserIn = () => {
         setPassword("");
 
-        auth.login(email, password)
-            .then(() => {
+        loginUser(email, password).then(() => {
                 props.setDialogOpen(false);
                 setError("");
             })
-            .catch((authError) => {
-                getErrorMessage(authError);
-            })
-        ;
     }
 
     return <React.Fragment>

@@ -1,8 +1,7 @@
 import * as React from "react";
 import {makeStyles, Typography} from "@material-ui/core";
-import {usePlayer} from "../../hooks/api/usePlayer";
+import {useGetCurrentUser} from "../../hooks/api/useUser";
 import {useCreateTeam} from "../../hooks/api/useTeam";
-import {useEffect} from "react";
 
 const useStyles = makeStyles((theme) => ({
     homePageContainer: {
@@ -23,10 +22,11 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 export const HomePage = () => {
-    const getPlayerById = usePlayer(1);
+    const {isLoggedIn, currentUser} = useGetCurrentUser();
     const [createTeam] = useCreateTeam();
-    console.log(getPlayerById.data);
 
+    console.log("Logged in: " + isLoggedIn)
+    console.log("Current User: " + currentUser?.playertag)
 
     const classes = useStyles();
 

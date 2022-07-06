@@ -6,6 +6,7 @@ import {useAuth} from "../../firebase/authentication/AuthContext";
 import {PlayerDropdown} from "./PlayerDropdown";
 import {usePlayersCollection} from "../../firebase/database/database";
 import {Player} from "../../firebase/database/PlayersHandler";
+import {useGetCurrentUser} from "../../hooks/api/useUser";
 
 const useStyles = makeStyles((theme) => ({
     profileSectionContainer: {
@@ -36,20 +37,10 @@ const useStyles = makeStyles((theme) => ({
 
 export const NavBarProfile = (): JSX.Element => {
     const classes = useStyles();
-    const {currentUser} = useAuth();
-    const playerDatabase = usePlayersCollection();
+    const {currentUser} = useGetCurrentUser();
 
     const [loginDialogIsOpen, setLoginDialogIsOpen] = useState<boolean>(false);
     const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
-    const [player, setPlayer] = useState<Player | null>(null);
-
-    useEffect(() => {
-        if (currentUser?.uid != null) {
-            playerDatabase.getPlayerById(currentUser?.uid).then(data => {
-                setPlayer(data);
-            })
-        }
-    }, [currentUser])
 
     const handleOpenLoginDialog = (open: boolean) => {
         setLoginDialogIsOpen(open);
@@ -64,17 +55,21 @@ export const NavBarProfile = (): JSX.Element => {
     }
 
     return <div className={classes.profileSectionContainer}>
-        {currentUser !== null ?
-            <div className={classes.loggedInContainer} onClick={(e) => handleOpenPlayerDropdown(e)}>
-                <Typography variant={"subtitle2"} className={classes.playerName}>{player?.username}</Typography>
-                <img className={classes.image} src={player?.picture}/>
-            </div> :
+        {currentUser ?
+            <>
+                <div className={classes.loggedInContainer} onClick={(e) => handleOpenPlayerDropdown(e)}>
+                    <Typography variant={"subtitle2"}
+                                className={classes.playerName}>{currentUser?.playertag}</Typography>
+                    <img className={classes.image} src={currentUser?.picture}/>
+                </div>
+                <PlayerDropdown closeDropdown={handleClosePlayerDropdown} anchorEl={anchorEl} player={currentUser}/>
+            </>
+            :
             <Button onClick={() => handleOpenLoginDialog(true)}>
                 <Typography variant={"button"}>Log ind</Typography>
-            </Button>}
+            </Button>
+        }
         {loginDialogIsOpen &&
             <LoginDialog setOpen={handleOpenLoginDialog}/>}
-        {player &&
-            <PlayerDropdown closeDropdown={handleClosePlayerDropdown} anchorEl={anchorEl} player={player}/>}
     </div>
 }

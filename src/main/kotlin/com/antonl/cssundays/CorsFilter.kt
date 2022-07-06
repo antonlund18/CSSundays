@@ -12,8 +12,9 @@ import reactor.core.publisher.Mono
 class CorsFilter : WebFilter {
     override fun filter(ctx: ServerWebExchange, chain: WebFilterChain): Mono<Void> {
         ctx.response.headers.add("Access-Control-Allow-Origin", "*")
+        ctx.response.headers.add("Access-Control-Allow-Credentials", "true")
         ctx.response.headers.add("Access-Control-Allow-Methods", "GET, PUT, POST, DELETE, OPTIONS")
-        ctx.response.headers.add("Access-Control-Allow-Headers", "DNT,X-CustomHeader,Keep-Alive,User-Agent,X-Requested-With,If-Modified-Since,Cache-Control,Content-Type,Content-Range,Range")
+        ctx.response.headers.add("Access-Control-Allow-Headers", "DNT,X-CustomHeader,Keep-Alive,User-Agent,X-Requested-With,If-Modified-Since,Cache-Control,Content-Type,Content-Range,Range, Authorization")
         return when {
             ctx.request.method == HttpMethod.OPTIONS -> {
                 ctx.response.headers.add("Access-Control-Max-Age", "1728000")

@@ -5,28 +5,29 @@ import java.time.LocalDateTime
 import javax.persistence.*
 
 @Entity
-@Table(name = "players")
-class Player(
+@Table(name = "users")
+class User(
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    var id: Int? = null,
+    var id: Int? = -1,
 
     @Column(unique = true)
-    var userId: String,
-
-    @Column(unique = true)
-    var username: String,
+    var playertag: String,
 
     @Column(unique = true)
     var email: String,
 
+    var password: String = "",
+
     var picture: String = "",
+
+    var role: UserRole = UserRole.USER,
 
     @GeneratedValue
     var createdTs: String = LocalDateTime.now().toString(),
 
-    var slug: String = username.toSlug(),
+    var slug: String = playertag.toSlug(),
 
-    @ManyToMany(mappedBy = "players", fetch = FetchType.EAGER)
+    @ManyToMany(mappedBy = "users", fetch = FetchType.EAGER)
     var teams: MutableList<Team> = mutableListOf()
 )

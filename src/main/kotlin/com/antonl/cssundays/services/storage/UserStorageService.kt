@@ -1,11 +1,11 @@
-package com.antonl.cssundays.storage
+package com.antonl.cssundays.services.storage
 
 import java.util.UUID
 
-class PlayerStorageService {
+class UserStorageService {
     companion object {
         private const val bucket = "cssundays-public-pictures";
-        private const val folder = "players";
+        private const val folder = "users";
 
         suspend fun uploadImage(imagePath: String): String {
             val id = UUID.randomUUID().toString() + ".jpg";
@@ -13,7 +13,7 @@ class PlayerStorageService {
             return id;
         }
 
-        suspend fun deleteImage(imageKey: String) {
+        suspend fun deleteImage(imageKey: String?) {
             S3StorageService.deleteObjectFromBucket(bucket, "$folder/$imageKey");
         }
     }

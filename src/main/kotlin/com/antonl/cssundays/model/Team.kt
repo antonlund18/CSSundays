@@ -9,7 +9,7 @@ import javax.persistence.*
 class Team(
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    var id: Int? = null,
+    var id: Int? = -1,
 
     @Column(unique = true)
     var name: String,
@@ -17,15 +17,15 @@ class Team(
     var picture: String = "",
 
     @ManyToOne
-    var owner: Player,
+    var owner: User,
 
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
-        name = "player_on_team",
+        name = "user_on_team",
         joinColumns = [JoinColumn(name = "team_id")],
-        inverseJoinColumns = [JoinColumn(name = "player_id")]
+        inverseJoinColumns = [JoinColumn(name = "user_id")]
     )
-    var players: MutableList<Player> = mutableListOf(),
+    var users: MutableList<User> = mutableListOf(),
 
     var slug: String = name.toSlug(),
 

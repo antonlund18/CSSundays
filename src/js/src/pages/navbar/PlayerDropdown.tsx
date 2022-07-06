@@ -3,15 +3,16 @@ import {Menu, MenuItem, Typography} from "@material-ui/core";
 import {useAuth} from "../../firebase/authentication/AuthContext";
 import {Player} from "../../firebase/database/PlayersHandler";
 import {useNavigate} from "react-router-dom";
+import {useMutateUser, User} from "../../hooks/api/useUser";
 
 interface PlayerDropdownProps {
-    player: Player
+    player: User
     closeDropdown: () => void,
     anchorEl: HTMLElement | null,
 }
 
 export const PlayerDropdown = (props: PlayerDropdownProps): JSX.Element => {
-    const {auth} = useAuth();
+    const {logOutUser} = useMutateUser();
     const navigate = useNavigate();
 
     return <Menu open={!!props.anchorEl}
@@ -28,13 +29,13 @@ export const PlayerDropdown = (props: PlayerDropdownProps): JSX.Element => {
                  onClose={() => props.closeDropdown()}
     >
         <MenuItem onClick={() => {
-            navigate("/players/" + props.player.username);
+            navigate("/players/" + props.player.playertag);
             props.closeDropdown()
         }}>
             <Typography>Profil</Typography>
         </MenuItem>
         <MenuItem onClick={() => {
-            auth?.signOut()
+            logOutUser();
             props.closeDropdown()
         }}>
             <Typography>Log ud</Typography>

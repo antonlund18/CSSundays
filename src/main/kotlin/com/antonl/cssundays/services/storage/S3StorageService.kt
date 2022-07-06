@@ -1,4 +1,4 @@
-package com.antonl.cssundays.storage
+package com.antonl.cssundays.services.storage
 
 import aws.sdk.kotlin.services.s3.S3Client
 import aws.sdk.kotlin.services.s3.model.DeleteObjectRequest
@@ -7,7 +7,11 @@ import aws.smithy.kotlin.runtime.content.asByteStream
 import java.nio.file.Paths
 
 suspend fun main(args: Array<String>) {
-    S3StorageService.uploadObjectToBucket("cssundays-public-pictures", "ged.jpg", "C:\\Users\\anton\\Documents\\ged.jpg")
+    S3StorageService.uploadObjectToBucket(
+        "cssundays-public-pictures",
+        "ged.jpg",
+        "C:\\Users\\anton\\Documents\\ged.jpg"
+    )
 }
 
 

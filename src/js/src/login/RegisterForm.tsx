@@ -3,7 +3,7 @@ import {useState} from "react";
 import {Button, makeStyles, TextField, Typography} from "@material-ui/core";
 import {useAuth} from "../firebase/authentication/AuthContext";
 import {theme} from "../theme/theme";
-import {useMutatePlayer} from "../hooks/api/usePlayer";
+import {useMutateUser} from "../hooks/api/useUser";
 
 const useStyles = makeStyles(theme => ({
     inputLabel: {
@@ -44,7 +44,7 @@ interface RegisterFormProps {
 export const RegisterForm = (props: RegisterFormProps): JSX.Element => {
     const classes = useStyles();
     const auth = useAuth();
-    const {createPlayer} = useMutatePlayer();
+    const {createUser} = useMutateUser();
 
     const [email, setEmail] = useState<string>("");
     const [username, setUsername] = useState<string>("");
@@ -80,15 +80,9 @@ export const RegisterForm = (props: RegisterFormProps): JSX.Element => {
         }
 
 
-        auth.signup(email, password)
-            .then((data) => {
-                createPlayer(username, email, data.user.uid).then(() => {
-                    props.setDialogOpen(false);
-                });
-            })
-            .catch((authError) => {
-                validateCredentials(authError);
-            })
+        createUser(username, email, password).then(() => {
+            props.setDialogOpen(false);
+        })
 
         clearFields();
     };

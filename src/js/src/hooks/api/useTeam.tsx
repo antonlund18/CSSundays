@@ -1,12 +1,12 @@
 import {gql, useMutation} from "@apollo/client";
-import {Player} from "./usePlayer";
+import {User} from "./useUser";
 
 const CREATE_TEAM = gql`
-    mutation createTeam($name: String!, $playerId: Int!) {
-        createTeam(name: $name, playerId: $playerId) {
+    mutation createTeam($name: String!, $userId: Int!) {
+        createTeam(name: $name, userId: $userId) {
             name
             owner {
-                username
+                playertag
             }
             createdTs
         }
@@ -20,7 +20,7 @@ export const useCreateTeam = () => {
 export interface Team {
     readonly name: string,
     readonly picture: string,
-    readonly owner: Player,
-    readonly players: Player[],
+    readonly owner: User,
+    readonly players: User[],
     readonly createdTs: string,
 }

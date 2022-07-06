@@ -17,14 +17,34 @@ repositories {
 }
 
 dependencies {
-    implementation("org.springframework.boot:spring-boot-starter-data-jpa")
-    implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
-    implementation("org.jetbrains.kotlin:kotlin-reflect")
-    implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
+	// Kotlin
+	implementation("org.jetbrains.kotlin:kotlin-reflect")
+	implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
+
+	// JWT
+	implementation("io.github.nefilim.kjwt:kjwt-core:0.5.3")
+
+	// BCrypt
+	implementation("com.ToxicBakery.library.bcrypt:bcrypt:1.0.9")
+
+	// Arrow
+	implementation("io.arrow-kt:arrow-core:1.1.2")
+
+	// Spring
+	implementation("org.springframework.boot:spring-boot-starter-data-jpa")
+
+	// Amazon Web Services
 	implementation("aws.sdk.kotlin:s3:0.9.4-beta")
-    implementation("com.expediagroup:graphql-kotlin-spring-server:5.3.2")
-    implementation("com.expediagroup:graphql-kotlin-schema-generator:5.3.2")
-    runtimeOnly("com.microsoft.sqlserver:mssql-jdbc")
+
+	// GraphQL
+	implementation("com.expediagroup:graphql-kotlin-spring-server:6.0.0-alpha.5")
+	implementation("com.expediagroup:graphql-kotlin-schema-generator:6.0.0-alpha.5")
+
+	// Jackson
+	implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
+
+	// MSSQL
+	runtimeOnly("com.microsoft.sqlserver:mssql-jdbc")
 }
 
 tasks.withType<KotlinCompile> {
