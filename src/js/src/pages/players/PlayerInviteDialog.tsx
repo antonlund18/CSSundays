@@ -6,6 +6,7 @@ import {usePlayersCollection, useTeamsCollection} from "../../firebase/database/
 import {useAuth} from "../../firebase/authentication/AuthContext";
 import {CenteredPage} from "../../components/CenteredPage";
 import {Team} from "../../firebase/database/TeamsHandler";
+import {User} from "../../codegen/generated-types";
 
 const useStyles = makeStyles(theme => ({
     inviteDialog: {
@@ -37,7 +38,7 @@ const useStyles = makeStyles(theme => ({
 
 interface PlayerInviteDialogProps {
     setDialogOpen: (open: boolean) => void,
-    player: Player
+    player: User
 }
 
 export const PlayerInviteDialog = (props: PlayerInviteDialogProps): JSX.Element => {

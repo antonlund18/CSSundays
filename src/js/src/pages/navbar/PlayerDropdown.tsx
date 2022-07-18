@@ -1,9 +1,8 @@
 import * as React from "react";
 import {Menu, MenuItem, Typography} from "@material-ui/core";
-import {useAuth} from "../../firebase/authentication/AuthContext";
-import {Player} from "../../firebase/database/PlayersHandler";
 import {useNavigate} from "react-router-dom";
-import {useMutateUser, User} from "../../hooks/api/useUser";
+import {useMutateUser} from "../../hooks/api/useUser";
+import {User} from "../../codegen/generated-types";
 
 interface PlayerDropdownProps {
     player: User
@@ -29,7 +28,7 @@ export const PlayerDropdown = (props: PlayerDropdownProps): JSX.Element => {
                  onClose={() => props.closeDropdown()}
     >
         <MenuItem onClick={() => {
-            navigate("/players/" + props.player.playertag);
+            navigate("/players/" + props.player.id);
             props.closeDropdown()
         }}>
             <Typography>Profil</Typography>

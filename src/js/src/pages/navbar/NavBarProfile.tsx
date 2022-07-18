@@ -7,6 +7,7 @@ import {PlayerDropdown} from "./PlayerDropdown";
 import {usePlayersCollection} from "../../firebase/database/database";
 import {Player} from "../../firebase/database/PlayersHandler";
 import {useGetCurrentUser} from "../../hooks/api/useUser";
+import {getPictureLinkFromKey} from "../../util/StorageHelper";
 
 const useStyles = makeStyles((theme) => ({
     profileSectionContainer: {
@@ -60,7 +61,7 @@ export const NavBarProfile = (): JSX.Element => {
                 <div className={classes.loggedInContainer} onClick={(e) => handleOpenPlayerDropdown(e)}>
                     <Typography variant={"subtitle2"}
                                 className={classes.playerName}>{currentUser?.playertag}</Typography>
-                    <img className={classes.image} src={currentUser?.picture}/>
+                    <img className={classes.image} src={currentUser.picture && getPictureLinkFromKey(currentUser.picture)}/>
                 </div>
                 <PlayerDropdown closeDropdown={handleClosePlayerDropdown} anchorEl={anchorEl} player={currentUser}/>
             </>

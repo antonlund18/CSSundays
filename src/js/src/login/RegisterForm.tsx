@@ -82,7 +82,7 @@ export const RegisterForm = (props: RegisterFormProps): JSX.Element => {
 
         createUser(username, email, password).then(() => {
             props.setDialogOpen(false);
-        })
+        }).then(() => window.location.reload())
 
         clearFields();
     };

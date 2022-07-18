@@ -1,16 +1,16 @@
 package com.antonl.cssundays.services.storage
 
-import java.util.UUID
+import com.antonl.cssundays.model.dto.RequestDTO
+import com.antonl.cssundays.services.storage.converters.RequestDTOConverter
 
 class UserStorageService {
     companion object {
         private const val bucket = "cssundays-public-pictures";
         private const val folder = "users";
 
-        suspend fun uploadImage(imagePath: String): String {
-            val id = UUID.randomUUID().toString() + ".jpg";
-            S3StorageService.uploadObjectToBucket(bucket, "$folder/$id", imagePath);
-            return id;
+        suspend fun getPresignedUploadRequest(imageKey: String): RequestDTO {
+            val httpRequest = S3StorageService.getPresignedUploadRequest(bucket, "$folder/$imageKey")
+            return RequestDTOConverter.toRequestDTO(httpRequest);
         }
 
         suspend fun deleteImage(imageKey: String?) {

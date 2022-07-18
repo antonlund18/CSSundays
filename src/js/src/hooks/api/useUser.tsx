@@ -1,99 +1,59 @@
-import {gql, useMutation, useQuery} from "@apollo/client";
-import {Team} from "./useTeam";
 import {Constants} from "../../util/Constants";
+import {
+    useCreateUserMutation,
+    useGetCurrentUserQuery, useGetUserByIdQuery,
+    useLoginUserMutation,
+    User,
+    useSetPictureAndGetPresignedRequestMutation
+} from "../../codegen/generated-types";
 
-const GET_USER_BY_ID = gql`
-    query getUserById($id: Int!) {
-        getUserById(id: $id) {
-            id
-            playertag
-            email
-            role
-            picture
-            teams {
-                name
-                users {
-                    playertag
-                }
-            }
-        }
-    }
-`
-
-const GET_CURRENT_USER = gql`
-    query getCurrentUser($token: String!) {
-        getCurrentUser(token: $token) {
-            id
-            playertag
-            email
-            role
-            picture
-            teams {
-                name
-                users {
-                    playertag
-                }
-            }
-        }
-    }
-`
-
-const CREATE_USER = gql`
-    mutation createUser($playertag: String!, $email: String!, $password: String!) {
-        createUser(playertag: $playertag, email: $email, password: $password)
-    }
-`
-
-const LOGIN_USER = gql`
-    mutation loginUser($email: String!, $password: String!) {
-        loginUser(email: $email, password: $password)
-    }
-`
-
-export const useGetUserById = (id: number) => {
-    return useQuery(GET_USER_BY_ID, {
-        variables: {
-            id: id
-        }
-    });
-}
-
-export const useGetCurrentUser = (): {currentUser: User | undefined, isLoggedIn: boolean} => {
+export const useGetCurrentUser = (): { currentUser: User, isLoggedIn: boolean } => {
     const token = localStorage.getItem(Constants.JWT_TOKEN);
-    const {data} = useQuery<GetCurrentUserResponse, GetCurrentUserVariables>(GET_CURRENT_USER, {
+    const {data} = useGetCurrentUserQuery({
         variables: {
             token: token ?? ""
         }
     })
     const isLoggedIn = data !== null;
     return {
-        currentUser: data?.getCurrentUser,
+        currentUser: data?.getCurrentUser as User,
         isLoggedIn
     }
 }
 
+export const useGetUserById = (id: number) => {
+    const {data} = useGetUserByIdQuery({
+        variables: {
+            id
+        }
+    })
+    return {
+        user: data?.getUserById as User
+    }
+}
+
 export const useMutateUser = () => {
-    const [createUserMutation] = useMutation<CreateUserResponse, CreateUserVariables>(CREATE_USER);
-    const [loginUserMutation] = useMutation<LogInUserResponse, LogInUserVariables>(LOGIN_USER);
+    const [createUserMutation] = useCreateUserMutation();
+    const [loginUserMutation] = useLoginUserMutation();
+    const [setPictureAndGetPresignedRequestMutation] = useSetPictureAndGetPresignedRequestMutation();
 
     const createUser = (playertag: string, email: string, password: string) => {
         return createUserMutation({
             variables: {
-                playertag: playertag,
-                email: email,
-                password: password
+                playertag,
+                email,
+                password
             }
         }).then((data) => {
             localStorage.setItem(Constants.JWT_TOKEN, data.data?.createUser ?? "");
         })
     }
 
-
     const loginUser = (email: string, password: string) => {
         return loginUserMutation({
             variables: {
-                email: email,
-                password: password
+                email,
+                password
             }
         }).then((data) => {
             localStorage.setItem(Constants.JWT_TOKEN, data.data?.loginUser ?? "");
@@ -104,46 +64,42 @@ export const useMutateUser = () => {
         localStorage.removeItem(Constants.JWT_TOKEN);
     }
 
+    const uploadUserPicture = async (userId: number, selector: HTMLInputElement) => {
+        const file = selector?.files?.item(0);
+        if (!file) return;
+
+        const buffer = await file?.arrayBuffer();
+        const byteArray = new Int8Array(buffer);
+
+        setPictureAndGetPresignedRequestMutation({
+            variables: {
+                userId,
+            }
+        }).then(async (data) => {
+            const request = data.data?.setPictureAndGetPresignedRequest;
+            if (!request) return;
+
+            const headers: any = {};
+            request.headers.forEach(header => {
+                headers[header.name] = header.value
+            })
+
+            const requestOptions: { method: string, headers: any, body: any } = {
+                method: request.method,
+                headers: headers,
+                body: byteArray,
+            }
+
+            await fetch(new URL("http://" + request.url).toString(), requestOptions).then(() => window.location.reload());
+        }).catch((e) => {
+            console.log(e);
+        })
+    }
+
     return {
         createUser,
         loginUser,
         logOutUser,
+        uploadUserPicture
     }
-}
-
-export interface User {
-    readonly id: number
-    readonly playertag: string,
-    readonly email: string,
-    readonly role: number,
-    readonly picture: string,
-    readonly createdTs: string,
-    readonly teams: Team[] | null,
-}
-
-type CreateUserVariables = {
-    readonly playertag: string,
-    readonly email: string,
-    readonly password: string
-}
-
-type CreateUserResponse = {
-    readonly createUser: string
-}
-
-type LogInUserVariables = {
-    readonly email: string,
-    readonly password: string
-}
-
-type LogInUserResponse = {
-    readonly loginUser: string
-}
-
-type GetCurrentUserResponse = {
-    readonly getCurrentUser: User
-}
-
-type GetCurrentUserVariables = {
-    readonly token: string
 }

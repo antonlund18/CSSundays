@@ -1,20 +1,19 @@
 package com.antonl.cssundays.graphql.queries
 
-import com.antonl.cssundays.graphql.server.directives.AuthorizationDirective
 import com.antonl.cssundays.model.User
-import com.antonl.cssundays.model.UserRole
-import com.antonl.cssundays.services.auth.AuthenticationService
 import com.antonl.cssundays.services.auth.AuthorizationService
 import com.antonl.cssundays.services.model.UserService
 import com.expediagroup.graphql.server.operations.Query
+import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Component
 import javax.transaction.Transactional
 
 @Component
 @Transactional
-@AuthorizationDirective(role = UserRole.ADMIN)
-class UserQueries(val userService: UserService) : Query {
-    @AuthorizationDirective(role = UserRole.ADMIN)
+class UserQueries : Query {
+    @Autowired
+    private lateinit var userService: UserService;
+
     suspend fun getUserById(id: Int): User? {
         return userService.findUserById(id);
     }

@@ -1,15 +1,13 @@
 package com.antonl.cssundays.services.model
 
-import at.favre.lib.crypto.bcrypt.BCrypt
+import com.antonl.cssundays.model.dto.RequestDTO
 import com.antonl.cssundays.model.Team
 import com.antonl.cssundays.model.User
 import com.antonl.cssundays.repositories.UserRepository
 import com.antonl.cssundays.services.auth.AuthenticationService
-import com.antonl.cssundays.services.auth.AuthorizationService
 import com.antonl.cssundays.services.storage.UserStorageService
-import com.expediagroup.graphql.generator.directives.KotlinSchemaDirectiveEnvironment
-import graphql.schema.DataFetchingEnvironment
 import org.springframework.stereotype.Service
+import java.util.*
 import javax.transaction.Transactional
 
 @Service
@@ -25,27 +23,25 @@ class UserService(val userRepository: UserRepository) {
         val user = User(
             playertag = playertag,
             email = email,
-            password = BCrypt.withDefaults().hashToString(4, password.toCharArray())
+            password = AuthenticationService.encodePassword(password)
         );
         saveUser(user);
         return user;
     }
 
-    suspend fun uploadPicture(userId: Int, picturePath: String): User? {
-        val user = findUserById(userId);
-        deletePicture(userId);
-        val pictureId = UserStorageService.uploadImage(picturePath);
-        user?.picture = pictureId;
+    suspend fun setPicture(user: User): RequestDTO {
+        deletePicture(user);
+        val imageKey = UUID.randomUUID().toString() + ".jpg";
+        user.picture = imageKey;
         saveUser(user)
-        return user;
+        return UserStorageService.getPresignedUploadRequest(imageKey);
     }
 
-    suspend fun deletePicture(playerId: Int): User? {
-        val user = findUserById(playerId);
-        if (!user?.picture.equals("")) {
-            UserStorageService.deleteImage(user?.picture);
-            user?.picture = "";
-            saveUser(user)
+    suspend fun deletePicture(user: User): User? {
+        if (!user.picture.equals("")) {
+            UserStorageService.deleteImage(user.picture);
+            user.picture = "";
+            saveUser(user);
         }
         return user;
     }
@@ -80,8 +76,10 @@ class UserService(val userRepository: UserRepository) {
         }
     }
 
-    fun handleSignUp(environment: DataFetchingEnvironment,playertag: String, email: String, password: String): String {
+    fun handleSignUp(playertag: String, email: String, password: String): String {
         val emailInUse: Boolean = findUserByEmail(email) != null;
+
+        // TODO: Better error handling
         if (emailInUse) {
             throw Exception("Email is already in use")
         }
@@ -93,7 +91,6 @@ class UserService(val userRepository: UserRepository) {
 
         val user = createUser(playertag, email, password);
         val jwtToken = AuthenticationService.generateJWTToken(user);
-        AuthorizationService.setAuthContext(environment.graphQlContext, jwtToken);
         return jwtToken;
     }
 }

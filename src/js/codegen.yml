@@ -1,0 +1,14 @@
+schema: schema.graphql
+documents:
+  - "src/**/*.{ts,tsx}"
+generates:
+  src/codegen/generated-types.ts:
+    plugins:
+      - typescript
+      - typescript-operations
+      - typescript-react-apollo
+      - named-operations-object
+    config:
+      withHooks: true
+      identifierName: ListAllOperations
+      reactApolloVersion: 3

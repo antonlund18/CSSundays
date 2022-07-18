@@ -19,8 +19,12 @@ class AuthenticationService() {
             return "";
         }
 
-        private fun validatePassword(user: User?, password: String): Boolean {
+        fun validatePassword(user: User?, password: String): Boolean {
             return BCrypt.verifyer().verify(password.toCharArray(), user?.password).verified;
+        }
+
+        fun encodePassword(password: String): String {
+            return BCrypt.withDefaults().hashToString(4, password.toCharArray());
         }
 
         fun generateJWTToken(user: User?): String {

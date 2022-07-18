@@ -8,4 +8,4 @@ fun String.toSlug(): String = Normalizer
     .replace('-', ' ') // Replace dashes with spaces
     .trim() // Trim leading/trailing whitespace (including what used to be leading/trailing dashes)
     .replace("\\s+".toRegex(), "-") // Replace whitespace (including newlines and repetitions) with single dashes
-    .toLowerCase() // Lowercase the final results
+    .lowercase() // Lowercase the final results

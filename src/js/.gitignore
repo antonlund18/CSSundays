@@ -30,3 +30,6 @@ firebase.json
 /template
 
 src/img/
+
+schema.graphql
+generated-types.ts

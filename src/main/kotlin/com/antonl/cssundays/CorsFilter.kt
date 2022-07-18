@@ -23,7 +23,7 @@ class CorsFilter : WebFilter {
             }
             else -> {
                 ctx.response.headers.add("Access-Control-Expose-Headers", "DNT,X-CustomHeader,Keep-Alive,User-Agent,X-Requested-With,If-Modified-Since,Cache-Control,Content-Type,Content-Range,Range")
-                chain.filter(ctx) ?: Mono.empty()
+                chain.filter(ctx)
             }
         }
     }
