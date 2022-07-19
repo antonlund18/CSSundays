@@ -20,7 +20,7 @@ export const Router = (): JSX.Element => {
             index: true,
             element: <TeamsPage/>
         }, {
-            path: ":team",
+            path: ":teamId",
             element: <TeamPage/>,
         }]
     }, {

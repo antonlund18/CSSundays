@@ -1,6 +1,6 @@
 package com.antonl.cssundays.services.model
 
-import com.antonl.cssundays.model.dto.RequestDTO
+import com.antonl.cssundays.graphql.dto.RequestDTO
 import com.antonl.cssundays.model.Team
 import com.antonl.cssundays.model.User
 import com.antonl.cssundays.repositories.UserRepository

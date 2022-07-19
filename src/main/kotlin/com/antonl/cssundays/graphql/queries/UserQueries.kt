@@ -1,6 +1,8 @@
 package com.antonl.cssundays.graphql.queries
 
+import com.antonl.cssundays.graphql.server.directives.AuthorizationDirective
 import com.antonl.cssundays.model.User
+import com.antonl.cssundays.model.UserRole
 import com.antonl.cssundays.services.auth.AuthorizationService
 import com.antonl.cssundays.services.model.UserService
 import com.expediagroup.graphql.server.operations.Query
@@ -18,6 +20,7 @@ class UserQueries : Query {
         return userService.findUserById(id);
     }
 
+    @AuthorizationDirective(role = UserRole.USER)
     suspend fun getCurrentUser(token: String): User? {
         if (!AuthorizationService.isValidToken(token)) return null;
         val userId = AuthorizationService.getIssuer(token)?.toInt() ?: return null;

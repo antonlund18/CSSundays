@@ -2,14 +2,20 @@ import * as React from "react";
 import {useEffect, useState} from "react";
 import {useNavigate, useParams} from "react-router-dom";
 import {CenteredPage} from "../../components/CenteredPage";
-import {Box, Divider as MuiDivider, Grid, makeStyles, Typography} from "@material-ui/core";
-import {usePlayersCollection, useTeamsCollection} from "../../firebase/database/database";
-import {Team} from "../../firebase/database/TeamsHandler";
+import {Box, Button, Divider as MuiDivider, Grid, makeStyles, Theme, Typography} from "@material-ui/core";
 import {calculateWinrate} from "../../helpers/helpers";
 import {Divider as CSDivider} from "../../components/Divider";
-import {Player} from "../../firebase/database/PlayersHandler";
+import {useGetTeamById, useMutateTeam} from "../../hooks/api/useTeam";
+import {ObjectType, User} from "../../codegen/generated-types";
+import {getPictureLinkFromKey} from "../../util/StorageHelper";
+import {useSharedTeamAndUser} from "../../hooks/api/useSharedTeamAndUser";
+import {useGetCurrentUser} from "../../hooks/api/useUser";
 
-const useStyles = makeStyles(theme => ({
+interface StylesProps {
+    isCurrentUserOwner: boolean
+}
+
+const useStyles = makeStyles<Theme, StylesProps>(theme => ({
     playersContainer: {
         display: "flex",
         flexWrap: "wrap",
@@ -26,12 +32,13 @@ const useStyles = makeStyles(theme => ({
         margin: theme.spacing(1),
         padding: theme.spacing(2),
     },
-    teamPicture: {
+    teamPicture: props => ({
         width: "344px",
         height: "344px",
         margin: theme.spacing(1),
         padding: theme.spacing(2),
-    },
+        cursor: props.isCurrentUserOwner ? "pointer" : "default"
+    }),
     teamStatsContainer: {
         width: "100%",
         marginTop: theme.spacing(3),
@@ -49,48 +56,57 @@ const useStyles = makeStyles(theme => ({
 }))
 
 export const TeamPage = (): JSX.Element => {
-    const urlParams = useParams();
-    const classes = useStyles();
     const navigate = useNavigate();
-    const teamsDatabase = useTeamsCollection();
-    const playersDatabase = usePlayersCollection();
-    const [team, setTeam] = useState<Team | null>(null);
-    const [players, setPlayers] = useState<Player[] | null>(null);
+    const urlParams = useParams();
 
-    useEffect(() => {
-        if (urlParams.team) {
-            teamsDatabase.getTeamByName(urlParams.team)
-                .then(data => setTeam(data))
-        }
-    }, []);
+    const {team} = useGetTeamById(parseInt(urlParams.teamId ?? ""))
+    const {setAndUploadPicture} = useSharedTeamAndUser();
+    const {incrementWins} = useMutateTeam();;
+
+    const {currentUser} = useGetCurrentUser();
+    const isCurrenUserOwner = currentUser?.id === team?.owner?.id;
+
+    const classes = useStyles({isCurrentUserOwner: isCurrenUserOwner});
+    const [fileSelector, setFileSelector] = useState<HTMLInputElement | null>(null);
 
     useEffect(() => {
         if (team) {
-            playersDatabase.getPlayersById(team.playerIds)
-                .then(data => {
-                    setPlayers(data)
-                })
+            const selector = document.createElement("input");
+            selector.setAttribute("type", "file");
+            selector.setAttribute("accept", "image/jpeg, image/png, image/jpg");
+            selector.addEventListener("change", async () => {
+                if (team.id) {
+                    await setAndUploadPicture(team.id, selector, ObjectType.Team)
+                }
+            })
+            setFileSelector(selector);
         }
-    }, [team]);
+    }, [team])
 
     if (team === null) {
         return <CenteredPage/>
     }
 
-    const renderPlayerBox = (player: Player) => {
-        return <div key={player.username} className={classes.playerContainer}
-                    onClick={() => navigate("/players/" + player.username)}>
+    const handleFileSelect = () => {
+        if (team?.owner?.id === currentUser?.id) {
+            fileSelector?.click();
+        }
+    }
+
+    const renderPlayerBox = (player: User) => {
+        return <div key={player.playertag} className={classes.playerContainer}
+                    onClick={() => navigate("/players/" + player.id)}>
             <Box boxShadow={3} className={classes.playerPicture}>
                 <React.Fragment>
-                    <img src={player.picture} width={"100%"} height={"100%"}/>
+                    <img src={getPictureLinkFromKey(player.picture, ObjectType.User)} width={"100%"} height={"100%"}/>
                 </React.Fragment>
             </Box>
-            <Typography variant={"h4"}>{player.username}</Typography>
+            <Typography variant={"h4"}>{player.playertag}</Typography>
         </div>
     }
 
     return <CenteredPage>
-        <Typography variant={"h2"} color={"primary"}>{team.name}</Typography>
+        <Typography variant={"h2"} color={"primary"}>{team?.name}</Typography>
         <CSDivider/>
         <Grid container
               direction={"row"}
@@ -99,39 +115,40 @@ export const TeamPage = (): JSX.Element => {
               spacing={3}
         >
             <Grid item xs={12} md={4}>
-                <Box boxShadow={3} className={classes.teamPicture}>
-                    <img src={team.picture} width={"100%"} height={"100%"}/>
+                <Box boxShadow={3} className={classes.teamPicture} onClick={handleFileSelect}>
+                    <img src={getPictureLinkFromKey(team?.picture ?? "", ObjectType.Team)} width={"100%"} height={"100%"}/>
                 </Box>
             </Grid>
             <Grid item xs={12} md={8}>
                 <div className={classes.playersContainer}>
-                    {players?.map(player => {
-                        return renderPlayerBox(player)
+                    {team?.users?.map(user => {
+                        return renderPlayerBox(user as User)
                     })}
                     <div className={classes.teamStatsContainer}>
-                        <div className={classes.teamStats}>
-                            <Typography variant={"subtitle1"}>Point</Typography>
-                            <Typography variant={"subtitle1"}>{team.points}</Typography>
-                        </div>
-                        <MuiDivider className={classes.MuiDivider}/>
+                        {/*<div className={classes.teamStats}>*/}
+                        {/*    <Typography variant={"subtitle1"}>Point</Typography>*/}
+                        {/*    <Typography variant={"subtitle1"}>{team.points}</Typography>*/}
+                        {/*</div>*/}
+                        {/*<MuiDivider className={classes.MuiDivider}/>*/}
                         <div className={classes.teamStats}>
                             <Typography variant={"subtitle1"}>Wins</Typography>
-                            <Typography variant={"subtitle1"}>{team.wins}</Typography>
+                            <Typography variant={"subtitle1"}>{team?.wins}</Typography>
                         </div>
                         <MuiDivider className={classes.MuiDivider}/>
                         <div className={classes.teamStats}>
                             <Typography variant={"subtitle1"}>Losses</Typography>
-                            <Typography variant={"subtitle1"}>{team.losses}</Typography>
+                            <Typography variant={"subtitle1"}>{team?.losses}</Typography>
                         </div>
                         <MuiDivider className={classes.MuiDivider}/>
                         <div className={classes.teamStats}>
                             <Typography variant={"subtitle1"}>Winrate</Typography>
-                            <Typography variant={"subtitle1"}>{calculateWinrate(team.wins, team.losses)}</Typography>
+                            <Typography variant={"subtitle1"}>{calculateWinrate(team?.wins, team?.losses)}</Typography>
                         </div>
+                        <MuiDivider className={classes.MuiDivider}/>
+                        <Button onClick={() => incrementWins(team?.id ?? -1)} color={"primary"} variant={"contained"}>+1 wins</Button>
                     </div>
                 </div>
             </Grid>
-
         </Grid>
     </CenteredPage>
 }

@@ -1,14 +1,24 @@
 import * as React from "react";
-import {useEffect, useState} from "react";
-import {Button, makeStyles, Table, TableBody, TableCell, TableHead, TableRow, Typography} from "@material-ui/core";
+import {useState} from "react";
+import {
+    Button,
+    CircularProgress,
+    makeStyles,
+    Table,
+    TableBody,
+    TableCell,
+    TableHead,
+    TableRow,
+    Typography
+} from "@material-ui/core";
 import {CenteredPage} from "../../components/CenteredPage";
 import {CreateTeamDialog} from "./CreateTeamDialog";
-import {useTeamsCollection} from "../../firebase/database/database";
-import {Team} from "../../firebase/database/TeamsHandler";
 import {useNavigate} from "react-router-dom";
 import {Divider} from "../../components/Divider";
 import {theme} from "../../theme/theme";
 import {calculateWinrate} from "../../helpers/helpers";
+import {useGetAllTeams} from "../../hooks/api/useTeam";
+import {Team} from "../../codegen/generated-types";
 
 const useStyles = makeStyles(theme => ({
     pageTitleContainer: {
@@ -26,23 +36,21 @@ const useStyles = makeStyles(theme => ({
 
 export const TeamsPage = (): JSX.Element => {
     const classes = useStyles();
-    const teamsDatabase = useTeamsCollection();
     const navigate = useNavigate();
 
     const [createDialogOpen, setCreateDialogOpen] = useState<boolean>(false);
-    const [teams, setTeams] = useState<Team[]>([]);
+    const {teams, loading} = useGetAllTeams()
 
-
-    useEffect(() => {
-        teamsDatabase.getAllTeams().then((data) => setTeams(data))
-    }, [])
+    if (loading || !teams) {
+        return <CircularProgress/>
+    }
 
     teams.sort((team1, team2) => {
-        return team1.points < team2.points ? 1 : -1
+        return team1.wins > team2.wins ? 1 : -1
     })
 
     const viewTeamPage = (team: Team) => {
-        navigate("/teams/" + team.name)
+        navigate("/teams/" + team.id)
     }
 
     return <CenteredPage>
@@ -72,9 +80,7 @@ export const TeamsPage = (): JSX.Element => {
                         <TableCell><Typography variant={"h4"}>{team.name}</Typography></TableCell>
                         <TableCell align={"right"}><Typography variant={"h4"}>{team.wins}</Typography></TableCell>
                         <TableCell align={"right"}><Typography variant={"h4"}>{team.losses}</Typography></TableCell>
-                        <TableCell align={"right"}><Typography
-                            variant={"h4"}>{calculateWinrate(team.wins, team.losses)}</Typography></TableCell>
-                        <TableCell align={"right"}><Typography variant={"h4"}>{team.points}</Typography></TableCell>
+                        <TableCell align={"right"}><Typography variant={"h4"}>{calculateWinrate(team.wins, team.losses)}</Typography></TableCell>
                     </TableRow>
                 })}
             </TableBody>

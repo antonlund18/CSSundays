@@ -1,6 +1,9 @@
 package com.antonl.cssundays.graphql.server
 
+import com.antonl.cssundays.graphql.mutations.SharedTeamAndUserMutations
+import com.antonl.cssundays.graphql.mutations.TeamMutations
 import com.antonl.cssundays.graphql.mutations.UserMutations
+import com.antonl.cssundays.graphql.queries.TeamQueries
 import com.antonl.cssundays.graphql.queries.UserQueries
 import com.expediagroup.graphql.generator.SchemaGeneratorConfig
 import com.expediagroup.graphql.generator.TopLevelObject
@@ -17,7 +20,7 @@ abstract class SchemaGenerator {
         fun main(args: Array<String>) {
             val schema = generateSchema()
             val schemaString = SchemaPrinter().print(schema)
-            writeSchemaToFile(schemaString);
+            writeSchemaToFile(schemaString)
         }
 
         private fun writeSchemaToFile(schema: String) {
@@ -31,11 +34,10 @@ abstract class SchemaGenerator {
         }
 
         private fun generateSchema(): GraphQLSchema {
-            val schemaGeneratorConfig = SchemaGeneratorConfig(supportedPackages = listOf("com.antonl.cssundays"))
             return toSchema(
-                config = schemaGeneratorConfig,
-                queries = listOf(TopLevelObject(UserQueries())),
-                mutations = listOf(TopLevelObject(UserMutations()))
+                config = SchemaGeneratorConfig(supportedPackages = listOf("com.antonl.cssundays")),
+                queries = listOf(TopLevelObject(UserQueries()), TopLevelObject(TeamQueries())),
+                mutations = listOf(TopLevelObject(UserMutations()), TopLevelObject(TeamMutations()), TopLevelObject(SharedTeamAndUserMutations()))
             )
         }
     }

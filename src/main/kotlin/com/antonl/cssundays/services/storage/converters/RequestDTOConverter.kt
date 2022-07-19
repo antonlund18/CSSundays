@@ -1,8 +1,8 @@
 package com.antonl.cssundays.services.storage.converters
 
 import aws.smithy.kotlin.runtime.http.request.HttpRequest
-import com.antonl.cssundays.model.dto.HeaderDTO
-import com.antonl.cssundays.model.dto.RequestDTO
+import com.antonl.cssundays.graphql.dto.HeaderDTO
+import com.antonl.cssundays.graphql.dto.RequestDTO
 
 class RequestDTOConverter {
     companion object {

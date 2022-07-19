@@ -1,6 +1,6 @@
 package com.antonl.cssundays.graphql.mutations
 
-import com.antonl.cssundays.model.dto.RequestDTO
+import com.antonl.cssundays.graphql.dto.RequestDTO
 import com.antonl.cssundays.model.User
 import com.antonl.cssundays.services.auth.AuthenticationService
 import com.antonl.cssundays.services.model.TeamService
@@ -25,11 +25,6 @@ class UserMutations : Mutation {
 
     suspend fun createUser(playertag: String, email: String, password: String): String {
         return userService.handleSignUp(playertag, email, password);
-    }
-
-    suspend fun setPictureAndGetPresignedRequest(userId: Int): RequestDTO? {
-        val user = userService.findUserById(userId) ?: return null
-        return userService.setPicture(user);
     }
 
     suspend fun deletePicture(userId: Int): User? {

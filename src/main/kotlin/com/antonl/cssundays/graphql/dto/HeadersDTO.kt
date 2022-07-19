@@ -1,4 +1,4 @@
-package com.antonl.cssundays.model.dto
+package com.antonl.cssundays.graphql.dto
 
 class HeaderDTO (
     val name: String,

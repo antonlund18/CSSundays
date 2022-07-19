@@ -43,19 +43,6 @@ gql`
 `
 
 gql`
-    mutation setPictureAndGetPresignedRequest($userId: Int!) {
-        setPictureAndGetPresignedRequest(userId: $userId) {
-            url
-            headers {
-                name
-                value
-            }
-            method
-        }
-    }
-`
-
-gql`
     mutation loginUser($email: String!, $password: String!) {
         loginUser(email: $email, password: $password)
     }

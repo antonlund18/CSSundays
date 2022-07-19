@@ -3,10 +3,10 @@ package com.antonl.cssundays.services.storage
 import com.antonl.cssundays.graphql.dto.RequestDTO
 import com.antonl.cssundays.services.storage.converters.RequestDTOConverter
 
-class UserStorageService {
+class TeamStorageService {
     companion object {
         private const val bucket = "cssundays-public-pictures";
-        private const val folder = "users";
+        private const val folder = "teams";
 
         suspend fun getPresignedUploadRequest(imageKey: String): RequestDTO {
             val httpRequest = S3StorageService.getPresignedUploadRequest(bucket, "$folder/$imageKey")

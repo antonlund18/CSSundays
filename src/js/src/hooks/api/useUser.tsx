@@ -1,7 +1,9 @@
 import {Constants} from "../../util/Constants";
 import {
+    ObjectType,
     useCreateUserMutation,
-    useGetCurrentUserQuery, useGetUserByIdQuery,
+    useGetCurrentUserQuery,
+    useGetUserByIdQuery,
     useLoginUserMutation,
     User,
     useSetPictureAndGetPresignedRequestMutation
@@ -35,7 +37,6 @@ export const useGetUserById = (id: number) => {
 export const useMutateUser = () => {
     const [createUserMutation] = useCreateUserMutation();
     const [loginUserMutation] = useLoginUserMutation();
-    const [setPictureAndGetPresignedRequestMutation] = useSetPictureAndGetPresignedRequestMutation();
 
     const createUser = (playertag: string, email: string, password: string) => {
         return createUserMutation({
@@ -64,42 +65,9 @@ export const useMutateUser = () => {
         localStorage.removeItem(Constants.JWT_TOKEN);
     }
 
-    const uploadUserPicture = async (userId: number, selector: HTMLInputElement) => {
-        const file = selector?.files?.item(0);
-        if (!file) return;
-
-        const buffer = await file?.arrayBuffer();
-        const byteArray = new Int8Array(buffer);
-
-        setPictureAndGetPresignedRequestMutation({
-            variables: {
-                userId,
-            }
-        }).then(async (data) => {
-            const request = data.data?.setPictureAndGetPresignedRequest;
-            if (!request) return;
-
-            const headers: any = {};
-            request.headers.forEach(header => {
-                headers[header.name] = header.value
-            })
-
-            const requestOptions: { method: string, headers: any, body: any } = {
-                method: request.method,
-                headers: headers,
-                body: byteArray,
-            }
-
-            await fetch(new URL("http://" + request.url).toString(), requestOptions).then(() => window.location.reload());
-        }).catch((e) => {
-            console.log(e);
-        })
-    }
-
     return {
         createUser,
         loginUser,
         logOutUser,
-        uploadUserPicture
     }
 }

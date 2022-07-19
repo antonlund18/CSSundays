@@ -27,7 +27,11 @@ class Team(
     )
     var users: MutableList<User> = mutableListOf(),
 
+    var wins: Int = 0,
+
+    var losses: Int = 0,
+
     var slug: String = name.toSlug(),
 
-    var createdTs: String = LocalDateTime.now().toString()
+    var createdTs: String = LocalDateTime.now().toString(),
 )

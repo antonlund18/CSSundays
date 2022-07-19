@@ -6,8 +6,10 @@ import {useParams} from "react-router-dom";
 import {Divider as CSDivider} from "../../components/Divider";
 import {theme} from "../../theme/theme";
 import {PlayerInviteDialog} from "./PlayerInviteDialog";
-import {useGetCurrentUser, useGetUserById, useMutateUser} from "../../hooks/api/useUser";
+import {useGetCurrentUser, useGetUserById} from "../../hooks/api/useUser";
 import {getPictureLinkFromKey} from "../../util/StorageHelper";
+import {useSharedTeamAndUser} from "../../hooks/api/useSharedTeamAndUser";
+import {ObjectType} from "../../codegen/generated-types";
 
 interface StylesProps {
     isCurrentUser: boolean
@@ -33,7 +35,7 @@ const useStyles = makeStyles<Theme, StylesProps>(theme => ({
 
 export const PlayerPage = (): JSX.Element => {
     const urlParams = useParams();
-    const {uploadUserPicture} = useMutateUser();
+    const {setAndUploadPicture} = useSharedTeamAndUser();
 
     const {user} = useGetUserById(parseInt(urlParams.player ?? ""))
     const {currentUser} = useGetCurrentUser();
@@ -52,7 +54,7 @@ export const PlayerPage = (): JSX.Element => {
             selector.setAttribute("accept", "image/jpeg, image/png, image/jpg");
             selector.addEventListener("change", async () => {
                 if (user.id) {
-                    uploadUserPicture(user.id, selector)
+                    await setAndUploadPicture(user.id, selector, ObjectType.User)
                 }
             })
             setFileSelector(selector);
@@ -94,7 +96,7 @@ export const PlayerPage = (): JSX.Element => {
         >
             <Grid item xs={12} md={4}>
                 <Box boxShadow={3} className={classes.playerPicture} onClick={handleFileSelect}>
-                    <img src={user.picture && getPictureLinkFromKey(user.picture)} width={"100%"} height={"100%"}/>
+                    <img src={getPictureLinkFromKey(user.picture, ObjectType.User)} width={"100%"} height={"100%"}/>
                 </Box>
             </Grid>
             <Grid item xs={12} md={8}>
