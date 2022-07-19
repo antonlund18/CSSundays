@@ -45,8 +45,8 @@ export const TeamsPage = (): JSX.Element => {
         return <CircularProgress/>
     }
 
-    teams.slice().sort((team1, team2) => {
-        return team1.wins > team2.wins ? 1 : -1
+    const teamsSorted = teams.slice().sort((team1, team2) => {
+        return team1.wins < team2.wins ? 1 : -1
     })
 
     const viewTeamPage = (team: Team) => {
@@ -74,7 +74,7 @@ export const TeamsPage = (): JSX.Element => {
             </TableHead>
 
             <TableBody>
-                {teams.map((team: Team, index: number) => {
+                {teamsSorted.map((team: Team, index: number) => {
                     return <TableRow key={team.name} className={classes.teamTableRow} onClick={() => viewTeamPage(team)}>
                         <TableCell align={"right"}><Typography variant={"h4"}>{index + 1 + "."}</Typography></TableCell>
                         <TableCell><Typography variant={"h4"}>{team.name}</Typography></TableCell>
