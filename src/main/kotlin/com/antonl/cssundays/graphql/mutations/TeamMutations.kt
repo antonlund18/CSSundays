@@ -15,11 +15,11 @@ class TeamMutations : Mutation {
     @Autowired
     private lateinit var userService: UserService;
 
-    suspend fun createTeam(name: String, userId: Int): Team? {
-        val user = userService.findUserById(userId) ?: return null;
+    suspend fun createTeam(name: String, ownerId: Int): Team? {
+        val user = userService.findUserById(ownerId) ?: return null;
         val team = teamService.createTeam(name, user) ?: return null;
         teamService.addPlayerToTeam(user, team);
-        return team;
+        return teamService.saveTeam(team);
     }
 
     suspend fun incrementLosses(teamId: Int): Team? {

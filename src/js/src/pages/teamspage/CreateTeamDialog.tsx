@@ -10,9 +10,9 @@ import {
     TextField,
     Typography
 } from "@material-ui/core";
-import {useTeamsCollection} from "../../firebase/database/database";
-import {CreateTeamResponse} from "../../firebase/database/TeamsHandler";
 import {useNavigate} from "react-router-dom";
+import {useMutateTeam} from "../../hooks/api/useTeam";
+import {useGetCurrentUser} from "../../hooks/api/useUser";
 
 const useStyles = makeStyles(theme => ({
     nameTextfield: {
@@ -44,13 +44,14 @@ interface CreateTeamDialogProps {
 
 export const CreateTeamDialog = (props: CreateTeamDialogProps): JSX.Element => {
     const classes = useStyles();
-    const teamsDatabase = useTeamsCollection();
     const navigate = useNavigate();
 
+    const {currentUser} = useGetCurrentUser();
+    const {createTeam} = useMutateTeam();
     const [name, setName] = useState<string>("");
     const [error, setError] = useState<string>("");
 
-    const createTeam = async () => {
+    const handleCreate = async () => {
         setError("");
 
         if (name.length < 2) {
@@ -59,15 +60,9 @@ export const CreateTeamDialog = (props: CreateTeamDialogProps): JSX.Element => {
             return;
         }
 
-        const createTeamResponse = await teamsDatabase.createTeam(name);
-        if (createTeamResponse === CreateTeamResponse.ERROR_NAME_EXISTS) {
-            const errorString = "Der findes allerede et holde med dette navn";
-            setError(errorString);
-        }
-
-        if (error.length === 0) {
-            navigate("/teams/" + name);
-        }
+        createTeam(name, currentUser?.id ?? -1).then(data => {
+            navigate("/teams/" + data.data?.createTeam?.id);
+        })
     }
 
     return <Dialog open={props.open}
@@ -93,7 +88,7 @@ export const CreateTeamDialog = (props: CreateTeamDialogProps): JSX.Element => {
         </DialogContent>
         <DialogActions>
             <Button onClick={() => props.setOpen(false)}>Luk</Button>
-            <Button color={"primary"} onClick={() => createTeam()}>Opret</Button>
+            <Button color={"primary"} onClick={handleCreate}>Opret</Button>
         </DialogActions>
     </Dialog>
 }

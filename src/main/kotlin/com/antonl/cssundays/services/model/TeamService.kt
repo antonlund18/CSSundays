@@ -13,13 +13,12 @@ import javax.transaction.Transactional
 @Service
 @Transactional
 class TeamService(val teamRepository: TeamRepository) {
-    fun saveTeam(team: Team) {
-        teamRepository.save(team);
+    fun saveTeam(team: Team): Team {
+        return teamRepository.save(team);
     }
 
     suspend fun createTeam(name: String, owner: User): Team? {
         val team = Team(name = name, owner = owner);
-        saveTeam(team)
         return team;
     }
 
@@ -37,7 +36,6 @@ class TeamService(val teamRepository: TeamRepository) {
 
     fun addPlayerToTeam(user: User, team: Team) {
         team.users.add(user);
-        saveTeam(team);
     }
 
     fun incrementWins(team: Team) {

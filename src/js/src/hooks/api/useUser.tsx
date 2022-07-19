@@ -1,12 +1,10 @@
 import {Constants} from "../../util/Constants";
 import {
-    ObjectType,
     useCreateUserMutation,
     useGetCurrentUserQuery,
     useGetUserByIdQuery,
     useLoginUserMutation,
     User,
-    useSetPictureAndGetPresignedRequestMutation
 } from "../../codegen/generated-types";
 
 export const useGetCurrentUser = (): { currentUser: User, isLoggedIn: boolean } => {

@@ -45,7 +45,7 @@ export const TeamsPage = (): JSX.Element => {
         return <CircularProgress/>
     }
 
-    teams.sort((team1, team2) => {
+    teams.slice().sort((team1, team2) => {
         return team1.wins > team2.wins ? 1 : -1
     })
 
@@ -69,7 +69,7 @@ export const TeamsPage = (): JSX.Element => {
                     <TableCell className={classes.teamsPageInfoCell}>Wins</TableCell>
                     <TableCell className={classes.teamsPageInfoCell}>Losses</TableCell>
                     <TableCell className={classes.teamsPageInfoCell}>Winrate</TableCell>
-                    <TableCell className={classes.teamsPageInfoCell}>Point</TableCell>
+                    {/*<TableCell className={classes.teamsPageInfoCell}>Point</TableCell>*/}
                 </TableRow>
             </TableHead>
 

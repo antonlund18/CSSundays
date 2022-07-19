@@ -44,3 +44,16 @@ gql`
         }
     }
 `;
+
+gql`
+    mutation createTeam($name: String!, $ownerId: Int!) {
+        createTeam(name: $name, ownerId: $ownerId) {
+            id,
+            users {
+                id
+                playertag
+                picture
+            }
+        }
+    }
+`
