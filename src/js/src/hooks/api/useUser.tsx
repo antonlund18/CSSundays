@@ -56,11 +56,13 @@ export const useMutateUser = () => {
             }
         }).then((data) => {
             localStorage.setItem(Constants.JWT_TOKEN, data.data?.loginUser ?? "");
+            window.location.reload();
         })
     }
 
     const logOutUser = () => {
         localStorage.removeItem(Constants.JWT_TOKEN);
+        window.location.reload();
     }
 
     return {
