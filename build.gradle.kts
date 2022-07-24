@@ -1,19 +1,26 @@
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
+apply("src/js/build.gradle")
+
 plugins {
     id("org.springframework.boot") version "2.6.4"
     id("io.spring.dependency-management") version "1.0.11.RELEASE"
+    id("com.github.node-gradle.node") version "3.4.0"
     kotlin("jvm") version "1.6.10"
     kotlin("plugin.spring") version "1.6.10"
     kotlin("plugin.jpa") version "1.6.10"
 }
 
 group = "com.antonl.cssundays"
-version = "0.0.1-SNAPSHOT"
+version = "0.0.1"
 java.sourceCompatibility = JavaVersion.VERSION_17
 
 repositories {
     mavenCentral()
+}
+
+springBoot {
+    mainClass.set("com.antonl.cssundays.CssundaysApplication")
 }
 
 dependencies {
@@ -27,14 +34,14 @@ dependencies {
     // BCrypt
     implementation("com.ToxicBakery.library.bcrypt:bcrypt:1.0.9")
 
-	// Arrow
-	implementation("io.arrow-kt:arrow-core:1.1.2")
+    // Arrow
+    implementation("io.arrow-kt:arrow-core:1.1.2")
 
     // Spring
     implementation("org.springframework.boot:spring-boot-starter-data-jpa")
 
-	// Amazon Web Services
-	implementation("aws.sdk.kotlin:s3:0.9.4-beta")
+    // Amazon Web Services
+    implementation("aws.sdk.kotlin:s3:0.9.4-beta")
 
     // GraphQL
     implementation("com.expediagroup:graphql-kotlin-spring-server:6.0.0-alpha.5")
@@ -59,9 +66,16 @@ tasks.withType<Test> {
 }
 
 tasks.register<JavaExec>("GenerateGraphQLSchema") {
-    dependsOn(":compileKotlin")
-    inputs.dir("src/main/kotlin/com/antonl/cssundays/graphql/server")
-    outputs.file("schema.graphql")
     classpath = sourceSets.main.get().runtimeClasspath
     mainClass.set("com.antonl.cssundays.graphql.server.SchemaGenerator")
+    inputs.dir("src/main/kotlin/com/antonl/cssundays/graphql/server")
+    outputs.file("schema.graphql")
+    outputs.upToDateWhen { false }
+}
+
+tasks.register("devBuild") {
+    dependsOn(":build")
+    dependsOn(":compileKotlin")
+    dependsOn("npmInstall")
+    dependsOn("GenerateGraphQLSchema")
 }

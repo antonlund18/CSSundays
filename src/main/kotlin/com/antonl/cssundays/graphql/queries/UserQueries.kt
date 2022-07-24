@@ -16,11 +16,11 @@ class UserQueries : Query {
     @Autowired
     private lateinit var userService: UserService;
 
+    @AuthorizationDirective(role = UserRole.ADMIN)
     suspend fun getUserById(id: Int): User? {
         return userService.findUserById(id);
     }
 
-    @AuthorizationDirective(role = UserRole.USER)
     suspend fun getCurrentUser(token: String): User? {
         if (!AuthorizationService.isValidToken(token)) return null;
         val userId = AuthorizationService.getIssuer(token)?.toInt() ?: return null;

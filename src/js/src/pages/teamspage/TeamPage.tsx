@@ -2,7 +2,7 @@ import * as React from "react";
 import {useEffect, useState} from "react";
 import {useNavigate, useParams} from "react-router-dom";
 import {CenteredPage} from "../../components/CenteredPage";
-import {Box, Button, Divider as MuiDivider, Grid, makeStyles, Theme, Typography} from "@material-ui/core";
+import {Box, Button, Divider as MuiDivider, Grid, makeStyles, Theme, Tooltip, Typography} from "@material-ui/core";
 import {calculateWinrate} from "../../helpers/helpers";
 import {Divider as CSDivider} from "../../components/Divider";
 import {useGetTeamById, useMutateTeam} from "../../hooks/api/useTeam";
@@ -61,7 +61,8 @@ export const TeamPage = (): JSX.Element => {
 
     const {team} = useGetTeamById(parseInt(urlParams.teamId ?? ""))
     const {setAndUploadPicture} = useSharedTeamAndUser();
-    const {incrementWins} = useMutateTeam();;
+    const {incrementWins, incrementLosses} = useMutateTeam();
+    ;
 
     const {currentUser} = useGetCurrentUser();
     const isCurrenUserOwner = currentUser?.id === team?.owner?.id;
@@ -116,7 +117,10 @@ export const TeamPage = (): JSX.Element => {
         >
             <Grid item xs={12} md={4}>
                 <Box boxShadow={3} className={classes.teamPicture} onClick={handleFileSelect}>
-                    <img src={getPictureLinkFromKey(team?.picture ?? "", ObjectType.Team)} width={"100%"} height={"100%"}/>
+                    <Tooltip title={"Upload billede"} disableHoverListener={!isCurrenUserOwner} arrow>
+                        <img src={getPictureLinkFromKey(team?.picture ?? "", ObjectType.Team)} width={"100%"}
+                             height={"100%"}/>
+                    </Tooltip>
                 </Box>
             </Grid>
             <Grid item xs={12} md={8}>
@@ -145,7 +149,10 @@ export const TeamPage = (): JSX.Element => {
                             <Typography variant={"subtitle1"}>{calculateWinrate(team?.wins, team?.losses)}</Typography>
                         </div>
                         <MuiDivider className={classes.MuiDivider}/>
-                        <Button onClick={() => incrementWins(team?.id ?? -1)} color={"primary"} variant={"contained"}>+1 wins</Button>
+                        <Button onClick={() => incrementWins(team?.id ?? -1)} color={"primary"} variant={"contained"}>+1
+                            wins</Button>
+                        <Button onClick={() => incrementLosses(team?.id ?? -1)} color={"primary"} variant={"contained"}>+1
+                            losses</Button>
                     </div>
                 </div>
             </Grid>

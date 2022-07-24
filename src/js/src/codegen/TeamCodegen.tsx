@@ -46,6 +46,15 @@ gql`
 `;
 
 gql`
+    mutation incrementLosses($teamId: Int!) {
+        incrementLosses(teamId: $teamId) {
+            id,
+            losses
+        }
+    }
+`;
+
+gql`
     mutation createTeam($name: String!, $ownerId: Int!) {
         createTeam(name: $name, ownerId: $ownerId) {
             id,

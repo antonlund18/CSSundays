@@ -2,11 +2,11 @@ import * as React from "react";
 import {useState} from "react";
 import {
     Button,
-    CircularProgress,
+    CircularProgress, Grid,
     makeStyles,
     Table,
     TableBody,
-    TableCell,
+    TableCell, TableContainer,
     TableHead,
     TableRow,
     Typography
@@ -56,35 +56,43 @@ export const TeamsPage = (): JSX.Element => {
     return <CenteredPage>
         <div className={classes.pageTitleContainer}>
             <Typography variant={"h2"} color={"primary"}>Hold</Typography>
-            <Button color={"primary"} variant={"outlined"} style={{marginBottom: -theme.spacing(1)}} onClick={() => setCreateDialogOpen(true)}>
-                Opret hold
-            </Button>
         </div>
         <Divider/>
-        <Table>
-            <TableHead>
-                <TableRow>
-                    <TableCell className={classes.teamsPageInfoCell}/>
-                    <TableCell>Navn</TableCell>
-                    <TableCell className={classes.teamsPageInfoCell}>Wins</TableCell>
-                    <TableCell className={classes.teamsPageInfoCell}>Losses</TableCell>
-                    <TableCell className={classes.teamsPageInfoCell}>Winrate</TableCell>
-                    {/*<TableCell className={classes.teamsPageInfoCell}>Point</TableCell>*/}
-                </TableRow>
-            </TableHead>
-
-            <TableBody>
-                {teamsSorted.map((team: Team, index: number) => {
-                    return <TableRow key={team.name} className={classes.teamTableRow} onClick={() => viewTeamPage(team)}>
-                        <TableCell align={"right"}><Typography variant={"h4"}>{index + 1 + "."}</Typography></TableCell>
-                        <TableCell><Typography variant={"h4"}>{team.name}</Typography></TableCell>
-                        <TableCell align={"right"}><Typography variant={"h4"}>{team.wins}</Typography></TableCell>
-                        <TableCell align={"right"}><Typography variant={"h4"}>{team.losses}</Typography></TableCell>
-                        <TableCell align={"right"}><Typography variant={"h4"}>{calculateWinrate(team.wins, team.losses)}</Typography></TableCell>
+        <TableContainer style={{maxHeight: "70vh"}}>
+            <Table stickyHeader>
+                <TableHead>
+                    <TableRow>
+                        <TableCell className={classes.teamsPageInfoCell}/>
+                        <TableCell>Navn</TableCell>
+                        <TableCell className={classes.teamsPageInfoCell}>Wins</TableCell>
+                        <TableCell className={classes.teamsPageInfoCell}>Losses</TableCell>
+                        <TableCell className={classes.teamsPageInfoCell}>Winrate</TableCell>
+                        {/*<TableCell className={classes.teamsPageInfoCell}>Point</TableCell>*/}
                     </TableRow>
-                })}
-            </TableBody>
-        </Table>
+                </TableHead>
+
+                <TableBody>
+                    {teamsSorted.map((team: Team, index: number) => {
+                        return <TableRow key={team.name} className={classes.teamTableRow}
+                                         onClick={() => viewTeamPage(team)}>
+                            <TableCell align={"right"}><Typography
+                                variant={"h4"}>{index + 1 + "."}</Typography></TableCell>
+                            <TableCell><Typography variant={"h4"}>{team.name}</Typography></TableCell>
+                            <TableCell align={"right"}><Typography variant={"h4"}>{team.wins}</Typography></TableCell>
+                            <TableCell align={"right"}><Typography variant={"h4"}>{team.losses}</Typography></TableCell>
+                            <TableCell align={"right"}><Typography
+                                variant={"h4"}>{calculateWinrate(team.wins, team.losses)}</Typography></TableCell>
+                        </TableRow>
+                    })}
+                </TableBody>
+            </Table>
+        </TableContainer>
+        <Grid container justifyContent={"flex-end"}>
+            <Button color={"primary"} variant={"contained"} style={{margin: theme.spacing(1), alignSelf: "end"}}
+                    onClick={() => setCreateDialogOpen(true)}>
+                Opret hold
+            </Button>
+        </Grid>
         <CreateTeamDialog open={createDialogOpen} setOpen={setCreateDialogOpen}/>
     </CenteredPage>
 }

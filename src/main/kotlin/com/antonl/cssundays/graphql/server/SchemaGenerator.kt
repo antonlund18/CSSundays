@@ -1,8 +1,10 @@
 package com.antonl.cssundays.graphql.server
 
+import com.antonl.cssundays.graphql.mutations.InviteToTeamMutations
 import com.antonl.cssundays.graphql.mutations.SharedTeamAndUserMutations
 import com.antonl.cssundays.graphql.mutations.TeamMutations
 import com.antonl.cssundays.graphql.mutations.UserMutations
+import com.antonl.cssundays.graphql.queries.InviteToTeamQueries
 import com.antonl.cssundays.graphql.queries.TeamQueries
 import com.antonl.cssundays.graphql.queries.UserQueries
 import com.expediagroup.graphql.generator.SchemaGeneratorConfig
@@ -36,8 +38,17 @@ abstract class SchemaGenerator {
         private fun generateSchema(): GraphQLSchema {
             return toSchema(
                 config = SchemaGeneratorConfig(supportedPackages = listOf("com.antonl.cssundays")),
-                queries = listOf(TopLevelObject(UserQueries()), TopLevelObject(TeamQueries())),
-                mutations = listOf(TopLevelObject(UserMutations()), TopLevelObject(TeamMutations()), TopLevelObject(SharedTeamAndUserMutations()))
+                queries = listOf(
+                    TopLevelObject(UserQueries()),
+                    TopLevelObject(TeamQueries()),
+                    TopLevelObject(InviteToTeamQueries())
+                ),
+                mutations = listOf(
+                    TopLevelObject(UserMutations()),
+                    TopLevelObject(TeamMutations()),
+                    TopLevelObject(SharedTeamAndUserMutations()),
+                    TopLevelObject(InviteToTeamMutations())
+                )
             )
         }
     }

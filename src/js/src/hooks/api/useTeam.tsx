@@ -3,6 +3,7 @@ import {
     useCreateTeamMutation,
     useGetAllTeamsQuery,
     useGetTeamByIdQuery,
+    useIncrementLossesMutation,
     useIncrementWinsMutation
 } from "../../codegen/generated-types";
 
@@ -25,6 +26,7 @@ export const useGetTeamById = (id: number) => {
 export const useMutateTeam = () => {
     const [createTeamMutation] = useCreateTeamMutation();
     const [incrementWinsMutation] = useIncrementWinsMutation();
+    const [incrementLossesMutation] = useIncrementLossesMutation();
 
     const createTeam = (name: string, ownerId: number) => {
         return createTeamMutation({
@@ -39,8 +41,13 @@ export const useMutateTeam = () => {
         return incrementWinsMutation({variables: {teamId}})
     }
 
+    const incrementLosses = (teamId: number) => {
+        return incrementLossesMutation({variables: {teamId}})
+    }
+
     return {
         createTeam,
-        incrementWins
+        incrementWins,
+        incrementLosses
     }
 }

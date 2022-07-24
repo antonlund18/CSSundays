@@ -1,6 +1,6 @@
 import * as React from "react";
 import {useEffect, useState} from "react";
-import {Box, Button, Grid, makeStyles, Theme, Typography} from "@material-ui/core";
+import {Box, Button, Grid, makeStyles, Theme, Tooltip, Typography} from "@material-ui/core";
 import {CenteredPage} from "../../components/CenteredPage";
 import {useParams} from "react-router-dom";
 import {Divider as CSDivider} from "../../components/Divider";
@@ -96,7 +96,9 @@ export const PlayerPage = (): JSX.Element => {
         >
             <Grid item xs={12} md={4}>
                 <Box boxShadow={3} className={classes.playerPicture} onClick={handleFileSelect}>
-                    <img src={getPictureLinkFromKey(user.picture, ObjectType.User)} width={"100%"} height={"100%"}/>
+                    <Tooltip title={"Upload billede"} disableHoverListener={!isCurrentUser} arrow>
+                        <img src={getPictureLinkFromKey(user.picture, ObjectType.User)} width={"100%"} height={"100%"}/>
+                    </Tooltip>
                 </Box>
             </Grid>
             <Grid item xs={12} md={8}>
