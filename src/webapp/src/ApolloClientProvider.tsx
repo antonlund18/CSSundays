@@ -5,7 +5,7 @@ import {Constants} from "./util/Constants";
 const DEV_DOMAIN = "http://localhost:8080/graphql"
 const PROD_DOMAIN = "http://cssundays.com:8080/graphql"
 const httpLink = createHttpLink({
-    uri: process.env.NODE_ENV === "development" ? 'http://localhost:8080/graphql' : 'http://cssundays.com:8080/graphql',
+    uri: process.env.NODE_ENV === "development" ? DEV_DOMAIN : PROD_DOMAIN,
 });
 
 

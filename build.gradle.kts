@@ -1,5 +1,4 @@
 import com.github.gradle.node.npm.task.NpmTask
-import com.palantir.gradle.docker.DockerExtension
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
@@ -9,8 +8,6 @@ plugins {
     kotlin("jvm") version "1.6.10"
     kotlin("plugin.spring") version "1.6.10"
     kotlin("plugin.jpa") version "1.6.10"
-    id("com.palantir.docker") version "0.22.1"
-    id("com.palantir.docker-run") version "0.22.1"
 }
 
 group = "com.antonl.cssundays"
@@ -79,48 +76,5 @@ tasks.register("devBuild") {
     dependsOn(":build")
     dependsOn(":compileKotlin")
     dependsOn("npmInstall")
-    dependsOn("GenerateGraphQLSchema")
+    dependsOn("generateGraphQLSchema")
 }
-
-//tasks.register("dockerFrontend") {
-//    docker {
-//        name = "${project.name}-frontend:${project.version}"
-//        setDockerfile(File("image-frontend.dockerfile"))
-//    }
-//}
-//
-//tasks.register("dockerBackend") {
-//    docker {
-//        name = "${project.name}-backend:${project.version}"
-//        setDockerfile(File("image-backend.dockerfile"))
-//        files(File("build/libs/cssundays-0.0.1.jar"))
-//    }
-//}
-//
-//tasks.register("dockerBuild") {
-//    dependsOn("dockerFrontend")
-//    dependsOn("dockerBackend")
-//}
-//
-//tasks.register("dockerRunBackend") {
-//    dockerRun {
-//        name = "${project.name}-backend"
-//        image = " ${project.name}-backend:${project.version}"
-//        this.ports("8080:8090")
-//        clean = true
-//    }
-//}
-//
-//tasks.register("dockerRunFrontend") {
-//    dockerRun {
-//        name = "${project.name}-frontend"
-//        image = " ${project.name}-frontend:${project.version}"
-//        this.ports("3000:80")
-//        clean = true
-//    }
-//}
-//
-//tasks.register("dockerRunStack") {
-//    dependsOn(":dockerRunFrontend")
-//    dependsOn(":dockerRunBackend")
-//}
