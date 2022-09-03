@@ -19,7 +19,7 @@ class User(
 
     var password: String = "",
 
-    var picture: String = "",
+    var picture: String? = null,
 
     var role: UserRole = UserRole.USER,
 

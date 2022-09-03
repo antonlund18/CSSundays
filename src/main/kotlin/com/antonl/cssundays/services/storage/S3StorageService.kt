@@ -5,9 +5,6 @@ import aws.sdk.kotlin.services.s3.model.DeleteObjectRequest
 import aws.sdk.kotlin.services.s3.model.PutObjectRequest
 import aws.sdk.kotlin.services.s3.presign
 import aws.smithy.kotlin.runtime.http.request.HttpRequest
-import com.antonl.cssundays.graphql.dto.ObjectType
-import org.springframework.http.HttpStatus
-import org.springframework.http.ResponseEntity
 
 class S3StorageService {
     companion object {

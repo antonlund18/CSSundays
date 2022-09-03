@@ -1,8 +1,6 @@
 package com.antonl.cssundays.graphql.queries
 
-import com.antonl.cssundays.graphql.server.directives.AuthorizationDirective
 import com.antonl.cssundays.model.User
-import com.antonl.cssundays.model.UserRole
 import com.antonl.cssundays.services.auth.AuthorizationService
 import com.antonl.cssundays.services.model.UserService
 import com.expediagroup.graphql.server.operations.Query
@@ -16,7 +14,6 @@ class UserQueries : Query {
     @Autowired
     private lateinit var userService: UserService;
 
-    @AuthorizationDirective(role = UserRole.ADMIN)
     suspend fun getUserById(id: Int): User? {
         return userService.findUserById(id);
     }

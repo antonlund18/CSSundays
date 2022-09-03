@@ -19,12 +19,20 @@ class InviteToTeamService(val inviteToTeamRepository: InviteToTeamRepository, va
         return inviteToTeamRepository.findInviteToTeamById(id);
     }
 
+    fun findAllInviteToTeamsByPlayer(player: User): List<InviteToTeam> {
+        return inviteToTeamRepository.findInviteToTeamsByPlayer(player);
+    }
+
+    fun findAllUnseenInviteToTeamsByPlayer(player: User): List<InviteToTeam> {
+        return inviteToTeamRepository.findInviteToTeamByPlayerAndSeen(player, false)
+    }
+
     fun findInviteToTeamsByPlayerAndStatus(player: User, status: InvitationStatus): List<InviteToTeam> {
         return inviteToTeamRepository.findInviteToTeamsByPlayerAndStatus(player, status);
     }
 
-    fun createInviteToTeam(player: User, team: Team): InviteToTeam {
-        val inviteToTeam = InviteToTeam(team = team, player = player)
+    fun createInviteToTeam(player: User, team: Team, sender: User): InviteToTeam {
+        val inviteToTeam = InviteToTeam(team = team, player = player, sender = sender)
         return saveInviteToTeam(inviteToTeam);
     }
 
@@ -38,6 +46,11 @@ class InviteToTeamService(val inviteToTeamRepository: InviteToTeamRepository, va
 
     fun declineInvite(inviteToTeam: InviteToTeam): InviteToTeam {
         inviteToTeam.status = InvitationStatus.DECLINED;
+        return saveInviteToTeam(inviteToTeam);
+    }
+
+    fun markAsSeen(inviteToTeam: InviteToTeam): InviteToTeam {
+        inviteToTeam.seen = true;
         return saveInviteToTeam(inviteToTeam);
     }
 }

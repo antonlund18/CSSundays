@@ -1,0 +1,16 @@
+version: '3.8'
+services:
+  backend:
+    build:
+      dockerfile: image-backend.dockerfile
+  frontend:
+    build:
+      dockerfile: image-frontend.dockerfile
+    ports:
+      - "3000:3000"
+  proxy:
+    image: nginx:1.17
+    ports:
+      - "8080:80"
+    volumes:
+      - ./nginx/default.conf/

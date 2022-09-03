@@ -1,6 +1,6 @@
+import com.github.gradle.node.npm.task.NpmTask
+import com.palantir.gradle.docker.DockerExtension
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
-
-apply("src/js/build.gradle")
 
 plugins {
     id("org.springframework.boot") version "2.6.4"
@@ -9,6 +9,8 @@ plugins {
     kotlin("jvm") version "1.6.10"
     kotlin("plugin.spring") version "1.6.10"
     kotlin("plugin.jpa") version "1.6.10"
+    id("com.palantir.docker") version "0.22.1"
+    id("com.palantir.docker-run") version "0.22.1"
 }
 
 group = "com.antonl.cssundays"
@@ -20,7 +22,7 @@ repositories {
 }
 
 springBoot {
-    mainClass.set("com.antonl.cssundays.CssundaysApplication")
+    mainClass.set("com.antonl.cssundays.CssundaysApplicationKt")
 }
 
 dependencies {
@@ -65,7 +67,7 @@ tasks.withType<Test> {
     useJUnitPlatform()
 }
 
-tasks.register<JavaExec>("GenerateGraphQLSchema") {
+tasks.register<JavaExec>("generateGraphQLSchema") {
     classpath = sourceSets.main.get().runtimeClasspath
     mainClass.set("com.antonl.cssundays.graphql.server.SchemaGenerator")
     inputs.dir("src/main/kotlin/com/antonl/cssundays/graphql/server")
@@ -79,3 +81,46 @@ tasks.register("devBuild") {
     dependsOn("npmInstall")
     dependsOn("GenerateGraphQLSchema")
 }
+
+//tasks.register("dockerFrontend") {
+//    docker {
+//        name = "${project.name}-frontend:${project.version}"
+//        setDockerfile(File("image-frontend.dockerfile"))
+//    }
+//}
+//
+//tasks.register("dockerBackend") {
+//    docker {
+//        name = "${project.name}-backend:${project.version}"
+//        setDockerfile(File("image-backend.dockerfile"))
+//        files(File("build/libs/cssundays-0.0.1.jar"))
+//    }
+//}
+//
+//tasks.register("dockerBuild") {
+//    dependsOn("dockerFrontend")
+//    dependsOn("dockerBackend")
+//}
+//
+//tasks.register("dockerRunBackend") {
+//    dockerRun {
+//        name = "${project.name}-backend"
+//        image = " ${project.name}-backend:${project.version}"
+//        this.ports("8080:8090")
+//        clean = true
+//    }
+//}
+//
+//tasks.register("dockerRunFrontend") {
+//    dockerRun {
+//        name = "${project.name}-frontend"
+//        image = " ${project.name}-frontend:${project.version}"
+//        this.ports("3000:80")
+//        clean = true
+//    }
+//}
+//
+//tasks.register("dockerRunStack") {
+//    dependsOn(":dockerRunFrontend")
+//    dependsOn(":dockerRunBackend")
+//}

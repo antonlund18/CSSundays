@@ -38,9 +38,9 @@ class UserService(val userRepository: UserRepository) {
     }
 
     suspend fun deletePicture(user: User): User? {
-        if (!user.picture.equals("")) {
+        if (!user.picture.equals(null)) {
             UserStorageService.deleteImage(user.picture);
-            user.picture = "";
+            user.picture = null;
             saveUser(user);
         }
         return user;
