@@ -20,7 +20,6 @@ phases:
       - echo Build completed on `date`
       - echo Pushing the Docker images...
       - docker push $REPOSITORY_URI
-      - echo Writing image definitions file...
 artifacts:
   files:
     - build/libs/cssundays-0.0.1.jar
