@@ -3,7 +3,6 @@ version: 0.2
 phases:
   pre_build:
     commands:
-      - gradle clean
       - echo Logging in to Amazon ECR...
       - aws --version
       - $(aws ecr get-login --region eu-central-1 --no-include-email)
