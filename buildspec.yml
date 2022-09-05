@@ -8,25 +8,19 @@ phases:
       - aws --version
       - aws ecr get-login-password --region eu-central-1 | docker login --username AWS --password-stdin 695646385237.dkr.ecr.eu-central-1.amazonaws.com
       - REPOSITORY_URI=695646385237.dkr.ecr.eu-central-1.amazonaws.com/cssundays
-      - COMMIT_HASH=$(echo $CODEBUILD_RESOLVED_SOURCE_VERSION | cut -c 1-7)
-      - IMAGE_TAG=build-$(echo $CODEBUILD_BUILD_ID | awk -F":" '{print $2}')
   build:
     commands:
       - echo Build started on `date`
       - echo Building the Docker image...
       - gradle build
-      - docker build -f image-backend.dockerfile -t $REPOSITORY_URI:latest .
-      - docker tag $REPOSITORY_URI:latest $REPOSITORY_URI:$IMAGE_TAG
+      - docker build -f image-backend.dockerfile -t cssundays-backend .
+      - docker tag cssundays-backend $REPOSITORY_URI
   post_build:
     commands:
       - echo Build completed on `date`
       - echo Pushing the Docker images...
-      - docker push $REPOSITORY_URI:latest
-      - docker push $REPOSITORY_URI:$IMAGE_TAG
+      - docker push $REPOSITORY_URI
       - echo Writing image definitions file...
-      - printf '[{"name":"CsSundays","imageUri":"%s"}]' $REPOSITORY_URI:$IMAGE_TAG > imagedefinitions.json
-      - cat imagedefinitions.json
 artifacts:
   files:
-    - imagedefinitions.json
     - build/libs/cssundays-0.0.1.jar
