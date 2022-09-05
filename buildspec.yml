@@ -8,7 +8,7 @@ phases:
       - aws --version
       - aws ecr get-login-password --region eu-central-1 | docker login --username AWS --password-stdin 695646385237.dkr.ecr.eu-central-1.amazonaws.com
       - REPOSITORY_URI=695646385237.dkr.ecr.eu-central-1.amazonaws.com/cssundays
-      - IMAGE_TAG=build-$(echo $CODEBUILD_BUILD_ID | awk -F":" '{print $2}')
+      - IMAGE_TAG=latest
   build:
     commands:
       - echo Build started on `date`
@@ -21,7 +21,7 @@ phases:
       - echo Build completed on `date`
       - echo Pushing the Docker images..
       - docker push $REPOSITORY_URI
-      - printf '[{"name":"cssundays-backend","imageUri":"%s"}]' $REPOSITORY_URI:$IMAGE_TAG > imagedefinitions.json
+      - printf '[{"name":"Backend","imageUri":"%s"}]' $REPOSITORY_URI:$IMAGE_TAG > imagedefinitions.json
       - cat imagedefinitions.json
 artifacts:
   files:
