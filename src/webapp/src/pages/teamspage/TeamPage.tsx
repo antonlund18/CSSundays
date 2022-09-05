@@ -30,13 +30,13 @@ const useStyles = makeStyles<Theme, StylesProps>(theme => ({
         height: "132px",
         width: "100%",
         margin: theme.spacing(1),
-        padding: theme.spacing(2),
+        padding: theme.spacing(1),
     },
     teamPicture: props => ({
         width: "344px",
         height: "344px",
         margin: theme.spacing(1),
-        padding: theme.spacing(2),
+        padding: theme.spacing(1),
         cursor: props.isCurrentUserOwner ? "pointer" : "default"
     }),
     teamStatsContainer: {
@@ -128,11 +128,6 @@ export const TeamPage = (): JSX.Element => {
                         return renderPlayerBox(user as User)
                     })}
                     <div className={classes.teamStatsContainer}>
-                        {/*<div className={classes.teamStats}>*/}
-                        {/*    <Typography variant={"subtitle1"}>Point</Typography>*/}
-                        {/*    <Typography variant={"subtitle1"}>{team.points}</Typography>*/}
-                        {/*</div>*/}
-                        {/*<MuiDivider className={classes.MuiDivider}/>*/}
                         <div className={classes.teamStats}>
                             <Typography variant={"subtitle1"}>Wins</Typography>
                             <Typography variant={"subtitle1"}>{team?.wins}</Typography>
