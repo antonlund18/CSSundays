@@ -29,10 +29,6 @@ firebase.json
 
 /template
 
-src/img/
-src/css/
-src/font/
-
 schema.graphql
 generated-types.ts
 
