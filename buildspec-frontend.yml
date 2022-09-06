@@ -1,0 +1,26 @@
+version: 0.2
+
+phases:
+  pre_build:
+    commands:
+      - echo Logging in to Amazon ECR...
+      - aws --version
+      - aws ecr get-login-password --region eu-central-1 | docker login --username AWS --password-stdin 695646385237.dkr.ecr.eu-central-1.amazonaws.com
+      - REPOSITORY_URI=695646385237.dkr.ecr.eu-central-1.amazonaws.com/cssundays-frontend
+      - IMAGE_TAG=latest
+  build:
+    commands:
+      - echo Build started on `date`
+      - echo Building the Docker image...
+      - docker build -f image-frontend.dockerfile -t cssundays-frontend .
+      - docker tag cssundays-frontend $REPOSITORY_URI
+  post_build:
+    commands:
+      - echo Build completed on `date`
+      - echo Pushing the Docker images..
+      - docker push $REPOSITORY_URI
+      - printf '[{"name":"Backend","imageUri":"%s"}]' $REPOSITORY_URI:$IMAGE_TAG > imagedefinitions.json
+      - cat imagedefinitions.json
+artifacts:
+  files:
+    - imagedefinitions.json
