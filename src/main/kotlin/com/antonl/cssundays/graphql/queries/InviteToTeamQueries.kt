@@ -20,16 +20,11 @@ class InviteToTeamQueries : Query {
 
     suspend fun findPendingInvitesForPlayer(playerId: Int): List<InviteToTeam> {
         val user = userService.findUserById(playerId) ?: return listOf();
-        return inviteToTeamService.findInviteToTeamsByPlayerAndStatus(user, InvitationStatus.PENDING)
+        return inviteToTeamService.findInviteToTeamsByRecipientAndStatus(user, InvitationStatus.PENDING)
     }
 
     suspend fun findAllInvitesForPlayer(playerId: Int): List<InviteToTeam> {
         val user = userService.findUserById(playerId) ?: return listOf();
-        return inviteToTeamService.findAllInviteToTeamsByPlayer(user);
-    }
-
-    suspend fun findAllUnseenInvitesForPlayer(playerId: Int): List<InviteToTeam> {
-        val user = userService.findUserById(playerId) ?: return listOf();
-        return inviteToTeamService.findAllUnseenInviteToTeamsByPlayer(user);
+        return inviteToTeamService.findAllInviteToTeamsByRecipient(user);
     }
 }

@@ -27,7 +27,7 @@ class NotificationService(
     }
 
     fun getUnseenNotifications(user: User): List<Notification> {
-        return notificationRepository.findNotificationsByUserAndSeen(user, false)
+        return notificationRepository.findNotificationsByRecipientAndIsSeen(user, false)
     }
 
     fun viewAllNotifications(user: User) {

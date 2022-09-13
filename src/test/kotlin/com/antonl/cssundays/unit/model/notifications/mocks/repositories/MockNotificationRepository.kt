@@ -6,10 +6,10 @@ import com.antonl.cssundays.repositories.NotificationRepository
 import java.util.*
 
 class MockNotificationRepository(var notifications: MutableList<Notification> = mutableListOf()) : NotificationRepository {
-    override fun findNotificationsByUserAndSeen(user: User, isSeen: Boolean): List<Notification> {
+    override fun findNotificationsByRecipientAndIsSeen(recipient: User, isSeen: Boolean): List<Notification> {
         return notifications
             .stream()
-            .filter { notification -> notification.recipient.equals(user) && notification.isSeen.equals(isSeen) }
+            .filter { notification -> notification.recipient.equals(recipient) && notification.isSeen.equals(isSeen) }
             .toList()
     }
 

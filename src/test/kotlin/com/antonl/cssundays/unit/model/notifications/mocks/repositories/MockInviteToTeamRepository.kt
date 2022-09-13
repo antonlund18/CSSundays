@@ -11,15 +11,11 @@ class MockInviteToTeamRepository(var invitesToTeams: MutableList<InviteToTeam> =
         TODO("Not yet implemented")
     }
 
-    override fun findInviteToTeamsByPlayerAndStatus(player: User, status: InvitationStatus): List<InviteToTeam> {
+    override fun findInviteToTeamsByRecipientAndStatus(player: User, status: InvitationStatus): List<InviteToTeam> {
         TODO("Not yet implemented")
     }
 
     override fun findInviteToTeamById(id: Int): InviteToTeam? {
-        TODO("Not yet implemented")
-    }
-
-    override fun findInviteToTeamByPlayerAndSeen(player: User, seen: Boolean): List<InviteToTeam> {
         TODO("Not yet implemented")
     }
 

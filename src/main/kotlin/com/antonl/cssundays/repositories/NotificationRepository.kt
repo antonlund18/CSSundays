@@ -5,6 +5,6 @@ import com.antonl.cssundays.model.notifications.Notification
 import org.springframework.data.repository.CrudRepository
 
 interface NotificationRepository : CrudRepository<Notification, Int> {
-    fun findNotificationsByUserAndSeen(user: User, isSeen: Boolean): List<Notification>
+    fun findNotificationsByRecipientAndIsSeen(recipient: User, isSeen: Boolean): List<Notification>
     fun findNotificationById(id: Int): Notification?
 }

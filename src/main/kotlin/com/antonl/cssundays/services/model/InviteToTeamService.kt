@@ -22,16 +22,12 @@ class InviteToTeamService(
         return inviteToTeamRepository.findInviteToTeamById(id);
     }
 
-    fun findAllInviteToTeamsByPlayer(player: User): List<InviteToTeam> {
-        return inviteToTeamRepository.findInviteToTeamsByPlayer(player);
+    fun findAllInviteToTeamsByRecipient(recipient: User): List<InviteToTeam> {
+        return inviteToTeamRepository.findInviteToTeamsByRecipient(recipient);
     }
 
-    fun findAllUnseenInviteToTeamsByPlayer(player: User): List<InviteToTeam> {
-        return inviteToTeamRepository.findInviteToTeamByPlayerAndSeen(player, false)
-    }
-
-    fun findInviteToTeamsByPlayerAndStatus(player: User, status: InvitationStatus): List<InviteToTeam> {
-        return inviteToTeamRepository.findInviteToTeamsByPlayerAndStatus(player, status);
+    fun findInviteToTeamsByRecipientAndStatus(player: User, status: InvitationStatus): List<InviteToTeam> {
+        return inviteToTeamRepository.findInviteToTeamsByRecipientAndStatus(player, status);
     }
 
     fun createInviteToTeam(id: Int = -1, recipient: User, team: Team, sender: User): InviteToTeam {
