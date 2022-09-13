@@ -7,7 +7,7 @@ import com.antonl.cssundays.repositories.InviteToTeamRepository
 import java.util.*
 
 class MockInviteToTeamRepository(var invitesToTeams: MutableList<InviteToTeam> = mutableListOf()) : InviteToTeamRepository {
-    override fun findInviteToTeamsByPlayer(player: User): List<InviteToTeam> {
+    override fun findInviteToTeamsByRecipient(recipient: User): List<InviteToTeam> {
         TODO("Not yet implemented")
     }
 
