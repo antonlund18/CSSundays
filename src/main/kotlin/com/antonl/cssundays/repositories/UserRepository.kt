@@ -1,6 +1,6 @@
 package com.antonl.cssundays.repositories
 
-import com.antonl.cssundays.model.User
+import com.antonl.cssundays.model.core.User
 import org.springframework.data.repository.CrudRepository
 
 interface UserRepository : CrudRepository<User, Int> {

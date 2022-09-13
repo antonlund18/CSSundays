@@ -1,4 +1,4 @@
-package com.antonl.cssundays.model
+package com.antonl.cssundays.model.core
 
 import com.antonl.cssundays.extensions.toSlug
 import java.time.LocalDateTime

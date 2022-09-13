@@ -8,13 +8,14 @@ import aws.smithy.kotlin.runtime.http.request.HttpRequest
 
 class S3StorageService {
     companion object {
+        private const val ONE_DAY = 1000L * 60L * 60L * 24L;
 
         @Throws(Exception::class)
         suspend fun getPresignedUploadRequest(bucketName: String, objectKey: String): HttpRequest {
             return PutObjectRequest {
                 bucket = bucketName
                 key = objectKey
-            }.presign(S3Client { region = "us-east-1" }.config, 3600L)
+            }.presign(S3Client { region = "us-east-1" }.config, ONE_DAY)
         }
 
         @Throws(Exception::class)

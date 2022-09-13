@@ -51,6 +51,10 @@ dependencies {
 
     // MSSQL
     runtimeOnly("com.microsoft.sqlserver:mssql-jdbc")
+
+    // JUnit
+    testImplementation("org.springframework.boot:spring-boot-starter-test")
+    testImplementation("io.mockk:mockk:1.12.7")
 }
 
 tasks.withType<KotlinCompile> {

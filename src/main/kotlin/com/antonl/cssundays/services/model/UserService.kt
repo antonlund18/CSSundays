@@ -1,8 +1,9 @@
 package com.antonl.cssundays.services.model
 
 import com.antonl.cssundays.graphql.dto.RequestDTO
-import com.antonl.cssundays.model.Team
-import com.antonl.cssundays.model.User
+import com.antonl.cssundays.model.core.Team
+import com.antonl.cssundays.model.core.User
+import com.antonl.cssundays.model.core.UserRole
 import com.antonl.cssundays.repositories.UserRepository
 import com.antonl.cssundays.services.auth.AuthenticationService
 import com.antonl.cssundays.services.storage.UserStorageService
@@ -23,7 +24,7 @@ class UserService(val userRepository: UserRepository) {
         val user = User(
             playertag = playertag,
             email = email,
-            password = AuthenticationService.encodePassword(password)
+            password = AuthenticationService.encodePassword(password),
         );
         saveUser(user);
         return user;
@@ -64,16 +65,6 @@ class UserService(val userRepository: UserRepository) {
 
     fun getAllUsers(): List<User> {
         return userRepository.findAll().toList();
-    }
-
-    fun addTeamToUser(team: Team?, user: User?) {
-        if (team == null || user == null) {
-            return;
-        }
-        if (!team.users.contains(user)) {
-            user.teams.add(team);
-            saveUser(user);
-        }
     }
 
     fun handleSignUp(playertag: String, email: String, password: String): String {

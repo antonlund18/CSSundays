@@ -1,6 +1,6 @@
 package com.antonl.cssundays.graphql.queries
 
-import com.antonl.cssundays.model.Team
+import com.antonl.cssundays.model.core.Team
 import com.antonl.cssundays.services.model.TeamService
 import com.expediagroup.graphql.server.operations.Query
 import org.springframework.beans.factory.annotation.Autowired

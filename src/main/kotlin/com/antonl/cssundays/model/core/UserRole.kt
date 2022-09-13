@@ -1,4 +1,4 @@
-package com.antonl.cssundays.model
+package com.antonl.cssundays.model.core
 
 enum class UserRole {
     ADMIN,

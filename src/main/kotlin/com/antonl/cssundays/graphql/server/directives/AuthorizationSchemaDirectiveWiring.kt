@@ -1,11 +1,10 @@
 package com.antonl.cssundays.graphql.server.directives
 
-import com.antonl.cssundays.model.UserRole
+import com.antonl.cssundays.model.core.UserRole
 import com.antonl.cssundays.services.auth.AuthorizationService
 import com.antonl.cssundays.util.AuthorizationConstants
 import com.expediagroup.graphql.generator.directives.KotlinFieldDirectiveEnvironment
 import com.expediagroup.graphql.generator.directives.KotlinSchemaDirectiveWiring
-import com.expediagroup.graphql.generator.extensions.get
 import graphql.GraphQLContext
 import graphql.schema.DataFetcher
 import graphql.schema.GraphQLFieldDefinition

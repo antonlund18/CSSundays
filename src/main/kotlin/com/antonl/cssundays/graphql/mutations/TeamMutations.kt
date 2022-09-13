@@ -1,6 +1,6 @@
 package com.antonl.cssundays.graphql.mutations
 
-import com.antonl.cssundays.model.Team
+import com.antonl.cssundays.model.core.Team
 import com.antonl.cssundays.services.model.TeamService
 import com.antonl.cssundays.services.model.UserService
 import com.expediagroup.graphql.server.operations.Mutation
@@ -17,9 +17,9 @@ class TeamMutations : Mutation {
 
     suspend fun createTeam(name: String, ownerId: Int): Team? {
         val user = userService.findUserById(ownerId) ?: return null;
-        val team = teamService.createTeam(name, user) ?: return null;
+        val team = teamService.createTeam(name, user)
         teamService.addPlayerToTeam(user, team);
-        return teamService.saveTeam(team);
+        return team;
     }
 
     suspend fun incrementLosses(teamId: Int): Team? {

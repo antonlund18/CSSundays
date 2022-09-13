@@ -1,7 +1,7 @@
 package com.antonl.cssundays.graphql.queries
 
-import com.antonl.cssundays.model.InvitationStatus
-import com.antonl.cssundays.model.InviteToTeam
+import com.antonl.cssundays.model.notifications.notificationobjects.InvitationStatus
+import com.antonl.cssundays.model.notifications.notificationobjects.InviteToTeam
 import com.antonl.cssundays.services.model.InviteToTeamService
 import com.antonl.cssundays.services.model.UserService
 import com.expediagroup.graphql.server.operations.Query

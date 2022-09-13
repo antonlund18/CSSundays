@@ -1,6 +1,6 @@
 package com.antonl.cssundays.graphql.queries
 
-import com.antonl.cssundays.model.User
+import com.antonl.cssundays.model.core.User
 import com.antonl.cssundays.services.auth.AuthorizationService
 import com.antonl.cssundays.services.model.UserService
 import com.expediagroup.graphql.server.operations.Query

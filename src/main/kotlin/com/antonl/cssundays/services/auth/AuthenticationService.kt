@@ -1,7 +1,7 @@
 package com.antonl.cssundays.services.auth
 
 import at.favre.lib.crypto.bcrypt.BCrypt
-import com.antonl.cssundays.model.User
+import com.antonl.cssundays.model.core.User
 import com.antonl.cssundays.util.AuthorizationConstants
 import io.github.nefilim.kjwt.JWT
 import org.springframework.stereotype.Service

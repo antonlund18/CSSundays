@@ -1,6 +1,6 @@
 package com.antonl.cssundays.services.auth
 
-import com.antonl.cssundays.model.UserRole
+import com.antonl.cssundays.model.core.UserRole
 import com.antonl.cssundays.util.AuthorizationConstants
 import graphql.GraphQLContext
 import io.github.nefilim.kjwt.JWT

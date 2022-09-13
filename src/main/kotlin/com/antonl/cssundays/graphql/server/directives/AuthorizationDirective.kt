@@ -1,6 +1,6 @@
 package com.antonl.cssundays.graphql.server.directives
 
-import com.antonl.cssundays.model.UserRole
+import com.antonl.cssundays.model.core.UserRole
 import com.antonl.cssundays.util.AuthorizationConstants
 import com.expediagroup.graphql.generator.annotations.GraphQLDirective
 import graphql.introspection.Introspection.DirectiveLocation

@@ -1,5 +1,8 @@
-package com.antonl.cssundays.model
+package com.antonl.cssundays.model.notifications.notificationobjects
 
+import com.antonl.cssundays.model.core.Team
+import com.antonl.cssundays.model.core.User
+import com.antonl.cssundays.model.notifications.NotifiableObject
 import java.time.LocalDateTime
 import javax.persistence.*
 
@@ -8,10 +11,10 @@ import javax.persistence.*
 class InviteToTeam(
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    var id: Int? = -1,
+    override var id: Int? = -1,
 
     @ManyToOne
-    var player: User,
+    var recipient: User,
 
     @ManyToOne
     var sender: User,
@@ -22,11 +25,8 @@ class InviteToTeam(
     var status: InvitationStatus = InvitationStatus.PENDING,
 
     @GeneratedValue
-    var createdTs: String = LocalDateTime.now().toString(),
-
-    @Column(columnDefinition = "bit default 0")
-    var seen: Boolean = false
-)
+    var createdTs: String = LocalDateTime.now().toString()
+) : NotifiableObject(id);
 
 enum class InvitationStatus {
     ACCEPTED,

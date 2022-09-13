@@ -1,8 +1,8 @@
 package com.antonl.cssundays.services.model
 
 import com.antonl.cssundays.graphql.dto.RequestDTO
-import com.antonl.cssundays.model.Team
-import com.antonl.cssundays.model.User
+import com.antonl.cssundays.model.core.Team
+import com.antonl.cssundays.model.core.User
 import com.antonl.cssundays.repositories.TeamRepository
 import com.antonl.cssundays.services.storage.TeamStorageService
 import com.antonl.cssundays.services.storage.UserStorageService
@@ -17,9 +17,9 @@ class TeamService(val teamRepository: TeamRepository) {
         return teamRepository.save(team);
     }
 
-    suspend fun createTeam(name: String, owner: User): Team? {
+    fun createTeam(name: String, owner: User): Team {
         val team = Team(name = name, owner = owner);
-        return team;
+        return saveTeam(team);
     }
 
     suspend fun findTeamBySlug(slug: String): Team? {
@@ -34,8 +34,15 @@ class TeamService(val teamRepository: TeamRepository) {
         return teamRepository.findAll().toList()
     }
 
-    fun addPlayerToTeam(user: User, team: Team) {
-        team.users.add(user);
+    fun addPlayerToTeam(user: User?, team: Team?) {
+        if (team == null || user == null) {
+            return;
+        }
+        if (!team.users.contains(user)) {
+            team.users.add(user);
+            saveTeam(team);
+        }
+
     }
 
     fun incrementWins(team: Team) {
@@ -54,12 +61,11 @@ class TeamService(val teamRepository: TeamRepository) {
         team.picture = imageKey;
         saveTeam(team)
         return TeamStorageService.getPresignedUploadRequest(imageKey);
-
     }
 
     suspend fun deletePicture(team: Team): Team? {
         if (!team.picture.equals("")) {
-            UserStorageService.deleteImage(team.picture);
+            TeamStorageService.deleteImage(team.picture);
             team.picture = "";
             saveTeam(team);
         }

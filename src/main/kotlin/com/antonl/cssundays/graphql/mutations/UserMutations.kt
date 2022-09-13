@@ -1,7 +1,6 @@
 package com.antonl.cssundays.graphql.mutations
 
-import com.antonl.cssundays.graphql.dto.RequestDTO
-import com.antonl.cssundays.model.User
+import com.antonl.cssundays.model.core.User
 import com.antonl.cssundays.services.auth.AuthenticationService
 import com.antonl.cssundays.services.model.TeamService
 import com.antonl.cssundays.services.model.UserService
@@ -30,12 +29,5 @@ class UserMutations : Mutation {
     suspend fun deletePicture(userId: Int): User? {
         val user = userService.findUserById(userId) ?: return null
         return userService.deletePicture(user);
-    }
-
-    suspend fun addTeamToUser(userId: Int, teamId: Int): User? {
-        val user = userService.findUserById(userId);
-        val team = teamService.findTeamById(teamId);
-        userService.addTeamToUser(team, user);
-        return user;
     }
 }
