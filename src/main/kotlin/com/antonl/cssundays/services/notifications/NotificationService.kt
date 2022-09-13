@@ -5,7 +5,6 @@ import com.antonl.cssundays.model.core.User
 import com.antonl.cssundays.model.notifications.NotifiableObject
 import com.antonl.cssundays.model.notifications.Notification
 import com.antonl.cssundays.model.notifications.NotificationAction
-import com.antonl.cssundays.model.notifications.NotificationType
 import com.antonl.cssundays.model.notifications.notificationobjects.InviteToTeam
 import com.antonl.cssundays.repositories.NotificationRepository
 import com.antonl.cssundays.services.model.InviteToTeamService
