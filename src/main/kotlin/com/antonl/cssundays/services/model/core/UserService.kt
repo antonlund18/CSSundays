@@ -1,9 +1,7 @@
-package com.antonl.cssundays.services.model
+package com.antonl.cssundays.services.model.core
 
 import com.antonl.cssundays.graphql.dto.RequestDTO
-import com.antonl.cssundays.model.core.Team
 import com.antonl.cssundays.model.core.User
-import com.antonl.cssundays.model.core.UserRole
 import com.antonl.cssundays.repositories.UserRepository
 import com.antonl.cssundays.services.auth.AuthenticationService
 import com.antonl.cssundays.services.storage.UserStorageService

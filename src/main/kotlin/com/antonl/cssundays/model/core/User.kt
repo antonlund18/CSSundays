@@ -9,7 +9,7 @@ import javax.persistence.*
 class User(
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    var id: Int? = -1,
+    var id: Int? = null,
 
     @Column(unique = true)
     var playertag: String,

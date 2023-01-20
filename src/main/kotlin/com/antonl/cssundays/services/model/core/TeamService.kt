@@ -1,11 +1,10 @@
-package com.antonl.cssundays.services.model
+package com.antonl.cssundays.services.model.core
 
 import com.antonl.cssundays.graphql.dto.RequestDTO
 import com.antonl.cssundays.model.core.Team
 import com.antonl.cssundays.model.core.User
 import com.antonl.cssundays.repositories.TeamRepository
 import com.antonl.cssundays.services.storage.TeamStorageService
-import com.antonl.cssundays.services.storage.UserStorageService
 import org.springframework.stereotype.Service
 import java.util.*
 import javax.transaction.Transactional

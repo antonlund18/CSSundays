@@ -1,6 +1,6 @@
 apply plugin: 'com.github.node-gradle.node'
 
 node {
-    nodeModulesDir = file(projectDir.absolutePath + "/src/js")
+    nodeModulesDir = file(projectDir.absolutePath + "/src/webapp")
     download = false
 }

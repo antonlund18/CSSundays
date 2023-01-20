@@ -6,7 +6,7 @@ import {PlayerDropdown} from "./PlayerDropdown";
 import {useGetCurrentUser} from "../../hooks/api/useUser";
 import {getPictureLinkFromKey} from "../../util/StorageHelper";
 import {ObjectType} from "../../codegen/generated-types";
-import {NotificationsButton} from "./NotificationsButton";
+import {NotificationsButton} from "./notifications/NotificationsButton";
 import {NavBarMenuItem} from "./NavBarMenuItem";
 
 const useStyles = makeStyles((theme) => ({

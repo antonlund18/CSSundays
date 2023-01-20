@@ -1,4 +1,4 @@
-package com.antonl.cssundays.services.model
+package com.antonl.cssundays.services.model.core
 
 import com.antonl.cssundays.model.core.Team
 import com.antonl.cssundays.model.core.User

@@ -2,18 +2,19 @@ import * as React from "react";
 import {useState} from "react";
 import {Badge, Icon} from "@material-ui/core";
 import {Notifications} from "@material-ui/icons";
-import {useGetCurrentUser} from "../../hooks/api/useUser";
-import {NavBarMenuItem} from "./NavBarMenuItem";
-import {useFindAllInvitesForPlayer, useFindAllUnseenInvitesForPlayer} from "../../hooks/api/useInviteToTeam";
+import {useGetCurrentUser} from "../../../hooks/api/useUser";
+import {NavBarMenuItem} from "../NavBarMenuItem";
 import {NotificationsMenu} from "./NotificationsMenu";
-import {InviteToTeam} from "../../codegen/generated-types";
+import {Notification} from "../../../codegen/generated-types";
+import {useFindAllNotificationsForPlayer} from "../../../hooks/api/useNotifications";
 
 export const NotificationsButton = (): JSX.Element => {
     const {currentUser} = useGetCurrentUser();
-    const {allInvitesForPlayer} = useFindAllInvitesForPlayer(currentUser.id ?? -1)
-    const {allUnseenInvitesForPlayer} = useFindAllUnseenInvitesForPlayer(currentUser.id ?? -1)
+    const {allNotificationsForPlayer} = useFindAllNotificationsForPlayer(currentUser.id ?? -1)
     const [isNotificationsMenuOpen, setIsNotificationsMenuOpen] = useState(false);
     const [notificationsMenuAnchor, setNotificationsMenuAnchor] = useState<HTMLElement | null>(null);
+
+    const allUnseenInvitesForPlayer = allNotificationsForPlayer?.filter(notification => notification.isSeen);
 
     if (!currentUser) {
         return <></>
@@ -33,6 +34,6 @@ export const NotificationsButton = (): JSX.Element => {
         <NotificationsMenu open={isNotificationsMenuOpen}
                            handleClose={handleOpenNotificationsMenu}
                            anchor={notificationsMenuAnchor}
-                           notifications={allInvitesForPlayer as InviteToTeam[] ?? []}/>
+                           notifications={allNotificationsForPlayer as Notification[] ?? []}/>
     </NavBarMenuItem>
 }

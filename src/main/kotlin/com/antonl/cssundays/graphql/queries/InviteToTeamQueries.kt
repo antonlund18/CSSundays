@@ -1,9 +1,9 @@
 package com.antonl.cssundays.graphql.queries
 
-import com.antonl.cssundays.model.notifications.notificationobjects.InvitationStatus
+import com.antonl.cssundays.model.notifications.notificationobjects.InviteToTeamStatus
 import com.antonl.cssundays.model.notifications.notificationobjects.InviteToTeam
-import com.antonl.cssundays.services.model.InviteToTeamService
-import com.antonl.cssundays.services.model.UserService
+import com.antonl.cssundays.services.model.notifications.InviteToTeamService
+import com.antonl.cssundays.services.model.core.UserService
 import com.expediagroup.graphql.server.operations.Query
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Component
@@ -20,7 +20,7 @@ class InviteToTeamQueries : Query {
 
     suspend fun findPendingInvitesForPlayer(playerId: Int): List<InviteToTeam> {
         val user = userService.findUserById(playerId) ?: return listOf();
-        return inviteToTeamService.findInviteToTeamsByRecipientAndStatus(user, InvitationStatus.PENDING)
+        return inviteToTeamService.findInviteToTeamsByRecipientAndStatus(user, InviteToTeamStatus.PENDING)
     }
 
     suspend fun findAllInvitesForPlayer(playerId: Int): List<InviteToTeam> {

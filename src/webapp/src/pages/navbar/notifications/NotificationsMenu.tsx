@@ -1,14 +1,14 @@
 import * as React from "react";
 import {useCallback, useMemo} from "react";
 import {Menu} from "@material-ui/core";
-import {InviteToTeam} from "../../codegen/generated-types";
-import {useRelativeTimeFormat} from "../../hooks/useRelativeTimeFormat";
+import {useRelativeTimeFormat} from "../../../hooks/useRelativeTimeFormat";
 import {InviteToTeamNotification} from "./InviteToTeamNotification";
+import {InviteToTeam, Notification} from "../../../codegen/generated-types";
 
 interface NotificationsMenuProps {
     open: boolean
     handleClose: (open: boolean) => void
-    notifications: InviteToTeam[]
+    notifications: Notification[]
     anchor: HTMLElement | null
 }
 
@@ -37,7 +37,7 @@ export const NotificationsMenu = (props: NotificationsMenuProps): JSX.Element =>
                  }}
     >
         {notificationsSortedByCreatedTs.map((notification, index) => {
-            return <InviteToTeamNotification invite={notification} endDivider={index < notificationsSortedByCreatedTs.length - 1} timeAgoText={formattedDate(notification.createdTs)}/>
+            return <InviteToTeamNotification invite={notification.notifiableObject as InviteToTeam} endDivider={index < notificationsSortedByCreatedTs.length - 1} timeAgoText={formattedDate(notification.createdTs)}/>
         })}
     </Menu>
 }

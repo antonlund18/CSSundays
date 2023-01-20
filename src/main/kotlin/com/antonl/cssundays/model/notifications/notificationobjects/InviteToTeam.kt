@@ -9,10 +9,6 @@ import javax.persistence.*
 @Entity
 @Table(name = "invite_to_team")
 class InviteToTeam(
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    override var id: Int? = -1,
-
     @ManyToOne
     var recipient: User,
 
@@ -22,13 +18,13 @@ class InviteToTeam(
     @ManyToOne
     var team: Team,
 
-    var status: InvitationStatus = InvitationStatus.PENDING,
+    @Enumerated(EnumType.STRING)
+    var status: InviteToTeamStatus = InviteToTeamStatus.PENDING,
 
-    @GeneratedValue
     var createdTs: String = LocalDateTime.now().toString()
-) : NotifiableObject(id);
+) : NotifiableObject();
 
-enum class InvitationStatus {
+enum class InviteToTeamStatus {
     ACCEPTED,
     DECLINED,
     PENDING

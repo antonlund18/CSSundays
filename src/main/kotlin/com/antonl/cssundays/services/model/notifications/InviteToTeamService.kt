@@ -1,18 +1,20 @@
-package com.antonl.cssundays.services.model
+package com.antonl.cssundays.services.model.notifications
 
 import com.antonl.cssundays.model.core.Team
 import com.antonl.cssundays.model.core.User
-import com.antonl.cssundays.model.notifications.notificationobjects.InvitationStatus
+import com.antonl.cssundays.model.notifications.NotificationType
+import com.antonl.cssundays.model.notifications.notificationobjects.InviteToTeamStatus
 import com.antonl.cssundays.model.notifications.notificationobjects.InviteToTeam
 import com.antonl.cssundays.repositories.InviteToTeamRepository
+import com.antonl.cssundays.services.model.core.SharedTeamAndUserService
 import org.springframework.stereotype.Service
 import javax.transaction.Transactional
 
 @Service
 @Transactional
-class InviteToTeamService(
-    val inviteToTeamRepository: InviteToTeamRepository,
-    val sharedTeamAndUserService: SharedTeamAndUserService,
+class InviteToTeamService(val inviteToTeamRepository: InviteToTeamRepository,
+                          val sharedTeamAndUserService: SharedTeamAndUserService,
+                          val notificationService: NotificationService
 ) {
     fun saveInviteToTeam(inviteToTeam: InviteToTeam): InviteToTeam {
         return inviteToTeamRepository.save(inviteToTeam)
@@ -26,23 +28,27 @@ class InviteToTeamService(
         return inviteToTeamRepository.findInviteToTeamsByRecipient(recipient);
     }
 
-    fun findInviteToTeamsByRecipientAndStatus(player: User, status: InvitationStatus): List<InviteToTeam> {
+    fun findInviteToTeamsByRecipientAndStatus(
+        player: User,
+        status: InviteToTeamStatus
+    ): List<InviteToTeam> {
         return inviteToTeamRepository.findInviteToTeamsByRecipientAndStatus(player, status);
     }
 
-    fun createInviteToTeam(id: Int = -1, recipient: User, team: Team, sender: User): InviteToTeam {
-        val inviteToTeam = InviteToTeam(id, team = team, sender = sender, recipient = recipient)
+    fun createInviteToTeam(recipient: User, team: Team, sender: User): InviteToTeam {
+        val inviteToTeam = InviteToTeam(team = team, sender = sender, recipient = recipient)
+        notificationService.createNotification(recipient, NotificationType.INVITE_TO_TEAM, inviteToTeam)
         return saveInviteToTeam(inviteToTeam);
     }
 
     fun acceptInvite(inviteToTeam: InviteToTeam): InviteToTeam {
         sharedTeamAndUserService.addUserToTeam(inviteToTeam.recipient, inviteToTeam.team)
-        inviteToTeam.status = InvitationStatus.ACCEPTED;
+        inviteToTeam.status = InviteToTeamStatus.ACCEPTED;
         return saveInviteToTeam(inviteToTeam);
     }
 
     fun declineInvite(inviteToTeam: InviteToTeam): InviteToTeam {
-        inviteToTeam.status = InvitationStatus.DECLINED;
+        inviteToTeam.status = InviteToTeamStatus.DECLINED;
         return saveInviteToTeam(inviteToTeam);
     }
 }

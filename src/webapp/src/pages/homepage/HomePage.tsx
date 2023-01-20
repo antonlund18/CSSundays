@@ -25,8 +25,6 @@ export const HomePage = () => {
 
     const {user} = useGetUserById(7);
 
-    console.log(user)
-
     return <div className={classes.homePageContainer}>
         <div className={classes.nameContainer}>
             <Typography variant={"h1"} style={{color: "white"}}>CS</Typography>

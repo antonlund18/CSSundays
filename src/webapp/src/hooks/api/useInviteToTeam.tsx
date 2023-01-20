@@ -1,11 +1,7 @@
 import {
-    FindAllInvitesForPlayerDocument,
-    FindAllInvitesForPlayerQuery,
-    useAcceptInvitationMutation,
-    useCreateInviteToTeamMutation,
+    useAcceptInvitationMutation, useCreateInviteToTeamMutation,
     useDeclineInvitationMutation,
     useFindAllInvitesForPlayerQuery,
-    useFindAllUnseenInvitesForPlayerQuery,
     useFindPendingInvitesForPlayerQuery
 } from "../../codegen/generated-types";
 
@@ -33,44 +29,17 @@ export const useFindAllInvitesForPlayer = (playerId: number) => {
     }
 }
 
-export const useFindAllUnseenInvitesForPlayer = (playerId: number) => {
-    const {data} = useFindAllUnseenInvitesForPlayerQuery({
-        variables: {
-            playerId: playerId
-        }
-    })
-
-    return {
-        allUnseenInvitesForPlayer: data?.findAllUnseenInvitesForPlayer
-    }
-}
-
 export const useInviteToTeamMutation = () => {
-    const [createInviteToTeamMutation] = useCreateInviteToTeamMutation();
+    const [createInviteToTeamMutation] = useCreateInviteToTeamMutation()
     const [acceptInvitationMutation] = useAcceptInvitationMutation();
     const [declineInvitationMutation] = useDeclineInvitationMutation();
 
-    const createInviteToTeam = (playerId: number, teamId: number, senderId: number) => {
+    const createInviteToTeam = (recipientId: number, teamId: number, senderId: number) => {
         return createInviteToTeamMutation({
             variables: {
-                playerId,
+                senderId,
                 teamId,
-                senderId
-            },
-            update(cache, {data}) {
-                const findAllInvitesQueryOptions = {
-                    query: FindAllInvitesForPlayerDocument,
-                    variables: {playerId: playerId}
-                }
-                const invites = cache.readQuery<FindAllInvitesForPlayerQuery>(findAllInvitesQueryOptions)?.findAllInvitesForPlayer
-                if (invites) {
-                    cache.writeQuery({
-                        ...findAllInvitesQueryOptions,
-                        data: {
-                            findAllInvitesForPlayer: [...invites, data?.createInviteToTeam]
-                        }
-                    })
-                }
+                recipientId
             }
         })
     }

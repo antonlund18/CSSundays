@@ -2,7 +2,7 @@ import * as React from "react";
 import {useCallback} from "react";
 import {Button, Dialog, DialogContent, Divider as MuiDivider, makeStyles, Typography} from "@material-ui/core";
 import {CenteredPage} from "../../components/CenteredPage";
-import {InvitationStatus, ObjectType, User} from "../../codegen/generated-types";
+import {InviteToTeamStatus, ObjectType, User} from "../../codegen/generated-types";
 import {useGetCurrentUser} from "../../hooks/api/useUser";
 import {getPictureLinkFromKey} from "../../util/StorageHelper";
 import {useFindAllInvitesForPlayer, useInviteToTeamMutation} from "../../hooks/api/useInviteToTeam";
@@ -48,12 +48,12 @@ interface PlayerInviteDialogProps {
 export const PlayerInviteDialog = (props: PlayerInviteDialogProps): JSX.Element => {
     const classes = useStyles();
     const {currentUser} = useGetCurrentUser();
-    const {createInviteToTeam} = useInviteToTeamMutation();
+    const {createInviteToTeam} = useInviteToTeamMutation()
     const {allInvitesForPlayer} = useFindAllInvitesForPlayer(props.targetPlayer.id ?? -1)
 
     const shouldDisableInviteButton = useCallback((teamId: number | null | undefined) => {
         const playerInvitesByTeam = allInvitesForPlayer?.filter(invite => invite.team.id === teamId);
-        const playerHasPendingInvite = playerInvitesByTeam?.find(invite => invite.status === InvitationStatus.Pending)
+        const playerHasPendingInvite = playerInvitesByTeam?.find(invite => invite.status === InviteToTeamStatus.Pending)
         const playerIsAlreadyOnTeam = props.targetPlayer.teams.find(team => team.id === teamId);
 
         return !(!playerHasPendingInvite && !playerIsAlreadyOnTeam)
@@ -64,8 +64,8 @@ export const PlayerInviteDialog = (props: PlayerInviteDialogProps): JSX.Element 
     }
 
     const handleInvite = (teamId: number | null | undefined) => {
-        if (props.targetPlayer.id && teamId) {
-            createInviteToTeam(props.targetPlayer.id, teamId, currentUser.id ?? -1);
+        if (props.targetPlayer.id && teamId && currentUser.id) {
+            createInviteToTeam(props.targetPlayer.id, teamId, currentUser.id)
         }
     }
 

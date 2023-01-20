@@ -1,10 +1,10 @@
 import {Box, Divider, Icon, makeStyles, MenuItem, Typography} from "@material-ui/core";
-import {getPictureLinkFromKey} from "../../util/StorageHelper";
-import {InvitationStatus, InviteToTeam, ObjectType} from "../../codegen/generated-types";
+import {getPictureLinkFromKey} from "../../../util/StorageHelper";
+import {InviteToTeamStatus, InviteToTeam, ObjectType} from "../../../codegen/generated-types";
 import {Link} from "react-router-dom";
 import * as React from "react";
 import {Check, Clear} from "@material-ui/icons";
-import {useInviteToTeamMutation} from "../../hooks/api/useInviteToTeam";
+import {useInviteToTeamMutation} from "../../../hooks/api/useInviteToTeam";
 
 const useStyles = makeStyles(theme => ({
     teamPicture: {
@@ -93,7 +93,7 @@ export const InviteToTeamNotification = (props: InviteToTeamNotificationProps): 
                     <Box fontStyle={"oblique"}>
                         {props.timeAgoText}
                     </Box>
-                    {props.invite.status === InvitationStatus.Pending ?
+                    {props.invite.status === InviteToTeamStatus.Pending ?
                         <div className={classes.actionContainer}>
                             <Icon className={classes.accept} onClick={(e) => acceptInvite(props.invite, e)}>
                                 <Check/>
@@ -103,7 +103,7 @@ export const InviteToTeamNotification = (props: InviteToTeamNotificationProps): 
                             </Icon>
                         </div> :
                         <Box fontStyle={"oblique"} display={"inline"}>
-                            {props.invite.status === InvitationStatus.Accepted ? "Accepteret" : "Afvist"}
+                            {props.invite.status === InviteToTeamStatus.Accepted ? "Accepteret" : "Afvist"}
                         </Box>
                     }
                 </div>

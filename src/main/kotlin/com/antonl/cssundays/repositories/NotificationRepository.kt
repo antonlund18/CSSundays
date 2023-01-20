@@ -7,4 +7,5 @@ import org.springframework.data.repository.CrudRepository
 interface NotificationRepository : CrudRepository<Notification, Int> {
     fun findNotificationsByRecipientAndIsSeen(recipient: User, isSeen: Boolean): List<Notification>
     fun findNotificationById(id: Int): Notification?
+    fun findAllByRecipient(recipient: User): List<Notification>
 }

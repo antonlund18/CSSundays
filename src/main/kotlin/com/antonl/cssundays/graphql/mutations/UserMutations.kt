@@ -2,8 +2,8 @@ package com.antonl.cssundays.graphql.mutations
 
 import com.antonl.cssundays.model.core.User
 import com.antonl.cssundays.services.auth.AuthenticationService
-import com.antonl.cssundays.services.model.TeamService
-import com.antonl.cssundays.services.model.UserService
+import com.antonl.cssundays.services.model.core.TeamService
+import com.antonl.cssundays.services.model.core.UserService
 import com.expediagroup.graphql.server.operations.Mutation
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Component

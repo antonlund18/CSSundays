@@ -1,7 +1,7 @@
 package com.antonl.cssundays.unit.model.notifications.mocks.repositories
 
 import com.antonl.cssundays.model.core.User
-import com.antonl.cssundays.model.notifications.notificationobjects.InvitationStatus
+import com.antonl.cssundays.model.notifications.notificationobjects.InviteToTeamStatus
 import com.antonl.cssundays.model.notifications.notificationobjects.InviteToTeam
 import com.antonl.cssundays.repositories.InviteToTeamRepository
 import java.util.*
@@ -11,7 +11,7 @@ class MockInviteToTeamRepository(var invitesToTeams: MutableList<InviteToTeam> =
         TODO("Not yet implemented")
     }
 
-    override fun findInviteToTeamsByRecipientAndStatus(player: User, status: InvitationStatus): List<InviteToTeam> {
+    override fun findInviteToTeamsByRecipientAndStatus(recipient: User, status: InviteToTeamStatus): List<InviteToTeam> {
         TODO("Not yet implemented")
     }
 

@@ -21,28 +21,27 @@ export type HeaderDto = {
   value: Scalars['String'];
 };
 
-export enum InvitationStatus {
+export type InviteToTeam = NotifiableObject & {
+  __typename?: 'InviteToTeam';
+  createdTs: Scalars['String'];
+  id?: Maybe<Scalars['Int']>;
+  recipient: User;
+  sender: User;
+  status: InviteToTeamStatus;
+  team: Team;
+};
+
+export enum InviteToTeamStatus {
   Accepted = 'ACCEPTED',
   Declined = 'DECLINED',
   Pending = 'PENDING'
 }
 
-export type InviteToTeam = {
-  __typename?: 'InviteToTeam';
-  createdTs: Scalars['String'];
-  id?: Maybe<Scalars['Int']>;
-  player: User;
-  seen: Scalars['Boolean'];
-  sender: User;
-  status: InvitationStatus;
-  team: Team;
-};
-
 export type Mutation = {
   __typename?: 'Mutation';
   acceptInvitation?: Maybe<InviteToTeam>;
-  addTeamToUser?: Maybe<User>;
   createInviteToTeam?: Maybe<InviteToTeam>;
+  createNotification?: Maybe<Notification>;
   createTeam?: Maybe<Team>;
   createUser: Scalars['String'];
   declineInvitation?: Maybe<InviteToTeam>;
@@ -50,7 +49,6 @@ export type Mutation = {
   incrementLosses?: Maybe<Team>;
   incrementWins?: Maybe<Team>;
   loginUser: Scalars['String'];
-  markInvitationsAsSeen: Array<InviteToTeam>;
   setPictureAndGetPresignedRequest?: Maybe<RequestDto>;
 };
 
@@ -60,16 +58,16 @@ export type MutationAcceptInvitationArgs = {
 };
 
 
-export type MutationAddTeamToUserArgs = {
+export type MutationCreateInviteToTeamArgs = {
+  recipientId: Scalars['Int'];
+  senderId: Scalars['Int'];
   teamId: Scalars['Int'];
-  userId: Scalars['Int'];
 };
 
 
-export type MutationCreateInviteToTeamArgs = {
-  playerId: Scalars['Int'];
-  senderId: Scalars['Int'];
-  teamId: Scalars['Int'];
+export type MutationCreateNotificationArgs = {
+  notificationType: NotificationType;
+  recipientId: Scalars['Int'];
 };
 
 
@@ -112,15 +110,28 @@ export type MutationLoginUserArgs = {
 };
 
 
-export type MutationMarkInvitationsAsSeenArgs = {
-  playerId: Scalars['Int'];
-};
-
-
 export type MutationSetPictureAndGetPresignedRequestArgs = {
   id: Scalars['Int'];
   objectType: ObjectType;
 };
+
+export type NotifiableObject = {
+  id?: Maybe<Scalars['Int']>;
+};
+
+export type Notification = {
+  __typename?: 'Notification';
+  createdTs: Scalars['String'];
+  id?: Maybe<Scalars['Int']>;
+  isSeen: Scalars['Boolean'];
+  notifiableObject?: Maybe<NotifiableObject>;
+  notificationType: NotificationType;
+  recipient: User;
+};
+
+export enum NotificationType {
+  InviteToTeam = 'INVITE_TO_TEAM'
+}
 
 export enum ObjectType {
   Team = 'TEAM',
@@ -130,12 +141,13 @@ export enum ObjectType {
 export type Query = {
   __typename?: 'Query';
   findAllInvitesForPlayer: Array<InviteToTeam>;
-  findAllUnseenInvitesForPlayer: Array<InviteToTeam>;
   findPendingInvitesForPlayer: Array<InviteToTeam>;
+  getAllNotifications: Array<Notification>;
   getAllTeams: Array<Team>;
   getAllUsers: Array<User>;
   getCurrentUser?: Maybe<User>;
   getTeamById?: Maybe<Team>;
+  getUnseenNotifications: Array<Notification>;
   getUserById?: Maybe<User>;
   getUserBySlug?: Maybe<User>;
 };
@@ -146,13 +158,13 @@ export type QueryFindAllInvitesForPlayerArgs = {
 };
 
 
-export type QueryFindAllUnseenInvitesForPlayerArgs = {
+export type QueryFindPendingInvitesForPlayerArgs = {
   playerId: Scalars['Int'];
 };
 
 
-export type QueryFindPendingInvitesForPlayerArgs = {
-  playerId: Scalars['Int'];
+export type QueryGetAllNotificationsArgs = {
+  userId: Scalars['Int'];
 };
 
 
@@ -163,6 +175,11 @@ export type QueryGetCurrentUserArgs = {
 
 export type QueryGetTeamByIdArgs = {
   teamId: Scalars['Int'];
+};
+
+
+export type QueryGetUnseenNotificationsArgs = {
+  userId: Scalars['Int'];
 };
 
 
@@ -220,51 +237,44 @@ export type FindAllInvitesForPlayerQueryVariables = Exact<{
 }>;
 
 
-export type FindAllInvitesForPlayerQuery = { __typename?: 'Query', findAllInvitesForPlayer: Array<{ __typename?: 'InviteToTeam', id?: number | null, status: InvitationStatus, seen: boolean, createdTs: string, player: { __typename?: 'User', id?: number | null, playertag: string, picture?: string | null }, team: { __typename?: 'Team', id?: number | null, name: string, picture: string, owner: { __typename?: 'User', id?: number | null, playertag: string, picture?: string | null } }, sender: { __typename?: 'User', id?: number | null, playertag: string, picture?: string | null } }> };
+export type FindAllInvitesForPlayerQuery = { __typename?: 'Query', findAllInvitesForPlayer: Array<{ __typename?: 'InviteToTeam', id?: number | null, status: InviteToTeamStatus, createdTs: string, recipient: { __typename?: 'User', id?: number | null, playertag: string, picture?: string | null }, team: { __typename?: 'Team', id?: number | null, name: string, picture: string, owner: { __typename?: 'User', id?: number | null, playertag: string, picture?: string | null } }, sender: { __typename?: 'User', id?: number | null, playertag: string, picture?: string | null } }> };
 
 export type FindPendingInvitesForPlayerQueryVariables = Exact<{
   playerId: Scalars['Int'];
 }>;
 
 
-export type FindPendingInvitesForPlayerQuery = { __typename?: 'Query', findPendingInvitesForPlayer: Array<{ __typename?: 'InviteToTeam', id?: number | null, status: InvitationStatus, seen: boolean, player: { __typename?: 'User', id?: number | null, playertag: string, picture?: string | null }, team: { __typename?: 'Team', id?: number | null, name: string, picture: string, owner: { __typename?: 'User', id?: number | null, playertag: string, picture?: string | null }, users: Array<{ __typename?: 'User', id?: number | null }> }, sender: { __typename?: 'User', id?: number | null, playertag: string, picture?: string | null } }> };
-
-export type FindAllUnseenInvitesForPlayerQueryVariables = Exact<{
-  playerId: Scalars['Int'];
-}>;
-
-
-export type FindAllUnseenInvitesForPlayerQuery = { __typename?: 'Query', findAllUnseenInvitesForPlayer: Array<{ __typename?: 'InviteToTeam', id?: number | null, status: InvitationStatus, seen: boolean, createdTs: string, player: { __typename?: 'User', id?: number | null, playertag: string, picture?: string | null }, team: { __typename?: 'Team', id?: number | null, name: string, picture: string, owner: { __typename?: 'User', id?: number | null, playertag: string, picture?: string | null }, users: Array<{ __typename?: 'User', id?: number | null }> }, sender: { __typename?: 'User', id?: number | null, playertag: string, picture?: string | null } }> };
-
-export type CreateInviteToTeamMutationVariables = Exact<{
-  playerId: Scalars['Int'];
-  teamId: Scalars['Int'];
-  senderId: Scalars['Int'];
-}>;
-
-
-export type CreateInviteToTeamMutation = { __typename?: 'Mutation', createInviteToTeam?: { __typename?: 'InviteToTeam', id?: number | null, status: InvitationStatus, seen: boolean, createdTs: string, player: { __typename?: 'User', id?: number | null, playertag: string, picture?: string | null }, team: { __typename?: 'Team', id?: number | null, name: string, picture: string, owner: { __typename?: 'User', id?: number | null, playertag: string, picture?: string | null } }, sender: { __typename?: 'User', id?: number | null, playertag: string, picture?: string | null } } | null };
+export type FindPendingInvitesForPlayerQuery = { __typename?: 'Query', findPendingInvitesForPlayer: Array<{ __typename?: 'InviteToTeam', id?: number | null, status: InviteToTeamStatus, recipient: { __typename?: 'User', id?: number | null, playertag: string, picture?: string | null }, team: { __typename?: 'Team', id?: number | null, name: string, picture: string, owner: { __typename?: 'User', id?: number | null, playertag: string, picture?: string | null }, users: Array<{ __typename?: 'User', id?: number | null }> }, sender: { __typename?: 'User', id?: number | null, playertag: string, picture?: string | null } }> };
 
 export type AcceptInvitationMutationVariables = Exact<{
   id: Scalars['Int'];
 }>;
 
 
-export type AcceptInvitationMutation = { __typename?: 'Mutation', acceptInvitation?: { __typename?: 'InviteToTeam', id?: number | null, status: InvitationStatus, seen: boolean, player: { __typename?: 'User', id?: number | null, playertag: string, picture?: string | null }, team: { __typename?: 'Team', id?: number | null, name: string, picture: string, owner: { __typename?: 'User', id?: number | null, playertag: string, picture?: string | null } }, sender: { __typename?: 'User', id?: number | null, playertag: string, picture?: string | null } } | null };
+export type AcceptInvitationMutation = { __typename?: 'Mutation', acceptInvitation?: { __typename?: 'InviteToTeam', id?: number | null, status: InviteToTeamStatus, recipient: { __typename?: 'User', id?: number | null, playertag: string, picture?: string | null }, team: { __typename?: 'Team', id?: number | null, name: string, picture: string, owner: { __typename?: 'User', id?: number | null, playertag: string, picture?: string | null } }, sender: { __typename?: 'User', id?: number | null, playertag: string, picture?: string | null } } | null };
 
 export type DeclineInvitationMutationVariables = Exact<{
   id: Scalars['Int'];
 }>;
 
 
-export type DeclineInvitationMutation = { __typename?: 'Mutation', declineInvitation?: { __typename?: 'InviteToTeam', id?: number | null, status: InvitationStatus, seen: boolean, player: { __typename?: 'User', id?: number | null, playertag: string, picture?: string | null }, team: { __typename?: 'Team', id?: number | null, name: string, picture: string, owner: { __typename?: 'User', id?: number | null, playertag: string, picture?: string | null } }, sender: { __typename?: 'User', id?: number | null, playertag: string, picture?: string | null } } | null };
+export type DeclineInvitationMutation = { __typename?: 'Mutation', declineInvitation?: { __typename?: 'InviteToTeam', id?: number | null, status: InviteToTeamStatus, recipient: { __typename?: 'User', id?: number | null, playertag: string, picture?: string | null }, team: { __typename?: 'Team', id?: number | null, name: string, picture: string, owner: { __typename?: 'User', id?: number | null, playertag: string, picture?: string | null } }, sender: { __typename?: 'User', id?: number | null, playertag: string, picture?: string | null } } | null };
 
-export type MarkInvitationsAsSeenMutationVariables = Exact<{
-  playerId: Scalars['Int'];
+export type CreateInviteToTeamMutationVariables = Exact<{
+  recipientId: Scalars['Int'];
+  teamId: Scalars['Int'];
+  senderId: Scalars['Int'];
 }>;
 
 
-export type MarkInvitationsAsSeenMutation = { __typename?: 'Mutation', markInvitationsAsSeen: Array<{ __typename?: 'InviteToTeam', id?: number | null, seen: boolean }> };
+export type CreateInviteToTeamMutation = { __typename?: 'Mutation', createInviteToTeam?: { __typename?: 'InviteToTeam', id?: number | null, status: InviteToTeamStatus } | null };
+
+export type GetAllNotificationsQueryVariables = Exact<{
+  userId: Scalars['Int'];
+}>;
+
+
+export type GetAllNotificationsQuery = { __typename?: 'Query', getAllNotifications: Array<{ __typename?: 'Notification', id?: number | null, isSeen: boolean, notificationType: NotificationType, createdTs: string, recipient: { __typename?: 'User', id?: number | null, playertag: string, picture?: string | null }, notifiableObject?: { __typename?: 'InviteToTeam', id?: number | null, createdTs: string, status: InviteToTeamStatus, recipient: { __typename?: 'User', id?: number | null, playertag: string, picture?: string | null }, sender: { __typename?: 'User', id?: number | null, playertag: string, picture?: string | null }, team: { __typename?: 'Team', id?: number | null, name: string, picture: string } } | null }> };
 
 export type SetPictureAndGetPresignedRequestMutationVariables = Exact<{
   id: Scalars['Int'];
@@ -344,7 +354,7 @@ export const FindAllInvitesForPlayerDocument = gql`
     query findAllInvitesForPlayer($playerId: Int!) {
   findAllInvitesForPlayer(playerId: $playerId) {
     id
-    player {
+    recipient {
       id
       playertag
       picture
@@ -365,7 +375,6 @@ export const FindAllInvitesForPlayerDocument = gql`
       playertag
       picture
     }
-    seen
     createdTs
   }
 }
@@ -402,7 +411,7 @@ export const FindPendingInvitesForPlayerDocument = gql`
     query findPendingInvitesForPlayer($playerId: Int!) {
   findPendingInvitesForPlayer(playerId: $playerId) {
     id
-    player {
+    recipient {
       id
       playertag
       picture
@@ -426,7 +435,6 @@ export const FindPendingInvitesForPlayerDocument = gql`
       playertag
       picture
     }
-    seen
   }
 }
     `;
@@ -458,130 +466,11 @@ export function useFindPendingInvitesForPlayerLazyQuery(baseOptions?: Apollo.Laz
 export type FindPendingInvitesForPlayerQueryHookResult = ReturnType<typeof useFindPendingInvitesForPlayerQuery>;
 export type FindPendingInvitesForPlayerLazyQueryHookResult = ReturnType<typeof useFindPendingInvitesForPlayerLazyQuery>;
 export type FindPendingInvitesForPlayerQueryResult = Apollo.QueryResult<FindPendingInvitesForPlayerQuery, FindPendingInvitesForPlayerQueryVariables>;
-export const FindAllUnseenInvitesForPlayerDocument = gql`
-    query findAllUnseenInvitesForPlayer($playerId: Int!) {
-  findAllUnseenInvitesForPlayer(playerId: $playerId) {
-    id
-    player {
-      id
-      playertag
-      picture
-    }
-    team {
-      id
-      name
-      picture
-      owner {
-        id
-        playertag
-        picture
-      }
-      users {
-        id
-      }
-    }
-    status
-    sender {
-      id
-      playertag
-      picture
-    }
-    seen
-    createdTs
-  }
-}
-    `;
-
-/**
- * __useFindAllUnseenInvitesForPlayerQuery__
- *
- * To run a query within a React component, call `useFindAllUnseenInvitesForPlayerQuery` and pass it any options that fit your needs.
- * When your component renders, `useFindAllUnseenInvitesForPlayerQuery` returns an object from Apollo Client that contains loading, error, and data properties
- * you can use to render your UI.
- *
- * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
- *
- * @example
- * const { data, loading, error } = useFindAllUnseenInvitesForPlayerQuery({
- *   variables: {
- *      playerId: // value for 'playerId'
- *   },
- * });
- */
-export function useFindAllUnseenInvitesForPlayerQuery(baseOptions: Apollo.QueryHookOptions<FindAllUnseenInvitesForPlayerQuery, FindAllUnseenInvitesForPlayerQueryVariables>) {
-        const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useQuery<FindAllUnseenInvitesForPlayerQuery, FindAllUnseenInvitesForPlayerQueryVariables>(FindAllUnseenInvitesForPlayerDocument, options);
-      }
-export function useFindAllUnseenInvitesForPlayerLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<FindAllUnseenInvitesForPlayerQuery, FindAllUnseenInvitesForPlayerQueryVariables>) {
-          const options = {...defaultOptions, ...baseOptions}
-          return Apollo.useLazyQuery<FindAllUnseenInvitesForPlayerQuery, FindAllUnseenInvitesForPlayerQueryVariables>(FindAllUnseenInvitesForPlayerDocument, options);
-        }
-export type FindAllUnseenInvitesForPlayerQueryHookResult = ReturnType<typeof useFindAllUnseenInvitesForPlayerQuery>;
-export type FindAllUnseenInvitesForPlayerLazyQueryHookResult = ReturnType<typeof useFindAllUnseenInvitesForPlayerLazyQuery>;
-export type FindAllUnseenInvitesForPlayerQueryResult = Apollo.QueryResult<FindAllUnseenInvitesForPlayerQuery, FindAllUnseenInvitesForPlayerQueryVariables>;
-export const CreateInviteToTeamDocument = gql`
-    mutation createInviteToTeam($playerId: Int!, $teamId: Int!, $senderId: Int!) {
-  createInviteToTeam(playerId: $playerId, teamId: $teamId, senderId: $senderId) {
-    id
-    player {
-      id
-      playertag
-      picture
-    }
-    team {
-      id
-      name
-      picture
-      owner {
-        id
-        playertag
-        picture
-      }
-    }
-    status
-    sender {
-      id
-      playertag
-      picture
-    }
-    seen
-    createdTs
-  }
-}
-    `;
-export type CreateInviteToTeamMutationFn = Apollo.MutationFunction<CreateInviteToTeamMutation, CreateInviteToTeamMutationVariables>;
-
-/**
- * __useCreateInviteToTeamMutation__
- *
- * To run a mutation, you first call `useCreateInviteToTeamMutation` within a React component and pass it any options that fit your needs.
- * When your component renders, `useCreateInviteToTeamMutation` returns a tuple that includes:
- * - A mutate function that you can call at any time to execute the mutation
- * - An object with fields that represent the current status of the mutation's execution
- *
- * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
- *
- * @example
- * const [createInviteToTeamMutation, { data, loading, error }] = useCreateInviteToTeamMutation({
- *   variables: {
- *      playerId: // value for 'playerId'
- *      teamId: // value for 'teamId'
- *      senderId: // value for 'senderId'
- *   },
- * });
- */
-export function useCreateInviteToTeamMutation(baseOptions?: Apollo.MutationHookOptions<CreateInviteToTeamMutation, CreateInviteToTeamMutationVariables>) {
-        const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useMutation<CreateInviteToTeamMutation, CreateInviteToTeamMutationVariables>(CreateInviteToTeamDocument, options);
-      }
-export type CreateInviteToTeamMutationHookResult = ReturnType<typeof useCreateInviteToTeamMutation>;
-export type CreateInviteToTeamMutationResult = Apollo.MutationResult<CreateInviteToTeamMutation>;
-export type CreateInviteToTeamMutationOptions = Apollo.BaseMutationOptions<CreateInviteToTeamMutation, CreateInviteToTeamMutationVariables>;
 export const AcceptInvitationDocument = gql`
     mutation acceptInvitation($id: Int!) {
   acceptInvitation(invitationId: $id) {
     id
-    player {
+    recipient {
       id
       playertag
       picture
@@ -602,7 +491,6 @@ export const AcceptInvitationDocument = gql`
       playertag
       picture
     }
-    seen
   }
 }
     `;
@@ -636,7 +524,7 @@ export const DeclineInvitationDocument = gql`
     mutation declineInvitation($id: Int!) {
   declineInvitation(invitationId: $id) {
     id
-    player {
+    recipient {
       id
       playertag
       picture
@@ -657,7 +545,6 @@ export const DeclineInvitationDocument = gql`
       playertag
       picture
     }
-    seen
   }
 }
     `;
@@ -687,40 +574,111 @@ export function useDeclineInvitationMutation(baseOptions?: Apollo.MutationHookOp
 export type DeclineInvitationMutationHookResult = ReturnType<typeof useDeclineInvitationMutation>;
 export type DeclineInvitationMutationResult = Apollo.MutationResult<DeclineInvitationMutation>;
 export type DeclineInvitationMutationOptions = Apollo.BaseMutationOptions<DeclineInvitationMutation, DeclineInvitationMutationVariables>;
-export const MarkInvitationsAsSeenDocument = gql`
-    mutation markInvitationsAsSeen($playerId: Int!) {
-  markInvitationsAsSeen(playerId: $playerId) {
+export const CreateInviteToTeamDocument = gql`
+    mutation createInviteToTeam($recipientId: Int!, $teamId: Int!, $senderId: Int!) {
+  createInviteToTeam(
+    recipientId: $recipientId
+    teamId: $teamId
+    senderId: $senderId
+  ) {
     id
-    seen
+    status
   }
 }
     `;
-export type MarkInvitationsAsSeenMutationFn = Apollo.MutationFunction<MarkInvitationsAsSeenMutation, MarkInvitationsAsSeenMutationVariables>;
+export type CreateInviteToTeamMutationFn = Apollo.MutationFunction<CreateInviteToTeamMutation, CreateInviteToTeamMutationVariables>;
 
 /**
- * __useMarkInvitationsAsSeenMutation__
+ * __useCreateInviteToTeamMutation__
  *
- * To run a mutation, you first call `useMarkInvitationsAsSeenMutation` within a React component and pass it any options that fit your needs.
- * When your component renders, `useMarkInvitationsAsSeenMutation` returns a tuple that includes:
+ * To run a mutation, you first call `useCreateInviteToTeamMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useCreateInviteToTeamMutation` returns a tuple that includes:
  * - A mutate function that you can call at any time to execute the mutation
  * - An object with fields that represent the current status of the mutation's execution
  *
  * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
  *
  * @example
- * const [markInvitationsAsSeenMutation, { data, loading, error }] = useMarkInvitationsAsSeenMutation({
+ * const [createInviteToTeamMutation, { data, loading, error }] = useCreateInviteToTeamMutation({
  *   variables: {
- *      playerId: // value for 'playerId'
+ *      recipientId: // value for 'recipientId'
+ *      teamId: // value for 'teamId'
+ *      senderId: // value for 'senderId'
  *   },
  * });
  */
-export function useMarkInvitationsAsSeenMutation(baseOptions?: Apollo.MutationHookOptions<MarkInvitationsAsSeenMutation, MarkInvitationsAsSeenMutationVariables>) {
+export function useCreateInviteToTeamMutation(baseOptions?: Apollo.MutationHookOptions<CreateInviteToTeamMutation, CreateInviteToTeamMutationVariables>) {
         const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useMutation<MarkInvitationsAsSeenMutation, MarkInvitationsAsSeenMutationVariables>(MarkInvitationsAsSeenDocument, options);
+        return Apollo.useMutation<CreateInviteToTeamMutation, CreateInviteToTeamMutationVariables>(CreateInviteToTeamDocument, options);
       }
-export type MarkInvitationsAsSeenMutationHookResult = ReturnType<typeof useMarkInvitationsAsSeenMutation>;
-export type MarkInvitationsAsSeenMutationResult = Apollo.MutationResult<MarkInvitationsAsSeenMutation>;
-export type MarkInvitationsAsSeenMutationOptions = Apollo.BaseMutationOptions<MarkInvitationsAsSeenMutation, MarkInvitationsAsSeenMutationVariables>;
+export type CreateInviteToTeamMutationHookResult = ReturnType<typeof useCreateInviteToTeamMutation>;
+export type CreateInviteToTeamMutationResult = Apollo.MutationResult<CreateInviteToTeamMutation>;
+export type CreateInviteToTeamMutationOptions = Apollo.BaseMutationOptions<CreateInviteToTeamMutation, CreateInviteToTeamMutationVariables>;
+export const GetAllNotificationsDocument = gql`
+    query getAllNotifications($userId: Int!) {
+  getAllNotifications(userId: $userId) {
+    id
+    isSeen
+    recipient {
+      id
+      playertag
+      picture
+    }
+    notificationType
+    notifiableObject {
+      ... on InviteToTeam {
+        id
+        recipient {
+          id
+          playertag
+          picture
+        }
+        sender {
+          id
+          playertag
+          picture
+        }
+        createdTs
+        team {
+          id
+          name
+          picture
+        }
+        status
+      }
+    }
+    createdTs
+  }
+}
+    `;
+
+/**
+ * __useGetAllNotificationsQuery__
+ *
+ * To run a query within a React component, call `useGetAllNotificationsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetAllNotificationsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetAllNotificationsQuery({
+ *   variables: {
+ *      userId: // value for 'userId'
+ *   },
+ * });
+ */
+export function useGetAllNotificationsQuery(baseOptions: Apollo.QueryHookOptions<GetAllNotificationsQuery, GetAllNotificationsQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<GetAllNotificationsQuery, GetAllNotificationsQueryVariables>(GetAllNotificationsDocument, options);
+      }
+export function useGetAllNotificationsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetAllNotificationsQuery, GetAllNotificationsQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<GetAllNotificationsQuery, GetAllNotificationsQueryVariables>(GetAllNotificationsDocument, options);
+        }
+export type GetAllNotificationsQueryHookResult = ReturnType<typeof useGetAllNotificationsQuery>;
+export type GetAllNotificationsLazyQueryHookResult = ReturnType<typeof useGetAllNotificationsLazyQuery>;
+export type GetAllNotificationsQueryResult = Apollo.QueryResult<GetAllNotificationsQuery, GetAllNotificationsQueryVariables>;
 export const SetPictureAndGetPresignedRequestDocument = gql`
     mutation setPictureAndGetPresignedRequest($id: Int!, $objectType: ObjectType!) {
   setPictureAndGetPresignedRequest(id: $id, objectType: $objectType) {
@@ -1117,17 +1075,16 @@ export const ListAllOperations = {
   Query: {
     findAllInvitesForPlayer: 'findAllInvitesForPlayer',
     findPendingInvitesForPlayer: 'findPendingInvitesForPlayer',
-    findAllUnseenInvitesForPlayer: 'findAllUnseenInvitesForPlayer',
+    getAllNotifications: 'getAllNotifications',
     getAllTeams: 'getAllTeams',
     getTeamById: 'getTeamById',
     getUserById: 'getUserById',
     getCurrentUser: 'getCurrentUser'
   },
   Mutation: {
-    createInviteToTeam: 'createInviteToTeam',
     acceptInvitation: 'acceptInvitation',
     declineInvitation: 'declineInvitation',
-    markInvitationsAsSeen: 'markInvitationsAsSeen',
+    createInviteToTeam: 'createInviteToTeam',
     setPictureAndGetPresignedRequest: 'setPictureAndGetPresignedRequest',
     incrementWins: 'incrementWins',
     incrementLosses: 'incrementLosses',
