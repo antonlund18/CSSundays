@@ -12,7 +12,7 @@ export const useGetCurrentUser = (): { currentUser: User, isLoggedIn: boolean } 
     const {data} = useGetCurrentUserQuery({
         variables: {
             token: token ?? ""
-        }
+        },
     })
     const isLoggedIn = data !== null;
     return {

@@ -49,6 +49,7 @@ export type Mutation = {
   incrementLosses?: Maybe<Team>;
   incrementWins?: Maybe<Team>;
   loginUser: Scalars['String'];
+  markAllNotificationsAsSeenForUser: Array<Notification>;
   setPictureAndGetPresignedRequest?: Maybe<RequestDto>;
 };
 
@@ -107,6 +108,11 @@ export type MutationIncrementWinsArgs = {
 export type MutationLoginUserArgs = {
   email: Scalars['String'];
   password: Scalars['String'];
+};
+
+
+export type MutationMarkAllNotificationsAsSeenForUserArgs = {
+  userId: Scalars['Int'];
 };
 
 
@@ -275,6 +281,13 @@ export type GetAllNotificationsQueryVariables = Exact<{
 
 
 export type GetAllNotificationsQuery = { __typename?: 'Query', getAllNotifications: Array<{ __typename?: 'Notification', id?: number | null, isSeen: boolean, notificationType: NotificationType, createdTs: string, recipient: { __typename?: 'User', id?: number | null, playertag: string, picture?: string | null }, notifiableObject?: { __typename?: 'InviteToTeam', id?: number | null, createdTs: string, status: InviteToTeamStatus, recipient: { __typename?: 'User', id?: number | null, playertag: string, picture?: string | null }, sender: { __typename?: 'User', id?: number | null, playertag: string, picture?: string | null }, team: { __typename?: 'Team', id?: number | null, name: string, picture: string } } | null }> };
+
+export type MarkAllNotificationsAsSeenForUserMutationVariables = Exact<{
+  userId: Scalars['Int'];
+}>;
+
+
+export type MarkAllNotificationsAsSeenForUserMutation = { __typename?: 'Mutation', markAllNotificationsAsSeenForUser: Array<{ __typename?: 'Notification', id?: number | null, isSeen: boolean }> };
 
 export type SetPictureAndGetPresignedRequestMutationVariables = Exact<{
   id: Scalars['Int'];
@@ -679,6 +692,40 @@ export function useGetAllNotificationsLazyQuery(baseOptions?: Apollo.LazyQueryHo
 export type GetAllNotificationsQueryHookResult = ReturnType<typeof useGetAllNotificationsQuery>;
 export type GetAllNotificationsLazyQueryHookResult = ReturnType<typeof useGetAllNotificationsLazyQuery>;
 export type GetAllNotificationsQueryResult = Apollo.QueryResult<GetAllNotificationsQuery, GetAllNotificationsQueryVariables>;
+export const MarkAllNotificationsAsSeenForUserDocument = gql`
+    mutation markAllNotificationsAsSeenForUser($userId: Int!) {
+  markAllNotificationsAsSeenForUser(userId: $userId) {
+    id
+    isSeen
+  }
+}
+    `;
+export type MarkAllNotificationsAsSeenForUserMutationFn = Apollo.MutationFunction<MarkAllNotificationsAsSeenForUserMutation, MarkAllNotificationsAsSeenForUserMutationVariables>;
+
+/**
+ * __useMarkAllNotificationsAsSeenForUserMutation__
+ *
+ * To run a mutation, you first call `useMarkAllNotificationsAsSeenForUserMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useMarkAllNotificationsAsSeenForUserMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [markAllNotificationsAsSeenForUserMutation, { data, loading, error }] = useMarkAllNotificationsAsSeenForUserMutation({
+ *   variables: {
+ *      userId: // value for 'userId'
+ *   },
+ * });
+ */
+export function useMarkAllNotificationsAsSeenForUserMutation(baseOptions?: Apollo.MutationHookOptions<MarkAllNotificationsAsSeenForUserMutation, MarkAllNotificationsAsSeenForUserMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<MarkAllNotificationsAsSeenForUserMutation, MarkAllNotificationsAsSeenForUserMutationVariables>(MarkAllNotificationsAsSeenForUserDocument, options);
+      }
+export type MarkAllNotificationsAsSeenForUserMutationHookResult = ReturnType<typeof useMarkAllNotificationsAsSeenForUserMutation>;
+export type MarkAllNotificationsAsSeenForUserMutationResult = Apollo.MutationResult<MarkAllNotificationsAsSeenForUserMutation>;
+export type MarkAllNotificationsAsSeenForUserMutationOptions = Apollo.BaseMutationOptions<MarkAllNotificationsAsSeenForUserMutation, MarkAllNotificationsAsSeenForUserMutationVariables>;
 export const SetPictureAndGetPresignedRequestDocument = gql`
     mutation setPictureAndGetPresignedRequest($id: Int!, $objectType: ObjectType!) {
   setPictureAndGetPresignedRequest(id: $id, objectType: $objectType) {
@@ -1085,6 +1132,7 @@ export const ListAllOperations = {
     acceptInvitation: 'acceptInvitation',
     declineInvitation: 'declineInvitation',
     createInviteToTeam: 'createInviteToTeam',
+    markAllNotificationsAsSeenForUser: 'markAllNotificationsAsSeenForUser',
     setPictureAndGetPresignedRequest: 'setPictureAndGetPresignedRequest',
     incrementWins: 'incrementWins',
     incrementLosses: 'incrementLosses',

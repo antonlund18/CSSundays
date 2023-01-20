@@ -6,15 +6,16 @@ import {useGetCurrentUser} from "../../../hooks/api/useUser";
 import {NavBarMenuItem} from "../NavBarMenuItem";
 import {NotificationsMenu} from "./NotificationsMenu";
 import {Notification} from "../../../codegen/generated-types";
-import {useFindAllNotificationsForPlayer} from "../../../hooks/api/useNotifications";
+import {useFindAllNotificationsForPlayer, useNotifications} from "../../../hooks/api/useNotifications";
 
 export const NotificationsButton = (): JSX.Element => {
     const {currentUser} = useGetCurrentUser();
+    const {markAllNotificationsAsSeenForUser} = useNotifications()
     const {allNotificationsForPlayer} = useFindAllNotificationsForPlayer(currentUser.id ?? -1)
     const [isNotificationsMenuOpen, setIsNotificationsMenuOpen] = useState(false);
     const [notificationsMenuAnchor, setNotificationsMenuAnchor] = useState<HTMLElement | null>(null);
 
-    const allUnseenInvitesForPlayer = allNotificationsForPlayer?.filter(notification => notification.isSeen);
+    const allUnseenInvitesForPlayer = allNotificationsForPlayer?.filter(notification => !notification.isSeen);
 
     if (!currentUser) {
         return <></>
@@ -23,6 +24,9 @@ export const NotificationsButton = (): JSX.Element => {
     const handleOpenNotificationsMenu = (open: boolean, e?: React.MouseEvent<HTMLElement>) => {
         setNotificationsMenuAnchor(e?.currentTarget ?? null);
         setIsNotificationsMenuOpen(open);
+        if (currentUser.id) {
+            markAllNotificationsAsSeenForUser(currentUser.id)
+        }
     }
 
     return <NavBarMenuItem onClick={(e) => handleOpenNotificationsMenu(!isNotificationsMenuOpen, e)}>

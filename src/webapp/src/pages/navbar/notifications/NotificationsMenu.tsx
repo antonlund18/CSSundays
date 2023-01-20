@@ -4,6 +4,7 @@ import {Menu} from "@material-ui/core";
 import {useRelativeTimeFormat} from "../../../hooks/useRelativeTimeFormat";
 import {InviteToTeamNotification} from "./InviteToTeamNotification";
 import {InviteToTeam, Notification} from "../../../codegen/generated-types";
+import {EmptyState} from "./EmptyState";
 
 interface NotificationsMenuProps {
     open: boolean
@@ -24,6 +25,12 @@ export const NotificationsMenu = (props: NotificationsMenuProps): JSX.Element =>
         ), [props.notifications]);
 
     return <Menu open={props.open}
+                 PaperProps={{
+                     style: {
+                         width: "300px",
+                         maxHeight: "400px"
+                     }
+                 }}
                  anchorEl={props.anchor}
                  getContentAnchorEl={null}
                  onClose={() => props.handleClose(false)}
@@ -36,8 +43,11 @@ export const NotificationsMenu = (props: NotificationsMenuProps): JSX.Element =>
                      horizontal: "right"
                  }}
     >
-        {notificationsSortedByCreatedTs.map((notification, index) => {
-            return <InviteToTeamNotification invite={notification.notifiableObject as InviteToTeam} endDivider={index < notificationsSortedByCreatedTs.length - 1} timeAgoText={formattedDate(notification.createdTs)}/>
-        })}
+        {props.notifications.length === 0 ? <EmptyState/> :
+            notificationsSortedByCreatedTs.map((notification, index) => {
+                return <InviteToTeamNotification invite={notification.notifiableObject as InviteToTeam}
+                                                 endDivider={index < notificationsSortedByCreatedTs.length - 1}
+                                                 timeAgoText={formattedDate(notification.createdTs)}/>
+            })}
     </Menu>
 }

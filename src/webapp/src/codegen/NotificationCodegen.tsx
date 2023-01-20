@@ -37,3 +37,12 @@ gql`
         }
     }
 `
+
+gql`
+    mutation markAllNotificationsAsSeenForUser($userId: Int!) {
+        markAllNotificationsAsSeenForUser(userId: $userId) {
+            id,
+            isSeen
+        }
+    }
+`

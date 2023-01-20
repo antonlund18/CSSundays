@@ -17,6 +17,10 @@ class MockNotificationRepository(var notifications: MutableList<Notification> = 
         return notifications.find { notification -> notification.id?.equals(id) ?: false }
     }
 
+    override fun findNotificationsById(ids: List<Int>): List<Notification> {
+        return notifications.filter { notification -> ids.contains(notification.id) }
+    }
+
     override fun findAllByRecipient(recipient: User): List<Notification> {
         TODO("Not yet implemented")
     }
