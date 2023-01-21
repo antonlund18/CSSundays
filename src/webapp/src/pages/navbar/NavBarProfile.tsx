@@ -21,6 +21,9 @@ const useStyles = makeStyles((theme) => ({
         display: "block",
         height: "40px",
         width: "40px",
+        padding: "4px",
+        borderRadius: "50%",
+        backgroundColor: "#f5f9fc",
     },
     playerContainer: {
         display: "flex",
@@ -32,9 +35,6 @@ const useStyles = makeStyles((theme) => ({
     },
     loggedInContainer: {
         display: "flex",
-    },
-    playerName: {
-        textTransform: "none",
     }
 }));
 
@@ -65,8 +65,6 @@ export const NavBarProfile = (): JSX.Element => {
                     <div className={classes.playerContainer}>
                         <img className={classes.image}
                              src={getPictureLinkFromKey(currentUser.picture ?? null, ObjectType.User)}/>
-                        <Typography variant={"subtitle2"}
-                                    className={classes.playerName}>{currentUser?.playertag}</Typography>
                     </div>
                 </NavBarMenuItem>
                 <PlayerDropdown closeDropdown={handleClosePlayerDropdown} anchorEl={anchorEl} player={currentUser}/>

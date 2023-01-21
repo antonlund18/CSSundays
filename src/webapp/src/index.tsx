@@ -9,14 +9,14 @@ import {ApolloClientProvider} from "./ApolloClientProvider";
 
 ReactDOM.render(
     <React.StrictMode>
-            <ApolloClientProvider>
-                <BrowserRouter>
-                    <MuiThemeProvider theme={theme}>
-                        <NavigationBar/>
-                        <Router/>
-                    </MuiThemeProvider>
-                </BrowserRouter>
-            </ApolloClientProvider>
+        <ApolloClientProvider>
+            <BrowserRouter>
+                <MuiThemeProvider theme={theme}>
+                    <NavigationBar/>
+                    <Router/>
+                </MuiThemeProvider>
+            </BrowserRouter>
+        </ApolloClientProvider>
     </React.StrictMode>,
     document.getElementById('root')
 );

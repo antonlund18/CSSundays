@@ -53,5 +53,27 @@ export const theme = createTheme({
             fontSize: 13,
             fontWeight: 700
         },
-    }
+    },
+    overrides: {
+        MuiPaper: {
+            root: {
+                "&::-webkit-scrollbar": {
+                    width: "4px"
+                },
+                "&::-webkit-scrollbar-thumb": {
+                    backgroundColor: "#1c95f3",
+                },
+            }
+        },
+        MuiTableContainer: {
+            root: {
+                "&::-webkit-scrollbar": {
+                    width: "4px"
+                },
+                "&::-webkit-scrollbar-thumb": {
+                    backgroundColor: "#1c95f3",
+                }
+            }
+        }
+    },
 })
