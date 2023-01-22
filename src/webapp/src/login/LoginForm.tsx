@@ -52,22 +52,20 @@ export const LoginForm = (props: LoginFormProps): JSX.Element => {
 
     return <React.Fragment>
         <Typography variant={"subtitle2"}>E-mail</Typography>
-        <TextField variant={"standard"}
+        <TextField variant={"outlined"}
                    value={email}
                    placeholder={"Indtast din e-mail"}
                    className={classes.loginTextField}
-                   InputProps={{disableUnderline: true}}
                    inputProps={{className: classes.loginInput}}
                    onChange={(e) => setEmail(e.target.value)}
         />
 
         <Typography variant={"subtitle2"} className={classes.passwordLabel}>Password</Typography>
-        <TextField variant={"standard"}
+        <TextField variant={"outlined"}
                    value={password}
                    placeholder={"Indtast dit password"}
                    className={classes.loginTextField}
                    type={"password"}
-                   InputProps={{disableUnderline: true}}
                    inputProps={{className: classes.loginInput}}
                    onChange={(e) => setPassword(e.target.value)}
         />

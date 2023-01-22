@@ -68,18 +68,12 @@ export const CreateTeamDialog = (props: CreateTeamDialogProps): JSX.Element => {
     return <Dialog open={props.open}
                    onClose={() => props.setOpen(false)}
     >
-        <DialogTitle>
-            <DialogContent>
-                <Typography variant={"h4"} color={"primary"}>Angiv navn</Typography>
-
-            </DialogContent>
-        </DialogTitle>
         <DialogContent>
-            <TextField variant={"standard"}
+            <Typography variant={"h4"} color={"primary"} gutterBottom>Vælg navn</Typography>
+            <TextField variant={"outlined"}
                        value={name}
                        placeholder={"Holdnavn"}
                        className={classes.nameTextfield}
-                       InputProps={{disableUnderline: true}}
                        inputProps={{className: classes.nameInput + " " + (name.length < 2 ? classes.red : classes.green)}}
                        onChange={(e) => setName(e.target.value)}
             />

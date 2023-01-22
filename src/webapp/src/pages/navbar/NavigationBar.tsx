@@ -3,7 +3,6 @@ import {Link} from "react-router-dom";
 import {makeStyles, Typography} from "@material-ui/core";
 import {NavBarProfile} from "./NavBarProfile";
 import {NavBarMenuItem} from "./NavBarMenuItem";
-import "../../css/style.min.css";
 
 const useStyles = makeStyles({
     navBarContainer: {

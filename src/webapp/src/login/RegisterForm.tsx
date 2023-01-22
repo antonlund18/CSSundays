@@ -94,36 +94,36 @@ export const RegisterForm = (props: RegisterFormProps): JSX.Element => {
     return <React.Fragment>
         <Typography variant={"subtitle2"}>E-mail</Typography>
         <TextField placeholder={"Indtast din e-mail"}
+                   variant={"outlined"}
                    className={classes.loginTextField}
-                   InputProps={{disableUnderline: true}}
                    inputProps={{className: classes.registerInput + " " + (new RegExp(/^\S+@\S+\.\S+/).test(email) ? classes.green : classes.red)}}
                    onChange={(e) => setEmail(e.target.value)}
         />
 
         <Typography variant={"subtitle2"} className={classes.inputLabel}>Brugernavn</Typography>
         <TextField placeholder={"Vælg dit brugernavn"}
+                   variant={"outlined"}
                    className={classes.loginTextField}
-                   InputProps={{disableUnderline: true}}
                    inputProps={{className: classes.registerInput + " " + (username.length < 3 ? classes.red : classes.green)}}
                    onChange={(e) => setUsername(e.target.value)}
         />
 
         <Typography variant={"subtitle2"} className={classes.inputLabel}>Password</Typography>
         <TextField type={"password"}
+                   variant={"outlined"}
                    value={password}
                    placeholder={"Indtast dit password"}
                    className={classes.loginTextField}
-                   InputProps={{disableUnderline: true}}
                    inputProps={{className: classes.registerInput + " " + (password.length > 5 ? classes.green : classes.red)}}
                    onChange={(e) => setPassword(e.target.value)}
         />
 
         <Typography variant={"subtitle2"} className={classes.inputLabel}>Bekræft password</Typography>
         <TextField type={"password"}
+                   variant={"outlined"}
                    value={confirmPassword}
                    placeholder={"Indtast dit password igen"}
                    className={classes.loginTextField}
-                   InputProps={{disableUnderline: true}}
                    inputProps={{className: classes.registerInput + " " + (confirmPassword.length > 5 && password === confirmPassword ? classes.green : classes.red)}}
                    onChange={(e) => setConfirmPassword(e.target.value)}
         />
