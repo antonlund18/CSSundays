@@ -8,9 +8,7 @@ type NavBarMenuItemWrapperProps = {
 }
 
 export const NavBarMenuItemWrapper = (props: React.PropsWithChildren<NavBarMenuItemWrapperProps>): JSX.Element => {
-    const hasLink = !(props.link === undefined)
-
-    return <ConditionalWrapper condition={hasLink} wrapper={() => <Link to={props.link ?? ""} style={{textDecoration: "none"}}>{props.children}</Link>}>
+    return <ConditionalWrapper condition={!!props.link} wrapper={() => <Link to={props.link ?? ""} style={{textDecoration: "none"}}>{props.children}</Link>}>
         {props.children}
     </ConditionalWrapper>
 }

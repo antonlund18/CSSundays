@@ -1,5 +1,5 @@
 import * as React from "react";
-import {Menu, MenuItem, Typography} from "@material-ui/core";
+import {Divider, Menu, MenuItem, Typography} from "@material-ui/core";
 import {useNavigate} from "react-router-dom";
 import {useMutateUser} from "../../hooks/api/useUser";
 import {User} from "../../codegen/generated-types";
@@ -19,20 +19,21 @@ export const PlayerDropdown = (props: PlayerDropdownProps): JSX.Element => {
                  getContentAnchorEl={null}
                  anchorOrigin={{
                      vertical: 'bottom',
-                     horizontal: 'right',
+                     horizontal: 'left',
                  }}
                  transformOrigin={{
                      vertical: 'top',
-                     horizontal: 'right',
+                     horizontal: 'left',
                  }}
                  onClose={() => props.closeDropdown()}
     >
-        <MenuItem onClick={() => {
-            navigate("/players/" + props.player.id);
-            props.closeDropdown()
-        }}>
-            <Typography>Profil</Typography>
+        <MenuItem
+            onClick={() => {
+                navigate("/players/" + props.player.id);
+            }}>
+            <Typography variant={"button"} style={{textTransform: "none"}}>{props.player.playertag}</Typography>
         </MenuItem>
+        <Divider/>
         <MenuItem onClick={() => {
             logOutUser();
             props.closeDropdown()
