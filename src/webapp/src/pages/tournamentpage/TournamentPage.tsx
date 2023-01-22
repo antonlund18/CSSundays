@@ -1,7 +1,12 @@
 import * as React from "react";
-import {Table, TableBody, TableCell, TableHead, TableRow, Typography} from "@material-ui/core";
+import {Button, Grid, Table, TableBody, TableCell, TableHead, TableRow, Typography} from "@material-ui/core";
 import {CenteredPage} from "../../components/CenteredPage";
 import {Divider} from "../../components/Divider";
+import {useGetCurrentUser} from "../../hooks/api/useUser";
+import {UserRole} from "../../codegen/generated-types";
+import {theme} from "../../theme/theme";
+import {CreateTournamentDialog} from "./CreateTournamentDialog";
+import {useState} from "react";
 
 const testTournaments = [
     {
@@ -39,6 +44,10 @@ const testTournaments = [
 ]
 
 export const TournamentPage = (): JSX.Element => {
+    const {currentUser} = useGetCurrentUser();
+    const isCurrentUserAdminOrOrganizer = currentUser && (currentUser.role === UserRole.Admin || currentUser.role === UserRole.Organizer)
+    const [createDialogOpen, setCreateDialogOpen] = useState<boolean>(false);
+
     testTournaments.sort((tournament1, tournament2) => {
         return tournament1.date < tournament2.date ? 1 : -1
     })
@@ -73,5 +82,14 @@ export const TournamentPage = (): JSX.Element => {
                 })}
             </TableBody>
         </Table>
+        {isCurrentUserAdminOrOrganizer && <>
+            <Grid container justifyContent={"flex-end"}>
+                <Button color={"primary"} variant={"contained"} style={{margin: theme.spacing(1), alignSelf: "end"}}
+                        onClick={() => setCreateDialogOpen(true)}>
+                    Opret turnering
+                </Button>
+            </Grid>
+            <CreateTournamentDialog open={createDialogOpen} setOpen={setCreateDialogOpen}/>
+        </>}
     </CenteredPage>
 }

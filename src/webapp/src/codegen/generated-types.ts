@@ -43,6 +43,7 @@ export type Mutation = {
   createInviteToTeam?: Maybe<InviteToTeam>;
   createNotification?: Maybe<Notification>;
   createTeam?: Maybe<Team>;
+  createTournament?: Maybe<Tournament>;
   createUser: Scalars['String'];
   declineInvitation?: Maybe<InviteToTeam>;
   deletePicture?: Maybe<User>;
@@ -75,6 +76,13 @@ export type MutationCreateNotificationArgs = {
 export type MutationCreateTeamArgs = {
   name: Scalars['String'];
   ownerId: Scalars['Int'];
+};
+
+
+export type MutationCreateTournamentArgs = {
+  date: Scalars['String'];
+  name: Scalars['String'];
+  numberOfTeamsAllowed: Scalars['Int'];
 };
 
 
@@ -218,6 +226,33 @@ export type Team = {
   wins: Scalars['Int'];
 };
 
+export type Tournament = {
+  __typename?: 'Tournament';
+  createdTs: Scalars['String'];
+  date: Scalars['String'];
+  id?: Maybe<Scalars['Int']>;
+  name: Scalars['String'];
+  numberOfTeamsAllowed: Scalars['Int'];
+  published: Scalars['Boolean'];
+  registeredTeams: Array<TournamentRegistration>;
+  status: TournamentStatus;
+};
+
+export type TournamentRegistration = {
+  __typename?: 'TournamentRegistration';
+  createdTs: Scalars['String'];
+  id?: Maybe<Scalars['Int']>;
+  team: Team;
+  tournament: Tournament;
+};
+
+export enum TournamentStatus {
+  ClosedForRegistrations = 'CLOSED_FOR_REGISTRATIONS',
+  Finished = 'FINISHED',
+  InProgress = 'IN_PROGRESS',
+  OpenForRegistrations = 'OPEN_FOR_REGISTRATIONS'
+}
+
 export type User = {
   __typename?: 'User';
   createdTs: Scalars['String'];
@@ -331,6 +366,15 @@ export type CreateTeamMutationVariables = Exact<{
 
 export type CreateTeamMutation = { __typename?: 'Mutation', createTeam?: { __typename?: 'Team', id?: number | null, users: Array<{ __typename?: 'User', id?: number | null, playertag: string, picture?: string | null }> } | null };
 
+export type CreateTournamentMutationVariables = Exact<{
+  name: Scalars['String'];
+  date: Scalars['String'];
+  numberOfTeamsAllowed: Scalars['Int'];
+}>;
+
+
+export type CreateTournamentMutation = { __typename?: 'Mutation', createTournament?: { __typename?: 'Tournament', id?: number | null, name: string, date: string, numberOfTeamsAllowed: number } | null };
+
 export type GetUserByIdQueryVariables = Exact<{
   id: Scalars['Int'];
 }>;
@@ -362,7 +406,14 @@ export type LoginUserMutationVariables = Exact<{
 
 export type LoginUserMutation = { __typename?: 'Mutation', loginUser: string };
 
+export type NewNotificationFragment = { __typename?: 'Notification', id?: number | null, isSeen: boolean };
 
+export const NewNotificationFragmentDoc = gql`
+    fragment NewNotification on Notification {
+  id
+  isSeen
+}
+    `;
 export const FindAllInvitesForPlayerDocument = gql`
     query findAllInvitesForPlayer($playerId: Int!) {
   findAllInvitesForPlayer(playerId: $playerId) {
@@ -961,6 +1012,48 @@ export function useCreateTeamMutation(baseOptions?: Apollo.MutationHookOptions<C
 export type CreateTeamMutationHookResult = ReturnType<typeof useCreateTeamMutation>;
 export type CreateTeamMutationResult = Apollo.MutationResult<CreateTeamMutation>;
 export type CreateTeamMutationOptions = Apollo.BaseMutationOptions<CreateTeamMutation, CreateTeamMutationVariables>;
+export const CreateTournamentDocument = gql`
+    mutation createTournament($name: String!, $date: String!, $numberOfTeamsAllowed: Int!) {
+  createTournament(
+    name: $name
+    date: $date
+    numberOfTeamsAllowed: $numberOfTeamsAllowed
+  ) {
+    id
+    name
+    date
+    numberOfTeamsAllowed
+  }
+}
+    `;
+export type CreateTournamentMutationFn = Apollo.MutationFunction<CreateTournamentMutation, CreateTournamentMutationVariables>;
+
+/**
+ * __useCreateTournamentMutation__
+ *
+ * To run a mutation, you first call `useCreateTournamentMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useCreateTournamentMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [createTournamentMutation, { data, loading, error }] = useCreateTournamentMutation({
+ *   variables: {
+ *      name: // value for 'name'
+ *      date: // value for 'date'
+ *      numberOfTeamsAllowed: // value for 'numberOfTeamsAllowed'
+ *   },
+ * });
+ */
+export function useCreateTournamentMutation(baseOptions?: Apollo.MutationHookOptions<CreateTournamentMutation, CreateTournamentMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<CreateTournamentMutation, CreateTournamentMutationVariables>(CreateTournamentDocument, options);
+      }
+export type CreateTournamentMutationHookResult = ReturnType<typeof useCreateTournamentMutation>;
+export type CreateTournamentMutationResult = Apollo.MutationResult<CreateTournamentMutation>;
+export type CreateTournamentMutationOptions = Apollo.BaseMutationOptions<CreateTournamentMutation, CreateTournamentMutationVariables>;
 export const GetUserByIdDocument = gql`
     query getUserById($id: Int!) {
   getUserById(id: $id) {
@@ -1137,7 +1230,11 @@ export const ListAllOperations = {
     incrementWins: 'incrementWins',
     incrementLosses: 'incrementLosses',
     createTeam: 'createTeam',
+    createTournament: 'createTournament',
     createUser: 'createUser',
     loginUser: 'loginUser'
+  },
+  Fragment: {
+    NewNotification: 'NewNotification'
   }
 }

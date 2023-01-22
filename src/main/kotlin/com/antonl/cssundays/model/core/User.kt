@@ -21,6 +21,7 @@ class User(
 
     var picture: String? = null,
 
+    @Enumerated(EnumType.STRING)
     var role: UserRole = UserRole.USER,
 
     @GeneratedValue
@@ -31,3 +32,10 @@ class User(
     @ManyToMany(mappedBy = "users", fetch = FetchType.EAGER)
     var teams: MutableList<Team> = mutableListOf()
 )
+
+enum class UserRole {
+    ADMIN,
+    ORGANIZER,
+    USER,
+    NONE,
+}
