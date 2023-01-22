@@ -28,3 +28,7 @@ class Notification(
     var createdTs: String = LocalDateTime.now().toString()
 )
 
+enum class NotificationType {
+    INVITE_TO_TEAM
+}
+
