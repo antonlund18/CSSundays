@@ -19,9 +19,10 @@ class Tournament(
     @OneToMany(mappedBy = "tournament")
     val registeredTeams: MutableList<TournamentRegistration> = mutableListOf(),
 
+    @Enumerated(EnumType.STRING)
     val status: TournamentStatus = TournamentStatus.OPEN_FOR_REGISTRATIONS,
 
-    val published: Boolean,
+    val published: Boolean = false,
 
     @GeneratedValue
     val createdTs: String = LocalDateTime.now().toString()

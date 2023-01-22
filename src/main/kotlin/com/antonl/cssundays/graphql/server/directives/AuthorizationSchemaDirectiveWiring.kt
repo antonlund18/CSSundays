@@ -11,25 +11,27 @@ import graphql.schema.GraphQLFieldDefinition
 
 class AuthorizationSchemaDirectiveWiring : KotlinSchemaDirectiveWiring {
     override fun onField(environment: KotlinFieldDirectiveEnvironment): GraphQLFieldDefinition {
-        val targetAuthRole: UserRole = environment.directive.getArgument(AuthorizationConstants.JWT_USER_ROLE_CLAIM).argumentValue.value as UserRole;
+        val targetAuthRole: Array<UserRole> = environment.directive.getArgument(AuthorizationConstants.GRAPHQL_AUTH_DIRECTIVE_ROLES).argumentValue.value as Array<UserRole>;
         val originalDataFetcher: DataFetcher<*> = environment.getDataFetcher();
         val authDataFetcher = getAuthDataFetcher(targetAuthRole, originalDataFetcher);
         environment.setDataFetcher(authDataFetcher);
         return environment.element;
     }
 
-    fun getAuthDataFetcher(targetAuthRole: UserRole, originalDataFetcher: DataFetcher<*>): DataFetcher<Any> {
+    fun getAuthDataFetcher(targetAuthRole: Array<UserRole>, originalDataFetcher: DataFetcher<*>): DataFetcher<Any> {
         return DataFetcher<Any> { dataEnv ->
             val contextMap: GraphQLContext = dataEnv.graphQlContext
 
             val jwtToken: String = contextMap.get(AuthorizationConstants.GRAPHQL_CONTEXT_AUTH);
             if (!AuthorizationService.isValidToken(jwtToken)) {
-                throw java.lang.RuntimeException("You are not authorized to access this resource!");
+                println("You are not authorized to access this resource!")
+                return@DataFetcher null;
             }
 
             val auth: UserRole = AuthorizationService.getUserRoleFromToken(jwtToken);
-            if (auth != targetAuthRole) {
-                throw java.lang.RuntimeException("You are not authorized to access this resource!");
+            if (!targetAuthRole.contains(auth)) {
+                println("You are not authorized to access this resource!")
+                return@DataFetcher null;
             }
             originalDataFetcher.get(dataEnv);
         }

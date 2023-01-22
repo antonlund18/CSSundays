@@ -48,6 +48,7 @@ abstract class SchemaGenerator {
                     TopLevelObject(SharedTeamAndUserMutations()),
                     TopLevelObject(InviteToTeamMutations()),
                     TopLevelObject(NotificationMutations()),
+                    TopLevelObject(TournamentMutations())
                 )
             )
         }

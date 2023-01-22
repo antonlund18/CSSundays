@@ -10,4 +10,4 @@ import graphql.introspection.Introspection.DirectiveLocation
     name = AuthorizationConstants.GRAPHQL_CONTEXT_AUTH,
     description = "Add authorization to a query or field",
     locations = [DirectiveLocation.OBJECT, DirectiveLocation.FIELD, DirectiveLocation.FIELD_DEFINITION])
-annotation class AuthorizationDirective(val role: UserRole)
+annotation class AuthorizationDirective(val roles: Array<UserRole>)
