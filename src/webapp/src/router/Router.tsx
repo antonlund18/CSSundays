@@ -5,7 +5,7 @@ import {TournamentPage} from "../pages/tournamentpage/TournamentPage";
 import {TeamsPage} from "../pages/teamspage/TeamsPage";
 import {TeamPage} from "../pages/teamspage/TeamPage";
 import {PlayerPage} from "../pages/players/PlayerPage";
-import {TournamentAdminPage} from "../pages/tournamentpage/TournamentAdminPage";
+import {AdminTournamentsPage} from "../pages/tournamentpage/AdminTournamentsPage";
 
 export const Router = (): JSX.Element => {
     const mainRoutes = [{
@@ -17,7 +17,7 @@ export const Router = (): JSX.Element => {
         element: <TournamentPage/>
     }, {
         path: "/tournaments/admin",
-        element: <TournamentAdminPage/>
+        element: <AdminTournamentsPage/>
     }, {
         path: "/teams",
         children: [{

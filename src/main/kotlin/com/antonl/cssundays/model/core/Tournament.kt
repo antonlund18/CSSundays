@@ -16,7 +16,7 @@ class Tournament(
 
     val numberOfTeamsAllowed: Int,
 
-    @OneToMany(mappedBy = "tournament")
+    @OneToMany(mappedBy = "tournament", fetch = FetchType.EAGER)
     val registeredTeams: MutableList<TournamentRegistration> = mutableListOf(),
 
     @Enumerated(EnumType.STRING)

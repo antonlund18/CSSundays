@@ -14,6 +14,10 @@ class TournamentService(val tournamentRepository: TournamentRepository) {
         }
     }
 
+    fun getAllTournaments(): List<Tournament> {
+        return tournamentRepository.findAll().toList()
+    }
+
     fun createTournament(name: String, date: String, numberOfTeamsAllowed: Int): Tournament {
         val tournament = Tournament(
             name = name,

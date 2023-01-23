@@ -1,4 +1,12 @@
-import {useCreateTournamentMutation} from "../../codegen/generated-types";
+import {Tournament, useCreateTournamentMutation, useGetAllTournamentsQuery} from "../../codegen/generated-types";
+
+export const useGetAllTournaments = () => {
+    const {data, loading} = useGetAllTournamentsQuery();
+    return {
+        tournaments: data?.getAllTournaments as Tournament[],
+        loading
+    }
+}
 
 export const useTournaments = () => {
     const [createTournamentMutation] = useCreateTournamentMutation();

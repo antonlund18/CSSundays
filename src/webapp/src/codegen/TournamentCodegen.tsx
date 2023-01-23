@@ -10,3 +10,23 @@ gql`
         }
     }
 `
+
+gql`
+    query getAllTournaments {
+        getAllTournaments {
+            id,
+            name,
+            date,
+            numberOfTeamsAllowed,
+            registeredTeams {
+                team {
+                    id
+                },
+                id
+            },
+            createdTs,
+            status,
+            published
+        }
+    }
+`;

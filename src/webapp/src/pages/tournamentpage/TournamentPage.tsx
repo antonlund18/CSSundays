@@ -7,6 +7,7 @@ import {UserRole} from "../../codegen/generated-types";
 import {theme} from "../../theme/theme";
 import {CreateTournamentDialog} from "./CreateTournamentDialog";
 import {useState} from "react";
+import {Link} from "react-router-dom";
 
 const testTournaments = [
     {
@@ -84,6 +85,11 @@ export const TournamentPage = (): JSX.Element => {
         </Table>
         {isCurrentUserAdminOrOrganizer && <>
             <Grid container justifyContent={"flex-end"}>
+                <Link to={"/tournaments/admin"} style={{textDecoration: "none"}}>
+                    <Button color={"primary"} variant={"contained"} style={{margin: theme.spacing(1), alignSelf: "end"}}>
+                        Rediger turneringer
+                    </Button>
+                </Link>
                 <Button color={"primary"} variant={"contained"} style={{margin: theme.spacing(1), alignSelf: "end"}}
                         onClick={() => setCreateDialogOpen(true)}>
                     Opret turnering

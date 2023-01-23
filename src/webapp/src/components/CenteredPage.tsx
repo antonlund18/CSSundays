@@ -1,23 +1,31 @@
 import * as React from "react";
-import {makeStyles} from "@material-ui/core";
+import {makeStyles, Theme} from "@material-ui/core";
 import {PropsWithChildren} from "react";
 
-const useStyles = makeStyles(theme => ({
+interface StylesProps {
+    fullWidth?: boolean
+}
+
+const useStyles = makeStyles<Theme, StylesProps>(theme  => ({
     page: {
         display: "flex",
         justifyContent: "center",
         height: "calc(100vh - 92px)",
         backgroundColor: "#f5f9fc",
     },
-    pageContent: {
+    pageContent: props => ({
         display: "inline",
-        width: "1200px",
+        width: !props.fullWidth ? "1200" : "",
         padding: theme.spacing(4),
-    }
+    })
 }));
 
-export const CenteredPage = (props: PropsWithChildren<any>): JSX.Element => {
-    const classes = useStyles();
+interface CenteredPageProps {
+    fullWidth?: boolean
+}
+
+export const CenteredPage = (props: PropsWithChildren<CenteredPageProps>): JSX.Element => {
+    const classes = useStyles({fullWidth: props.fullWidth});
 
     return <div className={classes.page}>
         <div className={classes.pageContent}>
