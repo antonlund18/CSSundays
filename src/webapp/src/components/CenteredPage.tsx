@@ -15,7 +15,7 @@ const useStyles = makeStyles<Theme, StylesProps>(theme  => ({
     },
     pageContent: props => ({
         display: "inline",
-        width: !props.fullWidth ? "1200" : "",
+        width: props.fullWidth ? "" : "1200px",
         padding: theme.spacing(4),
     })
 }));
