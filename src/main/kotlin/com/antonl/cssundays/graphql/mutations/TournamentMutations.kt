@@ -1,7 +1,7 @@
 package com.antonl.cssundays.graphql.mutations
 
 import com.antonl.cssundays.graphql.server.directives.AuthorizationDirective
-import com.antonl.cssundays.model.core.Tournament
+import com.antonl.cssundays.model.tournaments.Tournament
 import com.antonl.cssundays.model.core.UserRole
 import com.antonl.cssundays.services.model.core.TournamentService
 import com.expediagroup.graphql.server.operations.Mutation

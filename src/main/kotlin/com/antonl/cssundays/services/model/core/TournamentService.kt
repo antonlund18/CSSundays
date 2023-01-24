@@ -1,6 +1,6 @@
 package com.antonl.cssundays.services.model.core
 
-import com.antonl.cssundays.model.core.Tournament
+import com.antonl.cssundays.model.tournaments.Tournament
 import com.antonl.cssundays.repositories.TournamentRepository
 import org.springframework.stereotype.Service
 import javax.transaction.Transactional

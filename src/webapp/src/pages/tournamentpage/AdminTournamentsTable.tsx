@@ -51,7 +51,7 @@ export const AdminTournamentsTable = (props: AdminAllTournamentsTableProps): JSX
     const [search, setSearch] = useState<string>("")
     const filterTournaments = useFilterTournaments()
     const [sortDirection, setSortDirection] = useState<SortDirection>(SortDirection.ASC)
-    const [sortBy, setSortBy] = useState<SortOption>(SortOption.NAME)
+    const [sortBy, setSortBy] = useState<SortOption>(SortOption.CREATED)
     const getSortPredicate = useSortTournaments()
 
     const handleRequestSort = (event: React.MouseEvent<unknown>, sortOption: SortOption) => {

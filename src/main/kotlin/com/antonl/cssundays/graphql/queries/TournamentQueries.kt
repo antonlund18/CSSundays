@@ -1,6 +1,6 @@
 package com.antonl.cssundays.graphql.queries
 
-import com.antonl.cssundays.model.core.Tournament
+import com.antonl.cssundays.model.tournaments.Tournament
 import com.antonl.cssundays.services.model.core.TournamentService
 import com.expediagroup.graphql.server.operations.Query
 import org.springframework.beans.factory.annotation.Autowired

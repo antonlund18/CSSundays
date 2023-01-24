@@ -19,7 +19,7 @@ export const useSortTournaments = () => {
 
     const sortByCreatedTsPredicate = (direction: SortDirection) => {
         return (t1: Tournament, t2: Tournament): number => {
-            return direction === SortDirection.ASC ? Date.parse(t1.createdTs) - Date.parse(t2.createdTs) : Date.parse(t2.createdTs) - Date.parse(t1.createdTs)
+            return direction === SortDirection.ASC ? Date.parse(t2.createdTs) - Date.parse(t1.createdTs) : Date.parse(t1.createdTs) - Date.parse(t2.createdTs)
         }
     }
 

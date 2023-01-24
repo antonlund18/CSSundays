@@ -3,15 +3,11 @@ package com.antonl.cssundays.unit.model.notifications
 import com.antonl.cssundays.model.core.Team
 import com.antonl.cssundays.model.core.User
 import com.antonl.cssundays.model.notifications.NotifiableObject
-import com.antonl.cssundays.model.notifications.NotificationAction
-import com.antonl.cssundays.model.notifications.NotificationType
-import com.antonl.cssundays.model.notifications.notificationobjects.InviteToTeamStatus
 import com.antonl.cssundays.model.notifications.notificationobjects.InviteToTeam
 import com.antonl.cssundays.services.model.notifications.InviteToTeamService
 import com.antonl.cssundays.services.model.notifications.NotificationService
 import com.antonl.cssundays.unit.environment.TestEnvironment
 import org.junit.jupiter.api.Assertions.assertEquals
-import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 

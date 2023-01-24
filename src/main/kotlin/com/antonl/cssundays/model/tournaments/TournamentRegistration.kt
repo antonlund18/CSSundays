@@ -1,5 +1,6 @@
-package com.antonl.cssundays.model.core
+package com.antonl.cssundays.model.tournaments
 
+import com.antonl.cssundays.model.core.Team
 import java.time.LocalDateTime
 import javax.persistence.*
 

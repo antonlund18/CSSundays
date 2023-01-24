@@ -12,6 +12,7 @@ import * as React from "react";
 import {useState} from "react";
 import {Refresh} from "@material-ui/icons";
 import {useTournaments} from "../../hooks/api/useTournament";
+import {useNavigate} from "react-router-dom";
 
 const useStyles = makeStyles(theme => ({
     textField: {},
@@ -47,6 +48,7 @@ export interface CreateTournamentDialogProps {
 
 export const CreateTournamentDialog = (props: CreateTournamentDialogProps): JSX.Element => {
     const classes = useStyles();
+    const navigate = useNavigate()
     const [name, setName] = useState<string>("");
     const [date, setDate] = useState<string>("")
     const [size, setSize] = useState<number>(16)
@@ -54,7 +56,7 @@ export const CreateTournamentDialog = (props: CreateTournamentDialogProps): JSX.
     const {createTournament} = useTournaments()
 
     const handleCreate = async () => {
-        await createTournament(name, date, size)
+        createTournament(name, date, size).then((data) => navigate("/tournaments/admin"))
     }
 
     return <Dialog open={props.open} onClose={() => props.setOpen(false)}>
