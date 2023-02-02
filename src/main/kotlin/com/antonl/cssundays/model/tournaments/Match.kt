@@ -2,19 +2,30 @@ package com.antonl.cssundays.model.tournaments
 
 import com.antonl.cssundays.model.core.Team
 import java.time.LocalDateTime
+import javax.persistence.*
 
+@Entity
+@Table(name = "matches")
 class Match(
-    val id: Int? = -1,
-    val team1: Team? = null,
-    val team2: Team? = null,
-    val createdTs: LocalDateTime = LocalDateTime.now(),
-    val result: MatchResult = MatchResult.COMING_UP
-)
+    @OneToOne
+    var team1: Team? = null,
+
+    @OneToOne
+    var team2: Team? = null,
+
+    val createdTs: String = LocalDateTime.now().toString(),
+
+    @Enumerated(EnumType.STRING)
+    val result: MatchResult = MatchResult.COMING_UP,
+
+    parent: Match? = null
+) : PersistedNodeWithParent<Match>(parent)
 
 
 enum class MatchResult {
     WIN_TEAM_1,
     WIN_TEAM_2,
     IN_PROGRESS,
-    COMING_UP
+    COMING_UP,
+    CANCELLED
 }

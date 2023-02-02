@@ -1,4 +1,9 @@
-import {Tournament, useCreateTournamentMutation, useGetAllTournamentsQuery} from "../../codegen/generated-types";
+import {
+    Tournament,
+    useCreateTournamentMutation,
+    useGenerateBracketMutation,
+    useGetAllTournamentsQuery, useRegisterTeamMutation
+} from "../../codegen/generated-types";
 
 export const useGetAllTournaments = () => {
     const {data, loading} = useGetAllTournamentsQuery();
@@ -10,6 +15,8 @@ export const useGetAllTournaments = () => {
 
 export const useTournaments = () => {
     const [createTournamentMutation] = useCreateTournamentMutation();
+    const [generateBracketMutation] = useGenerateBracketMutation();
+    const [registerTeamMutation] = useRegisterTeamMutation();
 
     const createTournament = (name: string, date: string, numberOfTeamsAllowed: number) => createTournamentMutation({
         variables: {
@@ -19,7 +26,22 @@ export const useTournaments = () => {
         },
     })
 
+    const generateBracket = (tournamentId: number) => generateBracketMutation({
+        variables: {
+            tournamentId
+        }
+    })
+
+    const registerTeam = (tournamentId: number, teamId: number) => registerTeamMutation({
+        variables: {
+            tournamentId,
+            teamId
+        }
+    })
+
     return {
-        createTournament
+        createTournament,
+        generateBracket,
+        registerTeam
     }
 }

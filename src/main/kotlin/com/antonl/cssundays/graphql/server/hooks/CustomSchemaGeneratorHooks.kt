@@ -4,4 +4,5 @@ import com.expediagroup.graphql.generator.directives.KotlinDirectiveWiringFactor
 import com.expediagroup.graphql.generator.hooks.SchemaGeneratorHooks
 
 class CustomSchemaGeneratorHooks(override val wiringFactory: KotlinDirectiveWiringFactory) : SchemaGeneratorHooks {
+
 }

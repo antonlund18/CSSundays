@@ -5,6 +5,18 @@ gql`
         createTournament(name: $name, date: $date, numberOfTeamsAllowed: $numberOfTeamsAllowed) {
             id,
             name,
+            bracket {
+                id,
+                root {
+                    id,
+                    left {
+                        id
+                    },
+                    right {
+                        id
+                    }
+                }
+            }
             date,
             numberOfTeamsAllowed
         }
@@ -16,9 +28,21 @@ gql`
         getAllTournaments {
             id,
             name,
+            bracket {
+                id,
+                root {
+                    id,
+                    left {
+                        id
+                    },
+                    right {
+                        id
+                    }
+                }
+            }
             date,
             numberOfTeamsAllowed,
-            registeredTeams {
+            teamRegistrations {
                 team {
                     id
                 },
@@ -30,3 +54,50 @@ gql`
         }
     }
 `;
+
+gql`
+    mutation generateBracket($tournamentId: Int!) {
+        generateBracket(tournamentId: $tournamentId) {
+            id,
+            bracket {
+                id,
+                root {
+                    id,
+                    left {
+                        id
+                    },
+                    right {
+                        id
+                    },
+                    parent {
+                        id
+                    },
+                    team1 {
+                        id,
+                        name
+                    },
+                    team2 {
+                        id,
+                        name
+                    }
+                    result,                    
+                }
+            }
+        }
+    }
+`
+
+gql`
+    mutation registerTeam($tournamentId: Int!, $teamId: Int!) {
+        registerTeam(teamId: $teamId, tournamentId: $tournamentId) {
+            id,
+            teamRegistrations {
+                id,
+                team {
+                    id,
+                    name
+                }
+            }
+        }
+    }
+`

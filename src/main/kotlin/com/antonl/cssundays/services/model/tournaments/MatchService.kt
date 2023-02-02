@@ -1,13 +1,19 @@
 package com.antonl.cssundays.services.model.tournaments
 
 import com.antonl.cssundays.model.tournaments.Match
+import com.antonl.cssundays.repositories.MatchRepository
+import org.springframework.stereotype.Service
+import javax.transaction.Transactional
 
-class MatchService {
-    fun createMatches(amount: Int): List<Match> {
-        val matches = mutableListOf<Match>()
-        for (i in 1.rangeTo(amount)) {
-            matches.add(Match(team1 = null, team2 = null))
-        }
-        return matches;
+@Service
+@Transactional
+class MatchService(val matchRepository: MatchRepository) {
+    fun saveMatch(match: Match): Match {
+        return matchRepository.save(match)
+    }
+
+    fun createMatch(): Match {
+        val match = Match()
+        return saveMatch(match)
     }
 }

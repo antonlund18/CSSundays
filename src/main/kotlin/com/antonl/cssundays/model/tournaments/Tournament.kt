@@ -1,5 +1,7 @@
 package com.antonl.cssundays.model.tournaments
 
+import org.hibernate.annotations.LazyCollection
+import org.hibernate.annotations.LazyCollectionOption
 import java.time.LocalDateTime
 import javax.persistence.*
 
@@ -16,8 +18,13 @@ class Tournament(
 
     val numberOfTeamsAllowed: Int,
 
-    @OneToMany(mappedBy = "tournament", fetch = FetchType.EAGER)
-    val registeredTeams: MutableList<TournamentRegistration> = mutableListOf(),
+    @OneToOne(cascade = [CascadeType.ALL])
+    @JoinColumn(name = "bracket_id", referencedColumnName = "id")
+    var bracket: Bracket? = null,
+
+    @OneToMany(mappedBy = "tournament")
+    @LazyCollection(LazyCollectionOption.FALSE)
+    val teamRegistrations: MutableList<TournamentRegistration> = mutableListOf(),
 
     @Enumerated(EnumType.STRING)
     val status: TournamentStatus = TournamentStatus.OPEN_FOR_REGISTRATIONS,

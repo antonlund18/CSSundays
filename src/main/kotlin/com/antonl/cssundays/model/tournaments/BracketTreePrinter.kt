@@ -1,18 +1,21 @@
 package com.antonl.cssundays.model.tournaments
 
-import java.util.*
-
 class BracketTreePrinter : BracketTreeTraverser {
-    override fun traverseTree(tree: BracketTree) {
-        var currentLevel: MutableList<BracketNode> = mutableListOf()
+    override fun traverseTree(tree: Bracket) {
+        var currentLevel: MutableList<Match> = mutableListOf()
 
         tree.root?.let { currentLevel.add(it) }
 
         while (!currentLevel.isEmpty()) {
-            val nextLevel: MutableList<BracketNode> = mutableListOf()
+            val nextLevel: MutableList<Match> = mutableListOf()
 
             for (node in currentLevel) {
-                print("o ")
+                var teamsInMatch = 0
+
+                node.team1?.let { teamsInMatch++ }
+                node.team2?.let { teamsInMatch++ }
+
+                print("${teamsInMatch} ")
 
                 node.left?.let { nextLevel.add(it) }
                 node.right?.let { nextLevel.add(it) }

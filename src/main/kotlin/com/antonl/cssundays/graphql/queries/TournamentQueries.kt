@@ -1,7 +1,8 @@
 package com.antonl.cssundays.graphql.queries
 
+import com.antonl.cssundays.model.tournaments.Bracket
 import com.antonl.cssundays.model.tournaments.Tournament
-import com.antonl.cssundays.services.model.core.TournamentService
+import com.antonl.cssundays.services.model.tournaments.TournamentService
 import com.expediagroup.graphql.server.operations.Query
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Component
@@ -13,5 +14,10 @@ class TournamentQueries : Query {
 
     suspend fun getAllTournaments(): List<Tournament> {
         return tournamentService.getAllTournaments()
+    }
+
+    suspend fun getBracket(tournamentId: Int): Bracket? {
+        val tournament = tournamentService.getTournamentById(tournamentId) ?: return null
+        return tournament.bracket
     }
 }
