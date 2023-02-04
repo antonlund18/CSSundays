@@ -16,6 +16,10 @@ class TournamentQueries : Query {
         return tournamentService.getAllTournaments()
     }
 
+    suspend fun getTournamentById(id: Int): Tournament? {
+        return tournamentService.getTournamentById(id)
+    }
+
     suspend fun getBracket(tournamentId: Int): Bracket? {
         val tournament = tournamentService.getTournamentById(tournamentId) ?: return null
         return tournament.bracket

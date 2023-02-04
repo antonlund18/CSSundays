@@ -88,6 +88,39 @@ gql`
 `
 
 gql`
+    query getTournamentById($id: Int!) {
+        getTournamentById(id: $id) {
+            id,
+            name,
+            bracket {
+                id,
+                root {
+                    id,
+                    left {
+                        id
+                    },
+                    right {
+                        id
+                    },
+                    parent {
+                        id
+                    },
+                    team1 {
+                        id,
+                        name
+                    },
+                    team2 {
+                        id,
+                        name
+                    }
+                    result,                    
+                }
+            }
+        }
+    }
+`
+
+gql`
     mutation registerTeam($tournamentId: Int!, $teamId: Int!) {
         registerTeam(teamId: $teamId, tournamentId: $tournamentId) {
             id,

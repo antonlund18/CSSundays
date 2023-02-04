@@ -1,11 +1,12 @@
 import * as React from "react";
 import {HomePage} from "../pages/homepage/HomePage";
 import {useRoutes} from "react-router";
-import {TournamentPage} from "../pages/tournamentpage/TournamentPage";
+import {TournamentsPage} from "../pages/tournamentpage/TournamentsPage";
 import {TeamsPage} from "../pages/teamspage/TeamsPage";
 import {TeamPage} from "../pages/teamspage/TeamPage";
 import {PlayerPage} from "../pages/players/PlayerPage";
 import {AdminTournamentsPage} from "../pages/tournamentpage/AdminTournamentsPage";
+import {TournamentPage} from "../pages/tournamentpage/TournamentPage";
 
 export const Router = (): JSX.Element => {
     const mainRoutes = [{
@@ -14,7 +15,13 @@ export const Router = (): JSX.Element => {
         children: []
     }, {
         path: "/tournaments",
-        element: <TournamentPage/>
+        children: [{
+            index: true,
+            element: <TournamentsPage/>
+        }, {
+            path: ":tournamentId",
+            element: <TournamentPage/>
+        }],
     }, {
         path: "/tournaments/admin",
         element: <AdminTournamentsPage/>
