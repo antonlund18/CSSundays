@@ -1,6 +1,7 @@
 import {useGetTournamentById} from "../../hooks/api/useTournament";
 import {useParams} from "react-router-dom";
 import {CenteredPage} from "../../components/CenteredPage";
+import {TournamentBracket} from "./TournamentBracket";
 
 export const TournamentPage = () => {
     const urlParams = useParams();
@@ -11,6 +12,6 @@ export const TournamentPage = () => {
     }
 
     return <CenteredPage>
-        {tournament.name}
+        <TournamentBracket bracket={tournament.bracket}/>
     </CenteredPage>
 }

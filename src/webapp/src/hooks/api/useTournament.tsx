@@ -1,8 +1,12 @@
 import {
+    Match,
     Tournament,
     useCreateTournamentMutation,
     useGenerateBracketMutation,
-    useGetAllTournamentsQuery, useGetTournamentByIdQuery, useRegisterTeamMutation
+    useGetAllTournamentsQuery,
+    useGetMatchesByParentIdsQuery,
+    useGetTournamentByIdQuery,
+    useRegisterTeamMutation
 } from "../../codegen/generated-types";
 
 export const useGetAllTournaments = () => {
@@ -21,6 +25,18 @@ export const useGetTournamentById = (id: number) => {
     });
     return {
         tournament: data?.getTournamentById as Tournament,
+        loading
+    }
+}
+
+export const useGetMatchesByParentIds = (parentIds: number[]) => {
+    const {data, loading} = useGetMatchesByParentIdsQuery({
+        variables: {
+            parentIds
+        }
+    });
+    return {
+        matches: data?.getMatchesByParentIds as Match[],
         loading
     }
 }

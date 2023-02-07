@@ -96,15 +96,6 @@ gql`
                 id,
                 root {
                     id,
-                    left {
-                        id
-                    },
-                    right {
-                        id
-                    },
-                    parent {
-                        id
-                    },
                     team1 {
                         id,
                         name
@@ -113,7 +104,6 @@ gql`
                         id,
                         name
                     }
-                    result,                    
                 }
             }
         }
