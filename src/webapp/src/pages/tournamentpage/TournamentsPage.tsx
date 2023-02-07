@@ -1,18 +1,16 @@
 import * as React from "react";
+import {useState} from "react";
 import {Button, Grid, Table, TableBody, TableCell, TableHead, TableRow, Typography} from "@material-ui/core";
 import {CenteredPage} from "../../components/CenteredPage";
 import {Divider} from "../../components/Divider";
-import {useGetCurrentUser} from "../../hooks/api/useUser";
-import {UserRole} from "../../codegen/generated-types";
 import {theme} from "../../theme/theme";
 import {CreateTournamentDialog} from "./CreateTournamentDialog";
-import {useState} from "react";
 import {Link, useNavigate} from "react-router-dom";
 import {useGetAllTournaments} from "../../hooks/api/useTournament";
 
 export const TournamentsPage = (): JSX.Element => {
-    const {currentUser} = useGetCurrentUser();
-    const isCurrentUserAdminOrOrganizer = currentUser && (currentUser.role === UserRole.Admin || currentUser.role === UserRole.Organizer)
+    // const isCurrentUserAdminOrOrganizer = currentUser && (currentUser.role === UserRole.Admin || currentUser.role === UserRole.Organizer)
+    const isCurrentUserAdminOrOrganizer = true
     const [createDialogOpen, setCreateDialogOpen] = useState<boolean>(false);
     const {tournaments} = useGetAllTournaments()
     const navigate = useNavigate()

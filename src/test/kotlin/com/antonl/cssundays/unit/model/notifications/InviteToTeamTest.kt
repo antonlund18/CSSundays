@@ -41,9 +41,8 @@ internal class InviteToTeamTest {
         val inviteToTeam = inviteToTeamService.createInviteToTeam(recipient, team, sender)
         assertEquals(InviteToTeamStatus.PENDING, inviteToTeam.status)
 
-        inviteToTeamService.acceptInvite(inviteToTeam)
+        inviteToTeamService.declineInvite(inviteToTeam)
         assertEquals(InviteToTeamStatus.DECLINED, inviteToTeam.status)
-        assertEquals(1, recipient.teams.size)
-        assertEquals(team, recipient.teams[0])
+        assertEquals(0, recipient.teams.size)
     }
 }

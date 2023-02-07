@@ -21,12 +21,12 @@ class TournamentMutations : Mutation {
     @Autowired
     private lateinit var userService: UserService
 
-    @AuthorizationDirective([UserRole.ADMIN, UserRole.ORGANIZER])
+//    @AuthorizationDirective([UserRole.ADMIN, UserRole.ORGANIZER])
     suspend fun createTournament(name: String, date: String, numberOfTeamsAllowed: Int): Tournament? {
         return tournamentService.createTournament(name, date, numberOfTeamsAllowed)
     }
 
-    @AuthorizationDirective([UserRole.ADMIN, UserRole.ORGANIZER])
+//    @AuthorizationDirective([UserRole.ADMIN, UserRole.ORGANIZER])
     suspend fun generateBracket(tournamentId: Int): Tournament? {
         val tournament = tournamentService.getTournamentById(tournamentId) ?: return null
         return tournamentService.generateBracket(tournament)
