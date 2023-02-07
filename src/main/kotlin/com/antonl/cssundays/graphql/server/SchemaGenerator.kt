@@ -38,7 +38,8 @@ abstract class SchemaGenerator {
                     TopLevelObject(TeamQueries()),
                     TopLevelObject(InviteToTeamQueries()),
                     TopLevelObject(NotificationQueries()),
-                    TopLevelObject(TournamentQueries())
+                    TopLevelObject(TournamentQueries()),
+                    TopLevelObject(MatchQueries())
                 ),
                 mutations = listOf(
                     TopLevelObject(UserMutations()),

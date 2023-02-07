@@ -43,7 +43,7 @@ class TournamentService(
     }
 
     fun generateBracket(tournament: Tournament): Tournament {
-        val bracket = createBracket(tournament).bracket ?: return tournament
+        val bracket = createBracket(tournament)
         val numberOfMatches = BracketCalculator.calculateNumberOfMatchesInBracket(tournament.teamRegistrations.size)
         val registeredTeams = tournamentRegistrationService.getRegisteredTeams(tournament)
 
@@ -52,9 +52,16 @@ class TournamentService(
         return saveTournament(tournament)
     }
 
-    fun createBracket(tournament: Tournament): Tournament {
+    fun getFirstRoundMatches(tournament: Tournament): List<Match> {
+        val bracket = tournament.bracket ?: return listOf()
+        val leafFinder = BracketLeafNodeFinder()
+        leafFinder.traverseTree(bracket)
+        return leafFinder.leafNodes
+    }
+
+    fun createBracket(tournament: Tournament): Bracket {
         val bracket = Bracket(tournament)
         tournament.bracket = bracket
-        return saveTournament(tournament)
+        return bracket
     }
 }

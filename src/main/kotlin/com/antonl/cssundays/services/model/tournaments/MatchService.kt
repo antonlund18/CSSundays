@@ -12,8 +12,7 @@ class MatchService(val matchRepository: MatchRepository) {
         return matchRepository.save(match)
     }
 
-    fun createMatch(): Match {
-        val match = Match()
-        return saveMatch(match)
+    fun getMatchesByParentIds(parentIds: List<Int>): List<Match> {
+        return matchRepository.findByParentIdIn(parentIds)
     }
 }

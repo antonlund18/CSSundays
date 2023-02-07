@@ -1,6 +1,8 @@
 package com.antonl.cssundays.graphql.queries
 
 import com.antonl.cssundays.model.tournaments.Bracket
+import com.antonl.cssundays.model.tournaments.BracketLeafNodeFinder
+import com.antonl.cssundays.model.tournaments.Match
 import com.antonl.cssundays.model.tournaments.Tournament
 import com.antonl.cssundays.services.model.tournaments.TournamentService
 import com.expediagroup.graphql.server.operations.Query
@@ -17,11 +19,17 @@ class TournamentQueries : Query {
     }
 
     suspend fun getTournamentById(id: Int): Tournament? {
-        return tournamentService.getTournamentById(id)
+        val tournament = tournamentService.getTournamentById(id)
+        return tournament
     }
 
     suspend fun getBracket(tournamentId: Int): Bracket? {
         val tournament = tournamentService.getTournamentById(tournamentId) ?: return null
         return tournament.bracket
+    }
+
+    suspend fun getFirstRoundMatches(tournamentId: Int): List<Match>? {
+        val tournament = tournamentService.getTournamentById(tournamentId) ?: return listOf()
+        return tournamentService.getFirstRoundMatches(tournament)
     }
 }
