@@ -15,16 +15,20 @@ export const AdminTournamentRow = (props: AdminTournamentRowProps): JSX.Element 
     const {registerTeam, generateBracket} = useTournaments()
     const navigate = useNavigate()
 
-    const createDummyTeam = () => {
+    const createDummyTeam = (e: React.MouseEvent) => {
         if (props.tournament.id) {
             registerTeam(props.tournament?.id, 1)
         }
+        e.preventDefault()
+        e.stopPropagation()
     }
 
-    const handleGenerateBracket = () => {
+    const handleGenerateBracket = (e: React.MouseEvent) => {
         if (props.tournament.id) {
             generateBracket(props.tournament.id)
         }
+        e.preventDefault()
+        e.stopPropagation()
     }
 
     return <TableRow style={{color: "#123123", cursor: "pointer"}} onClick={() => navigate(`/tournaments/${props.tournament.id}`)}>
