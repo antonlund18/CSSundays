@@ -1,9 +1,10 @@
-import {IconButton, TableCell, TableRow, Typography} from "@material-ui/core";
+import {IconButton, TableCell, TableRow, Tooltip, Typography} from "@material-ui/core";
 import * as React from "react";
 import {Tournament} from "../../codegen/generated-types";
 import {formatDate} from "../../helpers/helpers";
 import {Dock, Edit} from "@material-ui/icons";
 import {useTournaments} from "../../hooks/api/useTournament";
+import {useNavigate} from "react-router-dom";
 
 interface AdminTournamentRowProps {
     tournament: Tournament
@@ -12,6 +13,7 @@ interface AdminTournamentRowProps {
 export const AdminTournamentRow = (props: AdminTournamentRowProps): JSX.Element => {
     const date = formatDate(new Date(props.tournament.createdTs))
     const {registerTeam, generateBracket} = useTournaments()
+    const navigate = useNavigate()
 
     const createDummyTeam = () => {
         if (props.tournament.id) {
@@ -25,7 +27,7 @@ export const AdminTournamentRow = (props: AdminTournamentRowProps): JSX.Element 
         }
     }
 
-    return <TableRow style={{color: "#123123"}}>
+    return <TableRow style={{color: "#123123", cursor: "pointer"}} onClick={() => navigate(`/tournaments/${props.tournament.id}`)}>
         <TableCell>
             <Typography color={"inherit"}>
                 {`${props.tournament.name} (${props.tournament.teamRegistrations.length} / ${props.tournament.numberOfTeamsAllowed})`}
@@ -47,14 +49,18 @@ export const AdminTournamentRow = (props: AdminTournamentRowProps): JSX.Element 
             </Typography>
         </TableCell>
         <TableCell>
-            <IconButton onClick={createDummyTeam}>
-                <Edit/>
-            </IconButton>
+            <Tooltip title={"Rediger"}>
+                <IconButton onClick={createDummyTeam}>
+                    <Edit/>
+                </IconButton>
+            </Tooltip>
         </TableCell>
         <TableCell>
-            <IconButton onClick={handleGenerateBracket}>
-                <Dock/>
-            </IconButton>
+            <Tooltip title={"Generer bracket"}>
+                <IconButton onClick={handleGenerateBracket}>
+                    <Dock/>
+                </IconButton>
+            </Tooltip>
         </TableCell>
     </TableRow>
 }
