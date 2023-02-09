@@ -1,6 +1,6 @@
 import {ObjectType} from "../codegen/generated-types";
 
-const S3_PUBLIC_PICTURES_URL = "https://cssundays-public-pictures.s3.amazonaws.com"
+const S3_PUBLIC_PICTURES_URL = "https://cssundays-public-images.s3.amazonaws.com"
 const TEAMS_FOLDER = "teams"
 const USERS_FOLDER = "users"
 

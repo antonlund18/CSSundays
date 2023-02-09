@@ -5,7 +5,7 @@ import com.antonl.cssundays.services.storage.converters.RequestDTOConverter
 
 class TeamStorageService {
     companion object {
-        private const val bucket = "cssundays-public-pictures";
+        private const val bucket = "cssundays-public-images";
         private const val folder = "teams";
 
         suspend fun getPresignedUploadRequest(imageKey: String): RequestDTO {

@@ -15,7 +15,7 @@ class S3StorageService {
             return PutObjectRequest {
                 bucket = bucketName
                 key = objectKey
-            }.presign(S3Client { region = "us-east-1" }.config, ONE_DAY)
+            }.presign(S3Client { region = "eu-central-1" }.config, ONE_DAY)
         }
 
         @Throws(Exception::class)
@@ -25,7 +25,7 @@ class S3StorageService {
                 key = objectKey
             }
 
-            S3Client { region = "us-east-1" }.use { s3 ->
+            S3Client { region = "eu-central-1" }.use { s3 ->
                 s3.deleteObject(request);
             }
         }
