@@ -18,9 +18,6 @@ class TournamentMutations : Mutation {
     @Autowired
     private lateinit var teamService: TeamService
 
-    @Autowired
-    private lateinit var userService: UserService
-
 //    @AuthorizationDirective([UserRole.ADMIN, UserRole.ORGANIZER])
     suspend fun createTournament(name: String, date: String, numberOfTeamsAllowed: Int): Tournament? {
         return tournamentService.createTournament(name, date, numberOfTeamsAllowed)
@@ -34,7 +31,7 @@ class TournamentMutations : Mutation {
 
     suspend fun registerTeam(tournamentId: Int, teamId: Int): Tournament? {
         val tournament = tournamentService.getTournamentById(tournamentId) ?: return null
-        val team = teamService.createTeam(System.currentTimeMillis().toString(), userService.findUserById(7) ?: return null)
+        val team = teamService.findTeamById(teamId) ?: return null
         return tournamentService.registerTeam(team, tournament)
     }
 }
