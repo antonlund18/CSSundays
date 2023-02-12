@@ -3,13 +3,14 @@ import {Box, makeStyles} from "@material-ui/core";
 import {TournamentBracketRound} from "./TournamentBracketRound";
 import {ConnectorAfter} from "./TournamentBracketMatch";
 
-const useStyles = makeStyles({
+const useStyles = makeStyles(theme => ({
     container: {
         display: "flex",
         flexDirection: "row",
-        position: "absolute"
+        position: "absolute",
+        padding: theme.spacing(2)
     }
-})
+}))
 
 interface TournamentBracketProps {
     bracket: Bracket | null | undefined
