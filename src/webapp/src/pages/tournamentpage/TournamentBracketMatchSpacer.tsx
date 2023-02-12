@@ -17,7 +17,7 @@ const useStyles = makeStyles<Theme, StylesProps>(theme => ({
             left: "50px",
             marginTop: "-2px",
             borderRight: !props.hasConnector ? "none" : "1px solid black",
-            padding: props.padding ? "20px 0px" : "0px",
+            padding: props.padding ? "4px 0px" : "0px",
         }
     })
 }))

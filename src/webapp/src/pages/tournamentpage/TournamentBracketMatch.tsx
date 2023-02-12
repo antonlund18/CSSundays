@@ -1,17 +1,19 @@
-import {Match} from "../../codegen/generated-types";
-import {Divider, List, ListItem, makeStyles, Theme, Typography} from "@material-ui/core";
+import {Match, ObjectType} from "../../codegen/generated-types";
+import {Divider, List, ListItem, ListItemIcon, makeStyles, Theme, Typography} from "@material-ui/core";
+import {Constants} from "../../util/Constants";
+import {getPictureLinkFromKey} from "../../util/StorageHelper";
+import * as React from "react";
 
 interface StylesProps {
     connectorAfter: ConnectorAfter
     connectorBefore: boolean
 }
 
-const pseudoBefore = {}
-
 const useStyles = makeStyles<Theme, StylesProps>(theme => ({
     match: props => ({
         border: "1px solid black",
-        width: "200px",
+        width: Constants.TOURNAMENT_MATCH_WIDTH,
+        padding: "0px",
         "&::after": {
             content: props.connectorAfter === ConnectorAfter.NONE ? 'none' : "''",
             width: "50px",
@@ -38,6 +40,7 @@ const useStyles = makeStyles<Theme, StylesProps>(theme => ({
     }),
     cancelledMatch: props => ({
         border: "1px solid black",
+        width: Constants.TOURNAMENT_MATCH_WIDTH,
         padding: "0px",
         "&::after": {
             content: props.connectorAfter === ConnectorAfter.NONE ? 'none' : "''",
@@ -52,7 +55,17 @@ const useStyles = makeStyles<Theme, StylesProps>(theme => ({
             marginTop: props.connectorAfter === ConnectorAfter.DOWN ? "-1px" : "0px",
             position: "absolute"
         },
-    })
+    }),
+    team: {
+        height: "24px",
+        paddingLeft: "2px"
+    },
+    image: {
+        height: "20px",
+        width: "20px",
+        minWidth: "0px",
+        paddingRight: "4px"
+    }
 }))
 
 export enum ConnectorAfter {
@@ -72,22 +85,32 @@ export const TournamentBracketMatch = (props: TournamentBracketMatchProps): JSX.
 
     if (!props.connectorBefore && !props.match.team1 && !props.match.team2) {
         return <List component={"nav"} className={classes.cancelledMatch}>
-            <ListItem style={{padding: "none", backgroundColor: "#bfbfbf", minHeight: "36px"}}/>
+            <ListItem style={{padding: "none", backgroundColor: "#bfbfbf", height: "24px"}}/>
             <Divider/>
-            <ListItem style={{padding: "none", backgroundColor: "#bfbfbf", minHeight: "36px"}}/>
+            <ListItem style={{padding: "none", backgroundColor: "#bfbfbf", height: "24px"}}/>
         </List>
     }
 
+    const {team1, team2} = props.match
+
     return <List component={"nav"} className={classes.match}>
-        <ListItem>
-            <Typography noWrap style={{textOverflow: "ellipsis"}}>
-                {props.match.team1 ? props.match.team1.name : "TBD"}
+        <ListItem button className={classes.team}>
+            {team1 && <ListItemIcon>
+                <img className={classes.image}
+                     src={getPictureLinkFromKey(team1.picture ?? null, ObjectType.Team)}/>
+            </ListItemIcon>}
+            <Typography noWrap style={{textOverflow: "ellipsis", fontSize: "12px"}}>
+                {team1 ? team1.name : <i>TBD</i>}
             </Typography>
         </ListItem>
         <Divider/>
-        <ListItem>
-            <Typography noWrap style={{textOverflow: "ellipsis"}}>
-                {props.match.team2 ? props.match.team2.name : "TBD"}
+        <ListItem button className={classes.team}>
+            {team2 && <ListItemIcon>
+                <img className={classes.image}
+                     src={getPictureLinkFromKey(team2.picture ?? null, ObjectType.Team)}/>
+            </ListItemIcon>}
+            <Typography noWrap style={{textOverflow: "ellipsis", fontSize: "12px"}}>
+                {team2 ? team2.name : <i>TBD</i>}
             </Typography>
         </ListItem>
     </List>

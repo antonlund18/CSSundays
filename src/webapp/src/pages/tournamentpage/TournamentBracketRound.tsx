@@ -4,6 +4,7 @@ import {useCallback, useMemo} from "react";
 import {TournamentBracketMatchSpacer} from "./TournamentBracketMatchSpacer";
 import {ConnectorAfter, TournamentBracketMatch} from "./TournamentBracketMatch";
 import {useGetMatchesByParentIds} from "../../hooks/api/useTournament";
+import {Constants} from "../../util/Constants";
 
 interface StylesProps {
     isFirstRound: boolean
@@ -13,7 +14,7 @@ const useStyles = makeStyles<Theme, StylesProps>(theme => ({
     round: props => ({
         display: "flex",
         flexDirection: "column",
-        width: "200px",
+        width: Constants.TOURNAMENT_MATCH_WIDTH,
         marginLeft: props.isFirstRound ? 0 : 100
     })
 }))
