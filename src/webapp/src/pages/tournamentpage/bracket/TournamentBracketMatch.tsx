@@ -64,7 +64,7 @@ const useStyles = makeStyles<Theme, StylesProps>(theme => ({
         height: "20px",
         width: "20px",
         minWidth: "0px",
-        paddingRight: "4px"
+        marginRight: "4px"
     }
 }))
 
@@ -95,9 +95,8 @@ export const TournamentBracketMatch = (props: TournamentBracketMatchProps): JSX.
 
     return <List component={"nav"} className={classes.match}>
         <ListItem button className={classes.team}>
-            {team1 && <ListItemIcon>
-                <img className={classes.image}
-                     src={getPictureLinkFromKey(team1.picture ?? null, ObjectType.Team)}/>
+            {team1 && <ListItemIcon className={classes.image}>
+                <img src={getPictureLinkFromKey(team1.picture ?? null, ObjectType.Team)}/>
             </ListItemIcon>}
             <Typography noWrap style={{textOverflow: "ellipsis", fontSize: "12px"}}>
                 {team1 ? team1.name : <i>TBD</i>}
@@ -105,9 +104,8 @@ export const TournamentBracketMatch = (props: TournamentBracketMatchProps): JSX.
         </ListItem>
         <Divider/>
         <ListItem button className={classes.team}>
-            {team2 && <ListItemIcon>
-                <img className={classes.image}
-                     src={getPictureLinkFromKey(team2.picture ?? null, ObjectType.Team)}/>
+            {team2 && <ListItemIcon className={classes.image}>
+                <img src={getPictureLinkFromKey(team2.picture ?? null, ObjectType.Team)}/>
             </ListItemIcon>}
             <Typography noWrap style={{textOverflow: "ellipsis", fontSize: "12px"}}>
                 {team2 ? team2.name : <i>TBD</i>}
