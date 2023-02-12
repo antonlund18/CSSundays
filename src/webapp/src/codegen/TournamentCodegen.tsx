@@ -101,11 +101,13 @@ gql`
                     id,
                     team1 {
                         id,
-                        name
+                        name,
+                        picture
                     },
                     team2 {
                         id,
-                        name
+                        name,
+                        picture
                     }
                 }
             }
