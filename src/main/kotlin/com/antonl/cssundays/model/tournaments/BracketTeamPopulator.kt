@@ -53,8 +53,8 @@ class BracketTeamPopulator(val teams: List<Team>) {
         parent.team1 = remainingTeams.removeLast()
         numberOfRemainingAutoAdvancedTeams--
 
-        parent.left?.team1 = remainingTeams.removeLast()
-        parent.left?.team2 = remainingTeams.removeLast()
+        parent.right?.team1 = remainingTeams.removeLast()
+        parent.right?.team2 = remainingTeams.removeLast()
     }
 
     private fun populateMatchesWithTwoTeamsAdvancing(parent: Match, remainingTeams: MutableList<Team>) {
