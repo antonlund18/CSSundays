@@ -11,7 +11,7 @@ import {
 import * as React from "react";
 import {useState} from "react";
 import {Refresh} from "@material-ui/icons";
-import {useTournaments} from "../../hooks/api/useTournament";
+import {useTournaments} from "../../../hooks/api/useTournament";
 import {useNavigate} from "react-router-dom";
 
 const useStyles = makeStyles(theme => ({
