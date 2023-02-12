@@ -1,10 +1,10 @@
 import {Box, makeStyles, Theme} from "@material-ui/core";
-import {Match} from "../../codegen/generated-types";
+import {Match} from "../../../codegen/generated-types";
 import {useCallback, useMemo} from "react";
 import {TournamentBracketMatchSpacer} from "./TournamentBracketMatchSpacer";
 import {ConnectorAfter, TournamentBracketMatch} from "./TournamentBracketMatch";
-import {useGetMatchesByParentIds} from "../../hooks/api/useTournament";
-import {Constants} from "../../util/Constants";
+import {useGetMatchesByParentIds} from "../../../hooks/api/useTournament";
+import {Constants} from "../../../util/Constants";
 
 interface StylesProps {
     isFirstRound: boolean

@@ -1,5 +1,5 @@
 import {TableCell, TableHead, TableRow, TableSortLabel, Typography} from "@material-ui/core";
-import {SortDirection, SortOption} from "./AdminTournamentsTable";
+import {SortDirection, SortOption} from "../../../hooks/tournaments/useSortTournaments";
 
 interface HeadCell {
     disablePadding: boolean;

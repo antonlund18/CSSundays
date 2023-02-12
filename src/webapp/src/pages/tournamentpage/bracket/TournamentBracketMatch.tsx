@@ -1,7 +1,7 @@
-import {Match, ObjectType} from "../../codegen/generated-types";
+import {Match, ObjectType} from "../../../codegen/generated-types";
 import {Divider, List, ListItem, ListItemIcon, makeStyles, Theme, Typography} from "@material-ui/core";
-import {Constants} from "../../util/Constants";
-import {getPictureLinkFromKey} from "../../util/StorageHelper";
+import {Constants} from "../../../util/Constants";
+import {getPictureLinkFromKey} from "../../../util/StorageHelper";
 import * as React from "react";
 
 interface StylesProps {

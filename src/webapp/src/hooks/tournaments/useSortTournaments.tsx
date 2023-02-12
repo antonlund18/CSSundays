@@ -1,5 +1,17 @@
-import {SortDirection, SortOption} from "../../pages/tournamentpage/AdminTournamentsTable";
 import {Tournament} from "../../codegen/generated-types";
+
+export enum SortOption {
+    NAME = "name",
+    CREATED = "createdTs",
+    PUBLISHED = "published",
+    START = "startTs"
+}
+
+export enum SortDirection {
+    ASC = "asc",
+    DESC = "desc"
+}
+
 
 export const useSortTournaments = () => {
     const sortByPublishedPredicate = (direction: SortDirection) => {

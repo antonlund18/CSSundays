@@ -1,7 +1,6 @@
-import {Bracket} from "../../codegen/generated-types";
+import {Bracket} from "../../../codegen/generated-types";
 import {Box, makeStyles} from "@material-ui/core";
 import {TournamentBracketRound} from "./TournamentBracketRound";
-import {CenteredPage} from "../../components/CenteredPage";
 import {ConnectorAfter} from "./TournamentBracketMatch";
 
 const useStyles = makeStyles({

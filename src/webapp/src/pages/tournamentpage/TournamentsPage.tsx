@@ -4,7 +4,7 @@ import {Button, Grid, Table, TableBody, TableCell, TableHead, TableRow, Typograp
 import {CenteredPage} from "../../components/CenteredPage";
 import {Divider} from "../../components/Divider";
 import {theme} from "../../theme/theme";
-import {CreateTournamentDialog} from "./CreateTournamentDialog";
+import {CreateTournamentDialog} from "./admin/CreateTournamentDialog";
 import {Link, useNavigate} from "react-router-dom";
 import {useGetAllTournaments} from "../../hooks/api/useTournament";
 

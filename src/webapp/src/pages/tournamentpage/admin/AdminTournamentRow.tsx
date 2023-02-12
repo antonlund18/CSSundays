@@ -1,9 +1,9 @@
 import {IconButton, TableCell, TableRow, Tooltip, Typography} from "@material-ui/core";
 import * as React from "react";
-import {Tournament} from "../../codegen/generated-types";
-import {formatDate} from "../../helpers/helpers";
+import {Tournament} from "../../../codegen/generated-types";
+import {formatDate} from "../../../helpers/helpers";
 import {Dock, Edit} from "@material-ui/icons";
-import {useTournaments} from "../../hooks/api/useTournament";
+import {useTournaments} from "../../../hooks/api/useTournament";
 import {useNavigate} from "react-router-dom";
 
 interface AdminTournamentRowProps {

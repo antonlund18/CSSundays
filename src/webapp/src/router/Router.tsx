@@ -5,7 +5,7 @@ import {TournamentsPage} from "../pages/tournamentpage/TournamentsPage";
 import {TeamsPage} from "../pages/teamspage/TeamsPage";
 import {TeamPage} from "../pages/teamspage/TeamPage";
 import {PlayerPage} from "../pages/players/PlayerPage";
-import {AdminTournamentsPage} from "../pages/tournamentpage/AdminTournamentsPage";
+import {AdminTournamentsPage} from "../pages/tournamentpage/admin/AdminTournamentsPage";
 import {TournamentPage} from "../pages/tournamentpage/TournamentPage";
 
 export const Router = (): JSX.Element => {

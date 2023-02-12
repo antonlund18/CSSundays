@@ -11,11 +11,11 @@ import {
 import {AdminTournamentRow} from "./AdminTournamentRow";
 import * as React from "react";
 import {useMemo, useState} from "react";
-import {Tournament} from "../../codegen/generated-types";
+import {Tournament} from "../../../codegen/generated-types";
 import {Search} from "@material-ui/icons";
-import {useFilterTournaments} from "../../hooks/tournaments/useFilterTournaments";
+import {useFilterTournaments} from "../../../hooks/tournaments/useFilterTournaments";
 import {AdminTournamentsTableHead} from "./AdminTournamentsTableHead";
-import {useSortTournaments} from "../../hooks/tournaments/useSortTournaments";
+import {SortDirection, SortOption, useSortTournaments} from "../../../hooks/tournaments/useSortTournaments";
 
 const useStyles = makeStyles(theme => ({
     headerText: {
@@ -26,18 +26,6 @@ const useStyles = makeStyles(theme => ({
         width: "1200px",
     },
 }))
-
-export enum SortOption {
-    NAME = "name",
-    CREATED = "createdTs",
-    PUBLISHED = "published",
-    START = "startTs"
-}
-
-export enum SortDirection {
-    ASC = "asc",
-    DESC = "desc"
-}
 
 interface AdminAllTournamentsTableProps {
     tournaments: Tournament[]

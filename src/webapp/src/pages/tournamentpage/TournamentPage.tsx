@@ -1,7 +1,7 @@
 import {useGetTournamentById, useTournaments} from "../../hooks/api/useTournament";
 import {useParams} from "react-router-dom";
 import {CenteredPage} from "../../components/CenteredPage";
-import {TournamentBracket} from "./TournamentBracket";
+import {TournamentBracket} from "./bracket/TournamentBracket";
 import {Button, Dialog, DialogContent, Typography} from "@material-ui/core";
 import {useState} from "react";
 import {useGetCurrentUser} from "../../hooks/api/useUser";
