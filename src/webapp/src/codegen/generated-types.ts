@@ -466,7 +466,7 @@ export type GetTournamentByIdQueryVariables = Exact<{
 }>;
 
 
-export type GetTournamentByIdQuery = { __typename?: 'Query', getTournamentById?: { __typename?: 'Tournament', id?: number, name: string, bracket?: { __typename?: 'Bracket', id?: number, root?: { __typename?: 'Match', id?: number, team1?: { __typename?: 'Team', id?: number, name: string }, team2?: { __typename?: 'Team', id?: number, name: string } } } } };
+export type GetTournamentByIdQuery = { __typename?: 'Query', getTournamentById?: { __typename?: 'Tournament', id?: number, name: string, teamRegistrations: Array<{ __typename?: 'TournamentRegistration', id?: number }>, bracket?: { __typename?: 'Bracket', id?: number, root?: { __typename?: 'Match', id?: number, team1?: { __typename?: 'Team', id?: number, name: string }, team2?: { __typename?: 'Team', id?: number, name: string } } } } };
 
 export type RegisterTeamMutationVariables = Exact<{
   tournamentId: Scalars['Int'];
@@ -1330,6 +1330,9 @@ export const GetTournamentByIdDocument = gql`
   getTournamentById(id: $id) {
     id
     name
+    teamRegistrations {
+      id
+    }
     bracket {
       id
       root {

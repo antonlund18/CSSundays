@@ -1,5 +1,5 @@
 import {IconButton, makeStyles, Theme} from "@material-ui/core";
-import React, {useCallback, useState} from "react";
+import React, {CSSProperties, useCallback, useState} from "react";
 import {throttle} from "lodash";
 import {Replay, ZoomIn, ZoomOut} from "@material-ui/icons";
 
@@ -10,12 +10,14 @@ interface StylesProps {
 
 const useStyles = makeStyles<Theme, StylesProps>(theme => ({
     pannable: props => ({
-        position: "absolute",
+        display: "flex",
+        position: "relative",
         overflow: "hidden",
-        width: "1200px",
-        height: "700px",
+        height: "600px",
         "& > div:first-child": {
             scale: props.zoom,
+            transitionDuration: "200ms",
+            transitionTimingFunction: "ease-out",
             transform: `translate(${props.position.x}px, ${props.position.y}px) scale(${props.zoom})`
         }
     }),
@@ -31,7 +33,11 @@ interface DragPosition {
     y: number
 }
 
-export const PannableContainer = (props: React.PropsWithChildren<any>): JSX.Element => {
+interface PannableContainerProps {
+    style?: CSSProperties
+}
+
+export const PannableContainer = (props: React.PropsWithChildren<PannableContainerProps>): JSX.Element => {
     const [isDragging, setIsDragging] = useState(false)
     const [elementPosition, setElementPosition] = useState<DragPosition>({x: 0, y: 0})
     const [prevMousePosition, setPrevMousePosition] = useState<DragPosition>({x: 0, y: 0})
@@ -88,6 +94,7 @@ export const PannableContainer = (props: React.PropsWithChildren<any>): JSX.Elem
                 onMouseMove={handleMouseMoveThrottled}
                 onMouseLeave={handleMouseUp}
                 onWheel={handleScroll}
+                style={props.style}
     >
         {props.children}
         <div className={classes.zoomContainer}>

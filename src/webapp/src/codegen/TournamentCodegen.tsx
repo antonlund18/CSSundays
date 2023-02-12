@@ -92,6 +92,9 @@ gql`
         getTournamentById(id: $id) {
             id,
             name,
+            teamRegistrations {
+                id
+            },
             bracket {
                 id,
                 root {
