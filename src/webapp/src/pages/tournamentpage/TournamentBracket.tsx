@@ -8,7 +8,7 @@ const useStyles = makeStyles({
     container: {
         display: "flex",
         flexDirection: "row",
-        justifyContent: "right",
+        position: "absolute"
     }
 })
 
@@ -20,7 +20,7 @@ export const TournamentBracket = (props: TournamentBracketProps): JSX.Element =>
     const classes = useStyles();
 
     if (!props.bracket?.root) {
-        return <CenteredPage/>
+        return <></>
     }
 
     return <Box className={classes.container}>

@@ -6,6 +6,7 @@ import {Button, Dialog, DialogContent, Typography} from "@material-ui/core";
 import {useState} from "react";
 import {useGetCurrentUser} from "../../hooks/api/useUser";
 import {Team} from "../../codegen/generated-types";
+import {PannableContainer} from "../../components/PannableContainer";
 
 export const TournamentPage = () => {
     const urlParams = useParams();
@@ -33,7 +34,10 @@ export const TournamentPage = () => {
                 onClick={() => handleOpenRegistrationDialog(true)}>
             Tilmeld hold
         </Button>
-        <TournamentBracket bracket={tournament.bracket}/>
+        <PannableContainer>
+            <TournamentBracket bracket={tournament.bracket}/>
+        </PannableContainer>
+        {currentUser &&
         <Dialog open={dialogOpen} onClose={() => handleOpenRegistrationDialog(false)}>
             <DialogContent>
                 {currentUser.teams.map(team => {
@@ -43,7 +47,7 @@ export const TournamentPage = () => {
                     </div>
                 })}
             </DialogContent>
-        </Dialog>
+        </Dialog>}
 
     </CenteredPage>
 }

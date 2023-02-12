@@ -11,6 +11,7 @@ const pseudoBefore = {}
 const useStyles = makeStyles<Theme, StylesProps>(theme => ({
     match: props => ({
         border: "1px solid black",
+        width: "200px",
         "&::after": {
             content: props.connectorAfter === ConnectorAfter.NONE ? 'none' : "''",
             width: "50px",
