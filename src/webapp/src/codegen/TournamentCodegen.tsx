@@ -92,6 +92,7 @@ gql`
         getTournamentById(id: $id) {
             id,
             name,
+            numberOfTeamsAllowed,
             teamRegistrations {
                 id
             },

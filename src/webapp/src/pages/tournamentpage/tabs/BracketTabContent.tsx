@@ -1,4 +1,4 @@
-import {Button, Dialog, DialogContent, Typography} from "@material-ui/core";
+import {Button, CircularProgress, Dialog, DialogContent, Typography} from "@material-ui/core";
 import {PannableContainer} from "../../../components/PannableContainer";
 import {TournamentBracket} from "../bracket/TournamentBracket";
 import {Team, Tournament} from "../../../codegen/generated-types";
@@ -14,6 +14,7 @@ export const BracketTabContent = (props: BracketTabContentProps): JSX.Element =>
     const {currentUser} = useGetCurrentUser()
     const {registerTeam} = useTournaments()
     const [dialogOpen, setDialogOpen] = useState(false)
+    const [isLoading, setIsLoading] = useState(true)
 
     const handleOpenRegistrationDialog = (open: boolean) => {
         setDialogOpen(open)
@@ -25,9 +26,18 @@ export const BracketTabContent = (props: BracketTabContentProps): JSX.Element =>
         }
     }
 
+    const style = {
+        backgroundColor: "white",
+        // alignItems: isLoading ? "center" : "normal",
+        // justifyContent: isLoading ? "center" : "normal",
+    }
+
     return <>
-        <PannableContainer style={{backgroundColor: "white", borderRadius: "8px"}}>
-            <TournamentBracket bracket={props.tournament.bracket}/>
+        <PannableContainer style={style}>
+            {isLoading && <CircularProgress style={{position: "absolute", left: "50%", top: "50%"}}/>}
+            <div style={{display: isLoading ? "none" : "block"}}>
+                <TournamentBracket  bracket={props.tournament.bracket} setIsLoading={setIsLoading}/>
+            </div>
         </PannableContainer>
         <Button variant={"contained"} color={"primary"} style={{marginTop: "16px"}}
                 onClick={() => handleOpenRegistrationDialog(true)}>

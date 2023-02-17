@@ -14,6 +14,7 @@ const useStyles = makeStyles(theme => ({
 
 interface TournamentBracketProps {
     bracket: Bracket | null | undefined
+    setIsLoading: (loading: boolean) => void
 }
 
 export const TournamentBracket = (props: TournamentBracketProps): JSX.Element => {
@@ -24,6 +25,6 @@ export const TournamentBracket = (props: TournamentBracketProps): JSX.Element =>
     }
 
     return <Box className={classes.container}>
-        <TournamentBracketRound matches={[props.bracket.root]} connectorAfter={ConnectorAfter.NONE}/>
+        <TournamentBracketRound matches={[props.bracket.root]} connectorAfter={ConnectorAfter.NONE} setIsLoading={props.setIsLoading}/>
     </Box>
 }

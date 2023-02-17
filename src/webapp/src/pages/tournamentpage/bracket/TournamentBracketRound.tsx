@@ -1,6 +1,6 @@
 import {Box, makeStyles, Theme} from "@material-ui/core";
 import {Match} from "../../../codegen/generated-types";
-import {useCallback, useMemo} from "react";
+import {useCallback, useEffect, useMemo} from "react";
 import {TournamentBracketMatchSpacer} from "./TournamentBracketMatchSpacer";
 import {ConnectorAfter, TournamentBracketMatch} from "./TournamentBracketMatch";
 import {useGetMatchesByParentIds} from "../../../hooks/api/useTournament";
@@ -22,6 +22,7 @@ const useStyles = makeStyles<Theme, StylesProps>(theme => ({
 interface TournamentBracketRound {
     matches: Match[]
     connectorAfter?: ConnectorAfter
+    setIsLoading: (loading: boolean) => void
 }
 
 export const TournamentBracketRound = (props: TournamentBracketRound): JSX.Element => {
@@ -31,6 +32,12 @@ export const TournamentBracketRound = (props: TournamentBracketRound): JSX.Eleme
 
     const {matches: previousRoundMatches} = useGetMatchesByParentIds(matchIds)
 
+    useEffect(() => {
+        if (previousRoundMatches?.length === 0) {
+            props.setIsLoading(false);
+        }
+    }, [previousRoundMatches])
+
     const isFirstRound = previousRoundMatches && !(previousRoundMatches.length > 0)
     const classes = useStyles({isFirstRound});
 
@@ -39,7 +46,7 @@ export const TournamentBracketRound = (props: TournamentBracketRound): JSX.Eleme
     }, [props.matches])
 
     return <>
-        {(previousRoundMatches && !isFirstRound) && <TournamentBracketRound matches={previousRoundMatches}/>}
+        {(previousRoundMatches && !isFirstRound) && <TournamentBracketRound matches={previousRoundMatches} setIsLoading={props.setIsLoading}/>}
         <Box className={classes.round}>
             <TournamentBracketMatchSpacer halfGrow/>
             {props.matches.map((match, index) => {

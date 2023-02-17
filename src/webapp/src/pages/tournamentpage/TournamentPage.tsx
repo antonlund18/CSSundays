@@ -4,6 +4,7 @@ import {CenteredPage} from "../../components/CenteredPage";
 import {Divider, makeStyles, Tab, Tabs, Typography} from "@material-ui/core";
 import React, {useState} from "react";
 import {BracketTabContent} from "./tabs/BracketTabContent";
+import { InformationTabContent } from "./tabs/InformationTabContent";
 
 const useStyles = makeStyles(theme => ({
     headerSection: {
@@ -52,7 +53,7 @@ export const TournamentPage = () => {
             </Tabs>
         </div>
         <TabPanel value={value} index={0}>
-            Information omkring turneringen
+            <InformationTabContent tournament={tournament}/>
         </TabPanel>
         <TabPanel value={value} index={1}>
             <BracketTabContent tournament={tournament}/>

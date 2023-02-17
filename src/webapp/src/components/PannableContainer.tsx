@@ -2,6 +2,7 @@ import {IconButton, makeStyles, Theme} from "@material-ui/core";
 import React, {CSSProperties, useCallback, useState} from "react";
 import {throttle} from "lodash";
 import {Replay, ZoomIn, ZoomOut} from "@material-ui/icons";
+import {StandardLonghandProperties} from "csstype";
 
 interface StylesProps {
     position: DragPosition,
