@@ -1,7 +1,7 @@
 import {useGetTournamentById} from "../../hooks/api/useTournament";
 import {useParams} from "react-router-dom";
 import {CenteredPage} from "../../components/CenteredPage";
-import {Divider, makeStyles, Tab, Tabs, Typography} from "@material-ui/core";
+import {CircularProgress, Divider, makeStyles, Tab, Tabs, Typography} from "@material-ui/core";
 import React, {useState} from "react";
 import {BracketTabContent} from "./tabs/BracketTabContent";
 import { InformationTabContent } from "./tabs/InformationTabContent";
@@ -30,7 +30,7 @@ export const TournamentPage = () => {
     const [value, setValue] = useState(0)
 
     if (!tournament || !tournament.id) {
-        return <CenteredPage/>
+        return <CircularProgress style={{position: "absolute", left: "50%", top: "50%"}}/>
     }
 
     const handleChangeTab = (e: React.ChangeEvent<{}>, value: number) => {

@@ -26,14 +26,8 @@ export const BracketTabContent = (props: BracketTabContentProps): JSX.Element =>
         }
     }
 
-    const style = {
-        backgroundColor: "white",
-        // alignItems: isLoading ? "center" : "normal",
-        // justifyContent: isLoading ? "center" : "normal",
-    }
-
     return <>
-        <PannableContainer style={style}>
+        <PannableContainer style={{backgroundColor: "white"}}>
             {isLoading && <CircularProgress style={{position: "absolute", left: "50%", top: "50%"}}/>}
             <div style={{display: isLoading ? "none" : "block"}}>
                 <TournamentBracket  bracket={props.tournament.bracket} setIsLoading={setIsLoading}/>

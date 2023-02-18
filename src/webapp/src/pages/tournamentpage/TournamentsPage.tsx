@@ -1,6 +1,16 @@
 import * as React from "react";
 import {useState} from "react";
-import {Button, Grid, Table, TableBody, TableCell, TableHead, TableRow, Typography} from "@material-ui/core";
+import {
+    Button,
+    CircularProgress,
+    Grid,
+    Table,
+    TableBody,
+    TableCell,
+    TableHead,
+    TableRow,
+    Typography
+} from "@material-ui/core";
 import {CenteredPage} from "../../components/CenteredPage";
 import {Divider} from "../../components/Divider";
 import {theme} from "../../theme/theme";
@@ -16,7 +26,7 @@ export const TournamentsPage = (): JSX.Element => {
     const navigate = useNavigate()
 
     if (!tournaments) {
-        return <CenteredPage/>
+        return <CircularProgress style={{position: "absolute", left: "50%", top: "50%"}}/>
     }
 
     return <CenteredPage>

@@ -57,7 +57,7 @@ export const InformationTabContent = (props: InformationTabContentProps): JSX.El
             <Typography variant={"h4"}>Præmiepulje</Typography>
             <Typography>1.000 DKK</Typography>
             <Typography variant={"h4"} className={classes.text}>Format</Typography>
-            <Typography>Single Elimination BO1 (BO3 i semifinale og efter)</Typography>
+            <Typography>Single Elimination BO1</Typography>
             <Typography variant={"h4"} className={classes.text}>Starttidspunkt</Typography>
             <Typography>14:00</Typography>
             <Typography variant={"h4"} className={classes.text}>Tilmeldte hold</Typography>

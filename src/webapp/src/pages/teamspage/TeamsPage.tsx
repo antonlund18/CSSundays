@@ -42,7 +42,7 @@ export const TeamsPage = (): JSX.Element => {
     const {teams, loading} = useGetAllTeams()
 
     if (loading || !teams) {
-        return <CircularProgress/>
+        return <CircularProgress style={{position: "absolute", left: "50%", top: "50%"}}/>
     }
 
     const teamsSorted = teams.slice().sort((team1, team2) => {
