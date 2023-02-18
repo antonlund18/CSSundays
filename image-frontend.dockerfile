@@ -1,4 +1,4 @@
-FROM node:alpine3.16 as build
+FROM public.ecr.aws/docker/library/node:lts-alpine3.17
 RUN mkdir -p /app
 WORKDIR /app
 COPY src/webapp/package*.json ./

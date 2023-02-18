@@ -1,4 +1,4 @@
-FROM openjdk:17
+FROM public.ecr.aws/docker/library/openjdk:17
 
 RUN mkdir -p /app
 
