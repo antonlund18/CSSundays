@@ -1,4 +1,4 @@
-FROM nginx:1.19
+FROM public.ecr.aws/nginx/nginx:1.19
 COPY src/webapp/nginx/nginx.conf etc/nginx/nginx.conf
 
 FROM public.ecr.aws/docker/library/node:lts-alpine3.17
