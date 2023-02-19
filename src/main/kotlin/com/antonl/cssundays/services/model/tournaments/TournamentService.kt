@@ -44,7 +44,7 @@ class TournamentService(
 
     fun generateBracket(tournament: Tournament): Tournament {
         val bracket = createBracket(tournament)
-        val numberOfMatches = BracketCalculator.calculateNumberOfMatchesInBracket(tournament.teamRegistrations.size)
+        val numberOfMatches = calculateNumberOfMatches(tournament.teamRegistrations.size)
         val registeredTeams = tournamentRegistrationService.getRegisteredTeams(tournament)
 
         BracketMatchInitializer(numberOfMatches).traverseTree(bracket)
@@ -63,5 +63,9 @@ class TournamentService(
         val bracket = Bracket(tournament)
         tournament.bracket = bracket
         return bracket
+    }
+
+    fun calculateNumberOfMatches(numberOfTeams: Int): Int {
+        return BracketCalculator.calculateNumberOfMatchesInBracket(numberOfTeams)
     }
 }
