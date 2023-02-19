@@ -12,7 +12,6 @@ import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 
 internal class NotificationTest {
-    private lateinit var testEnvironment: TestEnvironment
     private lateinit var notificationService: NotificationService
     private lateinit var inviteToTeamService: InviteToTeamService
     private lateinit var sender: User
@@ -22,7 +21,7 @@ internal class NotificationTest {
 
     @BeforeEach
     fun setUp() {
-        testEnvironment = TestEnvironment()
+        val testEnvironment = TestEnvironment()
         inviteToTeamService = testEnvironment.inviteToTeamService
         notificationService = testEnvironment.notificationService
         sender = testEnvironment.userService.createUser("Anton", "anton@anton.anton", "anton12345")

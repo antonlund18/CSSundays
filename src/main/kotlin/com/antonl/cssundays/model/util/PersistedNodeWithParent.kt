@@ -1,4 +1,4 @@
-package com.antonl.cssundays.model.tournaments
+package com.antonl.cssundays.model.util
 
 import com.expediagroup.graphql.generator.annotations.GraphQLIgnore
 import javax.persistence.*

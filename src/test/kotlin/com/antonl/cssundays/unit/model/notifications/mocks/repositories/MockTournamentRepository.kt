@@ -14,7 +14,7 @@ class MockTournamentRepository : TournamentRepository {
     }
 
     override fun <S : Tournament?> save(entity: S): S {
-        TODO("Not yet implemented")
+        return entity
     }
 
     override fun <S : Tournament?> saveAll(entities: MutableIterable<S>): MutableIterable<S> {

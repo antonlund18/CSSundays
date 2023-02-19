@@ -1,4 +1,4 @@
-package com.antonl.cssundays.model.tournaments
+package com.antonl.cssundays.model.tournaments.brackets
 
 class BracketTreePrinter : BracketTreeTraverser {
     override fun traverseTree(tree: Bracket) {

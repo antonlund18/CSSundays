@@ -1,5 +1,7 @@
-package com.antonl.cssundays.model.tournaments
+package com.antonl.cssundays.model.tournaments.brackets
 
+import com.antonl.cssundays.model.util.PersistedTree
+import com.antonl.cssundays.model.tournaments.Tournament
 import java.time.LocalDateTime
 import javax.persistence.*
 

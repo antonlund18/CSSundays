@@ -2,6 +2,7 @@ package com.antonl.cssundays.services.model.tournaments
 
 import com.antonl.cssundays.model.core.Team
 import com.antonl.cssundays.model.tournaments.*
+import com.antonl.cssundays.model.tournaments.brackets.*
 import com.antonl.cssundays.repositories.TournamentRepository
 import org.springframework.stereotype.Service
 import javax.transaction.Transactional
@@ -44,8 +45,8 @@ class TournamentService(
 
     fun generateBracket(tournament: Tournament): Tournament {
         val bracket = createBracket(tournament)
-        val numberOfMatches = calculateNumberOfMatches(tournament.teamRegistrations.size)
         val registeredTeams = tournamentRegistrationService.getRegisteredTeams(tournament)
+        val numberOfMatches = calculateNumberOfMatches(registeredTeams.size)
 
         BracketMatchInitializer(numberOfMatches).traverseTree(bracket)
         BracketTeamPopulator(registeredTeams).populateTree(bracket)
@@ -63,6 +64,12 @@ class TournamentService(
         val bracket = Bracket(tournament)
         tournament.bracket = bracket
         return bracket
+    }
+
+    fun getBracketSize(bracket: Bracket): Int {
+        val bracketSizeFinder = BracketSizeFinder()
+        bracketSizeFinder.traverseTree(bracket)
+        return bracketSizeFinder.size
     }
 
     fun calculateNumberOfMatches(numberOfTeams: Int): Int {

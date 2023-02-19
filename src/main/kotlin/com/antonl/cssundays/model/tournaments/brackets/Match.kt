@@ -1,6 +1,7 @@
-package com.antonl.cssundays.model.tournaments
+package com.antonl.cssundays.model.tournaments.brackets
 
 import com.antonl.cssundays.model.core.Team
+import com.antonl.cssundays.model.util.PersistedNodeWithParent
 import java.time.LocalDateTime
 import javax.persistence.*
 

@@ -1,8 +1,10 @@
-package com.antonl.cssundays.model.tournaments
+package com.antonl.cssundays.model.tournaments.brackets
 
 import java.util.*
 
-class BracketLeafNodeFinder(val leafNodes: MutableList<Match> = mutableListOf()) : BracketTreeTraverser {
+class BracketLeafNodeFinder() : BracketTreeTraverser {
+    val leafNodes: MutableList<Match> = mutableListOf()
+
     override fun traverseTree(tree: Bracket) {
         val queue: Queue<Match> = LinkedList()
 

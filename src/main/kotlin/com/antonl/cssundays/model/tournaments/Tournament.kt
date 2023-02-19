@@ -1,5 +1,6 @@
 package com.antonl.cssundays.model.tournaments
 
+import com.antonl.cssundays.model.tournaments.brackets.Bracket
 import org.hibernate.annotations.LazyCollection
 import org.hibernate.annotations.LazyCollectionOption
 import java.time.LocalDateTime

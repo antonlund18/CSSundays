@@ -1,8 +1,7 @@
 package com.antonl.cssundays.graphql.queries
 
-import com.antonl.cssundays.model.tournaments.Bracket
-import com.antonl.cssundays.model.tournaments.BracketLeafNodeFinder
-import com.antonl.cssundays.model.tournaments.Match
+import com.antonl.cssundays.model.tournaments.brackets.Bracket
+import com.antonl.cssundays.model.tournaments.brackets.Match
 import com.antonl.cssundays.model.tournaments.Tournament
 import com.antonl.cssundays.services.model.tournaments.TournamentService
 import com.expediagroup.graphql.server.operations.Query
