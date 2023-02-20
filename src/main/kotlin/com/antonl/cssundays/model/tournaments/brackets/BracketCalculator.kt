@@ -5,7 +5,7 @@ class BracketCalculator {
         val POWERS_OF_TWO = generateSequence(1) { it * 2 }
 
         /*
-         * Number of autoadvanced teams is equals to number of registered teams to nearest power of 2 (ceiling) minus number of registered teams
+         * Number of autoadvanced teams is equals to number of registered teams to the nearest power of 2 (ceiling) minus number of registered teams
          *
          * Examples:
          * Number of teams: 5 - Nearest power of 2 (ceil): 8 -> Minus 5 = 3
@@ -18,7 +18,7 @@ class BracketCalculator {
         }
 
         /*
-         * Number of matches is equals to one less than number of teams to nearest power of 2 (ceiling)
+         * Number of matches is equals to one less than number of teams to the nearest power of 2 (ceiling)
          *
          * Examples:
          * Number of teams: 5 - Nearest power of 2 (ceil): 8 -> Minus 1 = 7

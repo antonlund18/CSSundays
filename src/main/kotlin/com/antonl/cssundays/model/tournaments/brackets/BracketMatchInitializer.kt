@@ -3,7 +3,7 @@ package com.antonl.cssundays.model.tournaments.brackets
 import java.util.*
 
 class BracketMatchInitializer(val numberOfMatches: Int) : BracketTreeTraverser {
-    override fun traverseTree(tree: Bracket) {
+    override fun traverseTree(tree: Bracket): BracketMatchInitializer {
         val queue: Queue<Match> = LinkedList()
         var count = 0;
 
@@ -26,5 +26,7 @@ class BracketMatchInitializer(val numberOfMatches: Int) : BracketTreeTraverser {
                 count++
             }
         }
+
+        return this
     }
 }

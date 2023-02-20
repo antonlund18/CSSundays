@@ -11,7 +11,8 @@ import javax.transaction.Transactional
 @Transactional
 class TournamentService(
     val tournamentRepository: TournamentRepository,
-    val tournamentRegistrationService: TournamentRegistrationService
+    val tournamentRegistrationService: TournamentRegistrationService,
+    val sharedTournamentAndTournamentRegistrationService: SharedTournamentAndTournamentRegistrationService
 ) {
     fun saveTournament(tournament: Tournament): Tournament {
         return tournamentRepository.save(tournament)
@@ -35,14 +36,6 @@ class TournamentService(
         return tournamentRepository.findById(id)
     }
 
-    fun registerTeam(team: Team, tournament: Tournament): Tournament? {
-        if (tournament.teamRegistrations.size < tournament.numberOfTeamsAllowed) {
-            tournamentRegistrationService.createTournamentRegistration(tournament, team)
-            saveTournament(tournament)
-        }
-        return tournament
-    }
-
     fun generateBracket(tournament: Tournament): Tournament {
         val bracket = createBracket(tournament)
         val registeredTeams = tournamentRegistrationService.getRegisteredTeams(tournament)
@@ -55,9 +48,7 @@ class TournamentService(
 
     fun getFirstRoundMatches(tournament: Tournament): List<Match> {
         val bracket = tournament.bracket ?: return listOf()
-        val leafFinder = BracketLeafNodeFinder()
-        leafFinder.traverseTree(bracket)
-        return leafFinder.leafNodes
+        return BracketLeafNodeFinder().traverseTree(bracket).getLeafNodes()
     }
 
     fun createBracket(tournament: Tournament): Bracket {
@@ -67,9 +58,7 @@ class TournamentService(
     }
 
     fun getBracketSize(bracket: Bracket): Int {
-        val bracketSizeFinder = BracketSizeFinder()
-        bracketSizeFinder.traverseTree(bracket)
-        return bracketSizeFinder.size
+        return BracketSizeFinder().traverseTree(bracket).size
     }
 
     fun calculateNumberOfMatches(numberOfTeams: Int): Int {

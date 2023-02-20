@@ -12,26 +12,15 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Component
 
 @Component
-class TournamentMutations : Mutation {
+class SharedTournamentAndTournamentRegistrationMutations : Mutation {
+    @Autowired
+    private lateinit var sharedTournamentAndTournamentRegistrationService: SharedTournamentAndTournamentRegistrationService
+
     @Autowired
     private lateinit var tournamentService: TournamentService
 
     @Autowired
     private lateinit var teamService: TeamService
-
-    @Autowired
-    private lateinit var sharedTournamentAndTournamentRegistrationService: SharedTournamentAndTournamentRegistrationService
-
-//    @AuthorizationDirective([UserRole.ADMIN, UserRole.ORGANIZER])
-    suspend fun createTournament(name: String, date: String, numberOfTeamsAllowed: Int): Tournament? {
-        return tournamentService.createTournament(name, date, numberOfTeamsAllowed)
-    }
-
-//    @AuthorizationDirective([UserRole.ADMIN, UserRole.ORGANIZER])
-    suspend fun generateBracket(tournamentId: Int): Tournament? {
-        val tournament = tournamentService.getTournamentById(tournamentId) ?: return null
-        return tournamentService.generateBracket(tournament)
-    }
 
     suspend fun registerTeam(tournamentId: Int, teamId: Int): Tournament? {
         val tournament = tournamentService.getTournamentById(tournamentId) ?: return null
