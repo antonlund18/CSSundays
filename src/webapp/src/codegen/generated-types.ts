@@ -406,6 +406,14 @@ export type SetPictureAndGetPresignedRequestMutationVariables = Exact<{
 
 export type SetPictureAndGetPresignedRequestMutation = { __typename?: 'Mutation', setPictureAndGetPresignedRequest?: { __typename?: 'RequestDTO', url: string, method: string, headers: Array<{ __typename?: 'HeaderDTO', name: string, value: string }> } };
 
+export type RegisterTeamMutationVariables = Exact<{
+  tournamentId: Scalars['Int'];
+  teamId: Scalars['Int'];
+}>;
+
+
+export type RegisterTeamMutation = { __typename?: 'Mutation', registerTeam?: { __typename?: 'Tournament', id?: number, teamRegistrations: Array<{ __typename?: 'TournamentRegistration', id?: number, team: { __typename?: 'Team', id?: number, name: string } }> } };
+
 export type GetAllTeamsQueryVariables = Exact<{ [key: string]: never; }>;
 
 
@@ -467,14 +475,6 @@ export type GetTournamentByIdQueryVariables = Exact<{
 
 
 export type GetTournamentByIdQuery = { __typename?: 'Query', getTournamentById?: { __typename?: 'Tournament', id?: number, name: string, numberOfTeamsAllowed: number, teamRegistrations: Array<{ __typename?: 'TournamentRegistration', id?: number }>, bracket?: { __typename?: 'Bracket', id?: number, root?: { __typename?: 'Match', id?: number, team1?: { __typename?: 'Team', id?: number, name: string, picture: string }, team2?: { __typename?: 'Team', id?: number, name: string, picture: string } } } } };
-
-export type RegisterTeamMutationVariables = Exact<{
-  tournamentId: Scalars['Int'];
-  teamId: Scalars['Int'];
-}>;
-
-
-export type RegisterTeamMutation = { __typename?: 'Mutation', registerTeam?: { __typename?: 'Tournament', id?: number, teamRegistrations: Array<{ __typename?: 'TournamentRegistration', id?: number, team: { __typename?: 'Team', id?: number, name: string } }> } };
 
 export type GetUserByIdQueryVariables = Exact<{
   id: Scalars['Int'];
@@ -962,6 +962,47 @@ export function useSetPictureAndGetPresignedRequestMutation(baseOptions?: Apollo
 export type SetPictureAndGetPresignedRequestMutationHookResult = ReturnType<typeof useSetPictureAndGetPresignedRequestMutation>;
 export type SetPictureAndGetPresignedRequestMutationResult = Apollo.MutationResult<SetPictureAndGetPresignedRequestMutation>;
 export type SetPictureAndGetPresignedRequestMutationOptions = Apollo.BaseMutationOptions<SetPictureAndGetPresignedRequestMutation, SetPictureAndGetPresignedRequestMutationVariables>;
+export const RegisterTeamDocument = gql`
+    mutation registerTeam($tournamentId: Int!, $teamId: Int!) {
+  registerTeam(teamId: $teamId, tournamentId: $tournamentId) {
+    id
+    teamRegistrations {
+      id
+      team {
+        id
+        name
+      }
+    }
+  }
+}
+    `;
+export type RegisterTeamMutationFn = Apollo.MutationFunction<RegisterTeamMutation, RegisterTeamMutationVariables>;
+
+/**
+ * __useRegisterTeamMutation__
+ *
+ * To run a mutation, you first call `useRegisterTeamMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useRegisterTeamMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [registerTeamMutation, { data, loading, error }] = useRegisterTeamMutation({
+ *   variables: {
+ *      tournamentId: // value for 'tournamentId'
+ *      teamId: // value for 'teamId'
+ *   },
+ * });
+ */
+export function useRegisterTeamMutation(baseOptions?: Apollo.MutationHookOptions<RegisterTeamMutation, RegisterTeamMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<RegisterTeamMutation, RegisterTeamMutationVariables>(RegisterTeamDocument, options);
+      }
+export type RegisterTeamMutationHookResult = ReturnType<typeof useRegisterTeamMutation>;
+export type RegisterTeamMutationResult = Apollo.MutationResult<RegisterTeamMutation>;
+export type RegisterTeamMutationOptions = Apollo.BaseMutationOptions<RegisterTeamMutation, RegisterTeamMutationVariables>;
 export const GetAllTeamsDocument = gql`
     query getAllTeams {
   getAllTeams {
@@ -1383,47 +1424,6 @@ export function useGetTournamentByIdLazyQuery(baseOptions?: Apollo.LazyQueryHook
 export type GetTournamentByIdQueryHookResult = ReturnType<typeof useGetTournamentByIdQuery>;
 export type GetTournamentByIdLazyQueryHookResult = ReturnType<typeof useGetTournamentByIdLazyQuery>;
 export type GetTournamentByIdQueryResult = Apollo.QueryResult<GetTournamentByIdQuery, GetTournamentByIdQueryVariables>;
-export const RegisterTeamDocument = gql`
-    mutation registerTeam($tournamentId: Int!, $teamId: Int!) {
-  registerTeam(teamId: $teamId, tournamentId: $tournamentId) {
-    id
-    teamRegistrations {
-      id
-      team {
-        id
-        name
-      }
-    }
-  }
-}
-    `;
-export type RegisterTeamMutationFn = Apollo.MutationFunction<RegisterTeamMutation, RegisterTeamMutationVariables>;
-
-/**
- * __useRegisterTeamMutation__
- *
- * To run a mutation, you first call `useRegisterTeamMutation` within a React component and pass it any options that fit your needs.
- * When your component renders, `useRegisterTeamMutation` returns a tuple that includes:
- * - A mutate function that you can call at any time to execute the mutation
- * - An object with fields that represent the current status of the mutation's execution
- *
- * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
- *
- * @example
- * const [registerTeamMutation, { data, loading, error }] = useRegisterTeamMutation({
- *   variables: {
- *      tournamentId: // value for 'tournamentId'
- *      teamId: // value for 'teamId'
- *   },
- * });
- */
-export function useRegisterTeamMutation(baseOptions?: Apollo.MutationHookOptions<RegisterTeamMutation, RegisterTeamMutationVariables>) {
-        const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useMutation<RegisterTeamMutation, RegisterTeamMutationVariables>(RegisterTeamDocument, options);
-      }
-export type RegisterTeamMutationHookResult = ReturnType<typeof useRegisterTeamMutation>;
-export type RegisterTeamMutationResult = Apollo.MutationResult<RegisterTeamMutation>;
-export type RegisterTeamMutationOptions = Apollo.BaseMutationOptions<RegisterTeamMutation, RegisterTeamMutationVariables>;
 export const GetUserByIdDocument = gql`
     query getUserById($id: Int!) {
   getUserById(id: $id) {
@@ -1600,12 +1600,12 @@ export const ListAllOperations = {
     createInviteToTeam: 'createInviteToTeam',
     markAllNotificationsAsSeenForUser: 'markAllNotificationsAsSeenForUser',
     setPictureAndGetPresignedRequest: 'setPictureAndGetPresignedRequest',
+    registerTeam: 'registerTeam',
     incrementWins: 'incrementWins',
     incrementLosses: 'incrementLosses',
     createTeam: 'createTeam',
     createTournament: 'createTournament',
     generateBracket: 'generateBracket',
-    registerTeam: 'registerTeam',
     createUser: 'createUser',
     loginUser: 'loginUser'
   },
