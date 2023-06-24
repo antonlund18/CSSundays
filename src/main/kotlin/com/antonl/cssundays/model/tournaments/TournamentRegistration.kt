@@ -19,5 +19,5 @@ class TournamentRegistration(
     val team: Team,
 
     @GeneratedValue
-    val createdTs: String = LocalDateTime.now().toString()
+    val createdTs: LocalDateTime = LocalDateTime.now()
 )

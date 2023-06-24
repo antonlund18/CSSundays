@@ -33,5 +33,5 @@ class Team(
 
     var slug: String = name.toSlug(),
 
-    var createdTs: String = LocalDateTime.now().toString(),
+    var createdTs: LocalDateTime = LocalDateTime.now(),
 )

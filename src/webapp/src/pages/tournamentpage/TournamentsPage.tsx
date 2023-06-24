@@ -14,14 +14,12 @@ import {
 import {CenteredPage} from "../../components/CenteredPage";
 import {Divider} from "../../components/Divider";
 import {theme} from "../../theme/theme";
-import {CreateTournamentDialog} from "./admin/CreateTournamentDialog";
 import {Link, useNavigate} from "react-router-dom";
 import {useGetAllTournaments} from "../../hooks/api/useTournament";
 
 export const TournamentsPage = (): JSX.Element => {
     // const isCurrentUserAdminOrOrganizer = currentUser && (currentUser.role === UserRole.Admin || currentUser.role === UserRole.Organizer)
     const isCurrentUserAdminOrOrganizer = true
-    const [createDialogOpen, setCreateDialogOpen] = useState<boolean>(false);
     const {tournaments} = useGetAllTournaments()
     const navigate = useNavigate()
 
@@ -47,10 +45,10 @@ export const TournamentsPage = (): JSX.Element => {
                     return <TableRow key={tournament.name}
                                      style={{
                                          cursor: "pointer",
-                                         textDecoration: new Date(tournament.date).valueOf() < Date.now() ? "line-through" : "none"}}
+                                         textDecoration: new Date(tournament.startDateAndTime).valueOf() < Date.now() ? "line-through" : "none"}}
                                      onClick={() => navigate(`/tournaments/${tournament.id}`)}>
                         <TableCell><Typography variant={"h4"}>{tournament.name}</Typography></TableCell>
-                        <TableCell><Typography variant={"h4"}>{new Date(tournament.date).toLocaleDateString("da", {
+                        <TableCell><Typography variant={"h4"}>{new Date(tournament.startDateAndTime).toLocaleDateString("da", {
                             year: "numeric",
                             month: "long",
                             day: "numeric"
@@ -71,11 +69,10 @@ export const TournamentsPage = (): JSX.Element => {
                     </Button>
                 </Link>
                 <Button color={"primary"} variant={"contained"} style={{margin: theme.spacing(1), alignSelf: "end"}}
-                        onClick={() => setCreateDialogOpen(true)}>
+                        onClick={() => navigate("admin/create")}>
                     Opret turnering
                 </Button>
             </Grid>
-            <CreateTournamentDialog open={createDialogOpen} setOpen={setCreateDialogOpen}/>
         </>}
     </CenteredPage>
 }

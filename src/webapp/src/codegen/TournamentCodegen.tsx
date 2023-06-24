@@ -1,7 +1,7 @@
 import {gql} from "@apollo/client";
 
 gql`
-    mutation createTournament($name: String!, $date: String!, $numberOfTeamsAllowed: Int!) {
+    mutation createTournament($name: String!, $date: LocalDateTime!, $numberOfTeamsAllowed: Int!) {
         createTournament(name: $name, date: $date, numberOfTeamsAllowed: $numberOfTeamsAllowed) {
             id,
             name,
@@ -17,7 +17,7 @@ gql`
                     }
                 }
             }
-            date,
+            startDateAndTime,
             numberOfTeamsAllowed
         }
     }
@@ -40,7 +40,7 @@ gql`
                     }
                 }
             }
-            date,
+            startDateAndTime,
             numberOfTeamsAllowed,
             teamRegistrations {
                 team {

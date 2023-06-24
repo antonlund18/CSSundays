@@ -15,7 +15,7 @@ class Tournament(
 
     val name: String,
 
-    val date: String,
+    val startDateAndTime: LocalDateTime,
 
     val numberOfTeamsAllowed: Int,
 
@@ -33,7 +33,7 @@ class Tournament(
     val published: Boolean = false,
 
     @GeneratedValue
-    val createdTs: String = LocalDateTime.now().toString()
+    val createdTs: LocalDateTime = LocalDateTime.now()
 )
 
 enum class TournamentStatus {

@@ -10,6 +10,7 @@ import com.antonl.cssundays.services.model.tournaments.TournamentService
 import com.expediagroup.graphql.server.operations.Mutation
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Component
+import java.time.LocalDateTime
 
 @Component
 class TournamentMutations : Mutation {
@@ -23,7 +24,7 @@ class TournamentMutations : Mutation {
     private lateinit var sharedTournamentAndTournamentRegistrationService: SharedTournamentAndTournamentRegistrationService
 
 //    @AuthorizationDirective([UserRole.ADMIN, UserRole.ORGANIZER])
-    suspend fun createTournament(name: String, date: String, numberOfTeamsAllowed: Int): Tournament? {
+    suspend fun createTournament(name: String, date: LocalDateTime, numberOfTeamsAllowed: Int): Tournament? {
         return tournamentService.createTournament(name, date, numberOfTeamsAllowed)
     }
 
@@ -31,12 +32,5 @@ class TournamentMutations : Mutation {
     suspend fun generateBracket(tournamentId: Int): Tournament? {
         val tournament = tournamentService.getTournamentById(tournamentId) ?: return null
         return tournamentService.generateBracket(tournament)
-    }
-
-    suspend fun registerTeam(tournamentId: Int, teamId: Int): Tournament? {
-        val tournament = tournamentService.getTournamentById(tournamentId) ?: return null
-        val team = teamService.findTeamById(teamId) ?: return null
-        sharedTournamentAndTournamentRegistrationService.createTournamentRegistration(tournament, team)
-        return tournament
     }
 }

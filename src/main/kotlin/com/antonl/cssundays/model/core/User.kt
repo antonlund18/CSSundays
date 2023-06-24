@@ -25,7 +25,7 @@ class User(
     var role: UserRole = UserRole.USER,
 
     @GeneratedValue
-    var createdTs: String = LocalDateTime.now().toString(),
+    var createdTs: LocalDateTime = LocalDateTime.now(),
 
     var slug: String = playertag.toSlug(),
 

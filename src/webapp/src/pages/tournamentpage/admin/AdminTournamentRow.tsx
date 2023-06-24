@@ -44,7 +44,7 @@ export const AdminTournamentRow = (props: AdminTournamentRowProps): JSX.Element 
         </TableCell>
         <TableCell align={"right"}>
             <Typography color={"inherit"}>
-                {props.tournament.date}
+                {props.tournament.startDateAndTime}
             </Typography>
         </TableCell>
         <TableCell align={"right"}>

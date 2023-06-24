@@ -2,6 +2,7 @@ package com.antonl.cssundays.graphql.server
 
 import com.antonl.cssundays.graphql.mutations.*
 import com.antonl.cssundays.graphql.queries.*
+import com.antonl.cssundays.graphql.server.hooks.CustomSchemaGeneratorHooks
 import com.expediagroup.graphql.generator.SchemaGeneratorConfig
 import com.expediagroup.graphql.generator.TopLevelObject
 import com.expediagroup.graphql.generator.toSchema
@@ -32,7 +33,7 @@ abstract class SchemaGenerator {
 
         private fun generateSchema(): GraphQLSchema {
             return toSchema(
-                config = SchemaGeneratorConfig(supportedPackages = listOf("com.antonl.cssundays")),
+                config = SchemaGeneratorConfig(hooks = CustomSchemaGeneratorHooks(), supportedPackages = listOf("com.antonl.cssundays")),
                 queries = listOf(
                     TopLevelObject(UserQueries()),
                     TopLevelObject(TeamQueries()),
@@ -47,8 +48,9 @@ abstract class SchemaGenerator {
                     TopLevelObject(SharedTeamAndUserMutations()),
                     TopLevelObject(InviteToTeamMutations()),
                     TopLevelObject(NotificationMutations()),
-                    TopLevelObject(TournamentMutations())
-                )
+                    TopLevelObject(TournamentMutations()),
+                    TopLevelObject(SharedTournamentAndTournamentRegistrationMutations())
+                ),
             )
         }
     }

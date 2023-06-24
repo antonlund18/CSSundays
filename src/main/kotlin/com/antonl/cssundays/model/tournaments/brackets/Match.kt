@@ -14,7 +14,7 @@ class Match(
     @OneToOne
     var team2: Team? = null,
 
-    val createdTs: String = LocalDateTime.now().toString(),
+    val createdTs: LocalDateTime = LocalDateTime.now(),
 
     @Enumerated(EnumType.STRING)
     val result: MatchResult = MatchResult.COMING_UP,

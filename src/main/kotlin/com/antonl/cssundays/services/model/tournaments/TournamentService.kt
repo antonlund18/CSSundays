@@ -5,6 +5,7 @@ import com.antonl.cssundays.model.tournaments.*
 import com.antonl.cssundays.model.tournaments.brackets.*
 import com.antonl.cssundays.repositories.TournamentRepository
 import org.springframework.stereotype.Service
+import java.time.LocalDateTime
 import javax.transaction.Transactional
 
 @Service
@@ -22,10 +23,10 @@ class TournamentService(
         return tournamentRepository.findAll().toList()
     }
 
-    fun createTournament(name: String, date: String, numberOfTeamsAllowed: Int): Tournament {
+    fun createTournament(name: String, date: LocalDateTime, numberOfTeamsAllowed: Int): Tournament {
         val tournament = Tournament(
             name = name,
-            date = date,
+            startDateAndTime = date,
             numberOfTeamsAllowed = numberOfTeamsAllowed
         )
         saveTournament(tournament)
