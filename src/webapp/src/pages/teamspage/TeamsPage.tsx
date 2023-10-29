@@ -58,7 +58,7 @@ export const TeamsPage = (): JSX.Element => {
             <Typography variant={"h2"} color={"primary"}>Hold</Typography>
         </div>
         <Divider/>
-        <TableContainer style={{maxHeight: "70vh"}}>
+        <TableContainer style={{maxHeight: "65vh"}}>
             <Table stickyHeader>
                 <TableHead>
                     <TableRow>
@@ -88,7 +88,7 @@ export const TeamsPage = (): JSX.Element => {
             </Table>
         </TableContainer>
         <Grid container justifyContent={"flex-end"}>
-            <Button color={"primary"} variant={"contained"} style={{margin: theme.spacing(1), alignSelf: "end"}}
+            <Button color={"primary"} variant={"contained"} style={{marginTop: theme.spacing(2), alignSelf: "end"}}
                     onClick={() => setCreateDialogOpen(true)}>
                 Opret hold
             </Button>

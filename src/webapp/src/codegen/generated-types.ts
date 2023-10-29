@@ -426,7 +426,7 @@ export type GetTeamByIdQueryVariables = Exact<{
 }>;
 
 
-export type GetTeamByIdQuery = { __typename?: 'Query', getTeamById?: { __typename?: 'Team', id?: number, name: string, picture: string, wins: number, losses: number, createdTs: any, owner: { __typename?: 'User', id?: number, playertag: string, picture?: string }, users: Array<{ __typename?: 'User', id?: number, playertag: string, picture?: string }> } };
+export type GetTeamByIdQuery = { __typename?: 'Query', getTeamById?: { __typename?: 'Team', id?: number, name: string, slug: string, picture: string, wins: number, losses: number, createdTs: any, owner: { __typename?: 'User', id?: number, playertag: string, picture?: string }, users: Array<{ __typename?: 'User', id?: number, playertag: string, picture?: string }> } };
 
 export type IncrementWinsMutationVariables = Exact<{
   teamId: Scalars['Int'];
@@ -1049,6 +1049,7 @@ export const GetTeamByIdDocument = gql`
   getTeamById(teamId: $teamId) {
     id
     name
+    slug
     owner {
       id
       playertag

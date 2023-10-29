@@ -1,7 +1,7 @@
 import * as React from "react";
 import {useCallback, useMemo} from "react";
 import {Menu} from "@material-ui/core";
-import {useRelativeTimeFormat} from "../../../hooks/useRelativeTimeFormat";
+import {useDateFormatter} from "../../../hooks/useDateFormatter";
 import {InviteToTeamNotification} from "./InviteToTeamNotification";
 import {InviteToTeam, Notification} from "../../../codegen/generated-types";
 import {EmptyState} from "./EmptyState";
@@ -14,7 +14,7 @@ interface NotificationsMenuProps {
 }
 
 export const NotificationsMenu = (props: NotificationsMenuProps): JSX.Element => {
-    const {formatDateRelatively} = useRelativeTimeFormat();
+    const {formatDateRelatively} = useDateFormatter();
 
     const formattedDate = useCallback((timestamp: Date | string | number) => {
         return formatDateRelatively(timestamp)

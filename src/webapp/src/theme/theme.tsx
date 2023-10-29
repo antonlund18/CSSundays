@@ -74,6 +74,6 @@ export const theme = createTheme({
                     backgroundColor: "#1c95f3",
                 }
             }
-        }
+        },
     },
 })
