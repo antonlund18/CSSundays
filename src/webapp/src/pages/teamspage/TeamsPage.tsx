@@ -58,7 +58,7 @@ export const TeamsPage = (): JSX.Element => {
             <Typography variant={"h2"} color={"primary"}>Hold</Typography>
         </div>
         <Divider/>
-        <TableContainer style={{maxHeight: "65vh"}}>
+        <TableContainer style={{height: "65vh"}}>
             <Table stickyHeader>
                 <TableHead>
                     <TableRow>
