@@ -1,5 +1,4 @@
 import * as React from "react";
-import {useState} from "react";
 import {
     Button,
     CircularProgress,
@@ -10,7 +9,7 @@ import {
     TableHead,
     TableRow,
     Typography
-} from "@material-ui/core";
+} from "@mui/material";
 import {CenteredPage} from "../../components/CenteredPage";
 import {Divider} from "../../components/Divider";
 import {theme} from "../../theme/theme";

@@ -12,10 +12,10 @@ import javax.transaction.Transactional
 @Transactional
 class SharedTournamentAndTournamentRegistrationService(val tournamentRepository: TournamentRepository, val tournamentRegistrationRepository: TournamentRegistrationRepository) {
     fun createTournamentRegistration(tournament: Tournament, team: Team): TournamentRegistration {
-        val registration = TournamentRegistration(tournament = tournament, team = team)
+        var registration = TournamentRegistration(tournament = tournament, team = team)
+        registration = tournamentRegistrationRepository.save(registration)
         tournament.teamRegistrations.add(registration)
         tournamentRepository.save(tournament)
-        tournamentRegistrationRepository.save(registration)
         return registration
     }
 }

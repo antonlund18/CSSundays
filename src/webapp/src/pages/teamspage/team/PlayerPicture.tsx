@@ -1,8 +1,9 @@
 import * as React from "react"
-import {ObjectType, Team, User} from "../../../codegen/generated-types";
-import {Box, makeStyles, Theme} from "@material-ui/core";
+import {ObjectType, User} from "../../../codegen/generated-types";
+import {Box, Theme} from "@mui/material";
 import {getPictureLinkFromKey} from "../../../util/StorageHelper";
 import {useNavigate} from "react-router-dom";
+import {makeStyles} from "@mui/styles"
 
 type StylesProps = {
     playerPictureURL: string

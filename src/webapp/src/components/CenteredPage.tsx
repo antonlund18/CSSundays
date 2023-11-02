@@ -1,5 +1,6 @@
 import * as React from "react";
-import {makeStyles, Theme} from "@material-ui/core";
+import {Theme} from "@mui/material";
+import {makeStyles} from "@mui/styles"
 import {PropsWithChildren} from "react";
 
 interface StylesProps {

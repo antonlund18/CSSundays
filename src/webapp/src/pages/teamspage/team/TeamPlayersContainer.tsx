@@ -1,6 +1,7 @@
 import * as React from "react"
-import {makeStyles, Typography} from "@material-ui/core";
-import {Team, User} from "../../../codegen/generated-types";
+import {Typography} from "@mui/material";
+import {makeStyles} from "@mui/styles"
+import {Team} from "../../../codegen/generated-types";
 import {PlayerPicture} from "./PlayerPicture";
 import {useNavigate} from "react-router-dom";
 

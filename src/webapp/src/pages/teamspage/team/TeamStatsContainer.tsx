@@ -1,9 +1,7 @@
 import * as React from "react"
-import {Box, Button, Divider as MuiDivider, Grid, makeStyles, Typography} from "@material-ui/core";
-import {ObjectType, Team, User} from "../../../codegen/generated-types";
-import {getPictureLinkFromKey} from "../../../util/StorageHelper";
-import {useNavigate} from "react-router-dom";
-import {calculateWinrate} from "../../../helpers/helpers";
+import {Typography} from "@mui/material";
+import {makeStyles} from "@mui/styles"
+import {Team} from "../../../codegen/generated-types";
 import {useMutateTeam} from "../../../hooks/api/useTeam";
 
 const useStyles = makeStyles(theme => ({

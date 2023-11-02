@@ -1,6 +1,7 @@
 import * as React from "react"
 import {useEffect, useState} from "react"
-import {Divider, Grid, makeStyles, Theme, Tooltip, Typography} from "@material-ui/core";
+import {Divider, Grid, Theme, Tooltip, Typography} from "@mui/material";
+import {makeStyles} from "@mui/styles"
 import {getPictureLinkFromKey} from "../../../util/StorageHelper";
 import {ObjectType, Team, User} from "../../../codegen/generated-types";
 import {useSharedTeamAndUser} from "../../../hooks/api/useSharedTeamAndUser";
@@ -68,8 +69,7 @@ export const TeamInfo = (props: TeamInfoProps): JSX.Element => {
     return <Grid container spacing={2} style={{width: "100%"}}>
         <Grid item style={{width: "100%"}}>
             <Tooltip title={"Upload billede"} disableHoverListener={!isCurrenUserOwner} arrow>
-                <div className={classes.teamPicture} onClick={handleFileSelect}>
-                </div>
+                <div className={classes.teamPicture} onClick={handleFileSelect}/>
             </Tooltip>
         </Grid>
         <Grid item style={{width: "100%"}}>

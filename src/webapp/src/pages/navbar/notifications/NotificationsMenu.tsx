@@ -1,6 +1,6 @@
 import * as React from "react";
 import {useCallback, useMemo} from "react";
-import {Menu} from "@material-ui/core";
+import {Menu} from "@mui/material";
 import {useDateFormatter} from "../../../hooks/useDateFormatter";
 import {InviteToTeamNotification} from "./InviteToTeamNotification";
 import {InviteToTeam, Notification} from "../../../codegen/generated-types";
@@ -32,7 +32,6 @@ export const NotificationsMenu = (props: NotificationsMenuProps): JSX.Element =>
                      }
                  }}
                  anchorEl={props.anchor}
-                 getContentAnchorEl={null}
                  onClose={() => props.handleClose(false)}
                  anchorOrigin={{
                      vertical: "bottom",

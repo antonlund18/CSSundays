@@ -1,5 +1,6 @@
 import {Tournament} from "../../../codegen/generated-types";
-import {Box, Grid, List, ListItem, makeStyles, Typography} from "@material-ui/core";
+import {Box, Grid, List, ListItem, Typography} from "@mui/material";
+import {makeStyles} from "@mui/styles"
 import {useMemo} from "react";
 
 const useStyles = makeStyles(theme => ({

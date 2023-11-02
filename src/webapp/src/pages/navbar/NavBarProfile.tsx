@@ -1,6 +1,7 @@
 import * as React from "react";
 import {useState} from "react";
-import {Box, Button, makeStyles, Typography} from "@material-ui/core";
+import {Box, Button, Typography} from "@mui/material";
+import {makeStyles} from "@mui/styles"
 import {LoginDialog} from "../../login/LoginDialog";
 import {PlayerDropdown} from "./PlayerDropdown";
 import {useGetCurrentUser} from "../../hooks/api/useUser";

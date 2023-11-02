@@ -1,7 +1,7 @@
 import * as React from "react";
 import {useState} from "react";
-import {Badge, Icon} from "@material-ui/core";
-import {Notifications} from "@material-ui/icons";
+import {Badge, Icon} from "@mui/material";
+import {Notifications} from "@mui/icons-material";
 import {useGetCurrentUser} from "../../../hooks/api/useUser";
 import {NavBarMenuItem} from "../NavBarMenuItem";
 import {NotificationsMenu} from "./NotificationsMenu";

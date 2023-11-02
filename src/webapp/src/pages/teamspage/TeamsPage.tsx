@@ -3,14 +3,13 @@ import {useState} from "react";
 import {
     Button,
     CircularProgress, Grid,
-    makeStyles,
     Table,
     TableBody,
     TableCell, TableContainer,
     TableHead,
     TableRow,
     Typography
-} from "@material-ui/core";
+} from "@mui/material";
 import {CenteredPage} from "../../components/CenteredPage";
 import {CreateTeamDialog} from "./CreateTeamDialog";
 import {useNavigate} from "react-router-dom";
@@ -19,6 +18,7 @@ import {theme} from "../../theme/theme";
 import {calculateWinrate} from "../../helpers/helpers";
 import {useGetAllTeams} from "../../hooks/api/useTeam";
 import {Team} from "../../codegen/generated-types";
+import {makeStyles} from "@mui/styles"
 
 const useStyles = makeStyles(theme => ({
     pageTitleContainer: {

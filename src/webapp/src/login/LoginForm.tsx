@@ -1,5 +1,6 @@
 import * as React from "react";
-import {Button, makeStyles, TextField, Typography} from "@material-ui/core";
+import {Button, TextField, Typography} from "@mui/material";
+import {makeStyles} from "@mui/styles"
 import {useState} from "react";
 import {theme} from "../theme/theme";
 import {useMutateUser} from "../hooks/api/useUser";

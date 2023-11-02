@@ -1,7 +1,8 @@
 import {useGetTournamentById} from "../../hooks/api/useTournament";
 import {useParams} from "react-router-dom";
 import {CenteredPage} from "../../components/CenteredPage";
-import {CircularProgress, Divider, makeStyles, Tab, Tabs, Typography} from "@material-ui/core";
+import {CircularProgress, Divider, Tab, Tabs, Typography} from "@mui/material";
+import {makeStyles} from "@mui/styles"
 import React, {useState} from "react";
 import {BracketTabContent} from "./tabs/BracketTabContent";
 import { InformationTabContent } from "./tabs/InformationTabContent";

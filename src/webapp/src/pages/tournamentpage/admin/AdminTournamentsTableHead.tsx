@@ -1,4 +1,4 @@
-import {TableCell, TableHead, TableRow, TableSortLabel, Typography} from "@material-ui/core";
+import {TableCell, TableHead, TableRow, TableSortLabel, Typography} from "@mui/material";
 import {SortDirection, SortOption} from "../../../hooks/tournaments/useSortTournaments";
 
 interface HeadCell {

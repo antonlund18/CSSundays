@@ -1,7 +1,8 @@
 import * as React from "react"
 import {useGetTeamById} from "../../../hooks/api/useTeam";
 import {useParams} from "react-router-dom";
-import {Button, Grid, makeStyles, Typography} from "@material-ui/core";
+import {Button, Grid, Typography} from "@mui/material";
+import {makeStyles} from "@mui/styles"
 import {Divider as CSDivider} from "../../../components/Divider";
 import {CenteredPage} from "../../../components/CenteredPage";
 

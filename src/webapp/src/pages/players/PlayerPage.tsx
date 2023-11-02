@@ -1,6 +1,7 @@
 import * as React from "react";
 import {useEffect, useState} from "react";
-import {Box, Button, Grid, makeStyles, Theme, Tooltip, Typography} from "@material-ui/core";
+import {Box, Button, Grid, Theme, Tooltip, Typography} from "@mui/material";
+import {makeStyles} from "@mui/styles"
 import {CenteredPage} from "../../components/CenteredPage";
 import {useParams} from "react-router-dom";
 import {Divider as CSDivider} from "../../components/Divider";

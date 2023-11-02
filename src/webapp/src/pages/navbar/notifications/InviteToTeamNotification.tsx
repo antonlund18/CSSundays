@@ -1,9 +1,10 @@
-import {Box, Divider, Icon, makeStyles, MenuItem, Typography} from "@material-ui/core";
+import {Box, Divider, Icon, MenuItem, Typography} from "@mui/material";
+import {makeStyles} from "@mui/styles"
 import {getPictureLinkFromKey} from "../../../util/StorageHelper";
 import {InviteToTeamStatus, InviteToTeam, ObjectType} from "../../../codegen/generated-types";
 import {Link} from "react-router-dom";
 import * as React from "react";
-import {Check, Clear} from "@material-ui/icons";
+import {Check, Clear} from "@mui/icons-material";
 import {useInviteToTeamMutation} from "../../../hooks/api/useInviteToTeam";
 
 const useStyles = makeStyles(theme => ({

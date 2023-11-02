@@ -1,6 +1,7 @@
 import * as React from "react";
 import {useCallback} from "react";
-import {Button, Dialog, DialogContent, Divider as MuiDivider, makeStyles, Typography} from "@material-ui/core";
+import {Button, Dialog, DialogContent, Divider as MuiDivider, Typography} from "@mui/material";
+import {makeStyles} from "@mui/styles"
 import {CenteredPage} from "../../components/CenteredPage";
 import {InviteToTeamStatus, ObjectType, User} from "../../codegen/generated-types";
 import {useGetCurrentUser} from "../../hooks/api/useUser";

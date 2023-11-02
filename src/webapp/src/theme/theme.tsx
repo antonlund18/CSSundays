@@ -1,4 +1,4 @@
-import {createTheme} from "@material-ui/core";
+import {createTheme} from "@mui/material/styles";
 
 export const theme = createTheme({
     palette: {
@@ -54,24 +54,28 @@ export const theme = createTheme({
             fontWeight: 700
         },
     },
-    overrides: {
+    components: {
         MuiPaper: {
-            root: {
-                "&::-webkit-scrollbar": {
-                    width: "4px"
-                },
-                "&::-webkit-scrollbar-thumb": {
-                    backgroundColor: "#1c95f3",
-                },
+            styleOverrides: {
+                root: {
+                    "&::-webkit-scrollbar": {
+                        width: "4px"
+                    },
+                    "&::-webkit-scrollbar-thumb": {
+                        backgroundColor: "#1c95f3",
+                    },
+                }
             }
         },
         MuiTableContainer: {
-            root: {
-                "&::-webkit-scrollbar": {
-                    width: "4px"
-                },
-                "&::-webkit-scrollbar-thumb": {
-                    backgroundColor: "#1c95f3",
+            styleOverrides: {
+                root: {
+                    "&::-webkit-scrollbar": {
+                        width: "4px"
+                    },
+                    "&::-webkit-scrollbar-thumb": {
+                        backgroundColor: "#1c95f3",
+                    }
                 }
             }
         },

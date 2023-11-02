@@ -1,5 +1,5 @@
 import * as React from "react";
-import {Divider, Menu, MenuItem, Typography} from "@material-ui/core";
+import {Divider, Menu, MenuItem, Typography} from "@mui/material";
 import {useNavigate} from "react-router-dom";
 import {useMutateUser} from "../../hooks/api/useUser";
 import {User} from "../../codegen/generated-types";
@@ -16,7 +16,6 @@ export const PlayerDropdown = (props: PlayerDropdownProps): JSX.Element => {
 
     return <Menu open={!!props.anchorEl}
                  anchorEl={props.anchorEl}
-                 getContentAnchorEl={null}
                  anchorOrigin={{
                      vertical: 'bottom',
                      horizontal: 'left',
