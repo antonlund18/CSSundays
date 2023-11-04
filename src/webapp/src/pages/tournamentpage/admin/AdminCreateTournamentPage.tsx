@@ -8,12 +8,15 @@ import {Button, Grid, MenuItem, Select, TextareaAutosize, TextField, Theme, Tool
 import {Divider as CSDivider} from "../../../components/Divider";
 import {makeStyles} from "@mui/styles";
 import {AdapterDateFns} from "@mui/x-date-pickers/AdapterDateFns";
+import MarkdownView from 'react-showdown';
+import {ObjectType, TournamentFormat} from "../../../codegen/generated-types";
+import {useSharedTeamAndUser} from "../../../hooks/api/useSharedTeamAndUser";
 
 interface StylesProps {
     picture: string
 }
 
-const useStyles = makeStyles<Theme, StylesProps>(theme => ( {
+const useStyles = makeStyles<Theme, StylesProps>(theme => ({
     textLabel: {
         marginTop: theme.spacing(1),
     },
@@ -27,10 +30,6 @@ const useStyles = makeStyles<Theme, StylesProps>(theme => ( {
     },
     dateAndTimePicker: {
         backgroundColor: "white",
-        borderRadius: "4px",
-        width: "100%",
-    },
-    description: {
         borderRadius: "4px",
         width: "100%",
     },
@@ -61,31 +60,57 @@ const useStyles = makeStyles<Theme, StylesProps>(theme => ( {
         border: "1px solid #a9a9a9",
         borderRadius: "4px"
     },
+    description: {
+        resize: "none",
+        borderRadius: "4px",
+        width: "100%",
+        maxHeight: "200px",
+        flex: 1
+    },
+    descriptionPreview: {
+        border: "1px solid #a9a9a9",
+        borderRadius: "4px",
+        height: "200px",
+        width: "100%",
+        overflow: "auto"
+    },
     picture: props => ({
         height: "100%",
         width: "100%",
         cursor: "pointer",
-        backgroundImage: "url("+ props.picture+ ")",
+        backgroundImage: "url(" + props.picture + ")",
         backgroundSize: "contain",
         backgroundRepeat: "no-repeat",
         backgroundPosition: "50% 50%",
     }),
 }))
 
-enum Format {
-    SINGLE_ELIMINATION= "Single Elimination",
+
+type FormatTextMapType = {
+    format: TournamentFormat
+    text: string
 }
+
+const formatTextMap: FormatTextMapType[] = [
+    {
+        format: TournamentFormat.SingleElimination,
+        text: "Single Elimination"
+    }
+]
+
 
 export const AdminCreateTournamentPage = (): JSX.Element => {
     const navigate = useNavigate()
     const [name, setName] = useState<string>("");
-    const [date, setDate] = useState<Date | null>(new Date())
+    const [date, setDate] = useState<Date | null>(new Date(new Date().setHours(12, 0)))
     const [size, setSize] = useState<number>(16)
     const [description, setDescription] = useState<string>("")
-    const [format, setFormat] = useState<string>(Format.SINGLE_ELIMINATION)
+    const [rules, setRules] = useState<string>("")
+    const [format, setFormat] = useState<TournamentFormat>(formatTextMap[0].format)
     const [fileSelector, setFileSelector] = useState<HTMLInputElement | null>(null);
     const [fileReader, setFileReader] = useState<FileReader | null>(null);
     const classes = useStyles({picture: fileReader?.result + "" ?? ""});
+    const {setAndUploadPicture} = useSharedTeamAndUser();
 
     const {createTournament} = useTournaments()
 
@@ -109,7 +134,14 @@ export const AdminCreateTournamentPage = (): JSX.Element => {
 
     const handleCreate = async () => {
         if (date) {
-            createTournament(name, date.toISOString(), size).then((data) => navigate("/tournaments/admin"))
+            createTournament(name, date.toISOString(), size, format, "", description, rules)
+                .then((data) => {
+                    const tournament = data?.data?.createTournament
+                    if (tournament?.id) {
+                        setAndUploadPicture(tournament.id, fileSelector, ObjectType.Tournament)
+                    }
+                })
+                .then((data) => navigate("/tournaments/admin"))
         }
     }
 
@@ -131,8 +163,9 @@ export const AdminCreateTournamentPage = (): JSX.Element => {
                 <Typography variant={"h2"} color={"primary"}>Opret turnering</Typography>
                 <CSDivider/>
             </Grid>
+
             <Grid item xs={6}>
-                <Typography variant={"subtitle2"} className={classes.textLabel}>Turneringsnavn</Typography>
+                <Typography variant={"subtitle2"}>Turneringsnavn</Typography>
                 <TextField variant={"outlined"}
                            value={name}
                            placeholder={"Turneringsnavn"}
@@ -140,6 +173,7 @@ export const AdminCreateTournamentPage = (): JSX.Element => {
                            inputProps={{className: classes.nameInput + " " + (name.length < 2 ? classes.red : classes.green),}}
                            onChange={(e) => setName(e.target.value)}
                 />
+
                 <Typography variant={"subtitle2"} className={classes.textLabel}>Størrelse (antal hold)</Typography>
                 <TextField variant={"outlined"}
                            value={size}
@@ -148,22 +182,32 @@ export const AdminCreateTournamentPage = (): JSX.Element => {
                            className={classes.textField}
                            inputProps={{className: classes.nameInput}}
                            onKeyPress={e => e.preventDefault()}
-                           onChange={handleChangeTournamentSize}
+                           onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+                               e.preventDefault();
+                               handleChangeTournamentSize(e)
+                           }}
                 />
+
                 <LocalizationProvider dateAdapter={AdapterDateFns}>
                     <Typography variant={"subtitle2"} className={classes.textLabel}>Dato</Typography>
                     <DatePicker className={classes.dateAndTimePicker} value={date} format={"yyyy-MM-dd"} disablePast
                                 onChange={value => setDate(value)}/>
+
                     <Typography variant={"subtitle2"} className={classes.textLabel}>Starttidspunkt</Typography>
-                    <TimePicker ampm={false} className={classes.dateAndTimePicker}/>
+                    <TimePicker ampm={false} className={classes.dateAndTimePicker} value={date}
+                                onChange={(value: Date | null) => setDate(value)}/>
                 </LocalizationProvider>
+
                 <Typography variant={"subtitle2"} className={classes.textLabel}>Format</Typography>
-                <Select className={classes.textField} value={format} onChange={(e) => setFormat(e.target.value)} disabled>
-                    {Object.values(Format).map((format ) => {
-                        return <MenuItem value={format}>{format}</MenuItem>
+                <Select className={classes.textField} value={format}
+                        onChange={(e) => setFormat(e.target.value as TournamentFormat)}
+                        disabled>
+                    {formatTextMap.map((format) => {
+                        return <MenuItem value={format.format}>{format.text}</MenuItem>
                     })}
-                    </Select>
+                </Select>
             </Grid>
+
             <Grid item xs={6}>
                 <div className={classes.tournamentPicture}>
                     {!fileSelector?.files?.item(0) ? <>
@@ -176,10 +220,33 @@ export const AdminCreateTournamentPage = (): JSX.Element => {
                     }
                 </div>
             </Grid>
-            <Grid item xs={12}>
+
+            <Grid item xs={6}>
                 <Typography variant={"subtitle2"} className={classes.textLabel}>Beskrivelse</Typography>
-                <TextareaAutosize minRows={10} className={classes.description} maxRows={10} value={description}/>
-                <Button fullWidth variant={"outlined"} onClick={handleCreate}>Opret turnering</Button>
+                <TextareaAutosize minRows={20} className={classes.description} maxRows={20}
+                                  onChange={(e) => setDescription(e.target.value)}/>
+            </Grid>
+
+            <Grid item xs={6}>
+                <Typography variant={"subtitle2"} className={classes.textLabel}>Preview</Typography>
+                <MarkdownView markdown={`${description}`} className={classes.descriptionPreview}
+                              flavor={"github"}/>
+            </Grid>
+
+            <Grid item xs={6}>
+                <Typography variant={"subtitle2"} className={classes.textLabel}>Regler</Typography>
+                <TextareaAutosize minRows={20} className={classes.description} maxRows={20}
+                                  onChange={(e) => setRules(e.target.value)}/>
+            </Grid>
+
+            <Grid item xs={6}>
+                <Typography variant={"subtitle2"} className={classes.textLabel}>Preview</Typography>
+                <MarkdownView markdown={`${rules}`} className={classes.descriptionPreview}
+                              flavor={"github"}/>
+            </Grid>
+
+            <Grid item xs={12}>
+                <Button fullWidth variant={"contained"} onClick={handleCreate}>Opret turnering</Button>
             </Grid>
         </Grid>
     </CenteredPage>

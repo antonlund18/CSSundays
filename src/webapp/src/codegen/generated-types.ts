@@ -113,8 +113,12 @@ export type MutationCreateTeamArgs = {
 
 export type MutationCreateTournamentArgs = {
   date: Scalars['LocalDateTime'];
+  description: Scalars['String'];
+  format: TournamentFormat;
   name: Scalars['String'];
   numberOfTeamsAllowed: Scalars['Int'];
+  picture?: InputMaybe<Scalars['String']>;
+  rules: Scalars['String'];
 };
 
 
@@ -192,6 +196,7 @@ export enum NotificationType {
 
 export enum ObjectType {
   Team = 'TEAM',
+  Tournament = 'TOURNAMENT',
   User = 'USER'
 }
 
@@ -288,7 +293,7 @@ export type Team = {
   losses: Scalars['Int'];
   name: Scalars['String'];
   owner: User;
-  picture: Scalars['String'];
+  picture?: Maybe<Scalars['String']>;
   slug: Scalars['String'];
   users: Array<User>;
   wins: Scalars['Int'];
@@ -298,14 +303,22 @@ export type Tournament = {
   __typename?: 'Tournament';
   bracket?: Maybe<Bracket>;
   createdTs: Scalars['LocalDateTime'];
+  description: Scalars['String'];
+  format: TournamentFormat;
   id?: Maybe<Scalars['Int']>;
   name: Scalars['String'];
   numberOfTeamsAllowed: Scalars['Int'];
+  picture?: Maybe<Scalars['String']>;
   published: Scalars['Boolean'];
+  rules: Scalars['String'];
   startDateAndTime: Scalars['LocalDateTime'];
   status: TournamentStatus;
   teamRegistrations: Array<TournamentRegistration>;
 };
+
+export enum TournamentFormat {
+  SingleElimination = 'SINGLE_ELIMINATION',
+}
 
 export type TournamentRegistration = {
   __typename?: 'TournamentRegistration';
@@ -347,28 +360,28 @@ export type FindAllInvitesForPlayerQueryVariables = Exact<{
 }>;
 
 
-export type FindAllInvitesForPlayerQuery = { __typename?: 'Query', findAllInvitesForPlayer: Array<{ __typename?: 'InviteToTeam', id?: number, status: InviteToTeamStatus, createdTs: any, recipient: { __typename?: 'User', id?: number, playertag: string, picture?: string }, team: { __typename?: 'Team', id?: number, name: string, picture: string, owner: { __typename?: 'User', id?: number, playertag: string, picture?: string } }, sender: { __typename?: 'User', id?: number, playertag: string, picture?: string } }> };
+export type FindAllInvitesForPlayerQuery = { __typename?: 'Query', findAllInvitesForPlayer: Array<{ __typename?: 'InviteToTeam', id?: number, status: InviteToTeamStatus, createdTs: any, recipient: { __typename?: 'User', id?: number, playertag: string, picture?: string }, team: { __typename?: 'Team', id?: number, name: string, picture?: string, owner: { __typename?: 'User', id?: number, playertag: string, picture?: string } }, sender: { __typename?: 'User', id?: number, playertag: string, picture?: string } }> };
 
 export type FindPendingInvitesForPlayerQueryVariables = Exact<{
   playerId: Scalars['Int'];
 }>;
 
 
-export type FindPendingInvitesForPlayerQuery = { __typename?: 'Query', findPendingInvitesForPlayer: Array<{ __typename?: 'InviteToTeam', id?: number, status: InviteToTeamStatus, recipient: { __typename?: 'User', id?: number, playertag: string, picture?: string }, team: { __typename?: 'Team', id?: number, name: string, picture: string, owner: { __typename?: 'User', id?: number, playertag: string, picture?: string }, users: Array<{ __typename?: 'User', id?: number }> }, sender: { __typename?: 'User', id?: number, playertag: string, picture?: string } }> };
+export type FindPendingInvitesForPlayerQuery = { __typename?: 'Query', findPendingInvitesForPlayer: Array<{ __typename?: 'InviteToTeam', id?: number, status: InviteToTeamStatus, recipient: { __typename?: 'User', id?: number, playertag: string, picture?: string }, team: { __typename?: 'Team', id?: number, name: string, picture?: string, owner: { __typename?: 'User', id?: number, playertag: string, picture?: string }, users: Array<{ __typename?: 'User', id?: number }> }, sender: { __typename?: 'User', id?: number, playertag: string, picture?: string } }> };
 
 export type AcceptInvitationMutationVariables = Exact<{
   id: Scalars['Int'];
 }>;
 
 
-export type AcceptInvitationMutation = { __typename?: 'Mutation', acceptInvitation?: { __typename?: 'InviteToTeam', id?: number, status: InviteToTeamStatus, recipient: { __typename?: 'User', id?: number, playertag: string, picture?: string }, team: { __typename?: 'Team', id?: number, name: string, picture: string, owner: { __typename?: 'User', id?: number, playertag: string, picture?: string } }, sender: { __typename?: 'User', id?: number, playertag: string, picture?: string } } };
+export type AcceptInvitationMutation = { __typename?: 'Mutation', acceptInvitation?: { __typename?: 'InviteToTeam', id?: number, status: InviteToTeamStatus, recipient: { __typename?: 'User', id?: number, playertag: string, picture?: string }, team: { __typename?: 'Team', id?: number, name: string, picture?: string, owner: { __typename?: 'User', id?: number, playertag: string, picture?: string } }, sender: { __typename?: 'User', id?: number, playertag: string, picture?: string } } };
 
 export type DeclineInvitationMutationVariables = Exact<{
   id: Scalars['Int'];
 }>;
 
 
-export type DeclineInvitationMutation = { __typename?: 'Mutation', declineInvitation?: { __typename?: 'InviteToTeam', id?: number, status: InviteToTeamStatus, recipient: { __typename?: 'User', id?: number, playertag: string, picture?: string }, team: { __typename?: 'Team', id?: number, name: string, picture: string, owner: { __typename?: 'User', id?: number, playertag: string, picture?: string } }, sender: { __typename?: 'User', id?: number, playertag: string, picture?: string } } };
+export type DeclineInvitationMutation = { __typename?: 'Mutation', declineInvitation?: { __typename?: 'InviteToTeam', id?: number, status: InviteToTeamStatus, recipient: { __typename?: 'User', id?: number, playertag: string, picture?: string }, team: { __typename?: 'Team', id?: number, name: string, picture?: string, owner: { __typename?: 'User', id?: number, playertag: string, picture?: string } }, sender: { __typename?: 'User', id?: number, playertag: string, picture?: string } } };
 
 export type CreateInviteToTeamMutationVariables = Exact<{
   recipientId: Scalars['Int'];
@@ -384,14 +397,14 @@ export type GetMatchesByParentIdsQueryVariables = Exact<{
 }>;
 
 
-export type GetMatchesByParentIdsQuery = { __typename?: 'Query', getMatchesByParentIds: Array<{ __typename?: 'Match', id?: number, team1?: { __typename?: 'Team', id?: number, name: string, picture: string }, team2?: { __typename?: 'Team', id?: number, name: string, picture: string } }> };
+export type GetMatchesByParentIdsQuery = { __typename?: 'Query', getMatchesByParentIds: Array<{ __typename?: 'Match', id?: number, team1?: { __typename?: 'Team', id?: number, name: string, picture?: string }, team2?: { __typename?: 'Team', id?: number, name: string, picture?: string } }> };
 
 export type GetAllNotificationsQueryVariables = Exact<{
   userId: Scalars['Int'];
 }>;
 
 
-export type GetAllNotificationsQuery = { __typename?: 'Query', getAllNotifications: Array<{ __typename?: 'Notification', id?: number, isSeen: boolean, notificationType: NotificationType, createdTs: any, recipient: { __typename?: 'User', id?: number, playertag: string, picture?: string }, notifiableObject?: { __typename?: 'InviteToTeam', id?: number, createdTs: any, status: InviteToTeamStatus, recipient: { __typename?: 'User', id?: number, playertag: string, picture?: string }, sender: { __typename?: 'User', id?: number, playertag: string, picture?: string }, team: { __typename?: 'Team', id?: number, name: string, picture: string } } }> };
+export type GetAllNotificationsQuery = { __typename?: 'Query', getAllNotifications: Array<{ __typename?: 'Notification', id?: number, isSeen: boolean, notificationType: NotificationType, createdTs: any, recipient: { __typename?: 'User', id?: number, playertag: string, picture?: string }, notifiableObject?: { __typename?: 'InviteToTeam', id?: number, createdTs: any, status: InviteToTeamStatus, recipient: { __typename?: 'User', id?: number, playertag: string, picture?: string }, sender: { __typename?: 'User', id?: number, playertag: string, picture?: string }, team: { __typename?: 'Team', id?: number, name: string, picture?: string } } }> };
 
 export type MarkAllNotificationsAsSeenForUserMutationVariables = Exact<{
   userId: Scalars['Int'];
@@ -419,14 +432,14 @@ export type RegisterTeamMutation = { __typename?: 'Mutation', registerTeam?: { _
 export type GetAllTeamsQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type GetAllTeamsQuery = { __typename?: 'Query', getAllTeams: Array<{ __typename?: 'Team', id?: number, name: string, picture: string, wins: number, losses: number, createdTs: any }> };
+export type GetAllTeamsQuery = { __typename?: 'Query', getAllTeams: Array<{ __typename?: 'Team', id?: number, name: string, picture?: string, wins: number, losses: number, createdTs: any }> };
 
 export type GetTeamByIdQueryVariables = Exact<{
   teamId: Scalars['Int'];
 }>;
 
 
-export type GetTeamByIdQuery = { __typename?: 'Query', getTeamById?: { __typename?: 'Team', id?: number, name: string, slug: string, picture: string, wins: number, losses: number, createdTs: any, owner: { __typename?: 'User', id?: number, playertag: string, picture?: string }, users: Array<{ __typename?: 'User', id?: number, playertag: string, picture?: string }> } };
+export type GetTeamByIdQuery = { __typename?: 'Query', getTeamById?: { __typename?: 'Team', id?: number, name: string, picture?: string, wins: number, losses: number, createdTs: any, owner: { __typename?: 'User', id?: number, playertag: string, picture?: string }, users: Array<{ __typename?: 'User', id?: number, playertag: string, picture?: string }> } };
 
 export type IncrementWinsMutationVariables = Exact<{
   teamId: Scalars['Int'];
@@ -453,11 +466,15 @@ export type CreateTeamMutation = { __typename?: 'Mutation', createTeam?: { __typ
 export type CreateTournamentMutationVariables = Exact<{
   name: Scalars['String'];
   date: Scalars['LocalDateTime'];
+  format: TournamentFormat;
   numberOfTeamsAllowed: Scalars['Int'];
+  picture?: InputMaybe<Scalars['String']>;
+  description: Scalars['String'];
+  rules: Scalars['String'];
 }>;
 
 
-export type CreateTournamentMutation = { __typename?: 'Mutation', createTournament?: { __typename?: 'Tournament', id?: number, name: string, startDateAndTime: any, numberOfTeamsAllowed: number, bracket?: { __typename?: 'Bracket', id?: number, root?: { __typename?: 'Match', id?: number, left?: { __typename?: 'Match', id?: number }, right?: { __typename?: 'Match', id?: number } } } } };
+export type CreateTournamentMutation = { __typename?: 'Mutation', createTournament?: { __typename?: 'Tournament', id?: number, name: string, picture?: string, description: string, format: TournamentFormat, rules: string, startDateAndTime: any, numberOfTeamsAllowed: number, bracket?: { __typename?: 'Bracket', id?: number, root?: { __typename?: 'Match', id?: number, left?: { __typename?: 'Match', id?: number }, right?: { __typename?: 'Match', id?: number } } } } };
 
 export type GetAllTournamentsQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -476,7 +493,7 @@ export type GetTournamentByIdQueryVariables = Exact<{
 }>;
 
 
-export type GetTournamentByIdQuery = { __typename?: 'Query', getTournamentById?: { __typename?: 'Tournament', id?: number, name: string, numberOfTeamsAllowed: number, teamRegistrations: Array<{ __typename?: 'TournamentRegistration', id?: number }>, bracket?: { __typename?: 'Bracket', id?: number, root?: { __typename?: 'Match', id?: number, team1?: { __typename?: 'Team', id?: number, name: string, picture: string }, team2?: { __typename?: 'Team', id?: number, name: string, picture: string } } } } };
+export type GetTournamentByIdQuery = { __typename?: 'Query', getTournamentById?: { __typename?: 'Tournament', id?: number, name: string, numberOfTeamsAllowed: number, teamRegistrations: Array<{ __typename?: 'TournamentRegistration', id?: number }>, bracket?: { __typename?: 'Bracket', id?: number, root?: { __typename?: 'Match', id?: number, team1?: { __typename?: 'Team', id?: number, name: string, picture?: string }, team2?: { __typename?: 'Team', id?: number, name: string, picture?: string } } } } };
 
 export type GetUserByIdQueryVariables = Exact<{
   id: Scalars['Int'];
@@ -490,7 +507,7 @@ export type GetCurrentUserQueryVariables = Exact<{
 }>;
 
 
-export type GetCurrentUserQuery = { __typename?: 'Query', getCurrentUser?: { __typename?: 'User', id?: number, playertag: string, email: string, role: UserRole, picture?: string, teams: Array<{ __typename?: 'Team', id?: number, name: string, picture: string, users: Array<{ __typename?: 'User', playertag: string }> }> } };
+export type GetCurrentUserQuery = { __typename?: 'Query', getCurrentUser?: { __typename?: 'User', id?: number, playertag: string, email: string, role: UserRole, picture?: string, teams: Array<{ __typename?: 'Team', id?: number, name: string, picture?: string, users: Array<{ __typename?: 'User', playertag: string }> }> } };
 
 export type CreateUserMutationVariables = Exact<{
   playertag: Scalars['String'];
@@ -1049,7 +1066,6 @@ export const GetTeamByIdDocument = gql`
   getTeamById(teamId: $teamId) {
     id
     name
-    slug
     owner {
       id
       playertag
@@ -1203,14 +1219,22 @@ export type CreateTeamMutationHookResult = ReturnType<typeof useCreateTeamMutati
 export type CreateTeamMutationResult = Apollo.MutationResult<CreateTeamMutation>;
 export type CreateTeamMutationOptions = Apollo.BaseMutationOptions<CreateTeamMutation, CreateTeamMutationVariables>;
 export const CreateTournamentDocument = gql`
-    mutation createTournament($name: String!, $date: LocalDateTime!, $numberOfTeamsAllowed: Int!) {
+    mutation createTournament($name: String!, $date: LocalDateTime!, $format: TournamentFormat!, $numberOfTeamsAllowed: Int!, $picture: String, $description: String!, $rules: String!) {
   createTournament(
     name: $name
     date: $date
     numberOfTeamsAllowed: $numberOfTeamsAllowed
+    format: $format
+    picture: $picture
+    description: $description
+    rules: $rules
   ) {
     id
     name
+    picture
+    description
+    format
+    rules
     bracket {
       id
       root {
@@ -1245,7 +1269,11 @@ export type CreateTournamentMutationFn = Apollo.MutationFunction<CreateTournamen
  *   variables: {
  *      name: // value for 'name'
  *      date: // value for 'date'
+ *      format: // value for 'format'
  *      numberOfTeamsAllowed: // value for 'numberOfTeamsAllowed'
+ *      picture: // value for 'picture'
+ *      description: // value for 'description'
+ *      rules: // value for 'rules'
  *   },
  * });
  */

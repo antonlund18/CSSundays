@@ -1,11 +1,14 @@
 package com.antonl.cssundays.services.model.tournaments
 
-import com.antonl.cssundays.model.core.Team
-import com.antonl.cssundays.model.tournaments.*
+import com.antonl.cssundays.graphql.dto.RequestDTO
+import com.antonl.cssundays.model.tournaments.Tournament
+import com.antonl.cssundays.model.tournaments.TournamentFormat
 import com.antonl.cssundays.model.tournaments.brackets.*
 import com.antonl.cssundays.repositories.TournamentRepository
+import com.antonl.cssundays.services.storage.TournamentStorageService
 import org.springframework.stereotype.Service
 import java.time.LocalDateTime
+import java.util.*
 import javax.transaction.Transactional
 
 @Service
@@ -23,14 +26,34 @@ class TournamentService(
         return tournamentRepository.findAll().toList()
     }
 
-    fun createTournament(name: String, date: LocalDateTime, numberOfTeamsAllowed: Int): Tournament {
+    fun createTournament(name: String, date: LocalDateTime, numberOfTeamsAllowed: Int, format: TournamentFormat = TournamentFormat.SINGLE_ELIMINATION, picture: String? = null, description: String = "", rules: String = ""): Tournament {
         val tournament = Tournament(
             name = name,
             startDateAndTime = date,
-            numberOfTeamsAllowed = numberOfTeamsAllowed
+            numberOfTeamsAllowed = numberOfTeamsAllowed,
+            picture = picture,
+            description = description,
+            rules = rules
         )
         saveTournament(tournament)
         return tournament
+    }
+
+    suspend fun setPicture(tournament: Tournament): RequestDTO {
+        deletePicture(tournament);
+        val imageKey = UUID.randomUUID().toString() + ".jpg";
+        tournament.picture = imageKey;
+        saveTournament(tournament)
+        return TournamentStorageService().getPresignedUploadRequest(imageKey);
+    }
+
+    suspend fun deletePicture(tournament: Tournament): Tournament? {
+        if (!tournament.picture.equals(null)) {
+            TournamentStorageService().deleteImage(tournament.picture);
+            tournament.picture = null;
+            saveTournament(tournament);
+        }
+        return tournament;
     }
 
     fun getTournamentById(id: Int): Tournament? {

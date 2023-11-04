@@ -74,17 +74,17 @@ export const TeamInfo = (props: TeamInfoProps): JSX.Element => {
         </Grid>
         <Grid item style={{width: "100%"}}>
             <div className={classes.teamInfoContainer}>
-                <Typography variant={"h4"}>Owner:</Typography>
-                <Typography variant={"h4"} style={{cursor: "pointer"}} onClick={() => navigate("/players/" + team?.owner?.id ?? "")}>{team?.owner?.playertag}</Typography>
+                <Typography variant={"h4"}>Owner</Typography>
+                    <Typography variant={"h4"} style={{cursor: "pointer"}} onClick={() => navigate("/players/" + team?.owner?.id ?? "")}>{team?.owner?.playertag} ↗</Typography>
             </div>
             <Divider style={{margin: "8px 0px"}}/>
             <div className={classes.teamInfoContainer}>
-                <Typography variant={"h4"}>Dato oprettet:</Typography>
+                <Typography variant={"h4"}>Dato oprettet</Typography>
                 <Typography variant={"h4"}>{formatDate(team?.createdTs)}</Typography>
             </div>
             <Divider style={{margin: "8px 0px"}}/>
             <div className={classes.teamInfoContainer}>
-                <Typography variant={"h4"}>Antal spillere:</Typography>
+                <Typography variant={"h4"}>Antal spillere</Typography>
                 <Typography variant={"h4"}>{team?.users?.length}</Typography>
             </div>
         </Grid>

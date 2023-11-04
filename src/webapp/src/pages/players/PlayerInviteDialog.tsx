@@ -82,7 +82,7 @@ export const PlayerInviteDialog = (props: PlayerInviteDialogProps): JSX.Element 
                 return <React.Fragment>
                     <div className={classes.teamContainer}>
                         <div className={classes.teamInfo}>
-                            <img src={getPictureLinkFromKey(team.picture, ObjectType.Team) ?? "asd"} className={classes.teamImage} aria-label={"Team picture"}/>
+                            <img src={getPictureLinkFromKey(team.picture ?? null, ObjectType.Team) ?? "asd"} className={classes.teamImage} aria-label={"Team picture"}/>
                             <Typography variant={"subtitle2"} className={classes.teamName}>{team.name}</Typography>
                         </div>
                         <Button variant={"outlined"} color={"primary"} style={{height: "32px"}} disabled={shouldDisableInviteButton(team.id)} onClick={() => handleInvite(team?.id)}>Inviter</Button>

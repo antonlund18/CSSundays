@@ -1,10 +1,8 @@
 package com.antonl.cssundays.graphql.mutations
 
-import com.antonl.cssundays.graphql.server.directives.AuthorizationDirective
 import com.antonl.cssundays.model.tournaments.Tournament
-import com.antonl.cssundays.model.core.UserRole
+import com.antonl.cssundays.model.tournaments.TournamentFormat
 import com.antonl.cssundays.services.model.core.TeamService
-import com.antonl.cssundays.services.model.core.UserService
 import com.antonl.cssundays.services.model.tournaments.SharedTournamentAndTournamentRegistrationService
 import com.antonl.cssundays.services.model.tournaments.TournamentService
 import com.expediagroup.graphql.server.operations.Mutation
@@ -24,8 +22,9 @@ class TournamentMutations : Mutation {
     private lateinit var sharedTournamentAndTournamentRegistrationService: SharedTournamentAndTournamentRegistrationService
 
 //    @AuthorizationDirective([UserRole.ADMIN, UserRole.ORGANIZER])
-    suspend fun createTournament(name: String, date: LocalDateTime, numberOfTeamsAllowed: Int): Tournament? {
-        return tournamentService.createTournament(name, date, numberOfTeamsAllowed)
+    suspend fun createTournament(name: String, date: LocalDateTime, numberOfTeamsAllowed: Int, format: TournamentFormat, picture: String?, description: String, rules: String): Tournament? {
+        val tournament = tournamentService.createTournament(name, date, numberOfTeamsAllowed, format, picture, description, rules)
+        return tournament
     }
 
 //    @AuthorizationDirective([UserRole.ADMIN, UserRole.ORGANIZER])

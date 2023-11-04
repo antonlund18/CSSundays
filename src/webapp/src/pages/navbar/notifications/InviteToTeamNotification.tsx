@@ -76,7 +76,7 @@ export const InviteToTeamNotification = (props: InviteToTeamNotificationProps): 
         <MenuItem className={classes.container}>
             <Link to={"/teams/" + props.invite.team.id}>
                 <img className={classes.teamPicture}
-                     src={getPictureLinkFromKey(props.invite.team.picture, ObjectType.Team)}/>
+                     src={getPictureLinkFromKey(props.invite.team.picture ?? null, ObjectType.Team)}/>
             </Link>
             <Typography component={"div"} className={classes.textContainer}>
                 <Link to={"/players/" + props.invite.sender.id}>
