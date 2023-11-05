@@ -18,10 +18,10 @@ class Tournament(
 
     var picture: String? = null,
 
-    @Column(columnDefinition = "TEXT")
+    @Column(columnDefinition = "NTEXT")
     var description: String = "",
 
-    @Column(columnDefinition = "TEXT")
+    @Column(columnDefinition = "NTEXT")
     var rules: String = "",
 
     @Enumerated(EnumType.STRING)

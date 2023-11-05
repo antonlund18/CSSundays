@@ -32,6 +32,9 @@ gql`
         getAllTournaments {
             id,
             name,
+            picture,
+            description,
+            format,
             bracket {
                 id,
                 root {
@@ -96,6 +99,10 @@ gql`
         getTournamentById(id: $id) {
             id,
             name,
+            picture,
+            description,
+            format,
+            startDateAndTime,
             numberOfTeamsAllowed,
             teamRegistrations {
                 id

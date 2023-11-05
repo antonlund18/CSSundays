@@ -6,6 +6,8 @@ import {makeStyles} from "@mui/styles"
 import React, {useState} from "react";
 import {BracketTabContent} from "./tabs/BracketTabContent";
 import { InformationTabContent } from "./tabs/InformationTabContent";
+import {RulesTab} from "./tabs/RulesTab";
+import {MediaTab} from "./tabs/MediaTab";
 
 const useStyles = makeStyles(theme => ({
     headerSection: {
@@ -50,6 +52,7 @@ export const TournamentPage = () => {
                 <Tab label={"Bracket"} className={classes.tab}/>
                 <Tab label={"Regler"} className={classes.tab}/>
                 <Tab label={"Hold"} className={classes.tab}/>
+                <Tab label={"Se med"} className={classes.tab}/>
                 <Tab label={"Hjælp"} className={classes.tab}/>
             </Tabs>
         </div>
@@ -58,6 +61,12 @@ export const TournamentPage = () => {
         </TabPanel>
         <TabPanel value={value} index={1}>
             <BracketTabContent tournament={tournament}/>
+        </TabPanel>
+        <TabPanel value={value} index={2}>
+            <RulesTab tournament={tournament}/>
+        </TabPanel>
+        <TabPanel value={value} index={4}>
+            <MediaTab/>
         </TabPanel>
     </CenteredPage>
 }
