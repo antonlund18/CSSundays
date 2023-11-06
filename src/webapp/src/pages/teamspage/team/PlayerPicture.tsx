@@ -17,17 +17,6 @@ const useStyles = makeStyles<Theme, StylesProps>(theme => ({
         justifyContent: "center",
     },
     playerPicture: props => ({
-        height: "132px",
-        width: "132px",
-        margin: theme.spacing(1),
-        border: "2px solid white",
-        position: "relative",
-        backgroundImage: "url(" + props.playerPictureURL + " )",
-        backgroundSize: "contain",
-        backgroundRepeat: "no-repeat",
-        backgroundPosition: "50% 50%",
-    }),
-    image: props => ({
         "&::after": {
             position: "absolute",
             bottom: 0,
@@ -37,6 +26,15 @@ const useStyles = makeStyles<Theme, StylesProps>(theme => ({
             color: "rgb(241,241,241)",
             content: "'" + props.playerName + "'"
         },
+        height: "132px",
+        width: "132px",
+        margin: theme.spacing(1),
+        border: "2px solid white",
+        position: "relative",
+        backgroundImage: "url(" + props.playerPictureURL + " )",
+        backgroundSize: "contain",
+        backgroundRepeat: "no-repeat",
+        backgroundPosition: "50% 50%",
     }),
 }))
 
@@ -53,8 +51,6 @@ export const PlayerPicture = (props: PlayerPictureProps): JSX. Element => {
 
     return <div key={player.playertag} className={classes.playerContainer}
                 onClick={() => navigate("/players/" + player.id)}>
-        <Box boxShadow={1} className={classes.playerPicture}>
-            <div className={classes.image}/>
-        </Box>
+        <Box boxShadow={1} className={classes.playerPicture}/>
     </div>
 }

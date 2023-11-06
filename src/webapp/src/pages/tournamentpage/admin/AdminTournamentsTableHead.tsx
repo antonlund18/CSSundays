@@ -1,13 +1,6 @@
 import {TableCell, TableHead, TableRow, TableSortLabel, Typography} from "@mui/material";
-import {SortDirection, SortOption} from "../../../hooks/tournaments/useSortTournaments";
-
-interface HeadCell {
-    disablePadding: boolean;
-    id: string;
-    label: string;
-    sortOption?: SortOption
-    numeric: boolean;
-}
+import { SortDirection, SortOption } from "../../../components/SortTypes";
+import {HeadCell} from "../../../components/TableTypes";
 
 interface AdminTournamentsTableHeadProps {
     sortDirection: SortDirection,

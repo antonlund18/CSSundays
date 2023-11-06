@@ -493,7 +493,7 @@ export type GetTournamentByIdQueryVariables = Exact<{
 }>;
 
 
-export type GetTournamentByIdQuery = { __typename?: 'Query', getTournamentById?: { __typename?: 'Tournament', id?: number, name: string, picture?: string, description: string, format: TournamentFormat, startDateAndTime: any, numberOfTeamsAllowed: number, teamRegistrations: Array<{ __typename?: 'TournamentRegistration', id?: number }>, bracket?: { __typename?: 'Bracket', id?: number, root?: { __typename?: 'Match', id?: number, team1?: { __typename?: 'Team', id?: number, name: string, picture?: string }, team2?: { __typename?: 'Team', id?: number, name: string, picture?: string } } } } };
+export type GetTournamentByIdQuery = { __typename?: 'Query', getTournamentById?: { __typename?: 'Tournament', id?: number, name: string, picture?: string, description: string, format: TournamentFormat, startDateAndTime: any, numberOfTeamsAllowed: number, teamRegistrations: Array<{ __typename?: 'TournamentRegistration', id?: number, createdTs: any, team: { __typename?: 'Team', id?: number, name: string, picture?: string, users: Array<{ __typename?: 'User', id?: number, picture?: string, playertag: string }> } }>, bracket?: { __typename?: 'Bracket', id?: number, root?: { __typename?: 'Match', id?: number, team1?: { __typename?: 'Team', id?: number, name: string, picture?: string }, team2?: { __typename?: 'Team', id?: number, name: string, picture?: string } } } } };
 
 export type GetUserByIdQueryVariables = Exact<{
   id: Scalars['Int'];
@@ -1414,6 +1414,17 @@ export const GetTournamentByIdDocument = gql`
     numberOfTeamsAllowed
     teamRegistrations {
       id
+      team {
+        id
+        name
+        picture
+        users {
+          id
+          picture
+          playertag
+        }
+      }
+      createdTs
     }
     bracket {
       id

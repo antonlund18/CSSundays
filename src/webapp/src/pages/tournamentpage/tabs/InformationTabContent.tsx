@@ -48,7 +48,7 @@ interface InformationTabContentProps {
 export const InformationTabContent = (props: InformationTabContentProps): JSX.Element => {
     const tournamentPictureURL = getPictureLinkFromKey(props.tournament.picture ?? "", ObjectType.Tournament)
     const classes = useStyles({tournamentPictureURL: tournamentPictureURL})
-    const {formatDateTime} = useDateFormatter()
+    const {formatDate, formatTime} = useDateFormatter()
 
     const registeredTeams = useMemo(() => {
         return props.tournament.teamRegistrations.length
@@ -66,7 +66,7 @@ export const InformationTabContent = (props: InformationTabContentProps): JSX.El
             <Typography variant={"h4"}>Format</Typography>
             <Typography>{formatTextMap[props.tournament.format].text}</Typography>
             <Typography variant={"h4"} className={classes.text}>Starttidspunkt</Typography>
-            <Typography>{formatDateTime(props.tournament.startDateAndTime)}</Typography>
+            <Typography>{formatDate(props.tournament.startDateAndTime) + " kl. " + formatTime(props.tournament.startDateAndTime)}</Typography>
             <Typography variant={"h4"} className={classes.text}>Tilmeldte hold</Typography>
             <Typography>{`${registeredTeams}/${props.tournament.numberOfTeamsAllowed}`}</Typography>
         </Grid>

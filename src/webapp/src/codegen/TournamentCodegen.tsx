@@ -105,7 +105,18 @@ gql`
             startDateAndTime,
             numberOfTeamsAllowed,
             teamRegistrations {
-                id
+                id,
+                team {
+                    id,
+                    name
+                    picture
+                    users {
+                        id,
+                        picture,
+                        playertag
+                    }
+                },
+                createdTs
             },
             bracket {
                 id,

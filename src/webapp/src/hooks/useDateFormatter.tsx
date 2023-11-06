@@ -6,6 +6,12 @@ export const useDateFormatter = () => {
         + "-" + addZero(formattedDate.getDate())
     }
 
+    const formatTime = (date: string | number | Date): string => {
+        const formattedDate = new Date(date)
+        return addZero(formattedDate.getHours())
+        + ":" + addZero(formattedDate.getMinutes())
+    }
+
     const formatDateTime = (date: string | number | Date): string => {
         const formattedDate = new Date(date)
         return formattedDate.getFullYear()
@@ -57,6 +63,7 @@ export const useDateFormatter = () => {
     return {
         formatDateRelatively,
         formatDate,
-        formatDateTime
+        formatTime,
+        formatDateTime,
     }
 }
