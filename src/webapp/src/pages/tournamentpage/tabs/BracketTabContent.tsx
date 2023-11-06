@@ -12,7 +12,9 @@ const useStyles = makeStyles({
         position: "absolute",
         left: "50%",
         top: "50%",
-        transform: "translate(-50%, -50%)",
+        transform: "translate(-50%, -50%) !important",
+        textAlign: "center",
+        transformOrigin: "center"
     }
 })
 
@@ -41,7 +43,10 @@ export const BracketTabContent = (props: BracketTabContentProps): JSX.Element =>
 
     return <>
         <PannableContainer style={{backgroundColor: "white"}}>
-            {!hasBracketBeenCreated ? <Typography variant={"h2"} className={classes.bracketNotYetCreated}>Der er ikke oprettet en bracket endnu ⌛</Typography> :
+            {!hasBracketBeenCreated ? <div className={classes.bracketNotYetCreated}>
+                    <Typography variant={"h2"}>Der er ikke oprettet en bracket endnu</Typography>
+                    <Typography variant={"h4"}>Kom tilbage senere ☕</Typography>
+                </div> :
                 <>
                     {isLoading && <CircularProgress style={{position: "absolute", left: "50%", top: "50%"}}/>}
                     <div style={{display: isLoading ? "none" : "block"}}>
