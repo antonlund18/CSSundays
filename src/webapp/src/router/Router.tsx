@@ -5,10 +5,11 @@ import {TournamentsPage} from "../pages/tournamentpage/TournamentsPage";
 import {TeamsPage} from "../pages/teamspage/TeamsPage";
 import {TeamPage} from "../pages/teamspage/team/TeamPage";
 import {PlayerPage} from "../pages/players/PlayerPage";
-import {AdminTournamentsPage} from "../pages/tournamentpage/admin/AdminTournamentsPage";
+import {AdminTournamentsPage} from "../pages/admin/tournaments/AdminTournamentsPage";
 import {TournamentPage} from "../pages/tournamentpage/TournamentPage";
-import {AdminCreateTournamentPage} from "../pages/tournamentpage/admin/AdminCreateTournamentPage";
+import {AdminCreateTournamentPage} from "../pages/admin/tournaments/AdminCreateTournamentPage";
 import {PlayersPage} from "../pages/teamspage/team/PlayersPage";
+import {AdminPage} from "../pages/admin/AdminPage";
 
 export const Router = (): JSX.Element => {
     const mainRoutes = [{
@@ -25,9 +26,14 @@ export const Router = (): JSX.Element => {
             element: <TournamentPage/>
         }],
     }, {
-        path: "/tournaments/admin",
-        element: <AdminTournamentsPage/>
-    }, {
+        path: "/admin",
+        children: [{
+            index: true,
+            element: <AdminPage/>
+        }, {
+            path: "/admin/tournaments",
+            element: <AdminTournamentsPage/>
+        }]
     }, {
         path: "/tournaments/admin/create",
         element: <AdminCreateTournamentPage/>

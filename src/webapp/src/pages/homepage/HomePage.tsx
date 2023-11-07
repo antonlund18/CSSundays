@@ -1,7 +1,6 @@
 import * as React from "react";
 import {Typography} from "@mui/material";
 import {makeStyles} from "@mui/styles"
-import {useGetUserById} from "../../hooks/api/useUser";
 
 const useStyles = makeStyles((theme) => ({
     homePageContainer: {
