@@ -24,7 +24,7 @@ export const AdminTournamentsPage = (): JSX.Element => {
             </Grid>
         </Grid>
         <Button color={"primary"} variant={"contained"} style={{margin: theme.spacing(1), alignSelf: "end"}}
-                onClick={() => navigate("admin/create")}>
+                onClick={() => navigate("create")}>
             Opret turnering
         </Button>
     </CenteredPage>

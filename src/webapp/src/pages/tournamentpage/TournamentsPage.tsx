@@ -18,11 +18,13 @@ export const TournamentsPage = (): JSX.Element => {
         <Typography variant={"h2"} color={"primary"}>Turneringer</Typography>
         <CSDivider/>
         <Grid container spacing={2}>
-            <Stack divider={<Divider flexItem/>} spacing={2} sx={{width: "100%"}}>
-                {tournaments.map((tournament) => {
-                    return <TournamentRow tournament={tournament}/>
-                })}
-            </Stack>
+            <Grid item xs={12}>
+                <Stack divider={<Divider flexItem/>} spacing={2} sx={{width: "100%"}}>
+                    {tournaments.map((tournament) => {
+                        return <TournamentRow tournament={tournament}/>
+                    })}
+                </Stack>
+            </Grid>
         </Grid>
     </CenteredPage>
 }

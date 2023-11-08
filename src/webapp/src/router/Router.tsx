@@ -32,11 +32,14 @@ export const Router = (): JSX.Element => {
             element: <AdminPage/>
         }, {
             path: "/admin/tournaments",
-            element: <AdminTournamentsPage/>
+            children: [{
+                index: true,
+                element: <AdminTournamentsPage/>
+            }, {
+                path: "/admin/tournaments/create",
+                element: <AdminCreateTournamentPage/>
+            }]
         }]
-    }, {
-        path: "/tournaments/admin/create",
-        element: <AdminCreateTournamentPage/>
     }, {
         path: "/teams",
         children: [{
