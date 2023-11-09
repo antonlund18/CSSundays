@@ -8,8 +8,11 @@ gql`
             email
             role
             picture
+            createdTs
             teams {
+                id
                 name
+                picture
                 users {
                     playertag
                 }

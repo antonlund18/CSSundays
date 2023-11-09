@@ -23,8 +23,6 @@ export const PlayerPage = (): JSX.Element => {
     }
 
     return <CenteredPage>
-        <Typography variant={"h2"} color={"primary"} style={{textTransform: "none"}}>{user.playertag}</Typography>
-        <CSDivider/>
         <Grid container>
             <Grid item xs={10}>
                 <TabPanel value={value} index={0}>
