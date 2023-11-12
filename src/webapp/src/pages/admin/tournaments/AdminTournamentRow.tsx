@@ -1,8 +1,8 @@
-import {IconButton, TableCell, TableRow, Tooltip, Typography} from "@material-ui/core";
+import {IconButton, TableCell, TableRow, Tooltip, Typography} from "@mui/material";
 import * as React from "react";
 import {Tournament} from "../../../codegen/generated-types";
 import {formatDate} from "../../../helpers/helpers";
-import {Dock, Edit} from "@material-ui/icons";
+import {Dock, Edit} from "@mui/icons-material";
 import {useTournaments} from "../../../hooks/api/useTournament";
 import {useNavigate} from "react-router-dom";
 
@@ -44,7 +44,7 @@ export const AdminTournamentRow = (props: AdminTournamentRowProps): JSX.Element 
         </TableCell>
         <TableCell align={"right"}>
             <Typography color={"inherit"}>
-                {props.tournament.date}
+                {props.tournament.startDateAndTime}
             </Typography>
         </TableCell>
         <TableCell align={"right"}>

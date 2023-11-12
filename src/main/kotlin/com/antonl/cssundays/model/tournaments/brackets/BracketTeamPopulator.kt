@@ -6,9 +6,7 @@ class BracketTeamPopulator(val teams: List<Team>) {
     var numberOfRemainingAutoAdvancedTeams = BracketCalculator.numberOfTeamsToAutomaticallyAdvanceFirstRound(teams.size)
 
     fun populateTree(tree: Bracket) {
-        val leafFinder = BracketLeafNodeFinder()
-        leafFinder.traverseTree(tree)
-        val parentsOfLeafNodes = leafFinder.getParentsOfLeafNodes()
+        val parentsOfLeafNodes = BracketLeafNodeFinder().traverseTree(tree).getParentsOfLeafNodes()
 
         if (parentsOfLeafNodes.size == 0) {
             return
@@ -18,7 +16,7 @@ class BracketTeamPopulator(val teams: List<Team>) {
         populateMatches(parentsOfLeafNodes, remainingTeams)
     }
 
-    private fun populateMatches(matches: MutableList<Match>, remainingTeams: MutableList<Team>) {
+    private fun populateMatches(matches: List<Match>, remainingTeams: MutableList<Team>) {
         matches.forEach {
             when {
                 numberOfRemainingAutoAdvancedTeams == 0 -> {

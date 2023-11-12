@@ -1,7 +1,7 @@
 package com.antonl.cssundays.model.tournaments.brackets
 
 class BracketTreePrinter : BracketTreeTraverser {
-    override fun traverseTree(tree: Bracket) {
+    override fun traverseTree(tree: Bracket): BracketTreePrinter {
         var currentLevel: MutableList<Match> = mutableListOf()
 
         tree.root?.let { currentLevel.add(it) }
@@ -24,5 +24,7 @@ class BracketTreePrinter : BracketTreeTraverser {
             println("")
             currentLevel = nextLevel
         }
+
+        return this
     }
 }

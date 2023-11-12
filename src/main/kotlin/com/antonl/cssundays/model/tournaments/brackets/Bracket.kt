@@ -11,5 +11,5 @@ class Bracket(
     @OneToOne(mappedBy = "bracket")
     val tournament: Tournament? = null,
 
-    val createdTs: String = LocalDateTime.now().toString(),
+    val createdTs: LocalDateTime = LocalDateTime.now(),
 ) : PersistedTree<Match>()

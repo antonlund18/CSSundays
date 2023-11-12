@@ -1,4 +1,5 @@
-import {Button, CircularProgress, Dialog, DialogContent, Typography} from "@material-ui/core";
+import {Button, CircularProgress, Dialog, DialogContent, Typography} from "@mui/material";
+import {makeStyles} from "@mui/styles"
 import {PannableContainer} from "../../../components/PannableContainer";
 import {TournamentBracket} from "../bracket/TournamentBracket";
 import {Team, Tournament} from "../../../codegen/generated-types";
@@ -6,11 +7,23 @@ import {useGetCurrentUser} from "../../../hooks/api/useUser";
 import {useTournaments} from "../../../hooks/api/useTournament";
 import {useState} from "react";
 
+const useStyles = makeStyles({
+    bracketNotYetCreated: {
+        position: "absolute",
+        left: "50%",
+        top: "50%",
+        transform: "translate(-50%, -50%) !important",
+        textAlign: "center",
+        transformOrigin: "center"
+    }
+})
+
 interface BracketTabContentProps {
     tournament: Tournament
 }
 
 export const BracketTabContent = (props: BracketTabContentProps): JSX.Element => {
+    const classes = useStyles()
     const {currentUser} = useGetCurrentUser()
     const {registerTeam} = useTournaments()
     const [dialogOpen, setDialogOpen] = useState(false)
@@ -26,12 +39,20 @@ export const BracketTabContent = (props: BracketTabContentProps): JSX.Element =>
         }
     }
 
+    const hasBracketBeenCreated = props.tournament.bracket !== null
+
     return <>
         <PannableContainer style={{backgroundColor: "white"}}>
-            {isLoading && <CircularProgress style={{position: "absolute", left: "50%", top: "50%"}}/>}
-            <div style={{display: isLoading ? "none" : "block"}}>
-                <TournamentBracket  bracket={props.tournament.bracket} setIsLoading={setIsLoading}/>
-            </div>
+            {!hasBracketBeenCreated ? <div className={classes.bracketNotYetCreated}>
+                    <Typography variant={"h2"}>Der er ikke oprettet en bracket endnu</Typography>
+                    <Typography variant={"h4"}>Kom tilbage senere ☕</Typography>
+                </div> :
+                <>
+                    {isLoading && <CircularProgress style={{position: "absolute", left: "50%", top: "50%"}}/>}
+                    <div style={{display: isLoading ? "none" : "block"}}>
+                        <TournamentBracket bracket={props.tournament.bracket} setIsLoading={setIsLoading}/>
+                    </div>
+                </>}
         </PannableContainer>
         <Button variant={"contained"} color={"primary"} style={{marginTop: "16px"}}
                 onClick={() => handleOpenRegistrationDialog(true)}>

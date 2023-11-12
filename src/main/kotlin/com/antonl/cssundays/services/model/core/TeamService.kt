@@ -59,12 +59,12 @@ class TeamService(val teamRepository: TeamRepository) {
         val imageKey = UUID.randomUUID().toString() + ".jpg";
         team.picture = imageKey;
         saveTeam(team)
-        return TeamStorageService.getPresignedUploadRequest(imageKey);
+        return TeamStorageService().getPresignedUploadRequest(imageKey);
     }
 
     suspend fun deletePicture(team: Team): Team? {
         if (!team.picture.equals("")) {
-            TeamStorageService.deleteImage(team.picture);
+            TeamStorageService().deleteImage(team.picture);
             team.picture = "";
             saveTeam(team);
         }

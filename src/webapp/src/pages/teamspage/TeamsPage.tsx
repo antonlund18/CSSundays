@@ -3,14 +3,13 @@ import {useState} from "react";
 import {
     Button,
     CircularProgress, Grid,
-    makeStyles,
     Table,
     TableBody,
     TableCell, TableContainer,
     TableHead,
     TableRow,
     Typography
-} from "@material-ui/core";
+} from "@mui/material";
 import {CenteredPage} from "../../components/CenteredPage";
 import {CreateTeamDialog} from "./CreateTeamDialog";
 import {useNavigate} from "react-router-dom";
@@ -19,6 +18,7 @@ import {theme} from "../../theme/theme";
 import {calculateWinrate} from "../../helpers/helpers";
 import {useGetAllTeams} from "../../hooks/api/useTeam";
 import {Team} from "../../codegen/generated-types";
+import {makeStyles} from "@mui/styles"
 
 const useStyles = makeStyles(theme => ({
     pageTitleContainer: {
@@ -58,7 +58,7 @@ export const TeamsPage = (): JSX.Element => {
             <Typography variant={"h2"} color={"primary"}>Hold</Typography>
         </div>
         <Divider/>
-        <TableContainer style={{maxHeight: "70vh"}}>
+        <TableContainer style={{height: "65vh"}}>
             <Table stickyHeader>
                 <TableHead>
                     <TableRow>
@@ -88,7 +88,7 @@ export const TeamsPage = (): JSX.Element => {
             </Table>
         </TableContainer>
         <Grid container justifyContent={"flex-end"}>
-            <Button color={"primary"} variant={"contained"} style={{margin: theme.spacing(1), alignSelf: "end"}}
+            <Button color={"primary"} variant={"contained"} style={{marginTop: theme.spacing(2), alignSelf: "end"}}
                     onClick={() => setCreateDialogOpen(true)}>
                 Opret hold
             </Button>

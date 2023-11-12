@@ -1,6 +1,7 @@
 import * as React from "react";
 import {useState} from "react";
-import {Dialog, makeStyles, Theme} from "@material-ui/core";
+import {Dialog, Theme} from "@mui/material";
+import {makeStyles} from "@mui/styles"
 import {LoginHeading} from "./LoginHeading";
 import {LoginFormBody} from "./LoginFormBody";
 

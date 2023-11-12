@@ -33,12 +33,12 @@ class UserService(val userRepository: UserRepository) {
         val imageKey = UUID.randomUUID().toString() + ".jpg";
         user.picture = imageKey;
         saveUser(user)
-        return UserStorageService.getPresignedUploadRequest(imageKey);
+        return UserStorageService().getPresignedUploadRequest(imageKey);
     }
 
     suspend fun deletePicture(user: User): User? {
         if (!user.picture.equals(null)) {
-            UserStorageService.deleteImage(user.picture);
+            UserStorageService().deleteImage(user.picture);
             user.picture = null;
             saveUser(user);
         }

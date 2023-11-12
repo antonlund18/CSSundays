@@ -1,10 +1,14 @@
 import {gql} from "@apollo/client";
 
 gql`
-    mutation createTournament($name: String!, $date: String!, $numberOfTeamsAllowed: Int!) {
-        createTournament(name: $name, date: $date, numberOfTeamsAllowed: $numberOfTeamsAllowed) {
+    mutation createTournament($name: String!, $date: LocalDateTime!, $format: TournamentFormat!, $numberOfTeamsAllowed: Int!, $picture: String, $description: String!, $rules: String!) {
+        createTournament(name: $name, date: $date, numberOfTeamsAllowed: $numberOfTeamsAllowed, format: $format, picture: $picture, description: $description, rules: $rules) {
             id,
             name,
+            picture,
+            description,
+            format,
+            rules,
             bracket {
                 id,
                 root {
@@ -17,7 +21,7 @@ gql`
                     }
                 }
             }
-            date,
+            startDateAndTime,
             numberOfTeamsAllowed
         }
     }
@@ -28,6 +32,9 @@ gql`
         getAllTournaments {
             id,
             name,
+            picture,
+            description,
+            format,
             bracket {
                 id,
                 root {
@@ -40,7 +47,7 @@ gql`
                     }
                 }
             }
-            date,
+            startDateAndTime,
             numberOfTeamsAllowed,
             teamRegistrations {
                 team {
@@ -92,9 +99,24 @@ gql`
         getTournamentById(id: $id) {
             id,
             name,
+            picture,
+            description,
+            format,
+            startDateAndTime,
             numberOfTeamsAllowed,
             teamRegistrations {
-                id
+                id,
+                team {
+                    id,
+                    name
+                    picture
+                    users {
+                        id,
+                        picture,
+                        playertag
+                    }
+                },
+                createdTs
             },
             bracket {
                 id,
@@ -110,21 +132,6 @@ gql`
                         name,
                         picture
                     }
-                }
-            }
-        }
-    }
-`
-
-gql`
-    mutation registerTeam($tournamentId: Int!, $teamId: Int!) {
-        registerTeam(teamId: $teamId, tournamentId: $tournamentId) {
-            id,
-            teamRegistrations {
-                id,
-                team {
-                    id,
-                    name
                 }
             }
         }

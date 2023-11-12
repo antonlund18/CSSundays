@@ -1,5 +1,6 @@
 import {Match, ObjectType} from "../../../codegen/generated-types";
-import {Divider, List, ListItem, ListItemIcon, makeStyles, Theme, Typography} from "@material-ui/core";
+import {Divider, List, ListItem, ListItemIcon, Theme, Typography} from "@mui/material";
+import {makeStyles} from "@mui/styles"
 import {Constants} from "../../../util/Constants";
 import {getPictureLinkFromKey} from "../../../util/StorageHelper";
 import * as React from "react";

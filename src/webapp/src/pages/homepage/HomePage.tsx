@@ -1,6 +1,6 @@
 import * as React from "react";
-import {makeStyles, Typography} from "@material-ui/core";
-import {useGetUserById} from "../../hooks/api/useUser";
+import {Typography} from "@mui/material";
+import {makeStyles} from "@mui/styles"
 
 const useStyles = makeStyles((theme) => ({
     homePageContainer: {
@@ -22,8 +22,6 @@ const useStyles = makeStyles((theme) => ({
 
 export const HomePage = () => {
     const classes = useStyles();
-
-    const {user} = useGetUserById(7);
 
     return <div className={classes.homePageContainer}>
         <div className={classes.nameContainer}>

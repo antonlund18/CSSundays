@@ -1,5 +1,6 @@
 import * as React from "react";
-import {makeStyles, MenuItem, Typography} from "@material-ui/core";
+import {MenuItem, Typography} from "@mui/material";
+import {makeStyles} from "@mui/styles"
 import {NavBarMenuItemWrapper} from "./NavBarMenuItemWrapper";
 
 const useStyles = makeStyles(theme => ({

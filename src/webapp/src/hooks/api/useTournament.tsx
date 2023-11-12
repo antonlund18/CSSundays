@@ -1,6 +1,6 @@
 import {
     Match,
-    Tournament,
+    Tournament, TournamentFormat,
     useCreateTournamentMutation,
     useGenerateBracketMutation,
     useGetAllTournamentsQuery,
@@ -46,11 +46,15 @@ export const useTournaments = () => {
     const [generateBracketMutation] = useGenerateBracketMutation();
     const [registerTeamMutation] = useRegisterTeamMutation();
 
-    const createTournament = (name: string, date: string, numberOfTeamsAllowed: number) => createTournamentMutation({
+    const createTournament = (name: string, date: string, numberOfTeamsAllowed: number, format: TournamentFormat, picture: string, description: string, rules: string) => createTournamentMutation({
         variables: {
             name,
             date,
-            numberOfTeamsAllowed
+            numberOfTeamsAllowed,
+            format,
+            picture,
+            description,
+            rules
         },
     })
 

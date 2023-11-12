@@ -10,12 +10,24 @@ import javax.persistence.*
 @Table(name = "tournaments")
 class Tournament(
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    val id: Int? = -1,
+    @SequenceGenerator(name = "tournament_id_generator", sequenceName = "tournament_id_sequence", allocationSize = 1)
+    @GeneratedValue(generator = "tournament_id_generator", strategy = GenerationType.SEQUENCE)
+    val id: Int?,
 
     val name: String,
 
-    val date: String,
+    var picture: String? = null,
+
+    @Column(columnDefinition = "NTEXT")
+    var description: String = "",
+
+    @Column(columnDefinition = "NTEXT")
+    var rules: String = "",
+
+    @Enumerated(EnumType.STRING)
+    var format: TournamentFormat = TournamentFormat.SINGLE_ELIMINATION,
+
+    val startDateAndTime: LocalDateTime,
 
     val numberOfTeamsAllowed: Int,
 
@@ -33,8 +45,39 @@ class Tournament(
     val published: Boolean = false,
 
     @GeneratedValue
-    val createdTs: String = LocalDateTime.now().toString()
-)
+    val createdTs: LocalDateTime = LocalDateTime.now()
+) {
+    constructor() : this(null, "", null, "", "", TournamentFormat.SINGLE_ELIMINATION, LocalDateTime.now(), 64)
+    constructor(
+        name: String,
+        picture: String? = null,
+        description: String = "",
+        rules: String = "",
+        format: TournamentFormat = TournamentFormat.SINGLE_ELIMINATION,
+        startDateAndTime: LocalDateTime,
+        numberOfTeamsAllowed: Int,
+        bracket: Bracket? = null,
+        teamRegistrations: MutableList<TournamentRegistration> = mutableListOf(),
+        status: TournamentStatus = TournamentStatus.OPEN_FOR_REGISTRATIONS,
+        published: Boolean = false,
+        createdTs: LocalDateTime = LocalDateTime.now()
+    ) :
+            this(
+                null,
+                name,
+                picture,
+                description,
+                rules,
+                format,
+                startDateAndTime,
+                numberOfTeamsAllowed,
+                bracket,
+                teamRegistrations,
+                status,
+                published,
+                createdTs
+            )
+}
 
 enum class TournamentStatus {
     OPEN_FOR_REGISTRATIONS,
@@ -42,4 +85,3 @@ enum class TournamentStatus {
     IN_PROGRESS,
     FINISHED
 }
-

@@ -1,21 +1,14 @@
-import {
-    Checkbox,
-    Divider,
-    FormControlLabel,
-    makeStyles,
-    Table,
-    TableBody,
-    TableContainer,
-    TextField
-} from "@material-ui/core";
+import {Checkbox, Divider, FormControlLabel, Table, TableBody, TableContainer, TextField} from "@mui/material";
 import {AdminTournamentRow} from "./AdminTournamentRow";
 import * as React from "react";
 import {useMemo, useState} from "react";
 import {Tournament} from "../../../codegen/generated-types";
-import {Search} from "@material-ui/icons";
+import {Search} from "@mui/icons-material";
 import {useFilterTournaments} from "../../../hooks/tournaments/useFilterTournaments";
 import {AdminTournamentsTableHead} from "./AdminTournamentsTableHead";
-import {SortDirection, SortOption, useSortTournaments} from "../../../hooks/tournaments/useSortTournaments";
+import {makeStyles} from "@mui/styles";
+import {useTournamentSort} from "../../../hooks/useTournamentSort";
+import {SortDirection, SortOption} from "../../../components/SortTypes";
 
 const useStyles = makeStyles(theme => ({
     headerText: {
@@ -40,7 +33,7 @@ export const AdminTournamentsTable = (props: AdminAllTournamentsTableProps): JSX
     const filterTournaments = useFilterTournaments()
     const [sortDirection, setSortDirection] = useState<SortDirection>(SortDirection.ASC)
     const [sortBy, setSortBy] = useState<SortOption>(SortOption.CREATED)
-    const getSortPredicate = useSortTournaments()
+    const getSortPredicate = useTournamentSort()
 
     const handleRequestSort = (event: React.MouseEvent<unknown>, sortOption: SortOption) => {
         const isAsc = sortOption === sortBy && sortDirection === SortDirection.ASC

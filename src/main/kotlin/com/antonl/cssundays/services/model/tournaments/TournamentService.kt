@@ -1,17 +1,22 @@
 package com.antonl.cssundays.services.model.tournaments
 
-import com.antonl.cssundays.model.core.Team
-import com.antonl.cssundays.model.tournaments.*
+import com.antonl.cssundays.graphql.dto.RequestDTO
+import com.antonl.cssundays.model.tournaments.Tournament
+import com.antonl.cssundays.model.tournaments.TournamentFormat
 import com.antonl.cssundays.model.tournaments.brackets.*
 import com.antonl.cssundays.repositories.TournamentRepository
+import com.antonl.cssundays.services.storage.TournamentStorageService
 import org.springframework.stereotype.Service
+import java.time.LocalDateTime
+import java.util.*
 import javax.transaction.Transactional
 
 @Service
 @Transactional
 class TournamentService(
     val tournamentRepository: TournamentRepository,
-    val tournamentRegistrationService: TournamentRegistrationService
+    val tournamentRegistrationService: TournamentRegistrationService,
+    val sharedTournamentAndTournamentRegistrationService: SharedTournamentAndTournamentRegistrationService
 ) {
     fun saveTournament(tournament: Tournament): Tournament {
         return tournamentRepository.save(tournament)
@@ -21,26 +26,38 @@ class TournamentService(
         return tournamentRepository.findAll().toList()
     }
 
-    fun createTournament(name: String, date: String, numberOfTeamsAllowed: Int): Tournament {
+    fun createTournament(name: String, date: LocalDateTime, numberOfTeamsAllowed: Int, format: TournamentFormat = TournamentFormat.SINGLE_ELIMINATION, picture: String? = null, description: String = "", rules: String = ""): Tournament {
         val tournament = Tournament(
             name = name,
-            date = date,
-            numberOfTeamsAllowed = numberOfTeamsAllowed
+            startDateAndTime = date,
+            numberOfTeamsAllowed = numberOfTeamsAllowed,
+            picture = picture,
+            description = description,
+            rules = rules
         )
         saveTournament(tournament)
         return tournament
     }
 
-    fun getTournamentById(id: Int): Tournament? {
-        return tournamentRepository.findById(id)
+    suspend fun setPicture(tournament: Tournament): RequestDTO {
+        deletePicture(tournament);
+        val imageKey = UUID.randomUUID().toString() + ".jpg";
+        tournament.picture = imageKey;
+        saveTournament(tournament)
+        return TournamentStorageService().getPresignedUploadRequest(imageKey);
     }
 
-    fun registerTeam(team: Team, tournament: Tournament): Tournament? {
-        if (tournament.teamRegistrations.size < tournament.numberOfTeamsAllowed) {
-            tournamentRegistrationService.createTournamentRegistration(tournament, team)
-            saveTournament(tournament)
+    suspend fun deletePicture(tournament: Tournament): Tournament? {
+        if (!tournament.picture.equals(null)) {
+            TournamentStorageService().deleteImage(tournament.picture);
+            tournament.picture = null;
+            saveTournament(tournament);
         }
-        return tournament
+        return tournament;
+    }
+
+    fun getTournamentById(id: Int): Tournament? {
+        return tournamentRepository.findById(id)
     }
 
     fun generateBracket(tournament: Tournament): Tournament {
@@ -55,9 +72,7 @@ class TournamentService(
 
     fun getFirstRoundMatches(tournament: Tournament): List<Match> {
         val bracket = tournament.bracket ?: return listOf()
-        val leafFinder = BracketLeafNodeFinder()
-        leafFinder.traverseTree(bracket)
-        return leafFinder.leafNodes
+        return BracketLeafNodeFinder().traverseTree(bracket).getLeafNodes()
     }
 
     fun createBracket(tournament: Tournament): Bracket {
@@ -67,9 +82,7 @@ class TournamentService(
     }
 
     fun getBracketSize(bracket: Bracket): Int {
-        val bracketSizeFinder = BracketSizeFinder()
-        bracketSizeFinder.traverseTree(bracket)
-        return bracketSizeFinder.size
+        return BracketSizeFinder().traverseTree(bracket).size
     }
 
     fun calculateNumberOfMatches(numberOfTeams: Int): Int {

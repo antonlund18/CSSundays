@@ -1,6 +1,7 @@
 import * as React from "react";
 import {useCallback} from "react";
-import {Button, Dialog, DialogContent, Divider as MuiDivider, makeStyles, Typography} from "@material-ui/core";
+import {Button, Dialog, DialogContent, Divider as MuiDivider, Typography} from "@mui/material";
+import {makeStyles} from "@mui/styles"
 import {CenteredPage} from "../../components/CenteredPage";
 import {InviteToTeamStatus, ObjectType, User} from "../../codegen/generated-types";
 import {useGetCurrentUser} from "../../hooks/api/useUser";
@@ -81,7 +82,7 @@ export const PlayerInviteDialog = (props: PlayerInviteDialogProps): JSX.Element 
                 return <React.Fragment>
                     <div className={classes.teamContainer}>
                         <div className={classes.teamInfo}>
-                            <img src={getPictureLinkFromKey(team.picture, ObjectType.Team) ?? "asd"} className={classes.teamImage} aria-label={"Team picture"}/>
+                            <img src={getPictureLinkFromKey(team.picture ?? null, ObjectType.Team) ?? "asd"} className={classes.teamImage} aria-label={"Team picture"}/>
                             <Typography variant={"subtitle2"} className={classes.teamName}>{team.name}</Typography>
                         </div>
                         <Button variant={"outlined"} color={"primary"} style={{height: "32px"}} disabled={shouldDisableInviteButton(team.id)} onClick={() => handleInvite(team?.id)}>Inviter</Button>

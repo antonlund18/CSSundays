@@ -25,7 +25,7 @@ class Notification(
     var isSeen: Boolean = false,
 
     @GeneratedValue
-    var createdTs: String = LocalDateTime.now().toString()
+    var createdTs: LocalDateTime = LocalDateTime.now()
 )
 
 enum class NotificationType {

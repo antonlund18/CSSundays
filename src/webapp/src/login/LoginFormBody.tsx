@@ -1,5 +1,6 @@
 import * as React from "react";
-import {Button, makeStyles, Theme, Typography} from "@material-ui/core";
+import {Button, Theme, Typography} from "@mui/material";
+import {makeStyles} from "@mui/styles"
 import {LoginForm} from "./LoginForm";
 import {RegisterForm} from "./RegisterForm";
 import {Divider} from "../components/Divider";

@@ -1,21 +1,9 @@
-import {Tournament} from "../../codegen/generated-types";
+import {Tournament} from "../codegen/generated-types";
+import {SortDirection, SortOption} from "../components/SortTypes";
 
-export enum SortOption {
-    NAME = "name",
-    CREATED = "createdTs",
-    PUBLISHED = "published",
-    START = "startTs"
-}
-
-export enum SortDirection {
-    ASC = "asc",
-    DESC = "desc"
-}
-
-
-export const useSortTournaments = () => {
+export const useTournamentSort = () => {
     const sortByPublishedPredicate = (direction: SortDirection) => {
-     return (t1: Tournament, t2: Tournament): number => {
+        return (t1: Tournament, t2: Tournament): number => {
             if (t1.published === t2.published) return 0
             if (t1.published && !t2.published) return direction === SortDirection.ASC ? 1 : -1
             return direction === SortDirection.ASC ? -1 : 1
@@ -35,9 +23,15 @@ export const useSortTournaments = () => {
         }
     }
 
+    const sortByNumberPredicate = (direction: SortDirection) => {
+        return (t1: Tournament, t2: Tournament): number => {
+            return direction === SortDirection.ASC ? Date.parse(t2.createdTs) - Date.parse(t1.createdTs) : Date.parse(t1.createdTs) - Date.parse(t2.createdTs)
+        }
+    }
+
     const sortByStartTsPredicate = (direction: SortDirection) => {
         return (t1: Tournament, t2: Tournament): number => {
-            return direction === SortDirection.ASC ? Date.parse(t1.date) - Date.parse(t2.date) : Date.parse(t2.date) - Date.parse(t1.date)
+            return direction === SortDirection.ASC ? Date.parse(t1.startDateAndTime) - Date.parse(t2.startDateAndTime) : Date.parse(t2.startDateAndTime) - Date.parse(t1.startDateAndTime)
         }
     }
 
@@ -47,6 +41,8 @@ export const useSortTournaments = () => {
                 return sortByPublishedPredicate(direction)
             case SortOption.NAME:
                 return sortByNamePredicate(direction)
+            case SortOption.NUMBER:
+                return sortByNumberPredicate(direction)
             case SortOption.CREATED:
                 return sortByCreatedTsPredicate(direction)
             case SortOption.START:

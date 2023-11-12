@@ -1,5 +1,6 @@
 import * as React from "react";
-import {makeStyles, Theme} from "@material-ui/core";
+import {Theme} from "@mui/material";
+import {makeStyles} from "@mui/styles"
 import {PropsWithChildren} from "react";
 
 interface StylesProps {
@@ -11,13 +12,23 @@ const useStyles = makeStyles<Theme, StylesProps>(theme  => ({
         display: "flex",
         justifyContent: "center",
         height: "calc(100vh - 92px)",
-        backgroundColor: "#f5f9fc",
+        backgroundImage: "url(https://i.imgur.com/MkE9cBw.png)",
+        backgroundRepeat: "no-repeat",
+        backgroundSize: "cover",
     },
     pageContent: props => ({
+        "&::-webkit-scrollbar": {
+            width: "0px"
+        },
         display: "inline",
+        margin: "16px",
         width: props.fullWidth ? "" : "1200px",
+        backgroundColor: "rgba(245,249,252, .8)",
+        backgroundSize: "100vw",
         padding: theme.spacing(4),
-    })
+        borderRadius: "8px",
+        overflowY: "scroll"
+    }),
 }));
 
 interface CenteredPageProps {

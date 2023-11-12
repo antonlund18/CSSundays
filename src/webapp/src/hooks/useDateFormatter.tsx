@@ -1,4 +1,30 @@
-export const useRelativeTimeFormat = () => {
+export const useDateFormatter = () => {
+    const formatDate = (date: string | number | Date): string => {
+        const formattedDate = new Date(date)
+        return formattedDate.getFullYear()
+        + "-" + addZero(formattedDate.getMonth() + 1)
+        + "-" + addZero(formattedDate.getDate())
+    }
+
+    const formatTime = (date: string | number | Date): string => {
+        const formattedDate = new Date(date)
+        return addZero(formattedDate.getHours())
+        + ":" + addZero(formattedDate.getMinutes())
+    }
+
+    const formatDateTime = (date: string | number | Date): string => {
+        const formattedDate = new Date(date)
+        return formattedDate.getFullYear()
+        + "-" + addZero(formattedDate.getMonth() + 1)
+        + "-" + addZero(formattedDate.getDate())
+        + " " + addZero(formattedDate.getHours())
+        + ":" + addZero(formattedDate.getMinutes())
+    }
+
+    const addZero = (number: number): string => {
+        return number.toString().length === 1 ? "0" + number : "" + number
+    }
+    
     const formatDateRelatively = (date: string | number | Date): string => {
         const time = Math.floor((new Date().valueOf() - new Date(date).valueOf()) / 1000);
         const { interval, unit, pluralSuffix } = calculateTimeDifference(time);
@@ -35,6 +61,9 @@ export const useRelativeTimeFormat = () => {
     ];
 
     return {
-        formatDateRelatively
+        formatDateRelatively,
+        formatDate,
+        formatTime,
+        formatDateTime,
     }
 }

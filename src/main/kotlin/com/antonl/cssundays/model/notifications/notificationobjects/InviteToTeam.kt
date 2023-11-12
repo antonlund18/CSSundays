@@ -21,7 +21,7 @@ class InviteToTeam(
     @Enumerated(EnumType.STRING)
     var status: InviteToTeamStatus = InviteToTeamStatus.PENDING,
 
-    var createdTs: String = LocalDateTime.now().toString()
+    var createdTs: LocalDateTime = LocalDateTime.now()
 ) : NotifiableObject();
 
 enum class InviteToTeamStatus {

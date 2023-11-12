@@ -13,7 +13,7 @@ class CssundaysApplication {
 	fun wiringFactory() = CustomDirectiveWiringFactory()
 
 	@Bean
-	fun hooks(wiringFactory: KotlinDirectiveWiringFactory) = CustomSchemaGeneratorHooks(wiringFactory)
+	fun hooks(wiringFactory: KotlinDirectiveWiringFactory) = CustomSchemaGeneratorHooks()
 }
 
 fun main(args: Array<String>) {

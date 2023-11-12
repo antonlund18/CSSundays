@@ -1,18 +1,10 @@
 import * as React from "react";
 import {useState} from "react";
-import {
-    Button,
-    Dialog,
-    DialogActions,
-    DialogContent,
-    DialogTitle,
-    makeStyles,
-    TextField,
-    Typography
-} from "@material-ui/core";
+import {Button, Dialog, DialogActions, DialogContent, TextField, Typography} from "@mui/material";
 import {useNavigate} from "react-router-dom";
 import {useMutateTeam} from "../../hooks/api/useTeam";
 import {useGetCurrentUser} from "../../hooks/api/useUser";
+import {makeStyles} from "@mui/styles"
 
 const useStyles = makeStyles(theme => ({
     nameTextfield: {

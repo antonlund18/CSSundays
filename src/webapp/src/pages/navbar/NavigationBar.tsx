@@ -1,6 +1,7 @@
 import * as React from "react";
 import {Link} from "react-router-dom";
-import {makeStyles, Typography} from "@material-ui/core";
+import {Typography} from "@mui/material";
+import {makeStyles} from "@mui/styles"
 import {NavBarProfile} from "./NavBarProfile";
 import {NavBarMenuItem} from "./NavBarMenuItem";
 

@@ -13,11 +13,13 @@ export type Scalars = {
   Boolean: boolean;
   Int: number;
   Float: number;
+  /** DateTime */
+  LocalDateTime: any;
 };
 
 export type Bracket = {
   __typename?: 'Bracket';
-  createdTs: Scalars['String'];
+  createdTs: Scalars['LocalDateTime'];
   id?: Maybe<Scalars['Int']>;
   root?: Maybe<Match>;
   tournament?: Maybe<Tournament>;
@@ -31,7 +33,7 @@ export type HeaderDto = {
 
 export type InviteToTeam = NotifiableObject & {
   __typename?: 'InviteToTeam';
-  createdTs: Scalars['String'];
+  createdTs: Scalars['LocalDateTime'];
   id?: Maybe<Scalars['Int']>;
   recipient: User;
   sender: User;
@@ -47,7 +49,7 @@ export enum InviteToTeamStatus {
 
 export type Match = {
   __typename?: 'Match';
-  createdTs: Scalars['String'];
+  createdTs: Scalars['LocalDateTime'];
   id?: Maybe<Scalars['Int']>;
   left?: Maybe<Match>;
   parent?: Maybe<Match>;
@@ -110,9 +112,13 @@ export type MutationCreateTeamArgs = {
 
 
 export type MutationCreateTournamentArgs = {
-  date: Scalars['String'];
+  date: Scalars['LocalDateTime'];
+  description: Scalars['String'];
+  format: TournamentFormat;
   name: Scalars['String'];
   numberOfTeamsAllowed: Scalars['Int'];
+  picture?: InputMaybe<Scalars['String']>;
+  rules: Scalars['String'];
 };
 
 
@@ -176,7 +182,7 @@ export type NotifiableObject = {
 
 export type Notification = {
   __typename?: 'Notification';
-  createdTs: Scalars['String'];
+  createdTs: Scalars['LocalDateTime'];
   id?: Maybe<Scalars['Int']>;
   isSeen: Scalars['Boolean'];
   notifiableObject?: Maybe<NotifiableObject>;
@@ -190,6 +196,7 @@ export enum NotificationType {
 
 export enum ObjectType {
   Team = 'TEAM',
+  Tournament = 'TOURNAMENT',
   User = 'USER'
 }
 
@@ -281,12 +288,12 @@ export type RequestDto = {
 
 export type Team = {
   __typename?: 'Team';
-  createdTs: Scalars['String'];
+  createdTs: Scalars['LocalDateTime'];
   id?: Maybe<Scalars['Int']>;
   losses: Scalars['Int'];
   name: Scalars['String'];
   owner: User;
-  picture: Scalars['String'];
+  picture?: Maybe<Scalars['String']>;
   slug: Scalars['String'];
   users: Array<User>;
   wins: Scalars['Int'];
@@ -295,19 +302,27 @@ export type Team = {
 export type Tournament = {
   __typename?: 'Tournament';
   bracket?: Maybe<Bracket>;
-  createdTs: Scalars['String'];
-  date: Scalars['String'];
+  createdTs: Scalars['LocalDateTime'];
+  description: Scalars['String'];
+  format: TournamentFormat;
   id?: Maybe<Scalars['Int']>;
   name: Scalars['String'];
   numberOfTeamsAllowed: Scalars['Int'];
+  picture?: Maybe<Scalars['String']>;
   published: Scalars['Boolean'];
+  rules: Scalars['String'];
+  startDateAndTime: Scalars['LocalDateTime'];
   status: TournamentStatus;
   teamRegistrations: Array<TournamentRegistration>;
 };
 
+export enum TournamentFormat {
+  SingleElimination = 'SINGLE_ELIMINATION'
+}
+
 export type TournamentRegistration = {
   __typename?: 'TournamentRegistration';
-  createdTs: Scalars['String'];
+  createdTs: Scalars['LocalDateTime'];
   id?: Maybe<Scalars['Int']>;
   team: Team;
   tournament: Tournament;
@@ -322,7 +337,7 @@ export enum TournamentStatus {
 
 export type User = {
   __typename?: 'User';
-  createdTs: Scalars['String'];
+  createdTs: Scalars['LocalDateTime'];
   email: Scalars['String'];
   id?: Maybe<Scalars['Int']>;
   password: Scalars['String'];
@@ -345,28 +360,28 @@ export type FindAllInvitesForPlayerQueryVariables = Exact<{
 }>;
 
 
-export type FindAllInvitesForPlayerQuery = { __typename?: 'Query', findAllInvitesForPlayer: Array<{ __typename?: 'InviteToTeam', id?: number, status: InviteToTeamStatus, createdTs: string, recipient: { __typename?: 'User', id?: number, playertag: string, picture?: string }, team: { __typename?: 'Team', id?: number, name: string, picture: string, owner: { __typename?: 'User', id?: number, playertag: string, picture?: string } }, sender: { __typename?: 'User', id?: number, playertag: string, picture?: string } }> };
+export type FindAllInvitesForPlayerQuery = { __typename?: 'Query', findAllInvitesForPlayer: Array<{ __typename?: 'InviteToTeam', id?: number, status: InviteToTeamStatus, createdTs: any, recipient: { __typename?: 'User', id?: number, playertag: string, picture?: string }, team: { __typename?: 'Team', id?: number, name: string, picture?: string, owner: { __typename?: 'User', id?: number, playertag: string, picture?: string } }, sender: { __typename?: 'User', id?: number, playertag: string, picture?: string } }> };
 
 export type FindPendingInvitesForPlayerQueryVariables = Exact<{
   playerId: Scalars['Int'];
 }>;
 
 
-export type FindPendingInvitesForPlayerQuery = { __typename?: 'Query', findPendingInvitesForPlayer: Array<{ __typename?: 'InviteToTeam', id?: number, status: InviteToTeamStatus, recipient: { __typename?: 'User', id?: number, playertag: string, picture?: string }, team: { __typename?: 'Team', id?: number, name: string, picture: string, owner: { __typename?: 'User', id?: number, playertag: string, picture?: string }, users: Array<{ __typename?: 'User', id?: number }> }, sender: { __typename?: 'User', id?: number, playertag: string, picture?: string } }> };
+export type FindPendingInvitesForPlayerQuery = { __typename?: 'Query', findPendingInvitesForPlayer: Array<{ __typename?: 'InviteToTeam', id?: number, status: InviteToTeamStatus, recipient: { __typename?: 'User', id?: number, playertag: string, picture?: string }, team: { __typename?: 'Team', id?: number, name: string, picture?: string, owner: { __typename?: 'User', id?: number, playertag: string, picture?: string }, users: Array<{ __typename?: 'User', id?: number }> }, sender: { __typename?: 'User', id?: number, playertag: string, picture?: string } }> };
 
 export type AcceptInvitationMutationVariables = Exact<{
   id: Scalars['Int'];
 }>;
 
 
-export type AcceptInvitationMutation = { __typename?: 'Mutation', acceptInvitation?: { __typename?: 'InviteToTeam', id?: number, status: InviteToTeamStatus, recipient: { __typename?: 'User', id?: number, playertag: string, picture?: string }, team: { __typename?: 'Team', id?: number, name: string, picture: string, owner: { __typename?: 'User', id?: number, playertag: string, picture?: string } }, sender: { __typename?: 'User', id?: number, playertag: string, picture?: string } } };
+export type AcceptInvitationMutation = { __typename?: 'Mutation', acceptInvitation?: { __typename?: 'InviteToTeam', id?: number, status: InviteToTeamStatus, recipient: { __typename?: 'User', id?: number, playertag: string, picture?: string }, team: { __typename?: 'Team', id?: number, name: string, picture?: string, owner: { __typename?: 'User', id?: number, playertag: string, picture?: string } }, sender: { __typename?: 'User', id?: number, playertag: string, picture?: string } } };
 
 export type DeclineInvitationMutationVariables = Exact<{
   id: Scalars['Int'];
 }>;
 
 
-export type DeclineInvitationMutation = { __typename?: 'Mutation', declineInvitation?: { __typename?: 'InviteToTeam', id?: number, status: InviteToTeamStatus, recipient: { __typename?: 'User', id?: number, playertag: string, picture?: string }, team: { __typename?: 'Team', id?: number, name: string, picture: string, owner: { __typename?: 'User', id?: number, playertag: string, picture?: string } }, sender: { __typename?: 'User', id?: number, playertag: string, picture?: string } } };
+export type DeclineInvitationMutation = { __typename?: 'Mutation', declineInvitation?: { __typename?: 'InviteToTeam', id?: number, status: InviteToTeamStatus, recipient: { __typename?: 'User', id?: number, playertag: string, picture?: string }, team: { __typename?: 'Team', id?: number, name: string, picture?: string, owner: { __typename?: 'User', id?: number, playertag: string, picture?: string } }, sender: { __typename?: 'User', id?: number, playertag: string, picture?: string } } };
 
 export type CreateInviteToTeamMutationVariables = Exact<{
   recipientId: Scalars['Int'];
@@ -382,14 +397,14 @@ export type GetMatchesByParentIdsQueryVariables = Exact<{
 }>;
 
 
-export type GetMatchesByParentIdsQuery = { __typename?: 'Query', getMatchesByParentIds: Array<{ __typename?: 'Match', id?: number, team1?: { __typename?: 'Team', id?: number, name: string, picture: string }, team2?: { __typename?: 'Team', id?: number, name: string, picture: string } }> };
+export type GetMatchesByParentIdsQuery = { __typename?: 'Query', getMatchesByParentIds: Array<{ __typename?: 'Match', id?: number, team1?: { __typename?: 'Team', id?: number, name: string, picture?: string }, team2?: { __typename?: 'Team', id?: number, name: string, picture?: string } }> };
 
 export type GetAllNotificationsQueryVariables = Exact<{
   userId: Scalars['Int'];
 }>;
 
 
-export type GetAllNotificationsQuery = { __typename?: 'Query', getAllNotifications: Array<{ __typename?: 'Notification', id?: number, isSeen: boolean, notificationType: NotificationType, createdTs: string, recipient: { __typename?: 'User', id?: number, playertag: string, picture?: string }, notifiableObject?: { __typename?: 'InviteToTeam', id?: number, createdTs: string, status: InviteToTeamStatus, recipient: { __typename?: 'User', id?: number, playertag: string, picture?: string }, sender: { __typename?: 'User', id?: number, playertag: string, picture?: string }, team: { __typename?: 'Team', id?: number, name: string, picture: string } } }> };
+export type GetAllNotificationsQuery = { __typename?: 'Query', getAllNotifications: Array<{ __typename?: 'Notification', id?: number, isSeen: boolean, notificationType: NotificationType, createdTs: any, recipient: { __typename?: 'User', id?: number, playertag: string, picture?: string }, notifiableObject?: { __typename?: 'InviteToTeam', id?: number, createdTs: any, status: InviteToTeamStatus, recipient: { __typename?: 'User', id?: number, playertag: string, picture?: string }, sender: { __typename?: 'User', id?: number, playertag: string, picture?: string }, team: { __typename?: 'Team', id?: number, name: string, picture?: string } } }> };
 
 export type MarkAllNotificationsAsSeenForUserMutationVariables = Exact<{
   userId: Scalars['Int'];
@@ -406,17 +421,25 @@ export type SetPictureAndGetPresignedRequestMutationVariables = Exact<{
 
 export type SetPictureAndGetPresignedRequestMutation = { __typename?: 'Mutation', setPictureAndGetPresignedRequest?: { __typename?: 'RequestDTO', url: string, method: string, headers: Array<{ __typename?: 'HeaderDTO', name: string, value: string }> } };
 
+export type RegisterTeamMutationVariables = Exact<{
+  tournamentId: Scalars['Int'];
+  teamId: Scalars['Int'];
+}>;
+
+
+export type RegisterTeamMutation = { __typename?: 'Mutation', registerTeam?: { __typename?: 'Tournament', id?: number, teamRegistrations: Array<{ __typename?: 'TournamentRegistration', id?: number, team: { __typename?: 'Team', id?: number, name: string } }> } };
+
 export type GetAllTeamsQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type GetAllTeamsQuery = { __typename?: 'Query', getAllTeams: Array<{ __typename?: 'Team', id?: number, name: string, picture: string, wins: number, losses: number, createdTs: string }> };
+export type GetAllTeamsQuery = { __typename?: 'Query', getAllTeams: Array<{ __typename?: 'Team', id?: number, name: string, picture?: string, wins: number, losses: number, createdTs: any }> };
 
 export type GetTeamByIdQueryVariables = Exact<{
   teamId: Scalars['Int'];
 }>;
 
 
-export type GetTeamByIdQuery = { __typename?: 'Query', getTeamById?: { __typename?: 'Team', id?: number, name: string, picture: string, wins: number, losses: number, createdTs: string, owner: { __typename?: 'User', id?: number, playertag: string, picture?: string }, users: Array<{ __typename?: 'User', id?: number, playertag: string, picture?: string }> } };
+export type GetTeamByIdQuery = { __typename?: 'Query', getTeamById?: { __typename?: 'Team', id?: number, name: string, picture?: string, wins: number, losses: number, createdTs: any, owner: { __typename?: 'User', id?: number, playertag: string, picture?: string }, users: Array<{ __typename?: 'User', id?: number, playertag: string, picture?: string }> } };
 
 export type IncrementWinsMutationVariables = Exact<{
   teamId: Scalars['Int'];
@@ -442,17 +465,21 @@ export type CreateTeamMutation = { __typename?: 'Mutation', createTeam?: { __typ
 
 export type CreateTournamentMutationVariables = Exact<{
   name: Scalars['String'];
-  date: Scalars['String'];
+  date: Scalars['LocalDateTime'];
+  format: TournamentFormat;
   numberOfTeamsAllowed: Scalars['Int'];
+  picture?: InputMaybe<Scalars['String']>;
+  description: Scalars['String'];
+  rules: Scalars['String'];
 }>;
 
 
-export type CreateTournamentMutation = { __typename?: 'Mutation', createTournament?: { __typename?: 'Tournament', id?: number, name: string, date: string, numberOfTeamsAllowed: number, bracket?: { __typename?: 'Bracket', id?: number, root?: { __typename?: 'Match', id?: number, left?: { __typename?: 'Match', id?: number }, right?: { __typename?: 'Match', id?: number } } } } };
+export type CreateTournamentMutation = { __typename?: 'Mutation', createTournament?: { __typename?: 'Tournament', id?: number, name: string, picture?: string, description: string, format: TournamentFormat, rules: string, startDateAndTime: any, numberOfTeamsAllowed: number, bracket?: { __typename?: 'Bracket', id?: number, root?: { __typename?: 'Match', id?: number, left?: { __typename?: 'Match', id?: number }, right?: { __typename?: 'Match', id?: number } } } } };
 
 export type GetAllTournamentsQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type GetAllTournamentsQuery = { __typename?: 'Query', getAllTournaments: Array<{ __typename?: 'Tournament', id?: number, name: string, date: string, numberOfTeamsAllowed: number, createdTs: string, status: TournamentStatus, published: boolean, bracket?: { __typename?: 'Bracket', id?: number, root?: { __typename?: 'Match', id?: number, left?: { __typename?: 'Match', id?: number }, right?: { __typename?: 'Match', id?: number } } }, teamRegistrations: Array<{ __typename?: 'TournamentRegistration', id?: number, team: { __typename?: 'Team', id?: number } }> }> };
+export type GetAllTournamentsQuery = { __typename?: 'Query', getAllTournaments: Array<{ __typename?: 'Tournament', id?: number, name: string, picture?: string, description: string, format: TournamentFormat, startDateAndTime: any, numberOfTeamsAllowed: number, createdTs: any, status: TournamentStatus, published: boolean, bracket?: { __typename?: 'Bracket', id?: number, root?: { __typename?: 'Match', id?: number, left?: { __typename?: 'Match', id?: number }, right?: { __typename?: 'Match', id?: number } } }, teamRegistrations: Array<{ __typename?: 'TournamentRegistration', id?: number, team: { __typename?: 'Team', id?: number } }> }> };
 
 export type GenerateBracketMutationVariables = Exact<{
   tournamentId: Scalars['Int'];
@@ -466,29 +493,21 @@ export type GetTournamentByIdQueryVariables = Exact<{
 }>;
 
 
-export type GetTournamentByIdQuery = { __typename?: 'Query', getTournamentById?: { __typename?: 'Tournament', id?: number, name: string, numberOfTeamsAllowed: number, teamRegistrations: Array<{ __typename?: 'TournamentRegistration', id?: number }>, bracket?: { __typename?: 'Bracket', id?: number, root?: { __typename?: 'Match', id?: number, team1?: { __typename?: 'Team', id?: number, name: string, picture: string }, team2?: { __typename?: 'Team', id?: number, name: string, picture: string } } } } };
-
-export type RegisterTeamMutationVariables = Exact<{
-  tournamentId: Scalars['Int'];
-  teamId: Scalars['Int'];
-}>;
-
-
-export type RegisterTeamMutation = { __typename?: 'Mutation', registerTeam?: { __typename?: 'Tournament', id?: number, teamRegistrations: Array<{ __typename?: 'TournamentRegistration', id?: number, team: { __typename?: 'Team', id?: number, name: string } }> } };
+export type GetTournamentByIdQuery = { __typename?: 'Query', getTournamentById?: { __typename?: 'Tournament', id?: number, name: string, picture?: string, description: string, format: TournamentFormat, startDateAndTime: any, numberOfTeamsAllowed: number, teamRegistrations: Array<{ __typename?: 'TournamentRegistration', id?: number, createdTs: any, team: { __typename?: 'Team', id?: number, name: string, picture?: string, users: Array<{ __typename?: 'User', id?: number, picture?: string, playertag: string }> } }>, bracket?: { __typename?: 'Bracket', id?: number, root?: { __typename?: 'Match', id?: number, team1?: { __typename?: 'Team', id?: number, name: string, picture?: string }, team2?: { __typename?: 'Team', id?: number, name: string, picture?: string } } } } };
 
 export type GetUserByIdQueryVariables = Exact<{
   id: Scalars['Int'];
 }>;
 
 
-export type GetUserByIdQuery = { __typename?: 'Query', getUserById?: { __typename?: 'User', id?: number, playertag: string, email: string, role: UserRole, picture?: string, teams: Array<{ __typename?: 'Team', name: string, users: Array<{ __typename?: 'User', playertag: string }> }> } };
+export type GetUserByIdQuery = { __typename?: 'Query', getUserById?: { __typename?: 'User', id?: number, playertag: string, email: string, role: UserRole, picture?: string, createdTs: any, teams: Array<{ __typename?: 'Team', id?: number, name: string, picture?: string, users: Array<{ __typename?: 'User', playertag: string }> }> } };
 
 export type GetCurrentUserQueryVariables = Exact<{
   token: Scalars['String'];
 }>;
 
 
-export type GetCurrentUserQuery = { __typename?: 'Query', getCurrentUser?: { __typename?: 'User', id?: number, playertag: string, email: string, role: UserRole, picture?: string, teams: Array<{ __typename?: 'Team', id?: number, name: string, picture: string, users: Array<{ __typename?: 'User', playertag: string }> }> } };
+export type GetCurrentUserQuery = { __typename?: 'Query', getCurrentUser?: { __typename?: 'User', id?: number, playertag: string, email: string, role: UserRole, picture?: string, teams: Array<{ __typename?: 'Team', id?: number, name: string, picture?: string, users: Array<{ __typename?: 'User', playertag: string }> }> } };
 
 export type CreateUserMutationVariables = Exact<{
   playertag: Scalars['String'];
@@ -962,6 +981,47 @@ export function useSetPictureAndGetPresignedRequestMutation(baseOptions?: Apollo
 export type SetPictureAndGetPresignedRequestMutationHookResult = ReturnType<typeof useSetPictureAndGetPresignedRequestMutation>;
 export type SetPictureAndGetPresignedRequestMutationResult = Apollo.MutationResult<SetPictureAndGetPresignedRequestMutation>;
 export type SetPictureAndGetPresignedRequestMutationOptions = Apollo.BaseMutationOptions<SetPictureAndGetPresignedRequestMutation, SetPictureAndGetPresignedRequestMutationVariables>;
+export const RegisterTeamDocument = gql`
+    mutation registerTeam($tournamentId: Int!, $teamId: Int!) {
+  registerTeam(teamId: $teamId, tournamentId: $tournamentId) {
+    id
+    teamRegistrations {
+      id
+      team {
+        id
+        name
+      }
+    }
+  }
+}
+    `;
+export type RegisterTeamMutationFn = Apollo.MutationFunction<RegisterTeamMutation, RegisterTeamMutationVariables>;
+
+/**
+ * __useRegisterTeamMutation__
+ *
+ * To run a mutation, you first call `useRegisterTeamMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useRegisterTeamMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [registerTeamMutation, { data, loading, error }] = useRegisterTeamMutation({
+ *   variables: {
+ *      tournamentId: // value for 'tournamentId'
+ *      teamId: // value for 'teamId'
+ *   },
+ * });
+ */
+export function useRegisterTeamMutation(baseOptions?: Apollo.MutationHookOptions<RegisterTeamMutation, RegisterTeamMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<RegisterTeamMutation, RegisterTeamMutationVariables>(RegisterTeamDocument, options);
+      }
+export type RegisterTeamMutationHookResult = ReturnType<typeof useRegisterTeamMutation>;
+export type RegisterTeamMutationResult = Apollo.MutationResult<RegisterTeamMutation>;
+export type RegisterTeamMutationOptions = Apollo.BaseMutationOptions<RegisterTeamMutation, RegisterTeamMutationVariables>;
 export const GetAllTeamsDocument = gql`
     query getAllTeams {
   getAllTeams {
@@ -1159,14 +1219,22 @@ export type CreateTeamMutationHookResult = ReturnType<typeof useCreateTeamMutati
 export type CreateTeamMutationResult = Apollo.MutationResult<CreateTeamMutation>;
 export type CreateTeamMutationOptions = Apollo.BaseMutationOptions<CreateTeamMutation, CreateTeamMutationVariables>;
 export const CreateTournamentDocument = gql`
-    mutation createTournament($name: String!, $date: String!, $numberOfTeamsAllowed: Int!) {
+    mutation createTournament($name: String!, $date: LocalDateTime!, $format: TournamentFormat!, $numberOfTeamsAllowed: Int!, $picture: String, $description: String!, $rules: String!) {
   createTournament(
     name: $name
     date: $date
     numberOfTeamsAllowed: $numberOfTeamsAllowed
+    format: $format
+    picture: $picture
+    description: $description
+    rules: $rules
   ) {
     id
     name
+    picture
+    description
+    format
+    rules
     bracket {
       id
       root {
@@ -1179,7 +1247,7 @@ export const CreateTournamentDocument = gql`
         }
       }
     }
-    date
+    startDateAndTime
     numberOfTeamsAllowed
   }
 }
@@ -1201,7 +1269,11 @@ export type CreateTournamentMutationFn = Apollo.MutationFunction<CreateTournamen
  *   variables: {
  *      name: // value for 'name'
  *      date: // value for 'date'
+ *      format: // value for 'format'
  *      numberOfTeamsAllowed: // value for 'numberOfTeamsAllowed'
+ *      picture: // value for 'picture'
+ *      description: // value for 'description'
+ *      rules: // value for 'rules'
  *   },
  * });
  */
@@ -1217,6 +1289,9 @@ export const GetAllTournamentsDocument = gql`
   getAllTournaments {
     id
     name
+    picture
+    description
+    format
     bracket {
       id
       root {
@@ -1229,7 +1304,7 @@ export const GetAllTournamentsDocument = gql`
         }
       }
     }
-    date
+    startDateAndTime
     numberOfTeamsAllowed
     teamRegistrations {
       team {
@@ -1332,9 +1407,24 @@ export const GetTournamentByIdDocument = gql`
   getTournamentById(id: $id) {
     id
     name
+    picture
+    description
+    format
+    startDateAndTime
     numberOfTeamsAllowed
     teamRegistrations {
       id
+      team {
+        id
+        name
+        picture
+        users {
+          id
+          picture
+          playertag
+        }
+      }
+      createdTs
     }
     bracket {
       id
@@ -1383,47 +1473,6 @@ export function useGetTournamentByIdLazyQuery(baseOptions?: Apollo.LazyQueryHook
 export type GetTournamentByIdQueryHookResult = ReturnType<typeof useGetTournamentByIdQuery>;
 export type GetTournamentByIdLazyQueryHookResult = ReturnType<typeof useGetTournamentByIdLazyQuery>;
 export type GetTournamentByIdQueryResult = Apollo.QueryResult<GetTournamentByIdQuery, GetTournamentByIdQueryVariables>;
-export const RegisterTeamDocument = gql`
-    mutation registerTeam($tournamentId: Int!, $teamId: Int!) {
-  registerTeam(teamId: $teamId, tournamentId: $tournamentId) {
-    id
-    teamRegistrations {
-      id
-      team {
-        id
-        name
-      }
-    }
-  }
-}
-    `;
-export type RegisterTeamMutationFn = Apollo.MutationFunction<RegisterTeamMutation, RegisterTeamMutationVariables>;
-
-/**
- * __useRegisterTeamMutation__
- *
- * To run a mutation, you first call `useRegisterTeamMutation` within a React component and pass it any options that fit your needs.
- * When your component renders, `useRegisterTeamMutation` returns a tuple that includes:
- * - A mutate function that you can call at any time to execute the mutation
- * - An object with fields that represent the current status of the mutation's execution
- *
- * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
- *
- * @example
- * const [registerTeamMutation, { data, loading, error }] = useRegisterTeamMutation({
- *   variables: {
- *      tournamentId: // value for 'tournamentId'
- *      teamId: // value for 'teamId'
- *   },
- * });
- */
-export function useRegisterTeamMutation(baseOptions?: Apollo.MutationHookOptions<RegisterTeamMutation, RegisterTeamMutationVariables>) {
-        const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useMutation<RegisterTeamMutation, RegisterTeamMutationVariables>(RegisterTeamDocument, options);
-      }
-export type RegisterTeamMutationHookResult = ReturnType<typeof useRegisterTeamMutation>;
-export type RegisterTeamMutationResult = Apollo.MutationResult<RegisterTeamMutation>;
-export type RegisterTeamMutationOptions = Apollo.BaseMutationOptions<RegisterTeamMutation, RegisterTeamMutationVariables>;
 export const GetUserByIdDocument = gql`
     query getUserById($id: Int!) {
   getUserById(id: $id) {
@@ -1432,8 +1481,11 @@ export const GetUserByIdDocument = gql`
     email
     role
     picture
+    createdTs
     teams {
+      id
       name
+      picture
       users {
         playertag
       }
@@ -1600,12 +1652,12 @@ export const ListAllOperations = {
     createInviteToTeam: 'createInviteToTeam',
     markAllNotificationsAsSeenForUser: 'markAllNotificationsAsSeenForUser',
     setPictureAndGetPresignedRequest: 'setPictureAndGetPresignedRequest',
+    registerTeam: 'registerTeam',
     incrementWins: 'incrementWins',
     incrementLosses: 'incrementLosses',
     createTeam: 'createTeam',
     createTournament: 'createTournament',
     generateBracket: 'generateBracket',
-    registerTeam: 'registerTeam',
     createUser: 'createUser',
     loginUser: 'loginUser'
   },

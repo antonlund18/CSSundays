@@ -18,7 +18,7 @@ export const useGetAllTeams = () => {
 export const useGetTeamById = (id: number) => {
     const {data, loading} = useGetTeamByIdQuery({variables: {teamId: id}});
     return {
-        team: data?.getTeamById,
+        team: data?.getTeamById as Team,
         loading
     }
 }

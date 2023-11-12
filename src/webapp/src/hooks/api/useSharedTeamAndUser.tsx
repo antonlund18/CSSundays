@@ -3,8 +3,10 @@ import {ObjectType, useSetPictureAndGetPresignedRequestMutation} from "../../cod
 export const useSharedTeamAndUser = () => {
     const [setPictureAndGetPresignedRequestMutation] = useSetPictureAndGetPresignedRequestMutation();
 
-    const setAndUploadPicture = async (id: number, selector: HTMLInputElement, objectType: ObjectType) => {
-        const file = selector?.files?.item(0);
+    const setAndUploadPicture = async (id: number, selector: HTMLInputElement | null, objectType: ObjectType) => {
+        if (!selector) return;
+
+        const file = selector.files?.item(0);
         if (!file) return;
 
         const buffer = await file?.arrayBuffer();

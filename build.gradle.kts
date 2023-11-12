@@ -45,6 +45,7 @@ dependencies {
     // GraphQL
     implementation("com.expediagroup:graphql-kotlin-spring-server:6.0.0-alpha.5")
     implementation("com.expediagroup:graphql-kotlin-schema-generator:6.0.0-alpha.5")
+    implementation("com.tailrocks.graphql:graphql-datetime-spring-boot-starter:6.0.0")
 
     // Jackson
     implementation("com.fasterxml.jackson.module:jackson-module-kotlin")

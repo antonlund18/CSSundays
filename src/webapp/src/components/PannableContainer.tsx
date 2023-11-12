@@ -1,8 +1,8 @@
-import {IconButton, makeStyles, Theme} from "@material-ui/core";
+import {IconButton, Theme} from "@mui/material";
 import React, {CSSProperties, useCallback, useState} from "react";
 import {throttle} from "lodash";
-import {Replay, ZoomIn, ZoomOut} from "@material-ui/icons";
-import {StandardLonghandProperties} from "csstype";
+import {Replay, ZoomIn, ZoomOut} from "@mui/icons-material";
+import {makeStyles} from "@mui/styles";
 
 interface StylesProps {
     position: DragPosition,
@@ -14,7 +14,7 @@ const useStyles = makeStyles<Theme, StylesProps>(theme => ({
         display: "flex",
         position: "relative",
         overflow: "hidden",
-        height: "600px",
+        height: "50vh",
         "& > div:first-child": {
             scale: props.zoom,
             transitionDuration: "200ms",
@@ -48,7 +48,7 @@ export const PannableContainer = (props: React.PropsWithChildren<PannableContain
 
 
     const handleMouseDown = (e: React.MouseEvent) => {
-        if (e.button === 1) { // middle click
+        if (e.button === 0) {
             setIsDragging(true)
         }
         setPrevMousePosition({x: e.pageX, y: e.pageY})
@@ -72,11 +72,17 @@ export const PannableContainer = (props: React.PropsWithChildren<PannableContain
     }, 20), [isDragging])
 
     const handleIncreaseZoom = () => {
-        setZoom(zoom * ZOOM_FACTOR)
+        const newZoom = zoom * ZOOM_FACTOR
+        if (newZoom < 2) {
+            setZoom(newZoom)
+        }
     }
 
     const handleDecreaseZoom = () => {
-        setZoom(zoom / ZOOM_FACTOR)
+        const newZoom = zoom / ZOOM_FACTOR
+        if (newZoom > 0.5) {
+            setZoom(newZoom)
+        }
     }
 
     const handleReset = () => {

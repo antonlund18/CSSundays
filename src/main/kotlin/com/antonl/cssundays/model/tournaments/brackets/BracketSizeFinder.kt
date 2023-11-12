@@ -5,7 +5,7 @@ import java.util.*
 class BracketSizeFinder : BracketTreeTraverser {
     var size: Int = 0
 
-    override fun traverseTree(tree: Bracket) {
+    override fun traverseTree(tree: Bracket): BracketSizeFinder {
         val queue: Queue<Match> = LinkedList()
 
         tree.root?.let { queue.add(it) }
@@ -17,5 +17,7 @@ class BracketSizeFinder : BracketTreeTraverser {
             currentNode.left?.let { queue.add(it) }
             currentNode.right?.let { queue.add(it) }
         }
+
+        return this
     }
 }
