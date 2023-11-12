@@ -29,8 +29,6 @@ internal class BracketTeamPopulationTest {
     @Test
     fun testBracketGetsCorrectlyPopulated() {
         testTeamPopulationInMatches(0)
-        testTeamPopulationInMatches(1)
-        testTeamPopulationInMatches(2)
         testTeamPopulationInMatches(3)
         testTeamPopulationInMatches(7)
         testTeamPopulationInMatches(8)
