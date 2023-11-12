@@ -2,7 +2,7 @@ FROM public.ecr.aws/docker/library/node:lts-alpine3.17 AS build
 RUN mkdir -p /app
 WORKDIR /app
 COPY src/webapp/package*.json ./
-RUN npm install
+RUN npm install --force
 COPY src/webapp/ ./
 RUN npm run build
 
