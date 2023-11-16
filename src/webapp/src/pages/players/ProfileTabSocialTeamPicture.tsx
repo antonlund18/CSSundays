@@ -12,7 +12,8 @@ type StylesProps = {
 
 const useStyles = makeStyles<Theme, StylesProps>(theme => ({
     playerContainer: {
-        flexGrow: 5, width: "100%",
+        flexGrow: 5,
+        maxWidth: "20%",
         cursor: "pointer",
         textAlign: "center",
         justifyContent: "center",

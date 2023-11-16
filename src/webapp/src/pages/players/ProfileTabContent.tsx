@@ -4,6 +4,7 @@ import {Grid, Typography} from "@mui/material";
 import {ProfileTabHeaderSection} from "./ProfileTabHeaderSection";
 import {ProfileTabSocialSection} from "./ProfileTabSocialSection";
 import {ProfileTabInformationSection} from "./ProfileTabInformationSection";
+import {useDateFormatter} from "../../hooks/useDateFormatter";
 
 type ProfileTabContentProps = {
     player: User
@@ -11,13 +12,17 @@ type ProfileTabContentProps = {
 }
 
 export const ProfileTabContent = (props: ProfileTabContentProps): JSX.Element => {
+    const {formatDate} = useDateFormatter()
+
     return <>
         <Grid container spacing={4}>
             <ProfileTabHeaderSection player={props.player} isCurrentUser={props.isCurrentUser}/>
-            <Grid item container xs={12} spacing={2}>
-                <ProfileTabInformationSection player={props.player}/>
-                <ProfileTabSocialSection player={props.player}/>
+
+            <Grid item xs={12}>
+                <Typography>{"Bruger siden " + formatDate(props.player.createdTs)}</Typography>
             </Grid>
+
+            <ProfileTabSocialSection player={props.player}/>
         </Grid>
     </>
 }

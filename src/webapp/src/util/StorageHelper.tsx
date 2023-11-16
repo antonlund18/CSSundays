@@ -7,6 +7,7 @@ const TOURNAMENTS_FOLDER = "tournaments"
 
 const DEFAULT_PLAYER_PROFILE_PICTURE = "default_player_profile_picture.png";
 const DEFAULT_TEAM_PICTURE = "default_team_picture.png";
+const DEFAULT_TOURNAMENT_PICTURE = "default_tournament_picture.png";
 
 export const getPictureLinkFromKey = (pictureKey: string | null, objectType: ObjectType) => {
     switch (objectType) {
@@ -17,7 +18,7 @@ export const getPictureLinkFromKey = (pictureKey: string | null, objectType: Obj
             if (!pictureKey) return `${S3_PUBLIC_PICTURES_URL}/${TEAMS_FOLDER}/${DEFAULT_TEAM_PICTURE}`
             return `${S3_PUBLIC_PICTURES_URL}/${TEAMS_FOLDER}/${pictureKey}`;
         case ObjectType.Tournament:
-            if (!pictureKey) return `${S3_PUBLIC_PICTURES_URL}/${TOURNAMENTS_FOLDER}/${DEFAULT_TEAM_PICTURE}`
+            if (!pictureKey) return `${S3_PUBLIC_PICTURES_URL}/${TOURNAMENTS_FOLDER}/${DEFAULT_TOURNAMENT_PICTURE}`
             return `${S3_PUBLIC_PICTURES_URL}/${TOURNAMENTS_FOLDER}/${pictureKey}`;
         default:
             return "";

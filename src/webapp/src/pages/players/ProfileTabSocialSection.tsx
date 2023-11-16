@@ -33,7 +33,7 @@ export const ProfileTabSocialSection = (props: ProfileTabSocialSectionProps): JS
     const classes = useStyles();
     const navigate = useNavigate()
 
-    return <Grid item xs={8} sx={{borderRight: "1px solid", borderColor: "divider"}}>
+    return <Grid item xs={12} sx={{borderRight: "1px solid", borderColor: "divider"}}>
         <Typography variant={"h4"}>{"Hold (" + props.player.teams.length + ")"}</Typography>
         <div className={classes.container}>
             <div style={{display: "flex"}}>
