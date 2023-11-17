@@ -1,11 +1,19 @@
 import * as React from "react"
-import {useState} from "react"
+import {useEffect, useState} from "react"
 import {CenteredPage} from "../../components/CenteredPage";
-import {Grid, Tab, Tabs, Typography} from "@mui/material";
-import {Divider as CSDivider} from "../../components/Divider";
+import {Badge, Grid, Tab, Tabs} from "@mui/material";
 import {useGetCurrentUser, useGetUserById} from "../../hooks/api/useUser";
-import {useParams} from "react-router-dom";
+import {useNavigate, useParams} from "react-router-dom";
 import {ProfileTabContent} from "./ProfileTabContent";
+import {PlayerTeamsTabContent} from "./PlayerTeamsTabContent";
+import {useFindPendingInvitesForPlayer} from "../../hooks/api/useInviteToTeam";
+
+const TABS = {
+    0: "",
+    1: "#teams",
+    2: "#friends",
+    3: "#edit",
+}
 
 export const PlayerPage = (): JSX.Element => {
     const urlParams = useParams();
@@ -13,9 +21,23 @@ export const PlayerPage = (): JSX.Element => {
     const [value, setValue] = useState<number>(0)
     const {currentUser} = useGetCurrentUser();
     const isCurrentUser = user?.id === currentUser?.id;
+    const navigate = useNavigate()
+    const {pendingInvitesForPlayer} = useFindPendingInvitesForPlayer(user?.id ?? -1)
+    const shouldShowInviteToTeamBadge = isCurrentUser && pendingInvitesForPlayer && pendingInvitesForPlayer.length > 0
 
-    const handleChange = (event: React.SyntheticEvent, newValue: number) => {
-        setValue(newValue);
+    useEffect(() => {
+        Object.keys(TABS).forEach((key, index) => {
+            const str = index as keyof typeof TABS
+            if (window.location.hash === TABS[str]) {
+                setValue(index)
+            }
+        })
+    }, [window.location.hash])
+
+    const handleChangeTab = (event: React.SyntheticEvent, value: number) => {
+        setValue(value);
+        const str = value as keyof typeof TABS
+        navigate(TABS[str])
     };
 
     if (!user) {
@@ -23,26 +45,25 @@ export const PlayerPage = (): JSX.Element => {
     }
 
     return <CenteredPage>
-        <Grid container>
+        <Grid container spacing={2}>
             <Grid item xs={10}>
                 <TabPanel value={value} index={0}>
                     <ProfileTabContent player={user} isCurrentUser={isCurrentUser}/>
+                </TabPanel>
+                <TabPanel value={value} index={1}>
+                    <PlayerTeamsTabContent player={user} isCurrentUser={isCurrentUser}/>
                 </TabPanel>
             </Grid>
             <Grid item xs={2} >
                     <Tabs orientation={"vertical"}
                           value={value}
-                          onChange={handleChange}
+                          onChange={handleChangeTab}
                           centered={false}
-                          sx={{"&& .MuiTab-root": {alignItems: "start"}, borderLeft: 1, borderColor: "divider", alignItems: "start", height: "100%"}}
-                          TabIndicatorProps={{
-                              sx: {
-                                  left: 0
-                              }
-                          }}
+                          sx={{"&& .MuiTab-root": {alignItems: "start"}, borderLeft: 1, borderColor: "divider", height: "100%"}}
+                          TabIndicatorProps={{sx: {left: 0}}}
                     >
                         <Tab label={"Profil"}/>
-                        <Tab label={"Hold"}/>
+                        <Tab label={<Badge badgeContent={shouldShowInviteToTeamBadge ? 1 : 0} color={"secondary"} variant={"dot"}>Hold</Badge>}/>
                         <Tab label={"Venner"}/>
                         <Tab label={"Rediger"}/>
                     </Tabs>

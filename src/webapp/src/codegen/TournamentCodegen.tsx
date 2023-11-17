@@ -35,6 +35,7 @@ gql`
             picture,
             description,
             format,
+            rules,
             bracket {
                 id,
                 root {
@@ -102,6 +103,7 @@ gql`
             picture,
             description,
             format,
+            rules,
             startDateAndTime,
             numberOfTeamsAllowed,
             teamRegistrations {

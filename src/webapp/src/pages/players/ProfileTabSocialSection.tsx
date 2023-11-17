@@ -14,7 +14,6 @@ const useStyles = makeStyles(theme => ({
         display: "flex",
         flexDirection: "column",
         textAlign: "center",
-        marginRight: "16px",
         marginTop: "8px",
     },
     seeAll: {
@@ -33,15 +32,15 @@ export const ProfileTabSocialSection = (props: ProfileTabSocialSectionProps): JS
     const classes = useStyles();
     const navigate = useNavigate()
 
-    return <Grid item xs={12} sx={{borderRight: "1px solid", borderColor: "divider"}}>
+    return <Grid item xs={12} sx={{}}>
         <Typography variant={"h4"}>{"Hold (" + props.player.teams.length + ")"}</Typography>
         <div className={classes.container}>
-            <div style={{display: "flex"}}>
+            <div style={{display: "flex", minHeight: "120px"}}>
                 {props.player.teams.slice(0, 5).map(team => {
                     return <ProfileTabSocialTeamPicture team={team}/>
                 })}
             </div>
-            <Typography variant={"h4"} className={classes.seeAll} onClick={() => navigate("")}>se alle hold</Typography>
+            <Typography variant={"h4"} className={classes.seeAll} onClick={() => navigate("#teams")}>se alle hold</Typography>
         </div>
         <Typography variant={"h4"} sx={{marginTop: "32px"}}>Venner</Typography>
         <div className={classes.container}>

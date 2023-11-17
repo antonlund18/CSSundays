@@ -1,9 +1,12 @@
 import {
+    FindAllInvitesForPlayerDocument,
+    FindAllInvitesForPlayerQuery,
     useAcceptInvitationMutation, useCreateInviteToTeamMutation,
     useDeclineInvitationMutation,
     useFindAllInvitesForPlayerQuery,
     useFindPendingInvitesForPlayerQuery
 } from "../../codegen/generated-types";
+import {gql} from "@apollo/client";
 
 export const useFindPendingInvitesForPlayer = (playerId: number) => {
     const {data} = useFindPendingInvitesForPlayerQuery({
@@ -34,15 +37,16 @@ export const useInviteToTeamMutation = () => {
     const [acceptInvitationMutation] = useAcceptInvitationMutation();
     const [declineInvitationMutation] = useDeclineInvitationMutation();
 
-    const createInviteToTeam = (recipientId: number, teamId: number, senderId: number) => {
-        return createInviteToTeamMutation({
-            variables: {
-                senderId,
-                teamId,
-                recipientId
-            }
-        })
-    }
+    const createInviteToTeam = (recipientId: number, teamId: number, senderId: number) => createInviteToTeamMutation({
+        variables: {
+            senderId,
+            teamId,
+            recipientId
+        },
+        refetchQueries: [
+            FindAllInvitesForPlayerDocument
+        ]
+    })
 
     const acceptInvitation = (invitationId: number) => {
         return acceptInvitationMutation({

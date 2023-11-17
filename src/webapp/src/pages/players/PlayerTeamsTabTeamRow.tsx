@@ -1,10 +1,10 @@
 import * as React from "react"
-import {ObjectType, Team} from "../../../codegen/generated-types";
 import {makeStyles} from "@mui/styles";
 import {TableCell, TableRow, Theme, Typography} from "@mui/material";
-import {getPictureLinkFromKey} from "../../../util/StorageHelper";
-import {PlayerBox} from "./PlayerBox";
 import {useNavigate} from "react-router-dom";
+import {ObjectType, Team} from "../../codegen/generated-types";
+import {getPictureLinkFromKey} from "../../util/StorageHelper";
+import {PlayerBox} from "../tournamentpage/tabs/PlayerBox";
 
 const IMAGE_SIZE = "64px"
 
@@ -31,20 +31,16 @@ const useStyles = makeStyles<Theme, StylesProps>(theme => ({
     })
 }))
 
-type TeamRowProps = {
+type PlayerTeamsTabTeamRowProps = {
     team: Team,
-    index: number
 }
 
-export const TeamRow = (props: TeamRowProps): JSX.Element => {
+export const PlayerTeamsTabTeamRow = (props: PlayerTeamsTabTeamRowProps): JSX.Element => {
     const pictureUrl = getPictureLinkFromKey(props.team.picture ?? "", ObjectType.Team)
     const classes = useStyles({pictureUrl: pictureUrl})
     const navigate = useNavigate()
 
     return <TableRow>
-        <TableCell>
-            <Typography variant={"h4"}>#{props.index}</Typography>
-        </TableCell>
         <TableCell style={{cursor: "pointer"}} onClick={() => navigate("/teams/" + props.team.id)}>
             <div style={{display: "flex", flexDirection: "row", alignItems: "center"}}>
                 <div className={classes.picture}/>

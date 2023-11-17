@@ -141,7 +141,7 @@ export const AdminCreateTournamentPage = (): JSX.Element => {
                         setAndUploadPicture(tournament.id, fileSelector, ObjectType.Tournament)
                     }
                 })
-                .then((data) => navigate("/tournaments/admin"))
+                .then((data) => navigate("/admin/tournaments"))
         }
     }
 

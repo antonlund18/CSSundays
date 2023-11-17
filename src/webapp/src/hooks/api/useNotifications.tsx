@@ -24,21 +24,21 @@ export const useNotifications = () => {
             userId
         },
         update(cache, data) {
-         cache.modify({
-             fields: {
-                 notifications() {
-                     cache.writeFragment({
-                         data: data,
-                         fragment: gql`
-                             fragment NewNotification on Notification {
-                                 id,
-                                 isSeen
-                             }
-                         `
-                     })
-                 }
-             }
-         })
+            cache.modify({
+                fields: {
+                    notifications() {
+                        cache.writeFragment({
+                            data: data,
+                            fragment: gql`
+                                fragment NewNotification on Notification {
+                                    id,
+                                    isSeen
+                                }
+                            `
+                        })
+                    }
+                }
+            })
         }
     })
 

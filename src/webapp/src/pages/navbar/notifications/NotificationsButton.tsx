@@ -15,7 +15,7 @@ export const NotificationsButton = (): JSX.Element => {
     const [isNotificationsMenuOpen, setIsNotificationsMenuOpen] = useState(false);
     const [notificationsMenuAnchor, setNotificationsMenuAnchor] = useState<HTMLElement | null>(null);
 
-    const allUnseenInvitesForPlayer = allNotificationsForPlayer?.filter(notification => !notification.isSeen);
+    const allUnseenNotificationsForPlayer = allNotificationsForPlayer?.filter(notification => !notification.isSeen);
 
     if (!currentUser) {
         return <></>
@@ -30,7 +30,7 @@ export const NotificationsButton = (): JSX.Element => {
     }
 
     return <NavBarMenuItem onClick={(e) => handleOpenNotificationsMenu(!isNotificationsMenuOpen, e)}>
-        <Badge badgeContent={allUnseenInvitesForPlayer?.length ?? 0} color={"secondary"}>
+        <Badge badgeContent={allUnseenNotificationsForPlayer?.length ?? 0} color={"secondary"}>
             <Icon>
                 <Notifications/>
             </Icon>

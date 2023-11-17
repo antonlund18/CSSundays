@@ -127,6 +127,9 @@ gql`
         createInviteToTeam(recipientId: $recipientId, teamId: $teamId, senderId: $senderId) {
             id,
             status,
+            recipient {
+                id
+            }
         }
     }
 `;

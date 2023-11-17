@@ -39,6 +39,7 @@ const useStyles = makeStyles<Theme, StylesProps>(theme => ({
 type ProfileHeaderSectionProps = {
     player: User
     isCurrentUser: boolean
+    setDialogOpen: (open: boolean) => void
 }
 
 export const ProfileTabHeaderSection = (props: ProfileHeaderSectionProps): JSX.Element => {
@@ -95,30 +96,33 @@ export const ProfileTabHeaderSection = (props: ProfileHeaderSectionProps): JSX.E
             </Grid>
         </Grid>
         <Grid item xs={2} sx={{display: "flex", flexDirection: "column", flexGrow: 1, justifyContent: "center"}}>
-            {props.isCurrentUser &&
-                <Tooltip title={"Tilføj ven"} placement={"left"} arrow
-                         onClick={() => openSnackbar("'Venner' kommer snart!")}>
-                    <IconButton sx={{aspectRatio: "1/1", width: "40px"}}>
-                        <GroupAddRounded/>
-                    </IconButton>
-                </Tooltip>}
-            <Tooltip title={"Inviter til hold"} placement={"left"} arrow>
-                <IconButton sx={{aspectRatio: "1/1", width: "40px"}}>
-                    <Groups/>
-                </IconButton>
-            </Tooltip>
-            <Tooltip title={"Send besked"} placement={"left"} arrow>
-                <IconButton sx={{aspectRatio: "1/1", width: "40px"}}
-                            onClick={() => openSnackbar("'Beskeder' kommer snart!")}>
-                    <Mail/>
-                </IconButton>
-            </Tooltip>
-            <Tooltip title={"Rapportér bruger"} placement={"left"} arrow>
-                <IconButton sx={{aspectRatio: "1/1", width: "40px"}}
-                            onClick={() => openSnackbar("'Rapportér' kommer snart!")}>
-                    <Report/>
-                </IconButton>
-            </Tooltip>
+            {!props.isCurrentUser &&
+                <>
+                    <Tooltip title={"Tilføj ven"} placement={"left"} arrow
+                             onClick={() => openSnackbar("'Venner' kommer snart!")}>
+                        <IconButton sx={{aspectRatio: "1/1", width: "40px"}}>
+                            <GroupAddRounded/>
+                        </IconButton>
+                    </Tooltip>
+                    <Tooltip title={"Inviter til hold"} placement={"left"} arrow>
+                        <IconButton sx={{aspectRatio: "1/1", width: "40px"}} onClick={() => props.setDialogOpen(true)}>
+                            <Groups/>
+                        </IconButton>
+                    </Tooltip>
+                    <Tooltip title={"Send besked"} placement={"left"} arrow>
+                        <IconButton sx={{aspectRatio: "1/1", width: "40px"}}
+                                    onClick={() => openSnackbar("'Beskeder' kommer snart!")}>
+                            <Mail/>
+                        </IconButton>
+                    </Tooltip>
+                    <Tooltip title={"Rapportér bruger"} placement={"left"} arrow>
+                        <IconButton sx={{aspectRatio: "1/1", width: "40px"}}
+                                    onClick={() => openSnackbar("'Rapportér' kommer snart!")}>
+                            <Report/>
+                        </IconButton>
+                    </Tooltip>
+                </>
+            }
         </Grid>
         <Snackbar open={snackbarOpen} autoHideDuration={3000} onClose={closeSnackbar}>
             <Alert severity={"warning"}>{snackbarText}</Alert>
