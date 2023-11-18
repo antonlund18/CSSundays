@@ -1,13 +1,13 @@
 import * as React from "react"
-import {ObjectType, User} from "../../codegen/generated-types";
-import {Grid, IconButton, Snackbar, Tooltip, Typography} from "@mui/material";
+import {useContext, useEffect, useState} from "react"
+import {ObjectType, User} from "../../../codegen/generated-types";
+import {Grid, IconButton, Tooltip, Typography} from "@mui/material";
 import {GroupAddRounded, Groups, Mail, Report} from "@mui/icons-material";
-import {useEffect, useState} from "react";
-import {getPictureLinkFromKey} from "../../util/StorageHelper";
+import {getPictureLinkFromKey} from "../../../util/StorageHelper";
 import {makeStyles} from "@mui/styles";
 import {Theme} from "@mui/material/styles";
-import {useSharedTeamAndUser} from "../../hooks/api/useSharedTeamAndUser";
-import {Alert} from "../../components/Alert";
+import {useSharedTeamAndUser} from "../../../hooks/api/useSharedTeamAndUser";
+import {SnackbarContext} from "../../../SnackbarContextProvider";
 
 interface StylesProps {
     isCurrentUser: boolean
@@ -43,8 +43,7 @@ type ProfileHeaderSectionProps = {
 }
 
 export const ProfileTabHeaderSection = (props: ProfileHeaderSectionProps): JSX.Element => {
-    const [snackbarOpen, setSnackbarOpen] = useState(false);
-    const [snackbarText, setSnackbarText] = useState("");
+    const {openSnackbar} = useContext(SnackbarContext)
     const playerPictureUrl = getPictureLinkFromKey(props.player.picture ?? "", ObjectType.User)
     const classes = useStyles({isCurrentUser: props.isCurrentUser, playerPictureUrl: playerPictureUrl})
     const [fileSelector, setFileSelector] = useState<HTMLInputElement | null>(null);
@@ -70,19 +69,6 @@ export const ProfileTabHeaderSection = (props: ProfileHeaderSectionProps): JSX.E
         }
     }
 
-    const openSnackbar = (text: string) => {
-        setSnackbarText(text)
-        setSnackbarOpen(true)
-    }
-
-    const closeSnackbar = (event?: React.SyntheticEvent | Event, reason?: string) => {
-        if (reason === "clickaway") {
-            return
-        }
-
-        setSnackbarOpen(false)
-    }
-
     return <>
         <Grid item container xs={10}>
             <Grid item xs={3}>
@@ -92,14 +78,14 @@ export const ProfileTabHeaderSection = (props: ProfileHeaderSectionProps): JSX.E
             </Grid>
             <Grid item xs={9} className={classes.description}>
                 <Typography variant={"h2"} style={{textTransform: "none"}}>{props.player.playertag}</Typography>
-                <Typography>straight up killa</Typography>
+                <Typography>{props.player.description}</Typography>
             </Grid>
         </Grid>
         <Grid item xs={2} sx={{display: "flex", flexDirection: "column", flexGrow: 1, justifyContent: "center"}}>
             {!props.isCurrentUser &&
                 <>
                     <Tooltip title={"Tilføj ven"} placement={"left"} arrow
-                             onClick={() => openSnackbar("'Venner' kommer snart!")}>
+                             onClick={() => openSnackbar("'Venner' kommer snart!", "info")}>
                         <IconButton sx={{aspectRatio: "1/1", width: "40px"}}>
                             <GroupAddRounded/>
                         </IconButton>
@@ -111,21 +97,18 @@ export const ProfileTabHeaderSection = (props: ProfileHeaderSectionProps): JSX.E
                     </Tooltip>
                     <Tooltip title={"Send besked"} placement={"left"} arrow>
                         <IconButton sx={{aspectRatio: "1/1", width: "40px"}}
-                                    onClick={() => openSnackbar("'Beskeder' kommer snart!")}>
+                                    onClick={() => openSnackbar("'Beskeder' kommer snart!", "info")}>
                             <Mail/>
                         </IconButton>
                     </Tooltip>
                     <Tooltip title={"Rapportér bruger"} placement={"left"} arrow>
                         <IconButton sx={{aspectRatio: "1/1", width: "40px"}}
-                                    onClick={() => openSnackbar("'Rapportér' kommer snart!")}>
+                                    onClick={() => openSnackbar("'Rapportér' kommer snart!", "info")}>
                             <Report/>
                         </IconButton>
                     </Tooltip>
                 </>
             }
         </Grid>
-        <Snackbar open={snackbarOpen} autoHideDuration={3000} onClose={closeSnackbar}>
-            <Alert severity={"warning"}>{snackbarText}</Alert>
-        </Snackbar>
     </>
 }

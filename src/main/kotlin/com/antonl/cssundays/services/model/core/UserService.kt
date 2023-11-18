@@ -1,6 +1,7 @@
 package com.antonl.cssundays.services.model.core
 
 import com.antonl.cssundays.graphql.dto.RequestDTO
+import com.antonl.cssundays.graphql.mutations.EditUserInput
 import com.antonl.cssundays.model.core.User
 import com.antonl.cssundays.repositories.UserRepository
 import com.antonl.cssundays.services.auth.AuthenticationService
@@ -12,10 +13,11 @@ import javax.transaction.Transactional
 @Service
 @Transactional
 class UserService(val userRepository: UserRepository) {
-    fun saveUser(user: User?) {
+    fun saveUser(user: User?): User? {
         if (user != null) {
-            userRepository.save(user);
+            return userRepository.save(user);
         }
+        return null
     }
 
     fun createUser(playertag: String, email: String, password: String): User {
@@ -28,9 +30,30 @@ class UserService(val userRepository: UserRepository) {
         return user;
     }
 
+    fun updatePlayer(player: User, updates: EditUserInput): User? {
+        player.email = updates.email
+        player.description = updates.description
+        return saveUser(player)
+    }
+
+    fun verifyPassword(player: User, password: String) {
+        val correctPassword: Boolean = AuthenticationService.verifyPassword(player, password)
+        if (!correctPassword) throw IncorrectPasswordException("Incorrect password")
+    }
+
+    fun validatePassword(password: String) {
+        val validPassword: Boolean = AuthenticationService.validatePassword(password)
+        if (!validPassword) throw InvalidPasswordException("Invalid password")
+    }
+
+    fun changePassword(player: User, newPassword: String): User? {
+        player.password = AuthenticationService.encodePassword(newPassword)
+        return saveUser(player)
+    }
+
     suspend fun setPicture(user: User): RequestDTO {
         deletePicture(user);
-        val imageKey = UUID.randomUUID().toString() + ".jpg";
+        val imageKey = UUID.randomUUID().toString() + ".png";
         user.picture = imageKey;
         saveUser(user)
         return UserStorageService().getPresignedUploadRequest(imageKey);

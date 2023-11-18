@@ -2,9 +2,9 @@ import * as React from "react"
 import {makeStyles} from "@mui/styles";
 import {TableCell, TableRow, Theme, Typography} from "@mui/material";
 import {useNavigate} from "react-router-dom";
-import {ObjectType, Team} from "../../codegen/generated-types";
-import {getPictureLinkFromKey} from "../../util/StorageHelper";
-import {PlayerBox} from "../tournamentpage/tabs/PlayerBox";
+import {ObjectType, Team} from "../../../codegen/generated-types";
+import {getPictureLinkFromKey} from "../../../util/StorageHelper";
+import {PlayerBox} from "../../tournamentpage/tabs/PlayerBox";
 
 const IMAGE_SIZE = "64px"
 

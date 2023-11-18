@@ -8,21 +8,24 @@ import {theme} from "./theme/theme";
 import {ApolloClientProvider} from "./ApolloClientProvider";
 import {StyledEngineProvider, ThemeProvider} from '@mui/material/styles';
 import {Theme} from '@mui/material/styles';
+import {SnackbarContextProvider} from "./SnackbarContextProvider";
 
 ReactDOM.render(
     <StyledEngineProvider injectFirst>
-        <ThemeProvider theme={theme}>
-            <React.StrictMode>
-                <ApolloClientProvider>
-                    <BrowserRouter>
-                        <CssBaseline>
-                            <NavigationBar/>
-                            <Router/>
-                        </CssBaseline>
-                    </BrowserRouter>
-                </ApolloClientProvider>
-            </React.StrictMode>
-        </ThemeProvider>
+        <SnackbarContextProvider>
+            <ThemeProvider theme={theme}>
+                <React.StrictMode>
+                    <ApolloClientProvider>
+                        <BrowserRouter>
+                            <CssBaseline>
+                                <NavigationBar/>
+                                <Router/>
+                            </CssBaseline>
+                        </BrowserRouter>
+                    </ApolloClientProvider>
+                </React.StrictMode>
+            </ThemeProvider>
+        </SnackbarContextProvider>
     </StyledEngineProvider>,
     document.getElementById('root')
 )

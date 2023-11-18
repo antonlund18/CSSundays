@@ -79,5 +79,14 @@ export const theme = createTheme({
                 }
             }
         },
+        MuiTextField: {
+            defaultProps: {
+                FormHelperTextProps: {
+                    style: {
+                        marginLeft: "0px",
+                    },
+                },
+            },
+        }
     },
 })

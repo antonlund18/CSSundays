@@ -1,10 +1,12 @@
 import {Constants} from "../../util/Constants";
 import {
+    EditUserInput,
     useCreateUserMutation,
     useGetCurrentUserQuery,
     useGetUserByIdQuery,
     useLoginUserMutation,
     User,
+    useUpdateUserMutation,
 } from "../../codegen/generated-types";
 
 export const useGetCurrentUser = (): { currentUser: User, isLoggedIn: boolean } => {
@@ -35,6 +37,7 @@ export const useGetUserById = (id: number) => {
 export const useMutateUser = () => {
     const [createUserMutation] = useCreateUserMutation();
     const [loginUserMutation] = useLoginUserMutation();
+    const [updateUser] = useUpdateUserMutation()
 
     const createUser = (playertag: string, email: string, password: string) => {
         return createUserMutation({
@@ -60,6 +63,10 @@ export const useMutateUser = () => {
         })
     }
 
+    const editUser = (editUserInput: EditUserInput) => {
+        return updateUser({variables: {editUserInput: editUserInput}})
+    }
+
     const logOutUser = () => {
         localStorage.removeItem(Constants.JWT_TOKEN);
         window.location.reload();
@@ -68,6 +75,7 @@ export const useMutateUser = () => {
     return {
         createUser,
         loginUser,
+        editUser,
         logOutUser,
     }
 }

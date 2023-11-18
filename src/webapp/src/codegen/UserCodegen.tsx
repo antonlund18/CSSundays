@@ -7,6 +7,7 @@ gql`
             playertag
             email
             role
+            description
             picture
             createdTs
             teams {
@@ -50,5 +51,23 @@ gql`
 gql`
     mutation loginUser($email: String!, $password: String!) {
         loginUser(email: $email, password: $password)
+    }
+`
+
+gql`
+    mutation updateUser($editUserInput: EditUserInput!) {
+        updateUser(editUserInput: $editUserInput) {
+            id
+            email
+            description
+        }
+    }
+`
+
+gql`
+    mutation changePassword($userId: Int!, $currentPassword: String!, $newPassword: String!, $newPasswordRepeated: String!) {
+        changePassword(userId: $userId, currentPassword: $currentPassword, newPassword: $newPassword, newPasswordRepeated: $newPasswordRepeated) {
+            id
+        }
     }
 `

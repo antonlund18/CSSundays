@@ -25,6 +25,12 @@ export type Bracket = {
   tournament?: Maybe<Tournament>;
 };
 
+export type EditUserInput = {
+  description: Scalars['String'];
+  email: Scalars['String'];
+  id: Scalars['Int'];
+};
+
 export type HeaderDto = {
   __typename?: 'HeaderDTO';
   name: Scalars['String'];
@@ -70,6 +76,7 @@ export enum MatchResult {
 export type Mutation = {
   __typename?: 'Mutation';
   acceptInvitation?: Maybe<InviteToTeam>;
+  changePassword?: Maybe<User>;
   createInviteToTeam?: Maybe<InviteToTeam>;
   createNotification?: Maybe<Notification>;
   createTeam?: Maybe<Team>;
@@ -84,11 +91,20 @@ export type Mutation = {
   markAllNotificationsAsSeenForUser: Array<Notification>;
   registerTeam?: Maybe<Tournament>;
   setPictureAndGetPresignedRequest?: Maybe<RequestDto>;
+  updateUser?: Maybe<User>;
 };
 
 
 export type MutationAcceptInvitationArgs = {
   invitationId: Scalars['Int'];
+};
+
+
+export type MutationChangePasswordArgs = {
+  currentPassword: Scalars['String'];
+  newPassword: Scalars['String'];
+  newPasswordRepeated: Scalars['String'];
+  userId: Scalars['Int'];
 };
 
 
@@ -174,6 +190,11 @@ export type MutationRegisterTeamArgs = {
 export type MutationSetPictureAndGetPresignedRequestArgs = {
   id: Scalars['Int'];
   objectType: ObjectType;
+};
+
+
+export type MutationUpdateUserArgs = {
+  editUserInput: EditUserInput;
 };
 
 export type NotifiableObject = {
@@ -338,6 +359,7 @@ export enum TournamentStatus {
 export type User = {
   __typename?: 'User';
   createdTs: Scalars['LocalDateTime'];
+  description: Scalars['String'];
   email: Scalars['String'];
   id?: Maybe<Scalars['Int']>;
   password: Scalars['String'];
@@ -500,7 +522,7 @@ export type GetUserByIdQueryVariables = Exact<{
 }>;
 
 
-export type GetUserByIdQuery = { __typename?: 'Query', getUserById?: { __typename?: 'User', id?: number, playertag: string, email: string, role: UserRole, picture?: string, createdTs: any, teams: Array<{ __typename?: 'Team', id?: number, name: string, picture?: string, users: Array<{ __typename?: 'User', playertag: string }> }> } };
+export type GetUserByIdQuery = { __typename?: 'Query', getUserById?: { __typename?: 'User', id?: number, playertag: string, email: string, role: UserRole, description: string, picture?: string, createdTs: any, teams: Array<{ __typename?: 'Team', id?: number, name: string, picture?: string, users: Array<{ __typename?: 'User', playertag: string }> }> } };
 
 export type GetCurrentUserQueryVariables = Exact<{
   token: Scalars['String'];
@@ -525,6 +547,23 @@ export type LoginUserMutationVariables = Exact<{
 
 
 export type LoginUserMutation = { __typename?: 'Mutation', loginUser: string };
+
+export type UpdateUserMutationVariables = Exact<{
+  editUserInput: EditUserInput;
+}>;
+
+
+export type UpdateUserMutation = { __typename?: 'Mutation', updateUser?: { __typename?: 'User', id?: number, email: string, description: string } };
+
+export type ChangePasswordMutationVariables = Exact<{
+  userId: Scalars['Int'];
+  currentPassword: Scalars['String'];
+  newPassword: Scalars['String'];
+  newPasswordRepeated: Scalars['String'];
+}>;
+
+
+export type ChangePasswordMutation = { __typename?: 'Mutation', changePassword?: { __typename?: 'User', id?: number } };
 
 export type NewNotificationFragment = { __typename?: 'Notification', id?: number, isSeen: boolean };
 
@@ -1485,6 +1524,7 @@ export const GetUserByIdDocument = gql`
     playertag
     email
     role
+    description
     picture
     createdTs
     teams {
@@ -1638,6 +1678,82 @@ export function useLoginUserMutation(baseOptions?: Apollo.MutationHookOptions<Lo
 export type LoginUserMutationHookResult = ReturnType<typeof useLoginUserMutation>;
 export type LoginUserMutationResult = Apollo.MutationResult<LoginUserMutation>;
 export type LoginUserMutationOptions = Apollo.BaseMutationOptions<LoginUserMutation, LoginUserMutationVariables>;
+export const UpdateUserDocument = gql`
+    mutation updateUser($editUserInput: EditUserInput!) {
+  updateUser(editUserInput: $editUserInput) {
+    id
+    email
+    description
+  }
+}
+    `;
+export type UpdateUserMutationFn = Apollo.MutationFunction<UpdateUserMutation, UpdateUserMutationVariables>;
+
+/**
+ * __useUpdateUserMutation__
+ *
+ * To run a mutation, you first call `useUpdateUserMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUpdateUserMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [updateUserMutation, { data, loading, error }] = useUpdateUserMutation({
+ *   variables: {
+ *      editUserInput: // value for 'editUserInput'
+ *   },
+ * });
+ */
+export function useUpdateUserMutation(baseOptions?: Apollo.MutationHookOptions<UpdateUserMutation, UpdateUserMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<UpdateUserMutation, UpdateUserMutationVariables>(UpdateUserDocument, options);
+      }
+export type UpdateUserMutationHookResult = ReturnType<typeof useUpdateUserMutation>;
+export type UpdateUserMutationResult = Apollo.MutationResult<UpdateUserMutation>;
+export type UpdateUserMutationOptions = Apollo.BaseMutationOptions<UpdateUserMutation, UpdateUserMutationVariables>;
+export const ChangePasswordDocument = gql`
+    mutation changePassword($userId: Int!, $currentPassword: String!, $newPassword: String!, $newPasswordRepeated: String!) {
+  changePassword(
+    userId: $userId
+    currentPassword: $currentPassword
+    newPassword: $newPassword
+    newPasswordRepeated: $newPasswordRepeated
+  ) {
+    id
+  }
+}
+    `;
+export type ChangePasswordMutationFn = Apollo.MutationFunction<ChangePasswordMutation, ChangePasswordMutationVariables>;
+
+/**
+ * __useChangePasswordMutation__
+ *
+ * To run a mutation, you first call `useChangePasswordMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useChangePasswordMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [changePasswordMutation, { data, loading, error }] = useChangePasswordMutation({
+ *   variables: {
+ *      userId: // value for 'userId'
+ *      currentPassword: // value for 'currentPassword'
+ *      newPassword: // value for 'newPassword'
+ *      newPasswordRepeated: // value for 'newPasswordRepeated'
+ *   },
+ * });
+ */
+export function useChangePasswordMutation(baseOptions?: Apollo.MutationHookOptions<ChangePasswordMutation, ChangePasswordMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<ChangePasswordMutation, ChangePasswordMutationVariables>(ChangePasswordDocument, options);
+      }
+export type ChangePasswordMutationHookResult = ReturnType<typeof useChangePasswordMutation>;
+export type ChangePasswordMutationResult = Apollo.MutationResult<ChangePasswordMutation>;
+export type ChangePasswordMutationOptions = Apollo.BaseMutationOptions<ChangePasswordMutation, ChangePasswordMutationVariables>;
 export const ListAllOperations = {
   Query: {
     findAllInvitesForPlayer: 'findAllInvitesForPlayer',
@@ -1664,7 +1780,9 @@ export const ListAllOperations = {
     createTournament: 'createTournament',
     generateBracket: 'generateBracket',
     createUser: 'createUser',
-    loginUser: 'loginUser'
+    loginUser: 'loginUser',
+    updateUser: 'updateUser',
+    changePassword: 'changePassword'
   },
   Fragment: {
     NewNotification: 'NewNotification'

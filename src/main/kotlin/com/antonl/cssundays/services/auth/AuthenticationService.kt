@@ -6,6 +6,7 @@ import com.antonl.cssundays.util.AuthorizationConstants
 import io.github.nefilim.kjwt.JWT
 import org.springframework.stereotype.Service
 import java.time.LocalDateTime
+import java.util.regex.Pattern
 import javax.transaction.Transactional
 
 @Service
@@ -13,13 +14,20 @@ import javax.transaction.Transactional
 class AuthenticationService() {
     companion object {
         fun handleLogin(user: User?, password: String): String {
-            if (validatePassword(user, password)) {
+            if (verifyPassword(user, password)) {
                 return generateJWTToken(user);
             }
             return "";
         }
 
-        fun validatePassword(user: User?, password: String): Boolean {
+        fun validatePassword(password: String): Boolean {
+            val PASSWORD_PATTERN = "^(?=.*[a-zA-Z0-9æøåÆØÅ!@\$#%&.,]).{6,32}$"
+            val pattern = Pattern.compile(PASSWORD_PATTERN)
+            val matcher = pattern.matcher(password)
+            return matcher.matches()
+        }
+
+        fun verifyPassword(user: User?, password: String): Boolean {
             return BCrypt.verifyer().verify(password.toCharArray(), user?.password).verified;
         }
 

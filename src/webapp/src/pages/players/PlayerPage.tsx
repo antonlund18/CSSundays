@@ -4,9 +4,11 @@ import {CenteredPage} from "../../components/CenteredPage";
 import {Badge, Grid, Tab, Tabs} from "@mui/material";
 import {useGetCurrentUser, useGetUserById} from "../../hooks/api/useUser";
 import {useNavigate, useParams} from "react-router-dom";
-import {ProfileTabContent} from "./ProfileTabContent";
-import {PlayerTeamsTabContent} from "./PlayerTeamsTabContent";
+import {ProfileTabContent} from "./profiletab/ProfileTabContent";
+import {PlayerTeamsTabContent} from "./teamstab/PlayerTeamsTabContent";
 import {useFindPendingInvitesForPlayer} from "../../hooks/api/useInviteToTeam";
+import {PlayerFriendsTabContent} from "./friendstab/PlayerFriendsTabContent";
+import {PlayerEditTabContent} from "./edittab/PlayerEditTabContent";
 
 const TABS = {
     0: "",
@@ -53,23 +55,34 @@ export const PlayerPage = (): JSX.Element => {
                 <TabPanel value={value} index={1}>
                     <PlayerTeamsTabContent player={user} isCurrentUser={isCurrentUser}/>
                 </TabPanel>
+                <TabPanel value={value} index={2}>
+                    <PlayerFriendsTabContent player={user} isCurrentUser={isCurrentUser}/>
+                </TabPanel>
+                <TabPanel value={value} index={3}>
+                    <PlayerEditTabContent player={user} isCurrentUser={isCurrentUser}/>
+                </TabPanel>
             </Grid>
-            <Grid item xs={2} >
-                    <Tabs orientation={"vertical"}
-                          value={value}
-                          onChange={handleChangeTab}
-                          centered={false}
-                          sx={{"&& .MuiTab-root": {alignItems: "start"}, borderLeft: 1, borderColor: "divider", height: "100%"}}
-                          TabIndicatorProps={{sx: {left: 0}}}
-                    >
-                        <Tab label={"Profil"}/>
-                        <Tab label={<Badge badgeContent={shouldShowInviteToTeamBadge ? 1 : 0} color={"secondary"} variant={"dot"}>Hold</Badge>}/>
-                        <Tab label={"Venner"}/>
-                        <Tab label={"Rediger"}/>
-                    </Tabs>
+            <Grid item xs={2}>
+                <Tabs orientation={"vertical"}
+                      value={value}
+                      onChange={handleChangeTab}
+                      centered={false}
+                      sx={{
+                          "&& .MuiTab-root": {alignItems: "start"},
+                          borderLeft: 1,
+                          borderColor: "divider",
+                          height: "100%"
+                      }}
+                      TabIndicatorProps={{sx: {left: 0}}}
+                >
+                    <Tab label={"Profil"}/>
+                    <Tab label={<Badge badgeContent={shouldShowInviteToTeamBadge ? 1 : 0} color={"secondary"}
+                                       variant={"dot"}>Hold</Badge>}/>
+                    <Tab label={"Venner"}/>
+                    {isCurrentUser && <Tab label={"Rediger"}/>}
+                </Tabs>
             </Grid>
         </Grid>
-
     </CenteredPage>
 }
 

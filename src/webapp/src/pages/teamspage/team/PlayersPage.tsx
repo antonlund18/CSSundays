@@ -8,9 +8,7 @@ import {CenteredPage} from "../../../components/CenteredPage";
 
 const useStyles = makeStyles(theme => ({
     emptyPlayersContainer: {
-        width: "100%",
         height: "30vh",
-        marginTop: theme.spacing(3),
         borderWidth: "1px",
         borderStyle: "solid",
         borderColor: "#a9a9a9",
@@ -29,16 +27,14 @@ export const PlayersPage = (): JSX.Element => {
 
     return <CenteredPage>
         <Grid container
-              direction={"row"}
               justifyContent={"center"}
-              alignItems={"stretch"}
-              spacing={4}
+              spacing={0}
         >
             <Grid item xs={12}>
                 <Typography variant={"h2"} color={"primary"}>{team?.name + " - spillere"}</Typography>
                 <CSDivider/>
             </Grid>
-            <Grid item className={classes.emptyPlayersContainer}>
+            <Grid item xs={12} className={classes.emptyPlayersContainer}>
                 <Typography variant={"h2"}>Under udvikling 🔨</Typography>
                 <br/>
                 <Button variant={"outlined"} onClick={() => window.history.back()}>Gå tilbage</Button>

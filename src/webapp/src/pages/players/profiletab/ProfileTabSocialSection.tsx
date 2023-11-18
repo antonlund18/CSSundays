@@ -1,6 +1,6 @@
 import * as React from "react"
 import {Grid, Typography} from "@mui/material";
-import {User} from "../../codegen/generated-types";
+import {User} from "../../../codegen/generated-types";
 import {makeStyles} from "@mui/styles";
 import {useNavigate} from "react-router-dom";
 import {ProfileTabSocialTeamPicture} from "./ProfileTabSocialTeamPicture";

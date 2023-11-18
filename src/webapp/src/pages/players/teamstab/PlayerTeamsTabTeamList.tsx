@@ -1,8 +1,7 @@
 import * as React from "react"
 import {useMemo, useState} from "react"
-import {SortDirection, SortOption} from "../../components/SortTypes";
-import {useTournamentRegistrationSort} from "../../hooks/useTournamentRegistrationSort";
-import {HeadCell} from "../../components/TableTypes";
+import {SortDirection, SortOption} from "../../../components/SortTypes";
+import {HeadCell} from "../../../components/TableTypes";
 import {
     Grid,
     InputAdornment,
@@ -16,10 +15,10 @@ import {
     Typography
 } from "@mui/material";
 import {Search} from "@mui/icons-material";
-import {TableHeadSortWrapper} from "../../components/TableHeadSortWrapper";
-import {Team} from "../../codegen/generated-types";
+import {TableHeadSortWrapper} from "../../../components/TableHeadSortWrapper";
+import {Team} from "../../../codegen/generated-types";
 import {PlayerTeamsTabTeamRow} from "./PlayerTeamsTabTeamRow";
-import {useTeamSort} from "../../hooks/useTeamSort";
+import {useTeamSort} from "../../../hooks/useTeamSort";
 
 type PlayerTeamsTabTeamListProps = {
     teams: Team[]

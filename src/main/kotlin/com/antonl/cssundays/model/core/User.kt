@@ -17,6 +17,8 @@ class User(
     @Column(unique = true)
     var email: String,
 
+    var description: String = "",
+
     var password: String = "",
 
     var picture: String? = null,

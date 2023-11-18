@@ -1,7 +1,7 @@
 import * as React from "react"
-import {Divider, Grid, Typography} from "@mui/material";
-import {User} from "../../codegen/generated-types";
-import {useDateFormatter} from "../../hooks/useDateFormatter";
+import {Grid, Typography} from "@mui/material";
+import {User} from "../../../codegen/generated-types";
+import {useDateFormatter} from "../../../hooks/useDateFormatter";
 import {makeStyles} from "@mui/styles";
 import {useNavigate} from "react-router-dom";
 
