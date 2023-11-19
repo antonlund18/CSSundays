@@ -27,6 +27,16 @@ class TournamentMutations : Mutation {
         return tournament
     }
 
+    suspend fun publishTournament(tournamentId: Int): Tournament? {
+        val tournament = tournamentService.getTournamentById(tournamentId) ?: return null
+        return tournamentService.publishTournament(tournament)
+    }
+
+    suspend fun removePublicationFromTournament(tournamentId: Int): Tournament? {
+        val tournament = tournamentService.getTournamentById(tournamentId) ?: return null
+        return tournamentService.removePublication(tournament)
+    }
+
 //    @AuthorizationDirective([UserRole.ADMIN, UserRole.ORGANIZER])
     suspend fun generateBracket(tournamentId: Int): Tournament? {
         val tournament = tournamentService.getTournamentById(tournamentId) ?: return null

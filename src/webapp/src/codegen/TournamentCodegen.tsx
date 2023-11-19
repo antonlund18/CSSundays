@@ -139,3 +139,21 @@ gql`
         }
     }
 `
+
+gql`
+    mutation publishTournament($tournamentId: Int!) {
+        publishTournament(tournamentId: $tournamentId) {
+            id,
+            published
+        }
+    }
+`
+
+gql`
+    mutation removePublicationFromTournament($tournamentId: Int!) {
+        removePublicationFromTournament(tournamentId: $tournamentId) {
+            id,
+            published
+        }
+    }
+`

@@ -2,18 +2,23 @@ import {IconButton, TableCell, TableRow, Tooltip, Typography} from "@mui/materia
 import * as React from "react";
 import {Tournament} from "../../../codegen/generated-types";
 import {formatDate} from "../../../helpers/helpers";
-import {Dock, Edit} from "@mui/icons-material";
+import {Dock, Edit, MoreVert} from "@mui/icons-material";
 import {useTournaments} from "../../../hooks/api/useTournament";
 import {useNavigate} from "react-router-dom";
+import {useState} from "react";
+import {AdminTournamentRowContextMenu} from "./AdminTournamentRowContextMenu";
+import {useDateFormatter} from "../../../hooks/useDateFormatter";
 
 interface AdminTournamentRowProps {
     tournament: Tournament
 }
 
 export const AdminTournamentRow = (props: AdminTournamentRowProps): JSX.Element => {
-    const date = formatDate(new Date(props.tournament.createdTs))
+    const {formatDateTime} = useDateFormatter()
     const {registerTeam, generateBracket} = useTournaments()
     const navigate = useNavigate()
+    const [contextMenuOpen, setContextMenuOpen] = useState(false)
+    const [contextMenuAnchor, setContextMenuAnchor] = useState<HTMLElement | null>(null)
 
     const createDummyTeam = (e: React.MouseEvent) => {
         if (props.tournament.id) {
@@ -31,7 +36,15 @@ export const AdminTournamentRow = (props: AdminTournamentRowProps): JSX.Element 
         e.stopPropagation()
     }
 
-    return <TableRow style={{color: "#123123", cursor: "pointer"}} onClick={() => navigate(`/tournaments/${props.tournament.id}`)}>
+    const handleOpenContextMenu = (e: React.MouseEvent<HTMLElement>) => {
+        setContextMenuOpen(true)
+        setContextMenuAnchor(e.currentTarget)
+        e.preventDefault()
+        e.stopPropagation()
+    }
+
+    return <TableRow style={{color: "#123123", cursor: "pointer"}}
+                     onClick={() => navigate(`/tournaments/${props.tournament.id}`)}>
         <TableCell>
             <Typography color={"inherit"}>
                 {`${props.tournament.name} (${props.tournament.teamRegistrations.length} / ${props.tournament.numberOfTeamsAllowed})`}
@@ -44,27 +57,19 @@ export const AdminTournamentRow = (props: AdminTournamentRowProps): JSX.Element 
         </TableCell>
         <TableCell align={"right"}>
             <Typography color={"inherit"}>
-                {props.tournament.startDateAndTime}
+                {formatDateTime(props.tournament.startDateAndTime)}
             </Typography>
         </TableCell>
         <TableCell align={"right"}>
             <Typography color={"inherit"}>
-                {date}
+                {formatDateTime(props.tournament.createdTs)}
             </Typography>
         </TableCell>
         <TableCell>
-            <Tooltip title={"Rediger"}>
-                <IconButton onClick={createDummyTeam}>
-                    <Edit/>
-                </IconButton>
-            </Tooltip>
-        </TableCell>
-        <TableCell>
-            <Tooltip title={"Generer bracket"}>
-                <IconButton onClick={handleGenerateBracket}>
-                    <Dock/>
-                </IconButton>
-            </Tooltip>
+            <IconButton onClick={handleOpenContextMenu}>
+                <MoreVert/>
+            </IconButton>
+            <AdminTournamentRowContextMenu open={contextMenuOpen} setOpen={setContextMenuOpen} anchor={contextMenuAnchor} tournament={props.tournament}/>
         </TableCell>
     </TableRow>
 }

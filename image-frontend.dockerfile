@@ -10,3 +10,4 @@ FROM public.ecr.aws/nginx/nginx:1.19 AS base
 COPY src/webapp/nginx/nginx.conf etc/nginx/nginx.conf
 
 COPY --from=build /app/build/ /usr/share/nginx/html/
+COPY certificates/ /var/www/html/docker/certs/cssundays/

@@ -42,7 +42,7 @@ class Tournament(
     @Enumerated(EnumType.STRING)
     val status: TournamentStatus = TournamentStatus.OPEN_FOR_REGISTRATIONS,
 
-    val published: Boolean = false,
+    var published: Boolean = false,
 
     @GeneratedValue
     val createdTs: LocalDateTime = LocalDateTime.now()

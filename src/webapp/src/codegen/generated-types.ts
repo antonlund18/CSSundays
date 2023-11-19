@@ -89,7 +89,9 @@ export type Mutation = {
   incrementWins?: Maybe<Team>;
   loginUser: Scalars['String'];
   markAllNotificationsAsSeenForUser: Array<Notification>;
+  publishTournament?: Maybe<Tournament>;
   registerTeam?: Maybe<Tournament>;
+  removePublicationFromTournament?: Maybe<Tournament>;
   setPictureAndGetPresignedRequest?: Maybe<RequestDto>;
   updateUser?: Maybe<User>;
 };
@@ -181,8 +183,18 @@ export type MutationMarkAllNotificationsAsSeenForUserArgs = {
 };
 
 
+export type MutationPublishTournamentArgs = {
+  tournamentId: Scalars['Int'];
+};
+
+
 export type MutationRegisterTeamArgs = {
   teamId: Scalars['Int'];
+  tournamentId: Scalars['Int'];
+};
+
+
+export type MutationRemovePublicationFromTournamentArgs = {
   tournamentId: Scalars['Int'];
 };
 
@@ -516,6 +528,20 @@ export type GetTournamentByIdQueryVariables = Exact<{
 
 
 export type GetTournamentByIdQuery = { __typename?: 'Query', getTournamentById?: { __typename?: 'Tournament', id?: number, name: string, picture?: string, description: string, format: TournamentFormat, rules: string, startDateAndTime: any, numberOfTeamsAllowed: number, teamRegistrations: Array<{ __typename?: 'TournamentRegistration', id?: number, createdTs: any, team: { __typename?: 'Team', id?: number, name: string, picture?: string, users: Array<{ __typename?: 'User', id?: number, picture?: string, playertag: string }> } }>, bracket?: { __typename?: 'Bracket', id?: number, root?: { __typename?: 'Match', id?: number, team1?: { __typename?: 'Team', id?: number, name: string, picture?: string }, team2?: { __typename?: 'Team', id?: number, name: string, picture?: string } } } } };
+
+export type PublishTournamentMutationVariables = Exact<{
+  tournamentId: Scalars['Int'];
+}>;
+
+
+export type PublishTournamentMutation = { __typename?: 'Mutation', publishTournament?: { __typename?: 'Tournament', id?: number, published: boolean } };
+
+export type RemovePublicationFromTournamentMutationVariables = Exact<{
+  tournamentId: Scalars['Int'];
+}>;
+
+
+export type RemovePublicationFromTournamentMutation = { __typename?: 'Mutation', removePublicationFromTournament?: { __typename?: 'Tournament', id?: number, published: boolean } };
 
 export type GetUserByIdQueryVariables = Exact<{
   id: Scalars['Int'];
@@ -1517,6 +1543,74 @@ export function useGetTournamentByIdLazyQuery(baseOptions?: Apollo.LazyQueryHook
 export type GetTournamentByIdQueryHookResult = ReturnType<typeof useGetTournamentByIdQuery>;
 export type GetTournamentByIdLazyQueryHookResult = ReturnType<typeof useGetTournamentByIdLazyQuery>;
 export type GetTournamentByIdQueryResult = Apollo.QueryResult<GetTournamentByIdQuery, GetTournamentByIdQueryVariables>;
+export const PublishTournamentDocument = gql`
+    mutation publishTournament($tournamentId: Int!) {
+  publishTournament(tournamentId: $tournamentId) {
+    id
+    published
+  }
+}
+    `;
+export type PublishTournamentMutationFn = Apollo.MutationFunction<PublishTournamentMutation, PublishTournamentMutationVariables>;
+
+/**
+ * __usePublishTournamentMutation__
+ *
+ * To run a mutation, you first call `usePublishTournamentMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `usePublishTournamentMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [publishTournamentMutation, { data, loading, error }] = usePublishTournamentMutation({
+ *   variables: {
+ *      tournamentId: // value for 'tournamentId'
+ *   },
+ * });
+ */
+export function usePublishTournamentMutation(baseOptions?: Apollo.MutationHookOptions<PublishTournamentMutation, PublishTournamentMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<PublishTournamentMutation, PublishTournamentMutationVariables>(PublishTournamentDocument, options);
+      }
+export type PublishTournamentMutationHookResult = ReturnType<typeof usePublishTournamentMutation>;
+export type PublishTournamentMutationResult = Apollo.MutationResult<PublishTournamentMutation>;
+export type PublishTournamentMutationOptions = Apollo.BaseMutationOptions<PublishTournamentMutation, PublishTournamentMutationVariables>;
+export const RemovePublicationFromTournamentDocument = gql`
+    mutation removePublicationFromTournament($tournamentId: Int!) {
+  removePublicationFromTournament(tournamentId: $tournamentId) {
+    id
+    published
+  }
+}
+    `;
+export type RemovePublicationFromTournamentMutationFn = Apollo.MutationFunction<RemovePublicationFromTournamentMutation, RemovePublicationFromTournamentMutationVariables>;
+
+/**
+ * __useRemovePublicationFromTournamentMutation__
+ *
+ * To run a mutation, you first call `useRemovePublicationFromTournamentMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useRemovePublicationFromTournamentMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [removePublicationFromTournamentMutation, { data, loading, error }] = useRemovePublicationFromTournamentMutation({
+ *   variables: {
+ *      tournamentId: // value for 'tournamentId'
+ *   },
+ * });
+ */
+export function useRemovePublicationFromTournamentMutation(baseOptions?: Apollo.MutationHookOptions<RemovePublicationFromTournamentMutation, RemovePublicationFromTournamentMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<RemovePublicationFromTournamentMutation, RemovePublicationFromTournamentMutationVariables>(RemovePublicationFromTournamentDocument, options);
+      }
+export type RemovePublicationFromTournamentMutationHookResult = ReturnType<typeof useRemovePublicationFromTournamentMutation>;
+export type RemovePublicationFromTournamentMutationResult = Apollo.MutationResult<RemovePublicationFromTournamentMutation>;
+export type RemovePublicationFromTournamentMutationOptions = Apollo.BaseMutationOptions<RemovePublicationFromTournamentMutation, RemovePublicationFromTournamentMutationVariables>;
 export const GetUserByIdDocument = gql`
     query getUserById($id: Int!) {
   getUserById(id: $id) {
@@ -1779,6 +1873,8 @@ export const ListAllOperations = {
     createTeam: 'createTeam',
     createTournament: 'createTournament',
     generateBracket: 'generateBracket',
+    publishTournament: 'publishTournament',
+    removePublicationFromTournament: 'removePublicationFromTournament',
     createUser: 'createUser',
     loginUser: 'loginUser',
     updateUser: 'updateUser',

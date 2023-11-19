@@ -1,4 +1,14 @@
-import {Checkbox, Divider, FormControlLabel, Table, TableBody, TableContainer, TextField} from "@mui/material";
+import {
+    Button,
+    Checkbox,
+    Divider,
+    FormControlLabel,
+    InputAdornment,
+    Table,
+    TableBody,
+    TableContainer,
+    TextField
+} from "@mui/material";
 import {AdminTournamentRow} from "./AdminTournamentRow";
 import * as React from "react";
 import {useMemo, useState} from "react";
@@ -9,6 +19,8 @@ import {AdminTournamentsTableHead} from "./AdminTournamentsTableHead";
 import {makeStyles} from "@mui/styles";
 import {useTournamentSort} from "../../../hooks/useTournamentSort";
 import {SortDirection, SortOption} from "../../../components/SortTypes";
+import {theme} from "../../../theme/theme";
+import {useNavigate} from "react-router-dom";
 
 const useStyles = makeStyles(theme => ({
     headerText: {
@@ -34,6 +46,7 @@ export const AdminTournamentsTable = (props: AdminAllTournamentsTableProps): JSX
     const [sortDirection, setSortDirection] = useState<SortDirection>(SortDirection.ASC)
     const [sortBy, setSortBy] = useState<SortOption>(SortOption.CREATED)
     const getSortPredicate = useTournamentSort()
+    const navigate = useNavigate()
 
     const handleRequestSort = (event: React.MouseEvent<unknown>, sortOption: SortOption) => {
         const isAsc = sortOption === sortBy && sortDirection === SortDirection.ASC
@@ -62,19 +75,23 @@ export const AdminTournamentsTable = (props: AdminAllTournamentsTableProps): JSX
     }, [filteredTournaments, sortDirection, sortBy])
 
     return <>
-        <div style={{display: "flex", alignItems: "center", justifyContent: "space-between"}}>
+        <div style={{display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: "32px"}}>
             <div>
-                <Search/>
-                <TextField placeholder={"Søg"} InputProps={{disableUnderline: true}}
-                           style={{paddingLeft: 8, width: 400}}
+                <TextField placeholder={"Søg efter turnering..."}
+                           style={{ width: 400, marginRight: "32px" }}
+                           InputProps={{startAdornment: <InputAdornment position={"start"}><Search/></InputAdornment>}}
                            onChange={handleChangeSearch}/>
-            </div>
-            <div>
                 <FormControlLabel control={<Checkbox checked={showPublished} onChange={handleChangeShowPublished}/>}
                                   label={"Vis publicerede"}/>
                 <FormControlLabel
                     control={<Checkbox checked={showNotPublished} onChange={handleChangeShowNotPublished}/>}
                     label={"Vis ikke-publicerede"}/>
+            </div>
+            <div>
+                <Button color={"primary"} variant={"contained"}
+                        onClick={() => navigate("create")}>
+                    Opret turnering
+                </Button>
             </div>
         </div>
         <Divider/>

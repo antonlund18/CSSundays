@@ -60,6 +60,16 @@ class TournamentService(
         return tournamentRepository.findById(id)
     }
 
+    fun publishTournament(tournament: Tournament): Tournament? {
+        tournament.published = true
+        return saveTournament(tournament)
+    }
+
+    fun removePublication(tournament: Tournament): Tournament? {
+        tournament.published = false
+        return saveTournament(tournament)
+    }
+
     fun generateBracket(tournament: Tournament): Tournament {
         val bracket = createBracket(tournament)
         val registeredTeams = tournamentRegistrationService.getRegisteredTeams(tournament)

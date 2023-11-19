@@ -14,13 +14,15 @@ export const TournamentsPage = (): JSX.Element => {
         return <CircularProgress style={{position: "absolute", left: "50%", top: "50%"}}/>
     }
 
+    const publishedTournaments = tournaments.filter(tournament => tournament.published)
+
     return <CenteredPage>
         <Typography variant={"h2"} color={"primary"}>Turneringer</Typography>
         <CSDivider/>
         <Grid container spacing={2}>
             <Grid item xs={12}>
                 <Stack divider={<Divider flexItem/>} spacing={2} sx={{width: "100%"}}>
-                    {tournaments.map((tournament) => {
+                    {publishedTournaments.map((tournament) => {
                         return <TournamentRow tournament={tournament}/>
                     })}
                 </Stack>

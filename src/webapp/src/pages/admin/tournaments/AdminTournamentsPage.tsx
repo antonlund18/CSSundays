@@ -23,9 +23,5 @@ export const AdminTournamentsPage = (): JSX.Element => {
                 <AdminTournamentsTable tournaments={tournaments} text={"Ikke-publicerede turneringer"}/>
             </Grid>
         </Grid>
-        <Button color={"primary"} variant={"contained"} style={{margin: theme.spacing(1), alignSelf: "end"}}
-                onClick={() => navigate("create")}>
-            Opret turnering
-        </Button>
     </CenteredPage>
 }
