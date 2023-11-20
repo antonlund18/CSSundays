@@ -9,7 +9,7 @@ phases:
       - echo Change working directory to frontend
       - cd src/webapp
       - echo Installing dependencies
-      - npm install
+      - npm install --force
   build:
     commands:
       - echo Build started on `date`
