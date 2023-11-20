@@ -28,6 +28,6 @@ export const HomePage = () => {
             <Typography variant={"h1"} style={{color: "white"}}>CS</Typography>
             <Typography variant={"h1"} color={"primary"}>SUNDAYS</Typography>
         </div>
-        <Typography style={{color: "white"}}>Counter-Strike turneringer hver anden søndag</Typography>
+        <Typography style={{color: "white"}}>De fedeste Counter-Strike turneringer hver måned</Typography>
     </div>
 }
