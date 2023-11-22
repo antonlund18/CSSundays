@@ -3,7 +3,7 @@ import {setContext} from "@apollo/client/link/context";
 import {Constants} from "./util/Constants";
 
 const DEV_DOMAIN = "http://localhost:8080/graphql"
-const PROD_DOMAIN = "http://www.backend.cssundays.dk:8080/graphql"
+const PROD_DOMAIN = "https://backend.cssundays.dk/graphql"
 const httpLink = createHttpLink({
     uri: process.env.NODE_ENV === "development" ? DEV_DOMAIN : PROD_DOMAIN,
 });
