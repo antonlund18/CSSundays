@@ -1,6 +1,6 @@
 version: 0.2
 
 phases:
-  clean:
+  build:
     commands:
       - aws s3 rm --recursive "s3://cssundays-frontend-app/"
