@@ -10,6 +10,7 @@ import {TournamentPage} from "../pages/tournamentpage/TournamentPage";
 import {AdminCreateTournamentPage} from "../pages/admin/tournaments/AdminCreateTournamentPage";
 import {PlayersPage} from "../pages/teamspage/team/PlayersPage";
 import {AdminPage} from "../pages/admin/AdminPage";
+import {Error404} from "../pages/Error404";
 
 export const Router = (): JSX.Element => {
     const mainRoutes = [{
@@ -61,6 +62,9 @@ export const Router = (): JSX.Element => {
             path: ":player",
             element: <PlayerPage/>
         }]
+    }, {
+        path: "/*",
+        element: <Error404/>
     }]
 
 

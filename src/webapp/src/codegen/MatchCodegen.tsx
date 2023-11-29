@@ -7,12 +7,18 @@ gql`
             team1 {
                 id,
                 name,
-                picture
+                picture,
+                users {
+                    id
+                }
             },
             team2 {
                 id,
                 name,
                 picture
+                users {
+                    id
+                }
             }
         }
     }

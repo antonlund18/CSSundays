@@ -431,7 +431,7 @@ export type GetMatchesByParentIdsQueryVariables = Exact<{
 }>;
 
 
-export type GetMatchesByParentIdsQuery = { __typename?: 'Query', getMatchesByParentIds: Array<{ __typename?: 'Match', id?: number, team1?: { __typename?: 'Team', id?: number, name: string, picture?: string }, team2?: { __typename?: 'Team', id?: number, name: string, picture?: string } }> };
+export type GetMatchesByParentIdsQuery = { __typename?: 'Query', getMatchesByParentIds: Array<{ __typename?: 'Match', id?: number, team1?: { __typename?: 'Team', id?: number, name: string, picture?: string, users: Array<{ __typename?: 'User', id?: number }> }, team2?: { __typename?: 'Team', id?: number, name: string, picture?: string, users: Array<{ __typename?: 'User', id?: number }> } }> };
 
 export type GetAllNotificationsQueryVariables = Exact<{
   userId: Scalars['Int'];
@@ -874,11 +874,17 @@ export const GetMatchesByParentIdsDocument = gql`
       id
       name
       picture
+      users {
+        id
+      }
     }
     team2 {
       id
       name
       picture
+      users {
+        id
+      }
     }
   }
 }

@@ -1,11 +1,13 @@
-import {Button, CircularProgress, Dialog, DialogContent, Typography} from "@mui/material";
+import {Button, ButtonGroup, CircularProgress, Dialog, DialogContent, Divider, Typography} from "@mui/material";
 import {makeStyles} from "@mui/styles"
 import {PannableContainer} from "../../../components/PannableContainer";
 import {TournamentBracket} from "../bracket/TournamentBracket";
 import {Team, Tournament} from "../../../codegen/generated-types";
 import {useGetCurrentUser} from "../../../hooks/api/useUser";
 import {useTournaments} from "../../../hooks/api/useTournament";
-import {useState} from "react";
+import {useContext, useState} from "react";
+import {BracketContext} from "./BracketContextProvider";
+import {theme} from "../../../theme/theme";
 
 const useStyles = makeStyles({
     bracketNotYetCreated: {
@@ -15,6 +17,14 @@ const useStyles = makeStyles({
         transform: "translate(-50%, -50%) !important",
         textAlign: "center",
         transformOrigin: "center"
+    },
+    roundsToBeShownController: {
+        height: "100%",
+        display: "flex",
+        flexDirection: "row",
+        alignItems: "center",
+        border: "1px solid " + theme.palette.primary.main,
+        borderRadius: "4px"
     }
 })
 
@@ -28,6 +38,11 @@ export const BracketTabContent = (props: BracketTabContentProps): JSX.Element =>
     const {registerTeam} = useTournaments()
     const [dialogOpen, setDialogOpen] = useState(false)
     const [isLoading, setIsLoading] = useState(true)
+    const {
+        numberOfRoundsToBeShown,
+        increaseNumberOfRoundsShown,
+        decreaseNumberOfRoundsShown
+    } = useContext(BracketContext)
 
     const handleOpenRegistrationDialog = (open: boolean) => {
         setDialogOpen(open)
@@ -42,6 +57,17 @@ export const BracketTabContent = (props: BracketTabContentProps): JSX.Element =>
     const hasBracketBeenCreated = props.tournament.bracket !== null
 
     return <>
+        <div style={{display: "flex", height: "40px", marginBottom: "16px", alignItems: "center", justifyContent: "center"}}>
+            <Typography variant={"subtitle2"} marginRight={"16px"}>Vis antal runder: </Typography>
+            <div className={classes.roundsToBeShownController}>
+                <div style={{width: "40px", display: "flex", alignItems: "center", justifyContent: "center"}}>
+                    <Typography variant={"h4"}>{numberOfRoundsToBeShown}</Typography>
+                </div>
+                <Button variant={"text"} onClick={increaseNumberOfRoundsShown} style={{width: "40px", minWidth: "0"}}>+</Button>
+                <Divider orientation={"vertical"} flexItem/>
+                <Button variant={"text"} onClick={decreaseNumberOfRoundsShown} style={{width: "40px", minWidth: "0"}}>-</Button>
+            </div>
+        </div>
         <PannableContainer style={{backgroundColor: "white"}}>
             {!hasBracketBeenCreated ? <div className={classes.bracketNotYetCreated}>
                     <Typography variant={"h2"}>Der er ikke oprettet en bracket endnu</Typography>
@@ -58,7 +84,8 @@ export const BracketTabContent = (props: BracketTabContentProps): JSX.Element =>
                 onClick={() => handleOpenRegistrationDialog(true)}>
             Tilmeld hold
         </Button>
-        {currentUser &&
+        {
+            currentUser &&
             <Dialog open={dialogOpen} onClose={() => handleOpenRegistrationDialog(false)}>
                 <DialogContent>
                     {currentUser.teams.map(team => {
@@ -68,6 +95,7 @@ export const BracketTabContent = (props: BracketTabContentProps): JSX.Element =>
                         </div>
                     })}
                 </DialogContent>
-            </Dialog>}
+            </Dialog>
+        }
     </>
 }

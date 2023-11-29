@@ -1,11 +1,11 @@
 import * as React from "react"
+import {useContext} from "react"
 import {Menu, MenuItem} from "@mui/material";
 import {
-    Tournament,
+    Tournament, useGenerateBracketMutation,
     usePublishTournamentMutation,
     useRemovePublicationFromTournamentMutation
 } from "../../../codegen/generated-types";
-import {useContext} from "react";
 import {SnackbarContext} from "../../../SnackbarContextProvider";
 
 type AdminTournamentRowContextMenuProps = {
@@ -19,6 +19,11 @@ export const AdminTournamentRowContextMenu = (props: AdminTournamentRowContextMe
     const {openSnackbar} = useContext(SnackbarContext)
     const [publishTournament] = usePublishTournamentMutation()
     const [removePublication] = useRemovePublicationFromTournamentMutation()
+    const [generateBracket] = useGenerateBracketMutation()
+
+    if (!props.tournament) {
+        return <></>
+    }
 
     const handleClose = (e: React.MouseEvent) => {
         props.setOpen(false)
@@ -53,8 +58,28 @@ export const AdminTournamentRowContextMenu = (props: AdminTournamentRowContextMe
             variables: {
                 tournamentId: props.tournament.id
             }
+        }).then(data => {
+            openSnackbar(`'${props.tournament.name}' er ikke længere publiceret`, "success")
+        }).catch(error => {
+            openSnackbar('Fejl ved publicering', 'error')
         })
-        openSnackbar(`'${props.tournament.name}' er ikke længere publiceret`, "success")
+        props.setOpen(false)
+    }
+
+    const handleGenerateBracket = () => {
+        if (!props.tournament.id) {
+            return
+        }
+
+        generateBracket({
+            variables: {
+                tournamentId: props.tournament.id
+            }
+        }).then(data => {
+            openSnackbar(`Bracket oprettet for '${props.tournament.name}'`, "success")
+        }).catch(error => {
+            openSnackbar('Fejl ved oprettelse af bracket', 'error')
+        })
         props.setOpen(false)
     }
 
@@ -62,5 +87,9 @@ export const AdminTournamentRowContextMenu = (props: AdminTournamentRowContextMe
         <MenuItem onClick={() => props.tournament.published ? handleRemovePublication() : handlePublish()}>
             {props.tournament.published ? "Fjern publicering" : "Publicér"}
         </MenuItem>
+        <MenuItem onClick={handleGenerateBracket}>
+            Opret bracket
+        </MenuItem>
+
     </Menu>
 }

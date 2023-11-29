@@ -5,10 +5,11 @@ import {CircularProgress, Divider, Tab, Tabs, Typography} from "@mui/material";
 import {makeStyles} from "@mui/styles"
 import React, {useEffect, useState} from "react";
 import {BracketTabContent} from "./tabs/BracketTabContent";
-import { InformationTabContent } from "./tabs/InformationTabContent";
+import {InformationTabContent} from "./tabs/InformationTabContent";
 import {RulesTab} from "./tabs/RulesTab";
 import {MediaTab} from "./tabs/MediaTab";
 import {TeamsTab} from "./tabs/TeamsTab";
+import {BracketContextProvider} from "./tabs/BracketContextProvider";
 
 const useStyles = makeStyles(theme => ({
     headerSection: {
@@ -67,8 +68,9 @@ export const TournamentPage = () => {
     return <CenteredPage>
         <div className={classes.headerSection}>
             <div className={classes.header}>
-            <Typography variant={"h2"} color={"primary"}>{tournament.name}</Typography>
-            <Typography variant={"caption"}>{numberOfRegisteredTeams} {numberOfRegisteredTeams === 1 ? "tilmeldt" : "tilmeldte"} hold</Typography>
+                <Typography variant={"h2"} color={"primary"}>{tournament.name}</Typography>
+                <Typography
+                    variant={"caption"}>{numberOfRegisteredTeams} {numberOfRegisteredTeams === 1 ? "tilmeldt" : "tilmeldte"} hold</Typography>
             </div>
             <Divider/>
             <Tabs className={classes.tabs} value={value} onChange={handleChangeTab} indicatorColor={"primary"}>
@@ -84,7 +86,9 @@ export const TournamentPage = () => {
             <InformationTabContent tournament={tournament}/>
         </TabPanel>
         <TabPanel value={value} index={1}>
-            <BracketTabContent tournament={tournament}/>
+            <BracketContextProvider>
+                <BracketTabContent tournament={tournament}/>
+            </BracketContextProvider>
         </TabPanel>
         <TabPanel value={value} index={2}>
             <RulesTab tournament={tournament}/>

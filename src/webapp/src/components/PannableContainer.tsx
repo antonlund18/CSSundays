@@ -14,7 +14,7 @@ const useStyles = makeStyles<Theme, StylesProps>(theme => ({
         display: "flex",
         position: "relative",
         overflow: "hidden",
-        height: "50vh",
+        height: "150vh",
         "& > div:first-child": {
             scale: props.zoom,
             transitionDuration: "200ms",
@@ -90,17 +90,11 @@ export const PannableContainer = (props: React.PropsWithChildren<PannableContain
         setElementPosition({x: 0, y: 0})
     }
 
-    const handleScroll = (e: React.WheelEvent) => {
-        e.deltaY > 0 ? handleDecreaseZoom() : handleIncreaseZoom()
-    }
-
-
     return <div className={classes.pannable}
                 onMouseDown={handleMouseDown}
                 onMouseUp={handleMouseUp}
                 onMouseMove={handleMouseMoveThrottled}
                 onMouseLeave={handleMouseUp}
-                onWheel={handleScroll}
                 style={props.style}
     >
         {props.children}

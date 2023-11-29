@@ -1,9 +1,12 @@
-import {Match, ObjectType} from "../../../codegen/generated-types";
+import {Match, ObjectType, Team} from "../../../codegen/generated-types";
 import {Divider, List, ListItem, ListItemIcon, Theme, Typography} from "@mui/material";
 import {makeStyles} from "@mui/styles"
 import {Constants} from "../../../util/Constants";
 import {getPictureLinkFromKey} from "../../../util/StorageHelper";
 import * as React from "react";
+import {useCallback} from "react";
+import {useGetCurrentUser} from "../../../hooks/api/useUser";
+import {TournamentBracketMatchTeam} from "./TournamentBracketMatchTeam";
 
 interface StylesProps {
     connectorAfter: ConnectorAfter
@@ -86,6 +89,14 @@ interface TournamentBracketMatchProps {
 
 export const TournamentBracketMatch = (props: TournamentBracketMatchProps): JSX.Element => {
     const classes = useStyles(props)
+    const {currentUser} = useGetCurrentUser()
+
+    const currentPlayerIsOnTeam = useCallback((team: Team): boolean => {
+        if (!currentUser?.id) {
+            return false
+        }
+        return team.users.map(user => user.id).includes(currentUser.id)
+    }, [currentUser])
 
     if (!props.connectorBefore && !props.match.team1 && !props.match.team2) {
         return <List component={"nav"} className={classes.cancelledMatch}>
@@ -99,21 +110,21 @@ export const TournamentBracketMatch = (props: TournamentBracketMatchProps): JSX.
 
     return <List component={"nav"} className={classes.match}>
         <ListItem button className={classes.team}>
-            {team1 && <ListItemIcon className={classes.imageContainer}>
-                <img src={getPictureLinkFromKey(team1.picture ?? null, ObjectType.Team)} className={classes.image}/>
-            </ListItemIcon>}
-            <Typography noWrap style={{textOverflow: "ellipsis", fontSize: "12px"}}>
-                {team1 ? team1.name : <i>TBD</i>}
-            </Typography>
+            {team1 ?
+                <TournamentBracketMatchTeam team={team1} isCurrentUserOnTeam={currentPlayerIsOnTeam(team1)}/> :
+                <Typography noWrap fontWeight={"bold"} style={{textOverflow: "ellipsis", fontSize: "12px"}}>
+                    <i>TBD</i>
+                </Typography>
+            }
         </ListItem>
         <Divider/>
         <ListItem button className={classes.team}>
-            {team2 && <ListItemIcon className={classes.imageContainer}>
-                <img src={getPictureLinkFromKey(team2.picture ?? null, ObjectType.Team)} className={classes.image}/>
-            </ListItemIcon>}
-            <Typography noWrap style={{textOverflow: "ellipsis", fontSize: "12px"}}>
-                {team2 ? team2.name : <i>TBD</i>}
-            </Typography>
+            {team2 ?
+                <TournamentBracketMatchTeam team={team2} isCurrentUserOnTeam={currentPlayerIsOnTeam(team2)}/> :
+                <Typography noWrap fontWeight={"bold"} style={{textOverflow: "ellipsis", fontSize: "12px"}}>
+                    <i>TBD</i>
+                </Typography>
+            }
         </ListItem>
     </List>
 }

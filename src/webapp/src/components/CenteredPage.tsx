@@ -7,14 +7,20 @@ interface StylesProps {
     fullWidth?: boolean
 }
 
-const useStyles = makeStyles<Theme, StylesProps>(theme  => ({
+const useStyles = makeStyles<Theme, StylesProps>(theme => ({
     page: {
         display: "flex",
         justifyContent: "center",
+        minHeight: "calc(100vh - 92px)",
+    },
+    pageImage: {
+        position: "relative",
         height: "calc(100vh - 92px)",
+        content: "''",
         backgroundImage: "url(https://i.imgur.com/MkE9cBw.png)",
         backgroundRepeat: "no-repeat",
         backgroundSize: "cover",
+        overflowY: "scroll",
     },
     pageContent: props => ({
         "&::-webkit-scrollbar": {
@@ -27,7 +33,6 @@ const useStyles = makeStyles<Theme, StylesProps>(theme  => ({
         backgroundSize: "100vw",
         padding: theme.spacing(4),
         borderRadius: "8px",
-        overflowY: "scroll"
     }),
 }));
 
@@ -38,9 +43,11 @@ interface CenteredPageProps {
 export const CenteredPage = (props: PropsWithChildren<CenteredPageProps>): JSX.Element => {
     const classes = useStyles({fullWidth: props.fullWidth});
 
-    return <div className={classes.page}>
-        <div className={classes.pageContent}>
-            {props.children}
+    return <div className={classes.pageImage}>
+        <div className={classes.page}>
+            <div className={classes.pageContent}>
+                {props.children}
+            </div>
         </div>
     </div>
 }

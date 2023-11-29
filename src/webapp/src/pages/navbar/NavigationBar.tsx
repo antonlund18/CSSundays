@@ -13,7 +13,7 @@ const useStyles = makeStyles({
         alignItems: "center",
         width: "100%",
         padding: "0 32px",
-        boxSizing: "border-box"
+        boxSizing: "border-box",
     },
     logoTitleText: {
         "&:visited": {
@@ -33,22 +33,24 @@ const useStyles = makeStyles({
 export const NavigationBar = (): JSX.Element => {
     const classes = useStyles();
 
-    return <div className={classes.navBarContainer}>
-        <Link to={"/"} className={classes.logoTitleText}>
-            <Typography variant={"h2"}>CS</Typography>
-            <Typography variant={"h2"} color={"primary"}>Sundays</Typography>
-        </Link>
-        <div className={classes.navigationMenu}>
-            <NavBarMenuItem link={"/"}>
-                <Typography variant={"button"} className={classes.navigationMenuItemText}>Home</Typography>
-            </NavBarMenuItem>
-            <NavBarMenuItem link={"/tournaments"}>
-                <Typography variant={"button"} style={{textTransform: "capitalize"}}>Turneringer</Typography>
-            </NavBarMenuItem>
-            <NavBarMenuItem link={"/teams"}>
-                <Typography variant={"button"} style={{textTransform: "capitalize"}}>Hold</Typography>
-            </NavBarMenuItem>
+    return <div style={{height: "92px", width: "100%"}}>
+        <div className={classes.navBarContainer}>
+            <Link to={"/"} className={classes.logoTitleText}>
+                <Typography variant={"h2"}>CS</Typography>
+                <Typography variant={"h2"} color={"primary"}>Sundays</Typography>
+            </Link>
+            <div className={classes.navigationMenu}>
+                <NavBarMenuItem link={"/"}>
+                    <Typography variant={"button"} className={classes.navigationMenuItemText}>Home</Typography>
+                </NavBarMenuItem>
+                <NavBarMenuItem link={"/tournaments"}>
+                    <Typography variant={"button"} style={{textTransform: "capitalize"}}>Turneringer</Typography>
+                </NavBarMenuItem>
+                <NavBarMenuItem link={"/teams"}>
+                    <Typography variant={"button"} style={{textTransform: "capitalize"}}>Hold</Typography>
+                </NavBarMenuItem>
+            </div>
+            <NavBarProfile/>
         </div>
-        <NavBarProfile/>
     </div>
 }
