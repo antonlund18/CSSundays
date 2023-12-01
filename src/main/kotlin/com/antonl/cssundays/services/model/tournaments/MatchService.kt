@@ -15,4 +15,8 @@ class MatchService(val matchRepository: MatchRepository) {
     fun getMatchesByParentIds(parentIds: List<Int>): List<Match> {
         return matchRepository.findByParentIdIn(parentIds)
     }
+
+    fun getMatchById(matchId: Int): Match? {
+        return matchRepository.findById(matchId)
+    }
 }

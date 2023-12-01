@@ -23,3 +23,31 @@ gql`
         }
     }
 `
+
+gql`
+    query getMatchById($matchId: Int!) {
+        getMatchById(matchId: $matchId) {
+            id,
+            team1 {
+                id,
+                name,
+                picture,
+                users {
+                    id,
+                    playertag,
+                    picture
+                }
+            },
+            team2 {
+                id,
+                name,
+                picture
+                users {
+                    id,
+                    playertag,
+                    picture
+                }
+            }
+        }
+    }
+`

@@ -14,4 +14,8 @@ class MatchQueries : Query {
     fun getMatchesByParentIds(parentIds: List<Int>): List<Match> {
         return matchService.getMatchesByParentIds(parentIds)
     }
+
+    fun getMatchById(matchId: Int): Match? {
+        return matchService.getMatchById(matchId)
+    }
 }

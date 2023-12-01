@@ -4,7 +4,7 @@ import {Match} from "../../../codegen/generated-types";
 import {useCallback, useContext, useEffect, useMemo} from "react";
 import {TournamentBracketMatchSpacer} from "./TournamentBracketMatchSpacer";
 import {ConnectorAfter, TournamentBracketMatch} from "./TournamentBracketMatch";
-import {useGetMatchesByParentIds} from "../../../hooks/api/useTournament";
+import {useGetMatchesByParentIds} from "../../../hooks/api/useMatch";
 import {Constants} from "../../../util/Constants";
 import {BracketContext} from "../tabs/BracketContextProvider";
 

@@ -244,6 +244,7 @@ export type Query = {
   getBracket?: Maybe<Bracket>;
   getCurrentUser?: Maybe<User>;
   getFirstRoundMatches?: Maybe<Array<Match>>;
+  getMatchById?: Maybe<Match>;
   getMatchesByParentIds: Array<Match>;
   getTeamById?: Maybe<Team>;
   getTournamentById?: Maybe<Tournament>;
@@ -280,6 +281,11 @@ export type QueryGetCurrentUserArgs = {
 
 export type QueryGetFirstRoundMatchesArgs = {
   tournamentId: Scalars['Int'];
+};
+
+
+export type QueryGetMatchByIdArgs = {
+  matchId: Scalars['Int'];
 };
 
 
@@ -432,6 +438,13 @@ export type GetMatchesByParentIdsQueryVariables = Exact<{
 
 
 export type GetMatchesByParentIdsQuery = { __typename?: 'Query', getMatchesByParentIds: Array<{ __typename?: 'Match', id?: number, team1?: { __typename?: 'Team', id?: number, name: string, picture?: string, users: Array<{ __typename?: 'User', id?: number }> }, team2?: { __typename?: 'Team', id?: number, name: string, picture?: string, users: Array<{ __typename?: 'User', id?: number }> } }> };
+
+export type GetMatchByIdQueryVariables = Exact<{
+  matchId: Scalars['Int'];
+}>;
+
+
+export type GetMatchByIdQuery = { __typename?: 'Query', getMatchById?: { __typename?: 'Match', id?: number, team1?: { __typename?: 'Team', id?: number, name: string, picture?: string, users: Array<{ __typename?: 'User', id?: number, playertag: string, picture?: string }> }, team2?: { __typename?: 'Team', id?: number, name: string, picture?: string, users: Array<{ __typename?: 'User', id?: number, playertag: string, picture?: string }> } } };
 
 export type GetAllNotificationsQueryVariables = Exact<{
   userId: Scalars['Int'];
@@ -917,6 +930,61 @@ export function useGetMatchesByParentIdsLazyQuery(baseOptions?: Apollo.LazyQuery
 export type GetMatchesByParentIdsQueryHookResult = ReturnType<typeof useGetMatchesByParentIdsQuery>;
 export type GetMatchesByParentIdsLazyQueryHookResult = ReturnType<typeof useGetMatchesByParentIdsLazyQuery>;
 export type GetMatchesByParentIdsQueryResult = Apollo.QueryResult<GetMatchesByParentIdsQuery, GetMatchesByParentIdsQueryVariables>;
+export const GetMatchByIdDocument = gql`
+    query getMatchById($matchId: Int!) {
+  getMatchById(matchId: $matchId) {
+    id
+    team1 {
+      id
+      name
+      picture
+      users {
+        id
+        playertag
+        picture
+      }
+    }
+    team2 {
+      id
+      name
+      picture
+      users {
+        id
+        playertag
+        picture
+      }
+    }
+  }
+}
+    `;
+
+/**
+ * __useGetMatchByIdQuery__
+ *
+ * To run a query within a React component, call `useGetMatchByIdQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetMatchByIdQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetMatchByIdQuery({
+ *   variables: {
+ *      matchId: // value for 'matchId'
+ *   },
+ * });
+ */
+export function useGetMatchByIdQuery(baseOptions: Apollo.QueryHookOptions<GetMatchByIdQuery, GetMatchByIdQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<GetMatchByIdQuery, GetMatchByIdQueryVariables>(GetMatchByIdDocument, options);
+      }
+export function useGetMatchByIdLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetMatchByIdQuery, GetMatchByIdQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<GetMatchByIdQuery, GetMatchByIdQueryVariables>(GetMatchByIdDocument, options);
+        }
+export type GetMatchByIdQueryHookResult = ReturnType<typeof useGetMatchByIdQuery>;
+export type GetMatchByIdLazyQueryHookResult = ReturnType<typeof useGetMatchByIdLazyQuery>;
+export type GetMatchByIdQueryResult = Apollo.QueryResult<GetMatchByIdQuery, GetMatchByIdQueryVariables>;
 export const GetAllNotificationsDocument = gql`
     query getAllNotifications($userId: Int!) {
   getAllNotifications(userId: $userId) {
@@ -1859,6 +1927,7 @@ export const ListAllOperations = {
     findAllInvitesForPlayer: 'findAllInvitesForPlayer',
     findPendingInvitesForPlayer: 'findPendingInvitesForPlayer',
     getMatchesByParentIds: 'getMatchesByParentIds',
+    getMatchById: 'getMatchById',
     getAllNotifications: 'getAllNotifications',
     getAllTeams: 'getAllTeams',
     getTeamById: 'getTeamById',

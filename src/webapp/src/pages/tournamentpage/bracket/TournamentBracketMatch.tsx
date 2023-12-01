@@ -1,12 +1,12 @@
-import {Match, ObjectType, Team} from "../../../codegen/generated-types";
-import {Divider, List, ListItem, ListItemIcon, Theme, Typography} from "@mui/material";
+import {Match, Team} from "../../../codegen/generated-types";
+import {Button, Divider, List, ListItem, Theme, Typography} from "@mui/material";
 import {makeStyles} from "@mui/styles"
 import {Constants} from "../../../util/Constants";
-import {getPictureLinkFromKey} from "../../../util/StorageHelper";
 import * as React from "react";
 import {useCallback} from "react";
 import {useGetCurrentUser} from "../../../hooks/api/useUser";
 import {TournamentBracketMatchTeam} from "./TournamentBracketMatchTeam";
+import {useNavigate} from "react-router-dom";
 
 interface StylesProps {
     connectorAfter: ConnectorAfter
@@ -16,6 +16,10 @@ interface StylesProps {
 const useStyles = makeStyles<Theme, StylesProps>(theme => ({
     match: props => ({
         border: "1px solid black",
+        borderRadius: 0,
+        display: "flex",
+        textTransform: "none",
+        flexDirection: "column",
         width: Constants.TOURNAMENT_MATCH_WIDTH,
         padding: "0px",
         "&::after": {
@@ -90,6 +94,7 @@ interface TournamentBracketMatchProps {
 export const TournamentBracketMatch = (props: TournamentBracketMatchProps): JSX.Element => {
     const classes = useStyles(props)
     const {currentUser} = useGetCurrentUser()
+    const navigate = useNavigate()
 
     const currentPlayerIsOnTeam = useCallback((team: Team): boolean => {
         if (!currentUser?.id) {
@@ -108,8 +113,8 @@ export const TournamentBracketMatch = (props: TournamentBracketMatchProps): JSX.
 
     const {team1, team2} = props.match
 
-    return <List component={"nav"} className={classes.match}>
-        <ListItem button className={classes.team}>
+    return <Button className={classes.match} onClick={() => navigate(`matches/${props.match.id}` ?? "")}>
+        <ListItem className={classes.team}>
             {team1 ?
                 <TournamentBracketMatchTeam team={team1} isCurrentUserOnTeam={currentPlayerIsOnTeam(team1)}/> :
                 <Typography noWrap fontWeight={"bold"} style={{textOverflow: "ellipsis", fontSize: "12px"}}>
@@ -117,8 +122,8 @@ export const TournamentBracketMatch = (props: TournamentBracketMatchProps): JSX.
                 </Typography>
             }
         </ListItem>
-        <Divider/>
-        <ListItem button className={classes.team}>
+        <Divider flexItem/>
+        <ListItem className={classes.team}>
             {team2 ?
                 <TournamentBracketMatchTeam team={team2} isCurrentUserOnTeam={currentPlayerIsOnTeam(team2)}/> :
                 <Typography noWrap fontWeight={"bold"} style={{textOverflow: "ellipsis", fontSize: "12px"}}>
@@ -126,5 +131,5 @@ export const TournamentBracketMatch = (props: TournamentBracketMatchProps): JSX.
                 </Typography>
             }
         </ListItem>
-    </List>
+    </Button>
 }

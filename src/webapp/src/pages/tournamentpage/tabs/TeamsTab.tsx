@@ -91,7 +91,7 @@ export const TeamsTab = (props: TeamsTabProps): JSX.Element => {
         </Grid>
 
         <Grid item xs={12}>
-            <TableContainer style={{maxHeight: "55vh", overflowX: "hidden"}}>
+            <TableContainer style={{maxHeight: "100vh", overflowX: "hidden"}}>
                 <Table stickyHeader>
                     <colgroup>
                         <col style={{width: "0%"}}/>

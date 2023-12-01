@@ -29,18 +29,6 @@ export const useGetTournamentById = (id: number) => {
     }
 }
 
-export const useGetMatchesByParentIds = (parentIds: number[]) => {
-    const {data, loading} = useGetMatchesByParentIdsQuery({
-        variables: {
-            parentIds
-        }
-    });
-    return {
-        matches: data?.getMatchesByParentIds as Match[],
-        loading
-    }
-}
-
 export const useTournaments = () => {
     const [createTournamentMutation] = useCreateTournamentMutation();
     const [generateBracketMutation] = useGenerateBracketMutation();
