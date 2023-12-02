@@ -7,16 +7,15 @@ import {Circle} from "@mui/icons-material";
 import {Test} from "./Test";
 
 const useStyles = makeStyles(theme => ({
-    mapContainer: {
-        "& div:first-child:hover": {
+    mapButton: {
+        "&:hover": {
             transform: "scale(1.2)"
         },
         "&.MuiButtonBase-root:disabled": {
             boxShadow: "inset 0 0 0 1000px rgba(0,0,0,.8)",
             color: "rgba(255, 255, 255, 0.2)"
         },
-        width: "14%",
-        overflow: "hidden",
+        width: "100%",
         padding: 0,
         borderRadius: 0,
         height: "100%",
@@ -27,6 +26,11 @@ const useStyles = makeStyles(theme => ({
         backgroundSize: "cover",
         textShadow: "#000000 0px 0px 10px",
         color: "rgba(255, 255, 255, 1)"
+    },
+    mapContainer: {
+        width: "14%",
+        height: "100%",
+        overflow: "hidden",
     }
 }))
 
@@ -65,17 +69,19 @@ export const MatchPagePhaseContainer = () => {
         </Grid>
         <div style={{width: "100%", height: "30vh", display: "flex", justifyContent: "center"}}>
             {activeDutyMapPool.map(map => {
-                return <Button
-                    className={classes.mapContainer}
-                    onClick={() => {
-                        setBannedMaps([...bannedMaps, map])
-                        setCount(count + 1)
-                        setCountdownDate(new Date().getTime() + COUNTDOWN_TIME)
-                    }}
-                    disabled={bannedMaps.includes(map)}
-                    style={{backgroundImage: `url(${map.picture})`}}>
-                    <Typography variant={"h2"}>{map.label}</Typography>
-                </Button>
+                return <div className={classes.mapContainer}>
+                    <Button
+                        className={classes.mapButton}
+                        onClick={() => {
+                            setBannedMaps([...bannedMaps, map])
+                            setCount(count + 1)
+                            setCountdownDate(new Date().getTime() + COUNTDOWN_TIME)
+                        }}
+                        disabled={bannedMaps.includes(map)}
+                        style={{backgroundImage: `url(${map.picture})`}}>
+                        <Typography variant={"h2"}>{map.label}</Typography>
+                    </Button>
+                </div>
             })}
         </div>
     </Grid>
