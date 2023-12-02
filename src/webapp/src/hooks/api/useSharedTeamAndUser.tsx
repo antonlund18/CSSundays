@@ -42,7 +42,9 @@ export const useSharedTeamAndUser = () => {
                 body: byteArray,
             }
 
-            await fetch(new URL("http://" + request.url).toString(), requestOptions).then(() => {
+            const isLocalHost = window.location.hostname.includes("localhost")
+            const scheme = isLocalHost ? "http" : "https"
+            await fetch(new URL(`${scheme}://${request.url}`).toString(), requestOptions).then(() => {
                 switch (objectType) {
                     case ObjectType.User:
                         client.refetchQueries({
