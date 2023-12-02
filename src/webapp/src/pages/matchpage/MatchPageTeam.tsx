@@ -3,6 +3,7 @@ import {ObjectType, Team} from "../../codegen/generated-types";
 import {Grid, Typography} from "@mui/material";
 import {getPictureLinkFromKey} from "../../util/StorageHelper";
 import {makeStyles} from "@mui/styles";
+import {PlayerPicture} from "../teamspage/team/PlayerPicture";
 
 const useStyles = makeStyles({
     teamContainer: {
@@ -17,20 +18,11 @@ const useStyles = makeStyles({
     },
     teamPicture: {
         border: "2px solid white",
-        height: "96px",
         width: "96px",
-        objectFit: "cover",
-        marginLeft: "16px",
-        marginRight: "16px",
-    },
-    playerPicture: {
-        borderRadius: "50%",
-        border: "2px solid white",
         aspectRatio: "1/1",
-        width: "60%",
         objectFit: "cover",
-        marginLeft: "16px",
         marginRight: "16px",
+        marginLeft: "16px"
     },
 })
 
@@ -51,20 +43,17 @@ export const MatchPageTeam = (props: MatchPageTeamProps) => {
         return <></>
     }
 
-    console.log(props.team.users)
-
     return <Grid item xs={5} className={classes.teamContainer}>
         <div style={{
             width: "100%",
             display: "flex",
             alignItems: "center",
-            justifyContent: props.position === MagePageTeamPosition.LEFT ? "end" : "start",
             flexDirection: props.position === MagePageTeamPosition.LEFT ? "row" : "row-reverse"
         }}>
-            <Typography variant={"h2"} color={props.position !== MagePageTeamPosition.LEFT ? "error" : "primary"}
-                        sx={{textTransform: "none"}}>{props.team.name}</Typography>
             <img src={getPictureLinkFromKey(props.team.picture ?? "", ObjectType.Team)}
                  className={classes.teamPicture}/>
+            <Typography variant={"h2"} color={props.position !== MagePageTeamPosition.LEFT ? "error" : "primary"}
+                        sx={{textTransform: "none"}}>{props.team.name}</Typography>
         </div>
         <div style={{
             width: "100%",
@@ -72,18 +61,8 @@ export const MatchPageTeam = (props: MatchPageTeamProps) => {
             justifyContent: props.position === MagePageTeamPosition.LEFT ? "end" : "start",
             marginTop: "32px"
         }}>
-            {props.team.users.slice(0, 5).map(player => {
-                return <div style={{
-                    marginRight: 0,
-                    display: "flex",
-                    flexDirection: "column",
-                    alignItems: "center",
-                    width: "20%",
-                }}>
-                    <img src={getPictureLinkFromKey(player.picture ?? "", ObjectType.User)}
-                         className={classes.playerPicture}/>
-                    <Typography variant={"subtitle2"} sx={{textTransform: "none"}}>{player.playertag}</Typography>
-                </div>
+            {new Array(5).fill(props.team.users[0]).map(player => {
+                return <PlayerPicture player={player}/>
             })}
         </div>
     </Grid>

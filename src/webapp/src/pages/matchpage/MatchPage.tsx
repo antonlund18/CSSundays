@@ -1,4 +1,4 @@
-import {Grid, Typography} from "@mui/material";
+import {Divider, Grid, Typography} from "@mui/material";
 import * as React from "react"
 import {CenteredPage} from "../../components/CenteredPage";
 import {makeStyles} from "@mui/styles";
@@ -7,6 +7,8 @@ import {useGetMatchById} from "../../hooks/api/useMatch";
 import {getPictureLinkFromKey} from "../../util/StorageHelper";
 import {ObjectType} from "../../codegen/generated-types";
 import {MagePageTeamPosition, MatchPageTeam} from "./MatchPageTeam";
+import { MatchPagePhaseContainer } from "./MatchPagePhaseContainer";
+import { MatchPageChatContainer } from "./MatchPageChatContainer";
 
 const useStyles = makeStyles({
     teamContainer: {
@@ -54,6 +56,14 @@ export const MatchPage = () => {
                 <Typography variant={"h2"}>VS</Typography>
             </Grid>
             <MatchPageTeam position={MagePageTeamPosition.RIGHT} team={match.team2}/>
+        </Grid>
+        <Divider sx={{marginTop: "16px"}}/>
+        <Grid container xs={12}>
+            <MatchPagePhaseContainer/>
+        </Grid>
+        <Divider sx={{margin: "16px"}}/>
+        <Grid container xs={12}>
+            <MatchPageChatContainer/>
         </Grid>
     </CenteredPage>
 }

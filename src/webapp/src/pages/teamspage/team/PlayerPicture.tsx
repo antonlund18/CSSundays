@@ -15,6 +15,8 @@ const useStyles = makeStyles<Theme, StylesProps>(theme => ({
         cursor: "pointer",
         textAlign: "center",
         justifyContent: "center",
+        width: "20%",
+        padding: "8px",
     },
     playerPicture: props => ({
         "&::after": {
@@ -24,11 +26,12 @@ const useStyles = makeStyles<Theme, StylesProps>(theme => ({
             width: "100%",
             background: "rgba(0, 0, 0, .4)",
             color: "rgb(241,241,241)",
+            overflow: "hidden",
+            textOverflow: "ellipsis",
             content: "'" + props.playerName + "'"
         },
-        height: "132px",
-        width: "132px",
-        margin: theme.spacing(1),
+        width: "100%",
+        aspectRatio: "1/1",
         border: "2px solid white",
         position: "relative",
         backgroundImage: "url(" + props.playerPictureURL + " )",
