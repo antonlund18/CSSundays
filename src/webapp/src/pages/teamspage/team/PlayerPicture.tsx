@@ -4,20 +4,23 @@ import {Box, Theme} from "@mui/material";
 import {getPictureLinkFromKey} from "../../../util/StorageHelper";
 import {useNavigate} from "react-router-dom";
 import {makeStyles} from "@mui/styles"
+import {CSSProperties} from "react";
 
 type StylesProps = {
     playerPictureURL: string
     playerName: string
+    style?: CSSProperties
 }
 
 const useStyles = makeStyles<Theme, StylesProps>(theme => ({
-    playerContainer: {
+    playerContainer: props => ({
         cursor: "pointer",
         textAlign: "center",
         justifyContent: "center",
         width: "20%",
         padding: "8px",
-    },
+        ...props.style
+    }),
     playerPicture: props => ({
         "&::after": {
             position: "absolute",
@@ -43,13 +46,14 @@ const useStyles = makeStyles<Theme, StylesProps>(theme => ({
 
 export type PlayerPictureProps = {
     player: User
+    style?: CSSProperties
 }
 
 export const PlayerPicture = (props: PlayerPictureProps): JSX. Element => {
     const {player} = props
     const playerPictureURL = getPictureLinkFromKey(player.picture ?? null, ObjectType.User)
     const playerName = player.playertag ? player.playertag : ""
-    const classes = useStyles({playerPictureURL: playerPictureURL, playerName: playerName});
+    const classes = useStyles({playerPictureURL: playerPictureURL, playerName: playerName, style: props.style});
     const navigate = useNavigate();
 
     return <div key={player.playertag} className={classes.playerContainer}

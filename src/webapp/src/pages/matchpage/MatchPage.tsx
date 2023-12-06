@@ -7,8 +7,9 @@ import {useGetMatchById} from "../../hooks/api/useMatch";
 import {getPictureLinkFromKey} from "../../util/StorageHelper";
 import {ObjectType} from "../../codegen/generated-types";
 import {MagePageTeamPosition, MatchPageTeam} from "./MatchPageTeam";
-import { MatchPagePhaseContainer } from "./MatchPagePhaseContainer";
-import { MatchPageChatContainer } from "./MatchPageChatContainer";
+import {MatchPagePhaseContainer} from "./MatchPagePhaseContainer";
+import {MatchPageChatContainer} from "./MatchPageChatContainer";
+import {Error404} from "../Error404";
 
 const useStyles = makeStyles({
     teamContainer: {
@@ -46,7 +47,7 @@ export const MatchPage = () => {
     const {match} = useGetMatchById(parseInt(urlParams?.matchId ?? "-1"))
 
     if (!match) {
-        return <></>
+        return <Error404/>
     }
 
     return <CenteredPage>
@@ -58,9 +59,7 @@ export const MatchPage = () => {
             <MatchPageTeam position={MagePageTeamPosition.RIGHT} team={match.team2}/>
         </Grid>
         <Divider sx={{marginTop: "16px"}}/>
-        <Grid container xs={12}>
-            <MatchPagePhaseContainer/>
-        </Grid>
+        <MatchPagePhaseContainer team1Captain={match.team1?.users[0]} team2Captain={match.team2?.users[0]}/>
         <Divider sx={{margin: "16px"}}/>
         <Grid container xs={12}>
             <MatchPageChatContainer/>
