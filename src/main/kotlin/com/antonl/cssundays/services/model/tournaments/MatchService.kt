@@ -19,4 +19,9 @@ class MatchService(val matchRepository: MatchRepository) {
     fun getMatchById(matchId: Int): Match? {
         return matchRepository.findById(matchId)
     }
+
+    fun createTestMatch(): Match? {
+        val match = Match()
+        return saveMatch(match)
+    }
 }

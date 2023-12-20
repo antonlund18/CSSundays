@@ -88,8 +88,7 @@ gql`
                         id,
                         name
                     }
-                    result,                    
-                }
+                }                
             }
         }
     }

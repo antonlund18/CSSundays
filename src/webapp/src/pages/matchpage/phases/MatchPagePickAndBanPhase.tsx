@@ -67,7 +67,7 @@ type MatchPageMapPickPhaseProps = {
     team2Captain: User | undefined
 }
 
-export const MatchPageMapPickPhase = (props: MatchPageMapPickPhaseProps) => {
+export const MatchPagePickAndBanPhase = (props: MatchPageMapPickPhaseProps) => {
     const COUNTDOWN_TIME = 1000 * 20 // 20 seconds
     const classes = useStyles()
     const [count, setCount] = useState(0)

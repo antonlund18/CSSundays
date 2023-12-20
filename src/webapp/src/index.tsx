@@ -9,6 +9,7 @@ import {ApolloClientProvider} from "./ApolloClientProvider";
 import {StyledEngineProvider, ThemeProvider} from '@mui/material/styles';
 import {Theme} from '@mui/material/styles';
 import {SnackbarContextProvider} from "./SnackbarContextProvider";
+import {AdminCommands} from "./util/admin/AdminCommands";
 
 ReactDOM.render(
     <StyledEngineProvider injectFirst>
@@ -16,12 +17,14 @@ ReactDOM.render(
             <ThemeProvider theme={theme}>
                 <React.StrictMode>
                     <ApolloClientProvider>
-                        <BrowserRouter>
-                            <CssBaseline>
-                                <NavigationBar/>
-                                <Router/>
-                            </CssBaseline>
-                        </BrowserRouter>
+                        <AdminCommands>
+                            <BrowserRouter>
+                                <CssBaseline>
+                                    <NavigationBar/>
+                                    <Router/>
+                                </CssBaseline>
+                            </BrowserRouter>
+                        </AdminCommands>
                     </ApolloClientProvider>
                 </React.StrictMode>
             </ThemeProvider>

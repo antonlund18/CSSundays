@@ -1,6 +1,7 @@
 package com.antonl.cssundays.graphql.server
 
 import com.antonl.cssundays.graphql.mutations.*
+import com.antonl.cssundays.graphql.mutations.admin.AdminMatchMutations
 import com.antonl.cssundays.graphql.queries.*
 import com.antonl.cssundays.graphql.server.hooks.CustomSchemaGeneratorHooks
 import com.expediagroup.graphql.generator.SchemaGeneratorConfig
@@ -49,7 +50,8 @@ abstract class SchemaGenerator {
                     TopLevelObject(InviteToTeamMutations()),
                     TopLevelObject(NotificationMutations()),
                     TopLevelObject(TournamentMutations()),
-                    TopLevelObject(SharedTournamentAndTournamentRegistrationMutations())
+                    TopLevelObject(SharedTournamentAndTournamentRegistrationMutations()),
+                    TopLevelObject(AdminMatchMutations())
                 ),
             )
         }

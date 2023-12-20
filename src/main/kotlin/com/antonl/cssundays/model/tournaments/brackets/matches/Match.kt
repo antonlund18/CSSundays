@@ -1,9 +1,13 @@
 package com.antonl.cssundays.model.tournaments.brackets
 
 import com.antonl.cssundays.model.core.Team
+import com.antonl.cssundays.model.tournaments.brackets.matches.MatchPhase
 import com.antonl.cssundays.model.util.PersistedNodeWithParent
 import java.time.LocalDateTime
-import javax.persistence.*
+import javax.persistence.CascadeType
+import javax.persistence.Entity
+import javax.persistence.OneToOne
+import javax.persistence.Table
 
 @Entity
 @Table(name = "matches")
@@ -16,17 +20,12 @@ class Match(
 
     val createdTs: LocalDateTime = LocalDateTime.now(),
 
-    @Enumerated(EnumType.STRING)
-    val result: MatchResult = MatchResult.COMING_UP,
+    @OneToOne(cascade = [CascadeType.ALL])
+    val phase: MatchPhase = MatchPhase(),
 
     parent: Match? = null
-) : PersistedNodeWithParent<Match>(parent)
-
-
-enum class MatchResult {
-    WIN_TEAM_1,
-    WIN_TEAM_2,
-    IN_PROGRESS,
-    COMING_UP,
-    CANCELLED
+) : PersistedNodeWithParent<Match>(parent) {
+    init {
+        phase.match = this
+    }
 }

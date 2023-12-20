@@ -59,19 +59,43 @@ export type Match = {
   id?: Maybe<Scalars['Int']>;
   left?: Maybe<Match>;
   parent?: Maybe<Match>;
-  result: MatchResult;
+  phase: MatchPhase;
   right?: Maybe<Match>;
   team1?: Maybe<Team>;
   team2?: Maybe<Team>;
 };
 
-export enum MatchResult {
+export type MatchPhase = {
+  __typename?: 'MatchPhase';
+  id?: Maybe<Scalars['Int']>;
+  match?: Maybe<Match>;
+  phase: MatchPhaseType;
+  state?: Maybe<MatchPhaseState>;
+};
+
+export type MatchPhaseState = {
+  createdTs: Scalars['LocalDateTime'];
+  endTs?: Maybe<Scalars['LocalDateTime']>;
+  id?: Maybe<Scalars['Int']>;
+};
+
+export enum MatchPhaseType {
   Cancelled = 'CANCELLED',
-  ComingUp = 'COMING_UP',
   InProgress = 'IN_PROGRESS',
+  PickAndBan = 'PICK_AND_BAN',
+  ReadyCheck = 'READY_CHECK',
+  WaitingForTeams = 'WAITING_FOR_TEAMS',
+  WaitingToStart = 'WAITING_TO_START',
   WinTeam_1 = 'WIN_TEAM_1',
   WinTeam_2 = 'WIN_TEAM_2'
 }
+
+export type MatchReadyCheckPhaseState = MatchPhaseState & {
+  __typename?: 'MatchReadyCheckPhaseState';
+  createdTs: Scalars['LocalDateTime'];
+  endTs?: Maybe<Scalars['LocalDateTime']>;
+  id?: Maybe<Scalars['Int']>;
+};
 
 export type Mutation = {
   __typename?: 'Mutation';
@@ -80,6 +104,7 @@ export type Mutation = {
   createInviteToTeam?: Maybe<InviteToTeam>;
   createNotification?: Maybe<Notification>;
   createTeam?: Maybe<Team>;
+  createTestMatch?: Maybe<Match>;
   createTournament?: Maybe<Tournament>;
   createUser: Scalars['String'];
   declineInvitation?: Maybe<InviteToTeam>;
@@ -444,7 +469,7 @@ export type GetMatchByIdQueryVariables = Exact<{
 }>;
 
 
-export type GetMatchByIdQuery = { __typename?: 'Query', getMatchById?: { __typename?: 'Match', id?: number, team1?: { __typename?: 'Team', id?: number, name: string, picture?: string, users: Array<{ __typename?: 'User', id?: number, playertag: string, picture?: string }> }, team2?: { __typename?: 'Team', id?: number, name: string, picture?: string, users: Array<{ __typename?: 'User', id?: number, playertag: string, picture?: string }> } } };
+export type GetMatchByIdQuery = { __typename?: 'Query', getMatchById?: { __typename?: 'Match', id?: number, team1?: { __typename?: 'Team', id?: number, name: string, picture?: string, users: Array<{ __typename?: 'User', id?: number, playertag: string, picture?: string }> }, team2?: { __typename?: 'Team', id?: number, name: string, picture?: string, users: Array<{ __typename?: 'User', id?: number, playertag: string, picture?: string }> }, phase: { __typename?: 'MatchPhase', phase: MatchPhaseType, state?: { __typename?: 'MatchReadyCheckPhaseState', createdTs: any, endTs?: any } } } };
 
 export type GetAllNotificationsQueryVariables = Exact<{
   userId: Scalars['Int'];
@@ -533,7 +558,7 @@ export type GenerateBracketMutationVariables = Exact<{
 }>;
 
 
-export type GenerateBracketMutation = { __typename?: 'Mutation', generateBracket?: { __typename?: 'Tournament', id?: number, bracket?: { __typename?: 'Bracket', id?: number, root?: { __typename?: 'Match', id?: number, result: MatchResult, left?: { __typename?: 'Match', id?: number }, right?: { __typename?: 'Match', id?: number }, parent?: { __typename?: 'Match', id?: number }, team1?: { __typename?: 'Team', id?: number, name: string }, team2?: { __typename?: 'Team', id?: number, name: string } } } } };
+export type GenerateBracketMutation = { __typename?: 'Mutation', generateBracket?: { __typename?: 'Tournament', id?: number, bracket?: { __typename?: 'Bracket', id?: number, root?: { __typename?: 'Match', id?: number, left?: { __typename?: 'Match', id?: number }, right?: { __typename?: 'Match', id?: number }, parent?: { __typename?: 'Match', id?: number }, team1?: { __typename?: 'Team', id?: number, name: string }, team2?: { __typename?: 'Team', id?: number, name: string } } } } };
 
 export type GetTournamentByIdQueryVariables = Exact<{
   id: Scalars['Int'];
@@ -603,6 +628,11 @@ export type ChangePasswordMutationVariables = Exact<{
 
 
 export type ChangePasswordMutation = { __typename?: 'Mutation', changePassword?: { __typename?: 'User', id?: number } };
+
+export type CreateTestMatchMutationVariables = Exact<{ [key: string]: never; }>;
+
+
+export type CreateTestMatchMutation = { __typename?: 'Mutation', createTestMatch?: { __typename?: 'Match', id?: number } };
 
 export type NewNotificationFragment = { __typename?: 'Notification', id?: number, isSeen: boolean };
 
@@ -952,6 +982,15 @@ export const GetMatchByIdDocument = gql`
         id
         playertag
         picture
+      }
+    }
+    phase {
+      phase
+      state {
+        ... on MatchReadyCheckPhaseState {
+          createdTs
+          endTs
+        }
       }
     }
   }
@@ -1513,7 +1552,6 @@ export const GenerateBracketDocument = gql`
           id
           name
         }
-        result
       }
     }
   }
@@ -1922,6 +1960,38 @@ export function useChangePasswordMutation(baseOptions?: Apollo.MutationHookOptio
 export type ChangePasswordMutationHookResult = ReturnType<typeof useChangePasswordMutation>;
 export type ChangePasswordMutationResult = Apollo.MutationResult<ChangePasswordMutation>;
 export type ChangePasswordMutationOptions = Apollo.BaseMutationOptions<ChangePasswordMutation, ChangePasswordMutationVariables>;
+export const CreateTestMatchDocument = gql`
+    mutation createTestMatch {
+  createTestMatch {
+    id
+  }
+}
+    `;
+export type CreateTestMatchMutationFn = Apollo.MutationFunction<CreateTestMatchMutation, CreateTestMatchMutationVariables>;
+
+/**
+ * __useCreateTestMatchMutation__
+ *
+ * To run a mutation, you first call `useCreateTestMatchMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useCreateTestMatchMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [createTestMatchMutation, { data, loading, error }] = useCreateTestMatchMutation({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useCreateTestMatchMutation(baseOptions?: Apollo.MutationHookOptions<CreateTestMatchMutation, CreateTestMatchMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<CreateTestMatchMutation, CreateTestMatchMutationVariables>(CreateTestMatchDocument, options);
+      }
+export type CreateTestMatchMutationHookResult = ReturnType<typeof useCreateTestMatchMutation>;
+export type CreateTestMatchMutationResult = Apollo.MutationResult<CreateTestMatchMutation>;
+export type CreateTestMatchMutationOptions = Apollo.BaseMutationOptions<CreateTestMatchMutation, CreateTestMatchMutationVariables>;
 export const ListAllOperations = {
   Query: {
     findAllInvitesForPlayer: 'findAllInvitesForPlayer',
@@ -1953,7 +2023,8 @@ export const ListAllOperations = {
     createUser: 'createUser',
     loginUser: 'loginUser',
     updateUser: 'updateUser',
-    changePassword: 'changePassword'
+    changePassword: 'changePassword',
+    createTestMatch: 'createTestMatch'
   },
   Fragment: {
     NewNotification: 'NewNotification'

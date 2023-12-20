@@ -47,6 +47,15 @@ gql`
                     playertag,
                     picture
                 }
+            },
+            phase {
+                phase,
+                state {
+                    ... on MatchReadyCheckPhaseState {
+                        createdTs,
+                        endTs
+                    }
+                }
             }
         }
     }

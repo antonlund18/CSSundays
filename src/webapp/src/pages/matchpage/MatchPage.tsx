@@ -4,8 +4,6 @@ import {CenteredPage} from "../../components/CenteredPage";
 import {makeStyles} from "@mui/styles";
 import {useParams} from "react-router-dom";
 import {useGetMatchById} from "../../hooks/api/useMatch";
-import {getPictureLinkFromKey} from "../../util/StorageHelper";
-import {ObjectType} from "../../codegen/generated-types";
 import {MagePageTeamPosition, MatchPageTeam} from "./MatchPageTeam";
 import {MatchPagePhaseContainer} from "./MatchPagePhaseContainer";
 import {MatchPageChatContainer} from "./MatchPageChatContainer";
@@ -44,7 +42,11 @@ const useStyles = makeStyles({
 export const MatchPage = () => {
     const classes = useStyles()
     const urlParams = useParams()
-    const {match} = useGetMatchById(parseInt(urlParams?.matchId ?? "-1"))
+    const {match, loading} = useGetMatchById(parseInt(urlParams?.matchId ?? "-1"))
+
+    if (loading) {
+        return <></>
+    }
 
     if (!match) {
         return <Error404/>
@@ -59,7 +61,7 @@ export const MatchPage = () => {
             <MatchPageTeam position={MagePageTeamPosition.RIGHT} team={match.team2}/>
         </Grid>
         <Divider sx={{marginTop: "16px"}}/>
-        <MatchPagePhaseContainer team1Captain={match.team1?.users[0]} team2Captain={match.team2?.users[0]}/>
+        <MatchPagePhaseContainer match={match}/>
         <Divider sx={{margin: "16px"}}/>
         <Grid container xs={12}>
             <MatchPageChatContainer/>
