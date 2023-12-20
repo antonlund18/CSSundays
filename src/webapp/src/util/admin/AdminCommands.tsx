@@ -1,7 +1,8 @@
 import * as React from "react"
-import {useEffect, useState} from "react"
-import {Autocomplete, Popover, TextField} from "@mui/material";
+import {useEffect, useRef, useState} from "react"
+import {Autocomplete, TextField} from "@mui/material";
 import {AdminCommandCreateMatch} from "./AdminChangePlayerName";
+
 
 export const AdminCommands = (props: React.PropsWithChildren<any>) => {
     const [open, setOpen] = useState(false)
@@ -11,6 +12,7 @@ export const AdminCommands = (props: React.PropsWithChildren<any>) => {
     const [anchorX, setAnchorX] = useState<number>(0)
     const [anchorY, setAnchorY] = useState<number>(0)
     const [activeElement, setActiveElement] = useState<JSX.Element | null>(null)
+    const inputRef = useRef<HTMLInputElement>()
 
     const Commands = {
         createMatch: <AdminCommandCreateMatch/>
@@ -23,7 +25,13 @@ export const AdminCommands = (props: React.PropsWithChildren<any>) => {
         return () => {
             window.removeEventListener("keydown", handleKeyPress)
         }
-    }, [currentMouseY, currentMouseX])
+    }, [currentMouseY, currentMouseX, open])
+
+    useEffect(() => {
+        if (open && inputRef) {
+            inputRef.current?.focus()
+        }
+    }, [open, inputRef])
 
     const handleKeyPress = (e: KeyboardEvent) => {
         if (e.ctrlKey && e.shiftKey && e.code === 'KeyA') {
@@ -41,10 +49,12 @@ export const AdminCommands = (props: React.PropsWithChildren<any>) => {
         setCurrentMouseY(e.clientY)
     }
 
-    const handleClose = () => {
-        setCommandSearch("")
-        setActiveElement(null)
-        setOpen(false)
+    const handleClose = (e: React.KeyboardEvent) => {
+        if (e.code === "Escape") {
+            setCommandSearch("")
+            setActiveElement(null)
+            setOpen(false)
+        }
     }
 
     const handleCommandSelect = (e: React.KeyboardEvent) => {
@@ -60,14 +70,16 @@ export const AdminCommands = (props: React.PropsWithChildren<any>) => {
 
     return <div onMouseMove={updateCursor}>
         {props.children}
-        <Popover open={open} onClose={handleClose} anchorReference={"anchorPosition"}
-                 anchorPosition={{top: anchorY, left: anchorX}}>
+        <div onKeyDown={handleClose}
+             style={{display: open ? "block" : "none", position: "absolute", top: anchorY, left: anchorX, backgroundColor: "white", borderRadius: "4px", zIndex: 9999}}>
             {activeElement === null ?
                 <Autocomplete
                     renderInput={(params) => (
                         <TextField {...params}
                                    sx={{width: "400px"}}
                                    onKeyDown={e => handleCommandSelect(e)}
+                                   focused
+                                   inputRef={inputRef}
                                    autoFocus/>)}
                     inputValue={commandSearch}
                     onInputChange={(event, newSearch) => setCommandSearch(newSearch)}
@@ -82,6 +94,6 @@ export const AdminCommands = (props: React.PropsWithChildren<any>) => {
                         }
                     }}
                 /> : activeElement}
-        </Popover>
+        </div>
     </div>
 }
