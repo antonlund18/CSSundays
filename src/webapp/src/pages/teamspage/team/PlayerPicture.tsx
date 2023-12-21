@@ -45,16 +45,20 @@ const useStyles = makeStyles<Theme, StylesProps>(theme => ({
 }))
 
 export type PlayerPictureProps = {
-    player: User
+    player: User | null
     style?: CSSProperties
 }
 
 export const PlayerPicture = (props: PlayerPictureProps): JSX. Element => {
     const {player} = props
-    const playerPictureURL = getPictureLinkFromKey(player.picture ?? null, ObjectType.User)
-    const playerName = player.playertag ? player.playertag : ""
-    const classes = useStyles({playerPictureURL: playerPictureURL, playerName: playerName, style: props.style});
     const navigate = useNavigate();
+    const playerPictureURL = getPictureLinkFromKey(player?.picture ?? null, ObjectType.User)
+    const playerName = player?.playertag ? player.playertag : ""
+    const classes = useStyles({playerPictureURL: playerPictureURL, playerName: playerName, style: props.style});
+
+    if (!player) {
+        return <></>
+    }
 
     return <div key={player.playertag} className={classes.playerContainer}
                 onClick={() => navigate("/players/" + player.id)}>

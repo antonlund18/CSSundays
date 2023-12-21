@@ -6,11 +6,6 @@ import {makeStyles} from "@mui/styles";
 import {PlayerPicture} from "../teamspage/team/PlayerPicture";
 
 const useStyles = makeStyles({
-    teamContainer: {
-        display: "flex",
-        justifyContent: "center",
-        flexDirection: "column",
-    },
     vsContainer: {
         display: "flex",
         justifyContent: "center",
@@ -18,7 +13,7 @@ const useStyles = makeStyles({
     },
     teamPicture: {
         border: "2px solid white",
-        width: "96px",
+        height: "100%",
         aspectRatio: "1/1",
         objectFit: "cover",
         marginRight: "16px",
@@ -39,21 +34,28 @@ type MatchPageTeamProps = {
 export const MatchPageTeam = (props: MatchPageTeamProps) => {
     const classes = useStyles()
 
-    if (!props.team) {
-        return <></>
-    }
-
-    return <Grid item xs={5} className={classes.teamContainer}>
+    return <Grid item xs={5}>
         <div style={{
             width: "100%",
+            height: "100px",
             display: "flex",
             alignItems: "center",
             flexDirection: props.position === MagePageTeamPosition.LEFT ? "row" : "row-reverse"
         }}>
-            <img src={getPictureLinkFromKey(props.team.picture ?? "", ObjectType.Team)}
-                 className={classes.teamPicture}/>
-            <Typography variant={"h2"} color={props.position !== MagePageTeamPosition.LEFT ? "error" : "primary"}
-                        sx={{textTransform: "none"}}>{props.team.name}</Typography>
+            {props.team ?
+                <>
+                    <img src={getPictureLinkFromKey(props.team?.picture ?? "", ObjectType.Team)}
+                         className={classes.teamPicture}/>
+                    <Typography variant={"h2"}
+                                color={props.position !== MagePageTeamPosition.LEFT ? "error" : "primary"}
+                                sx={{textTransform: "none"}}>{props.team?.name}</Typography>
+                </> :
+                <>
+                    <img src={getPictureLinkFromKey("unknown.png", ObjectType.Team)} className={classes.teamPicture}/>
+                    <Typography variant={"h2"}
+                                color={props.position !== MagePageTeamPosition.LEFT ? "error" : "primary"}
+                                sx={{textTransform: "none"}}>TBD</Typography>
+                </>}
         </div>
         <div style={{
             width: "100%",
@@ -61,7 +63,7 @@ export const MatchPageTeam = (props: MatchPageTeamProps) => {
             justifyContent: props.position === MagePageTeamPosition.LEFT ? "end" : "start",
             marginTop: "32px"
         }}>
-            {new Array(5).fill(props.team.users[0]).map(player => {
+            {new Array(5).fill(props.team?.users[0]).map(player => {
                 return <PlayerPicture player={player}/>
             })}
         </div>
