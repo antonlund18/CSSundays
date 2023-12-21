@@ -113,7 +113,7 @@ export const TournamentBracketMatch = (props: TournamentBracketMatchProps): JSX.
 
     const {team1, team2} = props.match
 
-    return <Button className={classes.match} onClick={() => navigate(`matches/${props.match.id}` ?? "")}>
+    return <Button className={classes.match} onClick={() => navigate(`/matches/${props.match.id}` ?? "")}>
         <ListItem className={classes.team}>
             {team1 ?
                 <TournamentBracketMatchTeam team={team1} isCurrentUserOnTeam={currentPlayerIsOnTeam(team1)}/> :

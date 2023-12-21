@@ -11,7 +11,7 @@ import {AdminCreateTournamentPage} from "../pages/admin/tournaments/AdminCreateT
 import {PlayersPage} from "../pages/teamspage/team/PlayersPage";
 import {AdminPage} from "../pages/admin/AdminPage";
 import {Error404} from "../pages/Error404";
-import { MatchPage } from "../pages/matchpage/MatchPage";
+import {MatchPage} from "../pages/matchpage/MatchPage";
 
 export const Router = (): JSX.Element => {
     const mainRoutes = [{
@@ -25,14 +25,11 @@ export const Router = (): JSX.Element => {
             element: <TournamentsPage/>
         }, {
             path: ":tournamentId",
-            children: [{
-                index: true,
-                element: <TournamentPage/>
-            }, {
-                path: "/tournaments/:tournamentId/matches/:matchId",
-                element: <MatchPage/>
-            }]
+            element: <TournamentPage/>
         }],
+    }, {
+        path: "/matches/:matchId",
+        element: <MatchPage/>
     }, {
         path: "/admin",
         children: [{
