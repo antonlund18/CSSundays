@@ -3,6 +3,7 @@ import {makeStyles} from "@mui/styles";
 import {Match, MatchPhaseType} from "../../codegen/generated-types";
 import {MatchPagePickAndBanPhase} from "./phases/MatchPagePickAndBanPhase";
 import {MatchPageWaitingForTeamsPhase} from "./phases/MatchPageWaitingForTeamsPhase";
+import {MatchPageReadyCheckPhase} from "./phases/MatchPageReadyCheckPhase";
 
 const useStyles = makeStyles(theme => ({
     phaseContainer: {
@@ -24,11 +25,13 @@ export const MatchPagePhaseContainer = (props: MatchPagePhaseContainerProps) => 
     const team2Captain = props.match.team2?.users[0]
 
     const getCurrentPhaseComponent = () => {
-        switch (props.match.phase.phase) {
+        switch (props.match.currentPhase.phaseType) {
             case MatchPhaseType.WaitingForTeams:
                 return <MatchPageWaitingForTeamsPhase/>
             case MatchPhaseType.PickAndBan:
                 return <MatchPagePickAndBanPhase team1Captain={team1Captain} team2Captain={team2Captain}/>
+            case MatchPhaseType.ReadyCheck:
+                return <MatchPageReadyCheckPhase team1Captain={team1Captain} team2Captain={team2Captain}/>
         }
     }
 

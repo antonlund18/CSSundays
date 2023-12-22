@@ -5,10 +5,10 @@ import javax.persistence.*
 
 @Entity
 @Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
-abstract class MatchPhaseState (
+abstract class MatchPhaseState(
     @Id
     @GeneratedValue(strategy = GenerationType.TABLE)
-    open var id: Int? = null,
+    open var id: Int = -1,
 
     open val createdTs: LocalDateTime = LocalDateTime.now(),
 

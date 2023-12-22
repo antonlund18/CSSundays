@@ -48,8 +48,8 @@ gql`
                     picture
                 }
             },
-            phase {
-                phase,
+            currentPhase {
+                phaseType,
                 state {
                     ... on MatchReadyCheckPhaseState {
                         createdTs,

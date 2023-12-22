@@ -1,13 +1,14 @@
 package com.antonl.cssundays.model.tournaments.brackets.matches
 
-import com.antonl.cssundays.model.core.User
-import javax.persistence.Entity
-import javax.persistence.Table
+import java.time.LocalDateTime
+import javax.persistence.*
 
 @Entity
 @Table(name = "match_ready_check_phase_state")
 class MatchReadyCheckPhaseState(
-    captain1: User,
-    captain2: User,
-    readyPlayers: MutableList<User> = mutableListOf()
-) : MatchPhaseState()
+    @OneToOne(cascade = [CascadeType.ALL])
+    val teamOneAction: MatchReadyCheckPhaseCaptainPerTeamAction,
+
+    @OneToOne(cascade = [CascadeType.ALL])
+    val teamTwoAction: MatchReadyCheckPhaseCaptainPerTeamAction,
+) : MatchPhaseState(endTs = LocalDateTime.now().plusMinutes(15))

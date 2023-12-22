@@ -14,7 +14,8 @@ import {BracketContextProvider} from "./tabs/BracketContextProvider";
 const useStyles = makeStyles(theme => ({
     headerSection: {
         backgroundColor: "white",
-        marginBottom: theme.spacing(4)
+        marginBottom: theme.spacing(4),
+        borderRadius: "4px 4px 0px 0px"
     },
     header: {
         padding: theme.spacing(2),

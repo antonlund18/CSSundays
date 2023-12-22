@@ -2,7 +2,7 @@ import * as React from "react";
 import {Divider, Menu, MenuItem, Typography} from "@mui/material";
 import {useNavigate} from "react-router-dom";
 import {useMutateUser} from "../../hooks/api/useUser";
-import {User, UserRole} from "../../codegen/generated-types";
+import {User} from "../../codegen/generated-types";
 
 interface PlayerDropdownProps {
     player: User

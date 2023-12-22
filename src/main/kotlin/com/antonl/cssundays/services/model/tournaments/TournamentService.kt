@@ -16,7 +16,7 @@ import javax.transaction.Transactional
 class TournamentService(
     val tournamentRepository: TournamentRepository,
     val tournamentRegistrationService: TournamentRegistrationService,
-    val sharedTournamentAndTournamentRegistrationService: SharedTournamentAndTournamentRegistrationService
+    val matchService: MatchService,
 ) {
     fun saveTournament(tournament: Tournament): Tournament {
         return tournamentRepository.save(tournament)
@@ -76,7 +76,7 @@ class TournamentService(
         val numberOfMatches = calculateNumberOfMatches(registeredTeams.size)
 
         BracketMatchInitializer(numberOfMatches).traverseTree(bracket)
-        BracketTeamPopulator(registeredTeams).populateTree(bracket)
+        BracketTeamPopulator(registeredTeams, matchService).populateTree(bracket)
         return saveTournament(tournament)
     }
 

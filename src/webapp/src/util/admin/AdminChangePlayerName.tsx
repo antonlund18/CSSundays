@@ -1,22 +1,8 @@
 import * as React from "react"
 import {TextField} from "@mui/material";
-import {useChangePasswordMutation, useCreateTestMatchMutation} from "../../codegen/generated-types";
-import {useState} from "react";
+import {useCreateTestMatchMutation} from "../../codegen/generated-types";
 
-enum Types {
-    NUMBER,
-    STRING
-}
-
-type Parameter = {
-    name: string
-    type: Types
-}
-
-type AdminCommandChangePlayerNameProps = {
-}
-
-export const AdminCommandCreateMatch = (props: AdminCommandChangePlayerNameProps) => {
+export const AdminCommandCreateMatch = () => {
     const [createTestMatch] = useCreateTestMatchMutation()
 
     const handleCreateMatch = (e: React.KeyboardEvent) => {
@@ -25,5 +11,5 @@ export const AdminCommandCreateMatch = (props: AdminCommandChangePlayerNameProps
         }
     }
 
-    return <TextField sx={{width: "400px"}} autoFocus onKeyDown={(e) => handleCreateMatch(e)}/>
+    return <TextField sx={{width: "400px"}} autoFocus onKeyDown={(e) => handleCreateMatch(e)} placeholder={"Press 'Enter' to confirm creating match"}/>
 }

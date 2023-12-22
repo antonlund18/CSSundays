@@ -7,6 +7,6 @@ import javax.persistence.*
 @Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
 @GraphQLIgnore
 abstract class PersistedNodeWithParent<T> (
-    @OneToOne
+    @OneToOne(cascade = [CascadeType.ALL])
     open var parent: T? = null
 ) : PersistedNode<T>() where T: PersistedNode<T>

@@ -25,6 +25,17 @@ export type Bracket = {
   tournament?: Maybe<Tournament>;
 };
 
+export enum ChangeMatchPhaseStrategy {
+  Cancelled = 'CANCELLED',
+  FinishedWinTeam_1 = 'FINISHED_WIN_TEAM_1',
+  FinishedWinTeam_2 = 'FINISHED_WIN_TEAM_2',
+  InProgress = 'IN_PROGRESS',
+  PickAndBanBo1 = 'PICK_AND_BAN_BO1',
+  ReadyCheckOneCaptainPerTeam = 'READY_CHECK_ONE_CAPTAIN_PER_TEAM',
+  WaitingForTeams = 'WAITING_FOR_TEAMS',
+  WaitingToStart = 'WAITING_TO_START'
+}
+
 export type EditUserInput = {
   description: Scalars['String'];
   email: Scalars['String'];
@@ -55,11 +66,12 @@ export enum InviteToTeamStatus {
 
 export type Match = {
   __typename?: 'Match';
+  allPhases: Array<MatchPhase>;
   createdTs: Scalars['LocalDateTime'];
+  currentPhase: MatchPhase;
   id?: Maybe<Scalars['Int']>;
   left?: Maybe<Match>;
   parent?: Maybe<Match>;
-  phase: MatchPhase;
   right?: Maybe<Match>;
   team1?: Maybe<Team>;
   team2?: Maybe<Team>;
@@ -67,39 +79,48 @@ export type Match = {
 
 export type MatchPhase = {
   __typename?: 'MatchPhase';
-  id?: Maybe<Scalars['Int']>;
+  id: Scalars['Int'];
   match?: Maybe<Match>;
-  phase: MatchPhaseType;
+  phaseType: MatchPhaseType;
   state?: Maybe<MatchPhaseState>;
 };
 
 export type MatchPhaseState = {
   createdTs: Scalars['LocalDateTime'];
   endTs?: Maybe<Scalars['LocalDateTime']>;
-  id?: Maybe<Scalars['Int']>;
+  id: Scalars['Int'];
 };
 
 export enum MatchPhaseType {
   Cancelled = 'CANCELLED',
+  Finished = 'FINISHED',
   InProgress = 'IN_PROGRESS',
   PickAndBan = 'PICK_AND_BAN',
   ReadyCheck = 'READY_CHECK',
   WaitingForTeams = 'WAITING_FOR_TEAMS',
-  WaitingToStart = 'WAITING_TO_START',
-  WinTeam_1 = 'WIN_TEAM_1',
-  WinTeam_2 = 'WIN_TEAM_2'
+  WaitingToStart = 'WAITING_TO_START'
 }
+
+export type MatchReadyCheckPhaseCaptainPerTeamAction = {
+  __typename?: 'MatchReadyCheckPhaseCaptainPerTeamAction';
+  captain: User;
+  id?: Maybe<Scalars['Int']>;
+  ready: Scalars['Boolean'];
+};
 
 export type MatchReadyCheckPhaseState = MatchPhaseState & {
   __typename?: 'MatchReadyCheckPhaseState';
   createdTs: Scalars['LocalDateTime'];
   endTs?: Maybe<Scalars['LocalDateTime']>;
-  id?: Maybe<Scalars['Int']>;
+  id: Scalars['Int'];
+  teamOneAction: MatchReadyCheckPhaseCaptainPerTeamAction;
+  teamTwoAction: MatchReadyCheckPhaseCaptainPerTeamAction;
 };
 
 export type Mutation = {
   __typename?: 'Mutation';
   acceptInvitation?: Maybe<InviteToTeam>;
+  changeMatchPhase?: Maybe<Match>;
   changePassword?: Maybe<User>;
   createInviteToTeam?: Maybe<InviteToTeam>;
   createNotification?: Maybe<Notification>;
@@ -124,6 +145,12 @@ export type Mutation = {
 
 export type MutationAcceptInvitationArgs = {
   invitationId: Scalars['Int'];
+};
+
+
+export type MutationChangeMatchPhaseArgs = {
+  changeMatchPhaseStrategy: ChangeMatchPhaseStrategy;
+  matchId: Scalars['Int'];
 };
 
 
@@ -469,7 +496,7 @@ export type GetMatchByIdQueryVariables = Exact<{
 }>;
 
 
-export type GetMatchByIdQuery = { __typename?: 'Query', getMatchById?: { __typename?: 'Match', id?: number, team1?: { __typename?: 'Team', id?: number, name: string, picture?: string, users: Array<{ __typename?: 'User', id?: number, playertag: string, picture?: string }> }, team2?: { __typename?: 'Team', id?: number, name: string, picture?: string, users: Array<{ __typename?: 'User', id?: number, playertag: string, picture?: string }> }, phase: { __typename?: 'MatchPhase', phase: MatchPhaseType, state?: { __typename?: 'MatchReadyCheckPhaseState', createdTs: any, endTs?: any } } } };
+export type GetMatchByIdQuery = { __typename?: 'Query', getMatchById?: { __typename?: 'Match', id?: number, team1?: { __typename?: 'Team', id?: number, name: string, picture?: string, users: Array<{ __typename?: 'User', id?: number, playertag: string, picture?: string }> }, team2?: { __typename?: 'Team', id?: number, name: string, picture?: string, users: Array<{ __typename?: 'User', id?: number, playertag: string, picture?: string }> }, currentPhase: { __typename?: 'MatchPhase', phaseType: MatchPhaseType, state?: { __typename?: 'MatchReadyCheckPhaseState', createdTs: any, endTs?: any } } } };
 
 export type GetAllNotificationsQueryVariables = Exact<{
   userId: Scalars['Int'];
@@ -633,6 +660,14 @@ export type CreateTestMatchMutationVariables = Exact<{ [key: string]: never; }>;
 
 
 export type CreateTestMatchMutation = { __typename?: 'Mutation', createTestMatch?: { __typename?: 'Match', id?: number } };
+
+export type ChangeMatchPhaseMutationVariables = Exact<{
+  matchId: Scalars['Int'];
+  changeMatchPhaseStrategy: ChangeMatchPhaseStrategy;
+}>;
+
+
+export type ChangeMatchPhaseMutation = { __typename?: 'Mutation', changeMatchPhase?: { __typename?: 'Match', id?: number, currentPhase: { __typename?: 'MatchPhase', id: number, phaseType: MatchPhaseType, state?: { __typename?: 'MatchReadyCheckPhaseState', id: number, createdTs: any, endTs?: any } } } };
 
 export type NewNotificationFragment = { __typename?: 'Notification', id?: number, isSeen: boolean };
 
@@ -984,8 +1019,8 @@ export const GetMatchByIdDocument = gql`
         picture
       }
     }
-    phase {
-      phase
+    currentPhase {
+      phaseType
       state {
         ... on MatchReadyCheckPhaseState {
           createdTs
@@ -2002,6 +2037,59 @@ export function useCreateTestMatchMutation(baseOptions?: Apollo.MutationHookOpti
 export type CreateTestMatchMutationHookResult = ReturnType<typeof useCreateTestMatchMutation>;
 export type CreateTestMatchMutationResult = Apollo.MutationResult<CreateTestMatchMutation>;
 export type CreateTestMatchMutationOptions = Apollo.BaseMutationOptions<CreateTestMatchMutation, CreateTestMatchMutationVariables>;
+export const ChangeMatchPhaseDocument = gql`
+    mutation changeMatchPhase($matchId: Int!, $changeMatchPhaseStrategy: ChangeMatchPhaseStrategy!) {
+  changeMatchPhase(
+    matchId: $matchId
+    changeMatchPhaseStrategy: $changeMatchPhaseStrategy
+  ) {
+    id
+    currentPhase {
+      id
+      phaseType
+      state {
+        ... on MatchPhaseState {
+          id
+          createdTs
+          endTs
+        }
+        ... on MatchReadyCheckPhaseState {
+          id
+          createdTs
+          endTs
+        }
+      }
+    }
+  }
+}
+    `;
+export type ChangeMatchPhaseMutationFn = Apollo.MutationFunction<ChangeMatchPhaseMutation, ChangeMatchPhaseMutationVariables>;
+
+/**
+ * __useChangeMatchPhaseMutation__
+ *
+ * To run a mutation, you first call `useChangeMatchPhaseMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useChangeMatchPhaseMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [changeMatchPhaseMutation, { data, loading, error }] = useChangeMatchPhaseMutation({
+ *   variables: {
+ *      matchId: // value for 'matchId'
+ *      changeMatchPhaseStrategy: // value for 'changeMatchPhaseStrategy'
+ *   },
+ * });
+ */
+export function useChangeMatchPhaseMutation(baseOptions?: Apollo.MutationHookOptions<ChangeMatchPhaseMutation, ChangeMatchPhaseMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<ChangeMatchPhaseMutation, ChangeMatchPhaseMutationVariables>(ChangeMatchPhaseDocument, options);
+      }
+export type ChangeMatchPhaseMutationHookResult = ReturnType<typeof useChangeMatchPhaseMutation>;
+export type ChangeMatchPhaseMutationResult = Apollo.MutationResult<ChangeMatchPhaseMutation>;
+export type ChangeMatchPhaseMutationOptions = Apollo.BaseMutationOptions<ChangeMatchPhaseMutation, ChangeMatchPhaseMutationVariables>;
 export const ListAllOperations = {
   Query: {
     findAllInvitesForPlayer: 'findAllInvitesForPlayer',
@@ -2034,7 +2122,8 @@ export const ListAllOperations = {
     loginUser: 'loginUser',
     updateUser: 'updateUser',
     changePassword: 'changePassword',
-    createTestMatch: 'createTestMatch'
+    createTestMatch: 'createTestMatch',
+    changeMatchPhase: 'changeMatchPhase'
   },
   Fragment: {
     NewNotification: 'NewNotification'

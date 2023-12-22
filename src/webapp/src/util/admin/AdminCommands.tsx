@@ -2,6 +2,7 @@ import * as React from "react"
 import {useEffect, useRef, useState} from "react"
 import {Autocomplete, TextField} from "@mui/material";
 import {AdminCommandCreateMatch} from "./AdminChangePlayerName";
+import {AdminCommandChangeMatchPhase} from "./AdminCommandChangeMatchPhase";
 
 
 export const AdminCommands = (props: React.PropsWithChildren<any>) => {
@@ -15,7 +16,8 @@ export const AdminCommands = (props: React.PropsWithChildren<any>) => {
     const inputRef = useRef<HTMLInputElement>()
 
     const Commands = {
-        createMatch: <AdminCommandCreateMatch/>
+        createMatch: <AdminCommandCreateMatch/>,
+        changeMatchPhase: <AdminCommandChangeMatchPhase/>
     }
     const possibleCommands = Object.keys(Commands)
 
@@ -36,6 +38,7 @@ export const AdminCommands = (props: React.PropsWithChildren<any>) => {
     const handleKeyPress = (e: KeyboardEvent) => {
         if (e.ctrlKey && e.shiftKey && e.code === 'KeyA') {
             setOpen(!open)
+            setActiveElement(null)
             setAnchorX(currentMouseX)
             setAnchorY(currentMouseY)
             setCommandSearch("")
@@ -47,14 +50,6 @@ export const AdminCommands = (props: React.PropsWithChildren<any>) => {
     const updateCursor = (e: React.MouseEvent) => {
         setCurrentMouseX(e.clientX)
         setCurrentMouseY(e.clientY)
-    }
-
-    const handleClose = (e: React.KeyboardEvent) => {
-        if (e.code === "Escape") {
-            setCommandSearch("")
-            setActiveElement(null)
-            setOpen(false)
-        }
     }
 
     const handleCommandSelect = (e: React.KeyboardEvent) => {
@@ -70,8 +65,7 @@ export const AdminCommands = (props: React.PropsWithChildren<any>) => {
 
     return <div onMouseMove={updateCursor}>
         {props.children}
-        <div onKeyDown={handleClose}
-             style={{display: open ? "block" : "none", position: "absolute", top: anchorY, left: anchorX, backgroundColor: "white", borderRadius: "4px", zIndex: 9999}}>
+        <div style={{display: open ? "block" : "none", position: "absolute", top: anchorY, left: anchorX, backgroundColor: "white", borderRadius: "4px", zIndex: 9999}}>
             {activeElement === null ?
                 <Autocomplete
                     renderInput={(params) => (
