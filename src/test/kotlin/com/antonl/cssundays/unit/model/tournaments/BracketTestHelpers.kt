@@ -31,12 +31,14 @@ class BracketTestHelpers {
         fun generateTeams(numberOfTeams: Int): List<Team> {
             val teams = mutableListOf<Team>()
 
+            val user = User(playertag = "Player", email = "player@mail.com")
             for (i in 1..numberOfTeams) {
                 teams.add(
                     Team(
                         id = i,
                         name = "Team${i}",
-                        owner = User(playertag = "Player${i}", email = "player${i}@mail.com")
+                        owner = user,
+                        users = mutableListOf(user)
                     )
                 )
             }

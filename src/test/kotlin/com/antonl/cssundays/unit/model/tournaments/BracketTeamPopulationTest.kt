@@ -89,7 +89,7 @@ internal class BracketTeamPopulationTest {
     private fun testLeafNodeWithTwoTeamsCorrectlyPopulated(match: Match) {
         match.parent?.let { parent ->
             if (matchHasXTeams(parent, 1)) {
-                testMatchWithOneTeamIsCorrectlyPopulated(parent!!)
+                testMatchWithOneTeamIsCorrectlyPopulated(parent)
             } else {
                 assertTrue(matchHasXTeams(parent, 0))
                 assertNotNull(parent.left)
