@@ -15,26 +15,9 @@ interface AdminTournamentRowProps {
 
 export const AdminTournamentRow = (props: AdminTournamentRowProps): JSX.Element => {
     const {formatDateTime} = useDateFormatter()
-    const {registerTeam, generateBracket} = useTournaments()
     const navigate = useNavigate()
     const [contextMenuOpen, setContextMenuOpen] = useState(false)
     const [contextMenuAnchor, setContextMenuAnchor] = useState<HTMLElement | null>(null)
-
-    const createDummyTeam = (e: React.MouseEvent) => {
-        if (props.tournament.id) {
-            registerTeam(props.tournament?.id, 1)
-        }
-        e.preventDefault()
-        e.stopPropagation()
-    }
-
-    const handleGenerateBracket = (e: React.MouseEvent) => {
-        if (props.tournament.id) {
-            generateBracket(props.tournament.id)
-        }
-        e.preventDefault()
-        e.stopPropagation()
-    }
 
     const handleOpenContextMenu = (e: React.MouseEvent<HTMLElement>) => {
         setContextMenuOpen(true)

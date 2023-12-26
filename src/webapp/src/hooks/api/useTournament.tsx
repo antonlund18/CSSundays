@@ -1,10 +1,10 @@
 import {
-    Match,
-    Tournament, TournamentFormat,
+    FindTournamentRegistrationByPlayerDocument,
+    Tournament,
+    TournamentFormat,
     useCreateTournamentMutation,
     useGenerateBracketMutation,
     useGetAllTournamentsQuery,
-    useGetMatchesByParentIdsQuery,
     useGetTournamentByIdQuery,
     useRegisterTeamMutation
 } from "../../codegen/generated-types";
@@ -52,11 +52,15 @@ export const useTournaments = () => {
         }
     })
 
-    const registerTeam = (tournamentId: number, teamId: number) => registerTeamMutation({
+    const registerTeam = (tournamentId: number, teamId: number, captainId: number) => registerTeamMutation({
         variables: {
             tournamentId,
-            teamId
-        }
+            teamId,
+            captainId
+        },
+        refetchQueries: [
+            FindTournamentRegistrationByPlayerDocument
+        ]
     })
 
     return {

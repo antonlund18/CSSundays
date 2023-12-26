@@ -1,7 +1,7 @@
 import {useGetTournamentById} from "../../hooks/api/useTournament";
 import {useNavigate, useParams} from "react-router-dom";
 import {CenteredPage} from "../../components/CenteredPage";
-import {CircularProgress, Divider, Tab, Tabs, Typography} from "@mui/material";
+import {Button, CircularProgress, Divider, Tab, Tabs, Typography} from "@mui/material";
 import {makeStyles} from "@mui/styles"
 import React, {useEffect, useState} from "react";
 import {BracketTabContent} from "./tabs/BracketTabContent";
@@ -10,6 +10,7 @@ import {RulesTab} from "./tabs/RulesTab";
 import {MediaTab} from "./tabs/MediaTab";
 import {TeamsTab} from "./tabs/TeamsTab";
 import {BracketContextProvider} from "./tabs/BracketContextProvider";
+import {TournamentRegistrationDialog} from "./TournamentRegistrationDialog";
 
 const useStyles = makeStyles(theme => ({
     headerSection: {
@@ -19,6 +20,9 @@ const useStyles = makeStyles(theme => ({
     },
     header: {
         padding: theme.spacing(2),
+        display: "flex",
+        justifyContent: "space-between",
+        alignItems: "center"
     },
     tabs: {
         display: "flex",
@@ -43,6 +47,7 @@ export const TournamentPage = () => {
     const urlParams = useParams();
     const {tournament} = useGetTournamentById(parseInt(urlParams.tournamentId ?? "-1"))
     const [value, setValue] = useState(0)
+    const [registrationDialogOpen, setRegistrationDialogOpen] = useState(false)
     const navigate = useNavigate()
 
     useEffect(() => {
@@ -69,9 +74,14 @@ export const TournamentPage = () => {
     return <CenteredPage>
         <div className={classes.headerSection}>
             <div className={classes.header}>
-                <Typography variant={"h2"} color={"primary"}>{tournament.name}</Typography>
-                <Typography
-                    variant={"caption"}>{numberOfRegisteredTeams} {numberOfRegisteredTeams === 1 ? "tilmeldt" : "tilmeldte"} hold</Typography>
+                <div>
+                    <Typography variant={"h2"} color={"primary"}>{tournament.name}</Typography>
+                    <Typography
+                        variant={"caption"}>{numberOfRegisteredTeams} {numberOfRegisteredTeams === 1 ? "tilmeldt" : "tilmeldte"} hold</Typography>
+                </div>
+                <div>
+                    <Button variant={"contained"} onClick={() => setRegistrationDialogOpen(true)}>+ Tilmeld</Button>
+                </div>
             </div>
             <Divider/>
             <Tabs className={classes.tabs} value={value} onChange={handleChangeTab} indicatorColor={"primary"}>
@@ -100,6 +110,7 @@ export const TournamentPage = () => {
         <TabPanel value={value} index={4}>
             <MediaTab/>
         </TabPanel>
+        <TournamentRegistrationDialog open={registrationDialogOpen} setOpen={setRegistrationDialogOpen} tournament={tournament}/>
     </CenteredPage>
 }
 

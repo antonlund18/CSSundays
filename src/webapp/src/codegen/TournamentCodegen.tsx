@@ -107,6 +107,11 @@ gql`
             numberOfTeamsAllowed,
             teamRegistrations {
                 id,
+                captain {
+                    id,
+                    playertag,
+                    picture
+                }
                 team {
                     id,
                     name
@@ -163,6 +168,77 @@ gql`
         removePublicationFromTournament(tournamentId: $tournamentId) {
             id,
             published
+        }
+    }
+`
+
+gql`
+    query findTournamentRegistrationByPlayer($tournamentId: Int!, $playerId: Int!) {
+        findTournamentRegistrationByPlayer(tournamentId: $tournamentId, playerId: $playerId) {
+            id
+            team {
+                id
+                name
+                picture
+                users {
+                    id
+                    playertag
+                    picture
+                }
+            },
+            tournament {
+                id
+            },
+            captain {
+                id
+            }
+            players {
+                id
+                playertag
+                picture
+            }
+        }
+    }
+`
+
+gql`
+    mutation deregisterTeamFromTournament($tournamentId: Int!, $teamId: Int!) {
+        deregisterTeamFromTournament(tournamentId: $tournamentId, teamId: $teamId) {
+            id
+            teamRegistrations {
+                id
+                team {
+                    id
+                    name
+                    picture
+                }
+                players {
+                    id
+                    playertag
+                    picture
+                }
+            }
+        }
+    }
+`
+
+gql`
+    mutation deregisterPlayerFromTournament($tournamentId: Int!, $playerId: Int!) {
+        deregisterPlayerFromTournament(tournamentId: $tournamentId, playerId: $playerId) {
+            id
+            teamRegistrations {
+                id
+                team {
+                    id
+                    name
+                    picture
+                }
+                players {
+                    id
+                    playertag
+                    picture
+                }
+            }
         }
     }
 `
