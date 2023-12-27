@@ -6,6 +6,7 @@ import com.antonl.cssundays.model.core.UserRole
 import com.antonl.cssundays.services.model.core.TeamService
 import com.antonl.cssundays.services.model.core.UserService
 import com.antonl.cssundays.services.model.tournaments.SharedTournamentAndTournamentRegistrationService
+import com.antonl.cssundays.services.model.tournaments.TournamentRegistrationService
 import com.antonl.cssundays.services.model.tournaments.TournamentService
 import com.expediagroup.graphql.server.operations.Mutation
 import org.springframework.beans.factory.annotation.Autowired
@@ -17,6 +18,9 @@ class SharedTournamentAndTournamentRegistrationMutations : Mutation {
     private lateinit var sharedTournamentAndTournamentRegistrationService: SharedTournamentAndTournamentRegistrationService
 
     @Autowired
+    private lateinit var tournamentRegistrationService: TournamentRegistrationService
+
+    @Autowired
     private lateinit var tournamentService: TournamentService
 
     @Autowired
@@ -25,11 +29,18 @@ class SharedTournamentAndTournamentRegistrationMutations : Mutation {
     @Autowired
     private lateinit var userService: UserService
 
-    suspend fun registerTeam(tournamentId: Int, teamId: Int, captainId: Int): Tournament? {
+    suspend fun registerTeamOrPlayer(tournamentId: Int, teamId: Int, playerId: Int): Tournament? {
         val tournament = tournamentService.getTournamentById(tournamentId) ?: return null
-        val captain = userService.findUserById(captainId) ?: return null
+        val player = userService.findUserById(playerId) ?: return null
         val team = teamService.findTeamById(teamId) ?: return null
-        sharedTournamentAndTournamentRegistrationService.createTournamentRegistration(tournament, team, captain)
+        val tournamentRegistration = tournamentRegistrationService.getTournamentRegistrationByTeam(tournament, team)
+
+        if (tournamentRegistration == null) {
+            sharedTournamentAndTournamentRegistrationService.createTournamentRegistration(tournament, team, player)
+        } else {
+           sharedTournamentAndTournamentRegistrationService.registerPlayer(tournamentRegistration, player)
+        }
+
         return tournament
     }
 }

@@ -2,8 +2,8 @@ import {gql} from "@apollo/client";
 
 
 gql`
-    mutation registerTeam($tournamentId: Int!, $teamId: Int!, $captainId: Int!) {
-        registerTeam(teamId: $teamId, tournamentId: $tournamentId, captainId: $captainId) {
+    mutation registerTeamOrPlayer($tournamentId: Int!, $teamId: Int!, $playerId: Int!) {
+        registerTeamOrPlayer(teamId: $teamId, tournamentId: $tournamentId, playerId: $playerId) {
             id,
             teamRegistrations {
                 id,

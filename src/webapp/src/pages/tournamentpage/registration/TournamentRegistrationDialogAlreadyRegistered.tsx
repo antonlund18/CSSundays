@@ -6,11 +6,11 @@ import {
     useDeregisterPlayerFromTournamentMutation,
     useDeregisterTeamFromTournamentMutation,
     User
-} from "../../codegen/generated-types";
+} from "../../../codegen/generated-types";
 import {CheckCircle} from "@mui/icons-material";
 import {Button, Typography} from "@mui/material";
-import {getPictureLinkFromKey} from "../../util/StorageHelper";
-import {PlayerPicture} from "../teamspage/team/PlayerPicture";
+import {getPictureLinkFromKey} from "../../../util/StorageHelper";
+import {PlayerPicture} from "../../teamspage/team/PlayerPicture";
 
 type TournamentRegistrationDialogAlreadyRegisteredProps = {
     tournamentRegistration: TournamentRegistration

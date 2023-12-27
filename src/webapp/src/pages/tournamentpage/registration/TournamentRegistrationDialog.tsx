@@ -1,13 +1,14 @@
 import {Dialog, DialogContent, DialogTitle, Divider, Typography} from "@mui/material"
 import * as React from "react"
-import {
-    Tournament,
-    TournamentRegistration, useGetTournamentRegistrationByPlayerQuery,
-} from "../../codegen/generated-types";
-import {useGetCurrentUser} from "../../hooks/api/useUser";
+import {useGetCurrentUser} from "../../../hooks/api/useUser";
 import {makeStyles} from "@mui/styles";
 import {TournamentRegistrationDialogNewRegistration} from "./TournamentRegistrationDialogNewRegistration";
 import {TournamentRegistrationDialogAlreadyRegistered} from "./TournamentRegistrationDialogAlreadyRegistered";
+import {
+    Tournament,
+    TournamentRegistration,
+    useGetTournamentRegistrationByPlayerQuery
+} from "../../../codegen/generated-types";
 
 const useStyles = makeStyles(theme => ({
     dialog: {

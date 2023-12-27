@@ -138,7 +138,7 @@ export type Mutation = {
   loginUser: Scalars['String'];
   markAllNotificationsAsSeenForUser: Array<Notification>;
   publishTournament?: Maybe<Tournament>;
-  registerTeam?: Maybe<Tournament>;
+  registerTeamOrPlayer?: Maybe<Tournament>;
   removePublicationFromTournament?: Maybe<Tournament>;
   setPictureAndGetPresignedRequest?: Maybe<RequestDto>;
   updateUser?: Maybe<User>;
@@ -254,8 +254,8 @@ export type MutationPublishTournamentArgs = {
 };
 
 
-export type MutationRegisterTeamArgs = {
-  captainId: Scalars['Int'];
+export type MutationRegisterTeamOrPlayerArgs = {
+  playerId: Scalars['Int'];
   teamId: Scalars['Int'];
   tournamentId: Scalars['Int'];
 };
@@ -551,14 +551,14 @@ export type SetPictureAndGetPresignedRequestMutationVariables = Exact<{
 
 export type SetPictureAndGetPresignedRequestMutation = { __typename?: 'Mutation', setPictureAndGetPresignedRequest?: { __typename?: 'RequestDTO', url: string, method: string, headers: Array<{ __typename?: 'HeaderDTO', name: string, value: string }> } };
 
-export type RegisterTeamMutationVariables = Exact<{
+export type RegisterTeamOrPlayerMutationVariables = Exact<{
   tournamentId: Scalars['Int'];
   teamId: Scalars['Int'];
-  captainId: Scalars['Int'];
+  playerId: Scalars['Int'];
 }>;
 
 
-export type RegisterTeamMutation = { __typename?: 'Mutation', registerTeam?: { __typename?: 'Tournament', id?: number, teamRegistrations: Array<{ __typename?: 'TournamentRegistration', id?: number, captain: { __typename?: 'User', id?: number, playertag: string, picture?: string }, team: { __typename?: 'Team', id?: number, name: string } }> } };
+export type RegisterTeamOrPlayerMutation = { __typename?: 'Mutation', registerTeamOrPlayer?: { __typename?: 'Tournament', id?: number, teamRegistrations: Array<{ __typename?: 'TournamentRegistration', id?: number, captain: { __typename?: 'User', id?: number, playertag: string, picture?: string }, team: { __typename?: 'Team', id?: number, name: string } }> } };
 
 export type GetAllTeamsQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -1261,12 +1261,12 @@ export function useSetPictureAndGetPresignedRequestMutation(baseOptions?: Apollo
 export type SetPictureAndGetPresignedRequestMutationHookResult = ReturnType<typeof useSetPictureAndGetPresignedRequestMutation>;
 export type SetPictureAndGetPresignedRequestMutationResult = Apollo.MutationResult<SetPictureAndGetPresignedRequestMutation>;
 export type SetPictureAndGetPresignedRequestMutationOptions = Apollo.BaseMutationOptions<SetPictureAndGetPresignedRequestMutation, SetPictureAndGetPresignedRequestMutationVariables>;
-export const RegisterTeamDocument = gql`
-    mutation registerTeam($tournamentId: Int!, $teamId: Int!, $captainId: Int!) {
-  registerTeam(
+export const RegisterTeamOrPlayerDocument = gql`
+    mutation registerTeamOrPlayer($tournamentId: Int!, $teamId: Int!, $playerId: Int!) {
+  registerTeamOrPlayer(
     teamId: $teamId
     tournamentId: $tournamentId
-    captainId: $captainId
+    playerId: $playerId
   ) {
     id
     teamRegistrations {
@@ -1284,34 +1284,34 @@ export const RegisterTeamDocument = gql`
   }
 }
     `;
-export type RegisterTeamMutationFn = Apollo.MutationFunction<RegisterTeamMutation, RegisterTeamMutationVariables>;
+export type RegisterTeamOrPlayerMutationFn = Apollo.MutationFunction<RegisterTeamOrPlayerMutation, RegisterTeamOrPlayerMutationVariables>;
 
 /**
- * __useRegisterTeamMutation__
+ * __useRegisterTeamOrPlayerMutation__
  *
- * To run a mutation, you first call `useRegisterTeamMutation` within a React component and pass it any options that fit your needs.
- * When your component renders, `useRegisterTeamMutation` returns a tuple that includes:
+ * To run a mutation, you first call `useRegisterTeamOrPlayerMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useRegisterTeamOrPlayerMutation` returns a tuple that includes:
  * - A mutate function that you can call at any time to execute the mutation
  * - An object with fields that represent the current status of the mutation's execution
  *
  * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
  *
  * @example
- * const [registerTeamMutation, { data, loading, error }] = useRegisterTeamMutation({
+ * const [registerTeamOrPlayerMutation, { data, loading, error }] = useRegisterTeamOrPlayerMutation({
  *   variables: {
  *      tournamentId: // value for 'tournamentId'
  *      teamId: // value for 'teamId'
- *      captainId: // value for 'captainId'
+ *      playerId: // value for 'playerId'
  *   },
  * });
  */
-export function useRegisterTeamMutation(baseOptions?: Apollo.MutationHookOptions<RegisterTeamMutation, RegisterTeamMutationVariables>) {
+export function useRegisterTeamOrPlayerMutation(baseOptions?: Apollo.MutationHookOptions<RegisterTeamOrPlayerMutation, RegisterTeamOrPlayerMutationVariables>) {
         const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useMutation<RegisterTeamMutation, RegisterTeamMutationVariables>(RegisterTeamDocument, options);
+        return Apollo.useMutation<RegisterTeamOrPlayerMutation, RegisterTeamOrPlayerMutationVariables>(RegisterTeamOrPlayerDocument, options);
       }
-export type RegisterTeamMutationHookResult = ReturnType<typeof useRegisterTeamMutation>;
-export type RegisterTeamMutationResult = Apollo.MutationResult<RegisterTeamMutation>;
-export type RegisterTeamMutationOptions = Apollo.BaseMutationOptions<RegisterTeamMutation, RegisterTeamMutationVariables>;
+export type RegisterTeamOrPlayerMutationHookResult = ReturnType<typeof useRegisterTeamOrPlayerMutation>;
+export type RegisterTeamOrPlayerMutationResult = Apollo.MutationResult<RegisterTeamOrPlayerMutation>;
+export type RegisterTeamOrPlayerMutationOptions = Apollo.BaseMutationOptions<RegisterTeamOrPlayerMutation, RegisterTeamOrPlayerMutationVariables>;
 export const GetAllTeamsDocument = gql`
     query getAllTeams {
   getAllTeams {
@@ -2389,7 +2389,7 @@ export const ListAllOperations = {
     createInviteToTeam: 'createInviteToTeam',
     markAllNotificationsAsSeenForUser: 'markAllNotificationsAsSeenForUser',
     setPictureAndGetPresignedRequest: 'setPictureAndGetPresignedRequest',
-    registerTeam: 'registerTeam',
+    registerTeamOrPlayer: 'registerTeamOrPlayer',
     incrementWins: 'incrementWins',
     incrementLosses: 'incrementLosses',
     createTeam: 'createTeam',

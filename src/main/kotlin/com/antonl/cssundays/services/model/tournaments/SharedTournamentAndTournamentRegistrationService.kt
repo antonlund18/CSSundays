@@ -33,4 +33,10 @@ class SharedTournamentAndTournamentRegistrationService(val tournamentRepository:
         tournamentRegistrationRepository.delete(registration)
         return tournamentRepository.save(tournament)
     }
+
+    fun registerPlayer(tournamentRegistration: TournamentRegistration, player: User) {
+        if (tournamentRegistration.team.users.find { it.id == player.id } == null) return
+        tournamentRegistration.players.add(player)
+        tournamentRegistrationRepository.save(tournamentRegistration)
+    }
 }

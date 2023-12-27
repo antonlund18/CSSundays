@@ -10,7 +10,7 @@ import {RulesTab} from "./tabs/RulesTab";
 import {MediaTab} from "./tabs/MediaTab";
 import {TeamsTab} from "./tabs/TeamsTab";
 import {BracketContextProvider} from "./tabs/BracketContextProvider";
-import {TournamentRegistrationDialog} from "./TournamentRegistrationDialog";
+import {TournamentRegistrationDialog} from "./registration/TournamentRegistrationDialog";
 
 const useStyles = makeStyles(theme => ({
     headerSection: {

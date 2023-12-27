@@ -6,7 +6,7 @@ import {
     useGenerateBracketMutation,
     useGetAllTournamentsQuery,
     useGetTournamentByIdQuery,
-    useRegisterTeamMutation
+    useRegisterTeamOrPlayerMutation
 } from "../../codegen/generated-types";
 
 export const useGetAllTournaments = () => {
@@ -32,7 +32,7 @@ export const useGetTournamentById = (id: number) => {
 export const useTournaments = () => {
     const [createTournamentMutation] = useCreateTournamentMutation();
     const [generateBracketMutation] = useGenerateBracketMutation();
-    const [registerTeamMutation] = useRegisterTeamMutation();
+    const [registerTeamOrPlayerMutation] = useRegisterTeamOrPlayerMutation();
 
     const createTournament = (name: string, date: string, numberOfTeamsAllowed: number, format: TournamentFormat, picture: string, description: string, rules: string) => createTournamentMutation({
         variables: {
@@ -52,11 +52,11 @@ export const useTournaments = () => {
         }
     })
 
-    const registerTeam = (tournamentId: number, teamId: number, captainId: number) => registerTeamMutation({
+    const registerTeamOrPlayer = (tournamentId: number, teamId: number, playerId: number) => registerTeamOrPlayerMutation({
         variables: {
             tournamentId,
             teamId,
-            captainId
+            playerId
         },
         refetchQueries: [
             GetTournamentRegistrationByPlayerDocument
@@ -66,6 +66,6 @@ export const useTournaments = () => {
     return {
         createTournament,
         generateBracket,
-        registerTeam
+        registerTeamOrPlayer
     }
 }

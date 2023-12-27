@@ -1,5 +1,5 @@
 import * as React from "react"
-import {Tournament, User} from "../../codegen/generated-types";
+import {Tournament, User} from "../../../codegen/generated-types";
 import {TournamentRegistrationDialogNewRegistrationTeamRow} from "./TournamentRegistrationDialogNewRegistrationTeamRow";
 
 type TournamentRegistrationDialogNewRegistrationProps = {

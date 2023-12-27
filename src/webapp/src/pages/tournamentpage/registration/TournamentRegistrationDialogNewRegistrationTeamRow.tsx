@@ -1,14 +1,14 @@
 import * as React from "react"
-import {getPictureLinkFromKey} from "../../util/StorageHelper";
+import {getPictureLinkFromKey} from "../../../util/StorageHelper";
 import {
     ObjectType,
     Team,
     Tournament,
     useGetTournamentRegistrationByTeamQuery,
     User
-} from "../../codegen/generated-types";
+} from "../../../codegen/generated-types";
 import {Button, Divider, Typography} from "@mui/material";
-import {useTournaments} from "../../hooks/api/useTournament";
+import {useTournaments} from "../../../hooks/api/useTournament";
 
 type TournamentRegistrationDialogNewRegistrationTeamRowProps = {
     tournament: Tournament
@@ -18,7 +18,8 @@ type TournamentRegistrationDialogNewRegistrationTeamRowProps = {
 }
 
 export const TournamentRegistrationDialogNewRegistrationTeamRow = (props: TournamentRegistrationDialogNewRegistrationTeamRowProps) => {
-    const {registerTeam} = useTournaments()
+    const {registerTeamOrPlayer} = useTournaments()
+
     const {data} = useGetTournamentRegistrationByTeamQuery({
         variables: {
             tournamentId: props.tournament.id ?? -1,
@@ -26,14 +27,14 @@ export const TournamentRegistrationDialogNewRegistrationTeamRow = (props: Tourna
         }
     })
 
-    const handleRegisterTeam = (team: Team) => {
+    const isRegistered = data?.getTournamentRegistrationByTeam !== null
+
+    const handleRegister = (team: Team) => {
         if (!props.tournament.id || !team.id || !props.currentUser?.id) {
             return
         }
-        registerTeam(props.tournament.id, team.id, props.currentUser.id)
+        registerTeamOrPlayer(props.tournament.id, team.id, props.currentUser.id)
     }
-
-    const isRegistered = data?.getTournamentRegistrationByTeam !== null
 
     return <>
         <div
@@ -48,7 +49,7 @@ export const TournamentRegistrationDialogNewRegistrationTeamRow = (props: Tourna
                                 style={{marginLeft: "16px", textTransform: "none", color: isRegistered ? "green" : "red"}}>{isRegistered ? "Tilmeldt" : "Ikke tilmeldt"}</Typography>
                 </div>
             </div>
-            <Button onClick={() => handleRegisterTeam(props.team)}>Tilmeld</Button>
+            <Button onClick={() => handleRegister(props.team)}>Tilmeld</Button>
         </div>
         {props.includeDivider &&
             <Divider sx={{marginTop: "8px", marginBottom: "8px"}}/>}
