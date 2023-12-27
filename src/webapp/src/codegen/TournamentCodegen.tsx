@@ -173,8 +173,8 @@ gql`
 `
 
 gql`
-    query findTournamentRegistrationByPlayer($tournamentId: Int!, $playerId: Int!) {
-        findTournamentRegistrationByPlayer(tournamentId: $tournamentId, playerId: $playerId) {
+    query getTournamentRegistrationByPlayer($tournamentId: Int!, $playerId: Int!) {
+        getTournamentRegistrationByPlayer(tournamentId: $tournamentId, playerId: $playerId) {
             id
             team {
                 id
@@ -193,6 +193,22 @@ gql`
                 id
             }
             players {
+                id
+                playertag
+                picture
+            }
+        }
+    }
+`
+
+gql`
+    query getTournamentRegistrationByTeam($tournamentId: Int!, $teamId: Int!) {
+        getTournamentRegistrationByTeam(tournamentId: $tournamentId, teamId: $teamId) {
+            id
+            team {
+                id
+            },
+            captain {
                 id
                 playertag
                 picture

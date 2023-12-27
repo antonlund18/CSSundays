@@ -3,20 +3,26 @@ package com.antonl.cssundays.graphql.mutations
 import com.antonl.cssundays.model.tournaments.Tournament
 import com.antonl.cssundays.model.tournaments.TournamentFormat
 import com.antonl.cssundays.services.model.core.TeamService
+import com.antonl.cssundays.services.model.core.UserService
 import com.antonl.cssundays.services.model.tournaments.SharedTournamentAndTournamentRegistrationService
 import com.antonl.cssundays.services.model.tournaments.TournamentService
 import com.expediagroup.graphql.server.operations.Mutation
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Component
 import java.time.LocalDateTime
+import javax.transaction.Transactional
 
 @Component
+@Transactional
 class TournamentMutations : Mutation {
     @Autowired
     private lateinit var tournamentService: TournamentService
 
     @Autowired
     private lateinit var teamService: TeamService
+
+    @Autowired
+    private lateinit var userService: UserService
 
     @Autowired
     private lateinit var sharedTournamentAndTournamentRegistrationService: SharedTournamentAndTournamentRegistrationService
@@ -41,5 +47,17 @@ class TournamentMutations : Mutation {
     suspend fun generateBracket(tournamentId: Int): Tournament? {
         val tournament = tournamentService.getTournamentById(tournamentId) ?: return null
         return tournamentService.generateBracket(tournament)
+    }
+
+    suspend fun deregisterTeamFromTournament(tournamentId: Int, teamId: Int): Tournament? {
+        val tournament = tournamentService.getTournamentById(tournamentId) ?: return null
+        val team = teamService.findTeamById(teamId) ?: return null
+        return sharedTournamentAndTournamentRegistrationService.deregisterTeamFromTournament(tournament, team)
+    }
+
+    suspend fun deregisterPlayerFromTournament(tournamentId: Int, playerId: Int): Tournament? {
+        val tournament = tournamentService.getTournamentById(tournamentId) ?: return null
+        val player = userService.findUserById(playerId) ?: return null
+        return sharedTournamentAndTournamentRegistrationService.deregisterPlayerFromTournament(tournament, player)
     }
 }

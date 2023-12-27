@@ -1,6 +1,6 @@
 import * as React from "react"
 import {
-    FindTournamentRegistrationByPlayerDocument,
+    GetTournamentRegistrationByPlayerDocument,
     ObjectType,
     TournamentRegistration,
     useDeregisterPlayerFromTournamentMutation,
@@ -34,7 +34,7 @@ export const TournamentRegistrationDialogAlreadyRegistered = (props: TournamentR
                     teamId: props.tournamentRegistration.team.id
                 },
                 refetchQueries: [
-                    FindTournamentRegistrationByPlayerDocument
+                    GetTournamentRegistrationByPlayerDocument
                 ]
             })
         }
@@ -46,7 +46,7 @@ export const TournamentRegistrationDialogAlreadyRegistered = (props: TournamentR
                     playerId: props.currentUser.id
                 },
                 refetchQueries: [
-                    FindTournamentRegistrationByPlayerDocument
+                    GetTournamentRegistrationByPlayerDocument
                 ]
             })
         }

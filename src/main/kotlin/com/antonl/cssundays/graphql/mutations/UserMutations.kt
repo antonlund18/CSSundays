@@ -19,8 +19,10 @@ import graphql.execution.DataFetcherResult
 import graphql.language.SourceLocation
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Component
+import javax.transaction.Transactional
 
 @Component
+@Transactional
 class UserMutations : Mutation {
 
     @Autowired

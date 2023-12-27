@@ -304,7 +304,6 @@ export type Query = {
   __typename?: 'Query';
   findAllInvitesForPlayer: Array<InviteToTeam>;
   findPendingInvitesForPlayer: Array<InviteToTeam>;
-  findTournamentRegistrationByPlayer?: Maybe<TournamentRegistration>;
   getAllNotifications: Array<Notification>;
   getAllTeams: Array<Team>;
   getAllTournaments: Array<Tournament>;
@@ -316,6 +315,8 @@ export type Query = {
   getMatchesByParentIds: Array<Match>;
   getTeamById?: Maybe<Team>;
   getTournamentById?: Maybe<Tournament>;
+  getTournamentRegistrationByPlayer?: Maybe<TournamentRegistration>;
+  getTournamentRegistrationByTeam?: Maybe<TournamentRegistration>;
   getUnseenNotifications: Array<Notification>;
   getUserById?: Maybe<User>;
   getUserBySlug?: Maybe<User>;
@@ -329,12 +330,6 @@ export type QueryFindAllInvitesForPlayerArgs = {
 
 export type QueryFindPendingInvitesForPlayerArgs = {
   playerId: Scalars['Int'];
-};
-
-
-export type QueryFindTournamentRegistrationByPlayerArgs = {
-  playerId: Scalars['Int'];
-  tournamentId: Scalars['Int'];
 };
 
 
@@ -375,6 +370,18 @@ export type QueryGetTeamByIdArgs = {
 
 export type QueryGetTournamentByIdArgs = {
   id: Scalars['Int'];
+};
+
+
+export type QueryGetTournamentRegistrationByPlayerArgs = {
+  playerId: Scalars['Int'];
+  tournamentId: Scalars['Int'];
+};
+
+
+export type QueryGetTournamentRegistrationByTeamArgs = {
+  teamId: Scalars['Int'];
+  tournamentId: Scalars['Int'];
 };
 
 
@@ -633,13 +640,21 @@ export type RemovePublicationFromTournamentMutationVariables = Exact<{
 
 export type RemovePublicationFromTournamentMutation = { __typename?: 'Mutation', removePublicationFromTournament?: { __typename?: 'Tournament', id?: number, published: boolean } };
 
-export type FindTournamentRegistrationByPlayerQueryVariables = Exact<{
+export type GetTournamentRegistrationByPlayerQueryVariables = Exact<{
   tournamentId: Scalars['Int'];
   playerId: Scalars['Int'];
 }>;
 
 
-export type FindTournamentRegistrationByPlayerQuery = { __typename?: 'Query', findTournamentRegistrationByPlayer?: { __typename?: 'TournamentRegistration', id?: number, team: { __typename?: 'Team', id?: number, name: string, picture?: string, users: Array<{ __typename?: 'User', id?: number, playertag: string, picture?: string }> }, tournament: { __typename?: 'Tournament', id?: number }, captain: { __typename?: 'User', id?: number }, players: Array<{ __typename?: 'User', id?: number, playertag: string, picture?: string }> } };
+export type GetTournamentRegistrationByPlayerQuery = { __typename?: 'Query', getTournamentRegistrationByPlayer?: { __typename?: 'TournamentRegistration', id?: number, team: { __typename?: 'Team', id?: number, name: string, picture?: string, users: Array<{ __typename?: 'User', id?: number, playertag: string, picture?: string }> }, tournament: { __typename?: 'Tournament', id?: number }, captain: { __typename?: 'User', id?: number }, players: Array<{ __typename?: 'User', id?: number, playertag: string, picture?: string }> } };
+
+export type GetTournamentRegistrationByTeamQueryVariables = Exact<{
+  tournamentId: Scalars['Int'];
+  teamId: Scalars['Int'];
+}>;
+
+
+export type GetTournamentRegistrationByTeamQuery = { __typename?: 'Query', getTournamentRegistrationByTeam?: { __typename?: 'TournamentRegistration', id?: number, team: { __typename?: 'Team', id?: number }, captain: { __typename?: 'User', id?: number, playertag: string, picture?: string } } };
 
 export type DeregisterTeamFromTournamentMutationVariables = Exact<{
   tournamentId: Scalars['Int'];
@@ -1832,9 +1847,9 @@ export function useRemovePublicationFromTournamentMutation(baseOptions?: Apollo.
 export type RemovePublicationFromTournamentMutationHookResult = ReturnType<typeof useRemovePublicationFromTournamentMutation>;
 export type RemovePublicationFromTournamentMutationResult = Apollo.MutationResult<RemovePublicationFromTournamentMutation>;
 export type RemovePublicationFromTournamentMutationOptions = Apollo.BaseMutationOptions<RemovePublicationFromTournamentMutation, RemovePublicationFromTournamentMutationVariables>;
-export const FindTournamentRegistrationByPlayerDocument = gql`
-    query findTournamentRegistrationByPlayer($tournamentId: Int!, $playerId: Int!) {
-  findTournamentRegistrationByPlayer(
+export const GetTournamentRegistrationByPlayerDocument = gql`
+    query getTournamentRegistrationByPlayer($tournamentId: Int!, $playerId: Int!) {
+  getTournamentRegistrationByPlayer(
     tournamentId: $tournamentId
     playerId: $playerId
   ) {
@@ -1865,33 +1880,77 @@ export const FindTournamentRegistrationByPlayerDocument = gql`
     `;
 
 /**
- * __useFindTournamentRegistrationByPlayerQuery__
+ * __useGetTournamentRegistrationByPlayerQuery__
  *
- * To run a query within a React component, call `useFindTournamentRegistrationByPlayerQuery` and pass it any options that fit your needs.
- * When your component renders, `useFindTournamentRegistrationByPlayerQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * To run a query within a React component, call `useGetTournamentRegistrationByPlayerQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetTournamentRegistrationByPlayerQuery` returns an object from Apollo Client that contains loading, error, and data properties
  * you can use to render your UI.
  *
  * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
  *
  * @example
- * const { data, loading, error } = useFindTournamentRegistrationByPlayerQuery({
+ * const { data, loading, error } = useGetTournamentRegistrationByPlayerQuery({
  *   variables: {
  *      tournamentId: // value for 'tournamentId'
  *      playerId: // value for 'playerId'
  *   },
  * });
  */
-export function useFindTournamentRegistrationByPlayerQuery(baseOptions: Apollo.QueryHookOptions<FindTournamentRegistrationByPlayerQuery, FindTournamentRegistrationByPlayerQueryVariables>) {
+export function useGetTournamentRegistrationByPlayerQuery(baseOptions: Apollo.QueryHookOptions<GetTournamentRegistrationByPlayerQuery, GetTournamentRegistrationByPlayerQueryVariables>) {
         const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useQuery<FindTournamentRegistrationByPlayerQuery, FindTournamentRegistrationByPlayerQueryVariables>(FindTournamentRegistrationByPlayerDocument, options);
+        return Apollo.useQuery<GetTournamentRegistrationByPlayerQuery, GetTournamentRegistrationByPlayerQueryVariables>(GetTournamentRegistrationByPlayerDocument, options);
       }
-export function useFindTournamentRegistrationByPlayerLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<FindTournamentRegistrationByPlayerQuery, FindTournamentRegistrationByPlayerQueryVariables>) {
+export function useGetTournamentRegistrationByPlayerLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetTournamentRegistrationByPlayerQuery, GetTournamentRegistrationByPlayerQueryVariables>) {
           const options = {...defaultOptions, ...baseOptions}
-          return Apollo.useLazyQuery<FindTournamentRegistrationByPlayerQuery, FindTournamentRegistrationByPlayerQueryVariables>(FindTournamentRegistrationByPlayerDocument, options);
+          return Apollo.useLazyQuery<GetTournamentRegistrationByPlayerQuery, GetTournamentRegistrationByPlayerQueryVariables>(GetTournamentRegistrationByPlayerDocument, options);
         }
-export type FindTournamentRegistrationByPlayerQueryHookResult = ReturnType<typeof useFindTournamentRegistrationByPlayerQuery>;
-export type FindTournamentRegistrationByPlayerLazyQueryHookResult = ReturnType<typeof useFindTournamentRegistrationByPlayerLazyQuery>;
-export type FindTournamentRegistrationByPlayerQueryResult = Apollo.QueryResult<FindTournamentRegistrationByPlayerQuery, FindTournamentRegistrationByPlayerQueryVariables>;
+export type GetTournamentRegistrationByPlayerQueryHookResult = ReturnType<typeof useGetTournamentRegistrationByPlayerQuery>;
+export type GetTournamentRegistrationByPlayerLazyQueryHookResult = ReturnType<typeof useGetTournamentRegistrationByPlayerLazyQuery>;
+export type GetTournamentRegistrationByPlayerQueryResult = Apollo.QueryResult<GetTournamentRegistrationByPlayerQuery, GetTournamentRegistrationByPlayerQueryVariables>;
+export const GetTournamentRegistrationByTeamDocument = gql`
+    query getTournamentRegistrationByTeam($tournamentId: Int!, $teamId: Int!) {
+  getTournamentRegistrationByTeam(tournamentId: $tournamentId, teamId: $teamId) {
+    id
+    team {
+      id
+    }
+    captain {
+      id
+      playertag
+      picture
+    }
+  }
+}
+    `;
+
+/**
+ * __useGetTournamentRegistrationByTeamQuery__
+ *
+ * To run a query within a React component, call `useGetTournamentRegistrationByTeamQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetTournamentRegistrationByTeamQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetTournamentRegistrationByTeamQuery({
+ *   variables: {
+ *      tournamentId: // value for 'tournamentId'
+ *      teamId: // value for 'teamId'
+ *   },
+ * });
+ */
+export function useGetTournamentRegistrationByTeamQuery(baseOptions: Apollo.QueryHookOptions<GetTournamentRegistrationByTeamQuery, GetTournamentRegistrationByTeamQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<GetTournamentRegistrationByTeamQuery, GetTournamentRegistrationByTeamQueryVariables>(GetTournamentRegistrationByTeamDocument, options);
+      }
+export function useGetTournamentRegistrationByTeamLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetTournamentRegistrationByTeamQuery, GetTournamentRegistrationByTeamQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<GetTournamentRegistrationByTeamQuery, GetTournamentRegistrationByTeamQueryVariables>(GetTournamentRegistrationByTeamDocument, options);
+        }
+export type GetTournamentRegistrationByTeamQueryHookResult = ReturnType<typeof useGetTournamentRegistrationByTeamQuery>;
+export type GetTournamentRegistrationByTeamLazyQueryHookResult = ReturnType<typeof useGetTournamentRegistrationByTeamLazyQuery>;
+export type GetTournamentRegistrationByTeamQueryResult = Apollo.QueryResult<GetTournamentRegistrationByTeamQuery, GetTournamentRegistrationByTeamQueryVariables>;
 export const DeregisterTeamFromTournamentDocument = gql`
     mutation deregisterTeamFromTournament($tournamentId: Int!, $teamId: Int!) {
   deregisterTeamFromTournament(tournamentId: $tournamentId, teamId: $teamId) {
@@ -2319,7 +2378,8 @@ export const ListAllOperations = {
     getTeamById: 'getTeamById',
     getAllTournaments: 'getAllTournaments',
     getTournamentById: 'getTournamentById',
-    findTournamentRegistrationByPlayer: 'findTournamentRegistrationByPlayer',
+    getTournamentRegistrationByPlayer: 'getTournamentRegistrationByPlayer',
+    getTournamentRegistrationByTeam: 'getTournamentRegistrationByTeam',
     getUserById: 'getUserById',
     getCurrentUser: 'getCurrentUser'
   },

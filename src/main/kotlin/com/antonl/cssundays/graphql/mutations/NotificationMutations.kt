@@ -1,13 +1,11 @@
 package com.antonl.cssundays.graphql.mutations
 
-import com.antonl.cssundays.model.core.User
 import com.antonl.cssundays.model.notifications.Notification
 import com.antonl.cssundays.model.notifications.NotificationType
 import com.antonl.cssundays.services.model.core.TeamService
 import com.antonl.cssundays.services.model.core.UserService
 import com.antonl.cssundays.services.model.notifications.NotificationService
 import com.expediagroup.graphql.server.operations.Mutation
-import org.aspectj.weaver.ast.Not
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Component
 import javax.transaction.Transactional

@@ -25,7 +25,7 @@ class BracketTestHelpers {
         }
 
         fun registerTeams(tournament: Tournament, teams: List<Team>) {
-            teams.forEach { sharedTournamentAndTournamentRegistrationService.createTournamentRegistration(tournament, it) }
+            teams.forEach { sharedTournamentAndTournamentRegistrationService.createTournamentRegistration(tournament, it, it.users[0]) }
         }
 
         fun generateTeams(numberOfTeams: Int): List<Team> {

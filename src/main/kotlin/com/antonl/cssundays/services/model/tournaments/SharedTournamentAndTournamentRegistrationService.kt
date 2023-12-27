@@ -1,6 +1,7 @@
 package com.antonl.cssundays.services.model.tournaments
 
 import com.antonl.cssundays.model.core.Team
+import com.antonl.cssundays.model.core.User
 import com.antonl.cssundays.model.tournaments.Tournament
 import com.antonl.cssundays.model.tournaments.TournamentRegistration
 import com.antonl.cssundays.repositories.TournamentRegistrationRepository
@@ -11,11 +12,25 @@ import javax.transaction.Transactional
 @Service
 @Transactional
 class SharedTournamentAndTournamentRegistrationService(val tournamentRepository: TournamentRepository, val tournamentRegistrationRepository: TournamentRegistrationRepository) {
-    fun createTournamentRegistration(tournament: Tournament, team: Team): TournamentRegistration {
-        var registration = TournamentRegistration(tournament = tournament, team = team)
+    fun createTournamentRegistration(tournament: Tournament, team: Team, captain: User): TournamentRegistration {
+        var registration = TournamentRegistration(tournament = tournament, team = team, captain = captain)
         registration = tournamentRegistrationRepository.save(registration)
         tournament.teamRegistrations.add(registration)
         tournamentRepository.save(tournament)
         return registration
+    }
+
+    fun deregisterPlayerFromTournament(tournament: Tournament, player: User): Tournament? {
+        val registration = tournamentRegistrationRepository.findByTournamentAndPlayers(tournament, player) ?: return null
+        registration.players.remove(player)
+        tournamentRegistrationRepository.save(registration)
+        return tournamentRepository.save(tournament)
+    }
+
+    fun deregisterTeamFromTournament(tournament: Tournament, team: Team): Tournament? {
+        val registration = tournamentRegistrationRepository.findByTournamentAndTeam(tournament, team) ?: return null
+        tournament.teamRegistrations.remove(registration)
+        tournamentRegistrationRepository.delete(registration)
+        return tournamentRepository.save(tournament)
     }
 }

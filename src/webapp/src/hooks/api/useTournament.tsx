@@ -1,5 +1,5 @@
 import {
-    FindTournamentRegistrationByPlayerDocument,
+    GetTournamentRegistrationByPlayerDocument,
     Tournament,
     TournamentFormat,
     useCreateTournamentMutation,
@@ -59,7 +59,7 @@ export const useTournaments = () => {
             captainId
         },
         refetchQueries: [
-            FindTournamentRegistrationByPlayerDocument
+            GetTournamentRegistrationByPlayerDocument
         ]
     })
 

@@ -1,6 +1,7 @@
 package com.antonl.cssundays.services.model.tournaments
 
 import com.antonl.cssundays.model.core.Team
+import com.antonl.cssundays.model.core.User
 import com.antonl.cssundays.model.tournaments.Tournament
 import com.antonl.cssundays.model.tournaments.TournamentRegistration
 import com.antonl.cssundays.repositories.TournamentRegistrationRepository
@@ -16,5 +17,13 @@ class TournamentRegistrationService(val tournamentRegistrationRepository: Tourna
 
     fun getRegisteredTeams(tournament: Tournament): List<Team> {
         return tournament.teamRegistrations.map { it.team }
+    }
+
+    fun getTournamentRegistrationByPlayer(tournament: Tournament, player: User): TournamentRegistration? {
+        return tournamentRegistrationRepository.findByTournamentAndPlayers(tournament, player)
+    }
+
+    fun getTournamentRegistrationByTeam(tournament: Tournament, team: Team): TournamentRegistration? {
+        return tournamentRegistrationRepository.findByTournamentAndTeam(tournament, team)
     }
 }

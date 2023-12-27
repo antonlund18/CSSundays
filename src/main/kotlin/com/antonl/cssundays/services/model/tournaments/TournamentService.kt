@@ -1,8 +1,11 @@
 package com.antonl.cssundays.services.model.tournaments
 
 import com.antonl.cssundays.graphql.dto.RequestDTO
+import com.antonl.cssundays.model.core.Team
+import com.antonl.cssundays.model.core.User
 import com.antonl.cssundays.model.tournaments.Tournament
 import com.antonl.cssundays.model.tournaments.TournamentFormat
+import com.antonl.cssundays.model.tournaments.TournamentRegistration
 import com.antonl.cssundays.model.tournaments.brackets.*
 import com.antonl.cssundays.repositories.TournamentRepository
 import com.antonl.cssundays.services.storage.TournamentStorageService
@@ -97,5 +100,13 @@ class TournamentService(
 
     fun calculateNumberOfMatches(numberOfTeams: Int): Int {
         return BracketCalculator.calculateNumberOfMatchesInBracket(numberOfTeams)
+    }
+
+    fun getTournamentRegistrationByPlayer(tournament: Tournament, player: User): TournamentRegistration? {
+        return tournamentRegistrationService.getTournamentRegistrationByPlayer(tournament, player)
+    }
+
+    fun getTournamentRegistrationByTeam(tournament: Tournament, team: Team): TournamentRegistration? {
+        return tournamentRegistrationService.getTournamentRegistrationByTeam(tournament, team)
     }
 }

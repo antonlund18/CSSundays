@@ -22,10 +22,14 @@ class SharedTournamentAndTournamentRegistrationMutations : Mutation {
     @Autowired
     private lateinit var teamService: TeamService
 
-    suspend fun registerTeam(tournamentId: Int, teamId: Int): Tournament? {
+    @Autowired
+    private lateinit var userService: UserService
+
+    suspend fun registerTeam(tournamentId: Int, teamId: Int, captainId: Int): Tournament? {
         val tournament = tournamentService.getTournamentById(tournamentId) ?: return null
+        val captain = userService.findUserById(captainId) ?: return null
         val team = teamService.findTeamById(teamId) ?: return null
-        sharedTournamentAndTournamentRegistrationService.createTournamentRegistration(tournament, team)
+        sharedTournamentAndTournamentRegistrationService.createTournamentRegistration(tournament, team, captain)
         return tournament
     }
 }

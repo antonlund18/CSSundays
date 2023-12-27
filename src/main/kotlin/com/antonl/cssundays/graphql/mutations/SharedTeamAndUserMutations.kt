@@ -8,8 +8,10 @@ import com.antonl.cssundays.services.model.tournaments.TournamentService
 import com.expediagroup.graphql.server.operations.Mutation
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Component
+import javax.transaction.Transactional
 
 @Component
+@Transactional
 class SharedTeamAndUserMutations : Mutation {
 
     @Autowired

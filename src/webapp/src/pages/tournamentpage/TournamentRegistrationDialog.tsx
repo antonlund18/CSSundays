@@ -2,8 +2,7 @@ import {Dialog, DialogContent, DialogTitle, Divider, Typography} from "@mui/mate
 import * as React from "react"
 import {
     Tournament,
-    TournamentRegistration,
-    useFindTournamentRegistrationByPlayerQuery
+    TournamentRegistration, useGetTournamentRegistrationByPlayerQuery,
 } from "../../codegen/generated-types";
 import {useGetCurrentUser} from "../../hooks/api/useUser";
 import {makeStyles} from "@mui/styles";
@@ -25,14 +24,14 @@ export type TournamentRegistrationDialogProps = {
 
 export const TournamentRegistrationDialog = (props: TournamentRegistrationDialogProps) => {
     const {currentUser} = useGetCurrentUser()
-    const {data} = useFindTournamentRegistrationByPlayerQuery({
+    const {data} = useGetTournamentRegistrationByPlayerQuery({
         variables: {
             tournamentId: props.tournament.id ?? -1,
             playerId: currentUser?.id ?? -1
         }
     })
 
-    const existingTournamentRegistrationForPlayer = data?.findTournamentRegistrationByPlayer as TournamentRegistration
+    const existingTournamentRegistrationForPlayer = data?.getTournamentRegistrationByPlayer as TournamentRegistration
 
     return <Dialog open={props.open} onClose={() => props.setOpen(false)} maxWidth={"xl"}>
         <DialogTitle><Typography variant={"h2"} style={{textTransform: "none"}}>Tilmeld

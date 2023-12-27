@@ -7,8 +7,10 @@ import com.antonl.cssundays.services.model.core.UserService
 import com.expediagroup.graphql.server.operations.Mutation
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Component
+import javax.transaction.Transactional
 
 @Component
+@Transactional
 class TeamMutations : Mutation {
     @Autowired
     private lateinit var teamService: TeamService
