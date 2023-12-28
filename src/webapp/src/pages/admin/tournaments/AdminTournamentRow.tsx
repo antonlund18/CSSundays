@@ -30,7 +30,7 @@ export const AdminTournamentRow = (props: AdminTournamentRowProps): JSX.Element 
                      onClick={() => navigate(`/tournaments/${props.tournament.id}`)}>
         <TableCell>
             <Typography color={"inherit"}>
-                {`${props.tournament.name} (${props.tournament.teamRegistrations.length} / ${props.tournament.numberOfTeamsAllowed})`}
+                {`${props.tournament.name} (${props.tournament.tournamentRegistrations.length} / ${props.tournament.numberOfTeamsAllowed})`}
             </Typography>
         </TableCell>
         <TableCell>

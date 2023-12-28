@@ -54,8 +54,8 @@ internal class BracketTeamPopulationTest {
 
         val teams = mutableListOf<Team>()
         matchesWithTeams.forEach { match ->
-            match.team1?.let { team -> teams.add(team) }
-            match.team2?.let { team -> teams.add(team) }
+            match.tournamentRegistration1?.let { teams.add(it.team) }
+            match.tournamentRegistration2?.let { teams.add(it.team) }
         }
         assertEquals(numberOfTeams, teams.distinct().size)
     }
@@ -110,8 +110,8 @@ internal class BracketTeamPopulationTest {
 
     private fun matchHasXTeams(match: Match, x: Int): Boolean {
         var count = 0
-        match.team1?.let { count++ }
-        match.team2?.let { count++ }
+        match.tournamentRegistration1?.let { count++ }
+        match.tournamentRegistration2?.let { count++ }
         return count == x
     }
 }

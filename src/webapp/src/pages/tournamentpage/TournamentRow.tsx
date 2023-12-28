@@ -63,7 +63,7 @@ export const TournamentRow = (props: TournamentRowProps): JSX.Element => {
         })
         + " kl. " + formatTime(props.tournament.startDateAndTime)
 
-    const numberOfRegisteredTeams = props.tournament.teamRegistrations.length
+    const numberOfRegisteredTeams = props.tournament.tournamentRegistrations.length
 
     return <Grid item xs={12} className={classes.container} onClick={() => navigate(props.tournament.id?.toString() ?? "")}>
         <div style={{display: "flex", alignItems: "center"}}>

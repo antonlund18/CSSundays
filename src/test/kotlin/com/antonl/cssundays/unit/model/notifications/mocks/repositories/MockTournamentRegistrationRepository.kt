@@ -1,10 +1,21 @@
 package com.antonl.cssundays.unit.model.notifications.mocks.repositories
 
+import com.antonl.cssundays.model.core.Team
+import com.antonl.cssundays.model.core.User
+import com.antonl.cssundays.model.tournaments.Tournament
 import com.antonl.cssundays.model.tournaments.TournamentRegistration
 import com.antonl.cssundays.repositories.TournamentRegistrationRepository
 import java.util.*
 
 class MockTournamentRegistrationRepository : TournamentRegistrationRepository {
+    override fun findByTournamentAndPlayers(tournament: Tournament, player: User): TournamentRegistration? {
+        TODO("Not yet implemented")
+    }
+
+    override fun findByTournamentAndTeam(tournament: Tournament, team: Team): TournamentRegistration? {
+        TODO("Not yet implemented")
+    }
+
     override fun <S : TournamentRegistration?> save(entity: S): S {
         return entity
     }

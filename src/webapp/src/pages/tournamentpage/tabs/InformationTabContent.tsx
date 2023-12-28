@@ -51,7 +51,7 @@ export const InformationTabContent = (props: InformationTabContentProps): JSX.El
     const {formatDate, formatTime} = useDateFormatter()
 
     const registeredTeams = useMemo(() => {
-        return props.tournament.teamRegistrations.length
+        return props.tournament.tournamentRegistrations.length
     }, [props.tournament])
 
     return <Grid container className={classes.container} spacing={2}>

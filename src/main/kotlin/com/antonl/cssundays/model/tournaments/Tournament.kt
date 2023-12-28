@@ -35,9 +35,9 @@ class Tournament(
     @JoinColumn(name = "bracket_id", referencedColumnName = "id")
     var bracket: Bracket? = null,
 
-    @OneToMany(mappedBy = "tournament")
+    @OneToMany(mappedBy = "tournament", cascade = [CascadeType.ALL])
     @LazyCollection(LazyCollectionOption.FALSE)
-    val teamRegistrations: MutableList<TournamentRegistration> = mutableListOf(),
+    val tournamentRegistrations: MutableList<TournamentRegistration> = mutableListOf(),
 
     @Enumerated(EnumType.STRING)
     val status: TournamentStatus = TournamentStatus.OPEN_FOR_REGISTRATIONS,

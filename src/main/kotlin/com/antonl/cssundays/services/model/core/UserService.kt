@@ -3,6 +3,7 @@ package com.antonl.cssundays.services.model.core
 import com.antonl.cssundays.graphql.dto.RequestDTO
 import com.antonl.cssundays.graphql.mutations.EditUserInput
 import com.antonl.cssundays.model.core.User
+import com.antonl.cssundays.model.core.UserRole
 import com.antonl.cssundays.repositories.UserRepository
 import com.antonl.cssundays.services.auth.AuthenticationService
 import com.antonl.cssundays.services.storage.UserStorageService
@@ -104,5 +105,10 @@ class UserService(val userRepository: UserRepository) {
         val user = createUser(playertag, email, password);
         val jwtToken = AuthenticationService.generateJWTToken(user);
         return jwtToken;
+    }
+
+    fun changeUserRole(user: User, targetRole: UserRole): User? {
+        user.role = targetRole
+        return saveUser(user)
     }
 }
