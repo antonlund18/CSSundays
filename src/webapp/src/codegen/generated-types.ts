@@ -125,6 +125,7 @@ export type Mutation = {
   createInviteToTeam?: Maybe<InviteToTeam>;
   createNotification?: Maybe<Notification>;
   createTeam?: Maybe<Team>;
+  createTestData?: Maybe<Tournament>;
   createTestMatch?: Maybe<Match>;
   createTournament?: Maybe<Tournament>;
   createUser: Scalars['String'];
@@ -732,6 +733,11 @@ export type ChangeMatchPhaseMutationVariables = Exact<{
 
 
 export type ChangeMatchPhaseMutation = { __typename?: 'Mutation', changeMatchPhase?: { __typename?: 'Match', id?: number, currentPhase: { __typename?: 'MatchPhase', id: number, phaseType: MatchPhaseType, state?: { __typename?: 'MatchReadyCheckPhaseState', id: number, createdTs: any, endTs?: any } } } };
+
+export type CreateTestDataMutationVariables = Exact<{ [key: string]: never; }>;
+
+
+export type CreateTestDataMutation = { __typename?: 'Mutation', createTestData?: { __typename?: 'Tournament', id?: number } };
 
 export type NewNotificationFragment = { __typename?: 'Notification', id?: number, isSeen: boolean };
 
@@ -2367,6 +2373,38 @@ export function useChangeMatchPhaseMutation(baseOptions?: Apollo.MutationHookOpt
 export type ChangeMatchPhaseMutationHookResult = ReturnType<typeof useChangeMatchPhaseMutation>;
 export type ChangeMatchPhaseMutationResult = Apollo.MutationResult<ChangeMatchPhaseMutation>;
 export type ChangeMatchPhaseMutationOptions = Apollo.BaseMutationOptions<ChangeMatchPhaseMutation, ChangeMatchPhaseMutationVariables>;
+export const CreateTestDataDocument = gql`
+    mutation createTestData {
+  createTestData {
+    id
+  }
+}
+    `;
+export type CreateTestDataMutationFn = Apollo.MutationFunction<CreateTestDataMutation, CreateTestDataMutationVariables>;
+
+/**
+ * __useCreateTestDataMutation__
+ *
+ * To run a mutation, you first call `useCreateTestDataMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useCreateTestDataMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [createTestDataMutation, { data, loading, error }] = useCreateTestDataMutation({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useCreateTestDataMutation(baseOptions?: Apollo.MutationHookOptions<CreateTestDataMutation, CreateTestDataMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<CreateTestDataMutation, CreateTestDataMutationVariables>(CreateTestDataDocument, options);
+      }
+export type CreateTestDataMutationHookResult = ReturnType<typeof useCreateTestDataMutation>;
+export type CreateTestDataMutationResult = Apollo.MutationResult<CreateTestDataMutation>;
+export type CreateTestDataMutationOptions = Apollo.BaseMutationOptions<CreateTestDataMutation, CreateTestDataMutationVariables>;
 export const ListAllOperations = {
   Query: {
     findAllInvitesForPlayer: 'findAllInvitesForPlayer',
@@ -2404,7 +2442,8 @@ export const ListAllOperations = {
     updateUser: 'updateUser',
     changePassword: 'changePassword',
     createTestMatch: 'createTestMatch',
-    changeMatchPhase: 'changeMatchPhase'
+    changeMatchPhase: 'changeMatchPhase',
+    createTestData: 'createTestData'
   },
   Fragment: {
     NewNotification: 'NewNotification'

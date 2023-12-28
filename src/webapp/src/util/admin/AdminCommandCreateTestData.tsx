@@ -1,13 +1,13 @@
 import * as React from "react"
 import {TextField} from "@mui/material";
-import {useCreateTestMatchMutation} from "../../codegen/generated-types";
+import {useCreateTestDataMutation} from "../../codegen/generated-types";
 
-export const AdminCommandCreateMatch = () => {
-    const [createTestMatch] = useCreateTestMatchMutation()
+export const AdminCommandCreateTestData = () => {
+    const [createTestData] = useCreateTestDataMutation()
 
     const handleCreateMatch = (e: React.KeyboardEvent) => {
         if (e.code === "Enter") {
-            createTestMatch()
+            createTestData()
         }
     }
 
