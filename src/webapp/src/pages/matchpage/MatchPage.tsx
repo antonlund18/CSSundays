@@ -54,11 +54,11 @@ export const MatchPage = () => {
 
     return <CenteredPage>
         <Grid container xs={12}>
-            <MatchPageTeam position={MagePageTeamPosition.LEFT} team={match.team1}/>
+            <MatchPageTeam position={MagePageTeamPosition.LEFT} team={match.tournamentRegistration1?.team}/>
             <Grid item xs={2} className={classes.vsContainer}>
                 <Typography variant={"h2"}>VS</Typography>
             </Grid>
-            <MatchPageTeam position={MagePageTeamPosition.RIGHT} team={match.team2}/>
+            <MatchPageTeam position={MagePageTeamPosition.RIGHT} team={match.tournamentRegistration2?.team}/>
         </Grid>
         <Divider sx={{marginTop: "16px"}}/>
         <MatchPagePhaseContainer match={match}/>

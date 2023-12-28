@@ -6,8 +6,6 @@ import {Divider as CSDivider} from "../../components/Divider";
 import {TournamentRow} from "./TournamentRow";
 
 export const TournamentsPage = (): JSX.Element => {
-    // const isCurrentUserAdminOrOrganizer = currentUser && (currentUser.role === UserRole.Admin || currentUser.role === UserRole.Organizer)
-    const isCurrentUserAdminOrOrganizer = true
     const {tournaments} = useGetAllTournaments()
 
     if (!tournaments) {
@@ -15,6 +13,7 @@ export const TournamentsPage = (): JSX.Element => {
     }
 
     const publishedTournaments = tournaments.filter(tournament => tournament.published)
+    const sortedTournaments = publishedTournaments.sort((t1, t2) => new Date(t2.startDateAndTime).getTime() - new Date(t1.startDateAndTime).getTime())
 
     return <CenteredPage>
         <Typography variant={"h2"} color={"primary"}>Turneringer</Typography>
@@ -22,7 +21,7 @@ export const TournamentsPage = (): JSX.Element => {
         <Grid container spacing={2}>
             <Grid item xs={12}>
                 <Stack divider={<Divider flexItem/>} spacing={2} sx={{width: "100%"}}>
-                    {publishedTournaments.map((tournament) => {
+                    {sortedTournaments.map((tournament) => {
                         return <TournamentRow tournament={tournament}/>
                     })}
                 </Stack>

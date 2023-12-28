@@ -21,8 +21,8 @@ type MatchPagePhaseContainerProps = {
 export const MatchPagePhaseContainer = (props: MatchPagePhaseContainerProps) => {
     const classes = useStyles()
 
-    const team1Captain = props.match.team1?.users[0]
-    const team2Captain = props.match.team2?.users[0]
+    const team1Captain = props.match.tournamentRegistration1?.team.users[0]
+    const team2Captain = props.match.tournamentRegistration2?.team.users[0]
 
     const getCurrentPhaseComponent = () => {
         switch (props.match.currentPhase.phaseType) {

@@ -73,8 +73,8 @@ export type Match = {
   left?: Maybe<Match>;
   parent?: Maybe<Match>;
   right?: Maybe<Match>;
-  team1?: Maybe<Team>;
-  team2?: Maybe<Team>;
+  tournamentRegistration1?: Maybe<TournamentRegistration>;
+  tournamentRegistration2?: Maybe<TournamentRegistration>;
 };
 
 export type MatchPhase = {
@@ -125,6 +125,7 @@ export type Mutation = {
   createInviteToTeam?: Maybe<InviteToTeam>;
   createNotification?: Maybe<Notification>;
   createTeam?: Maybe<Team>;
+  createTestData?: Maybe<Tournament>;
   createTestMatch?: Maybe<Match>;
   createTournament?: Maybe<Tournament>;
   createUser: Scalars['String'];
@@ -433,7 +434,7 @@ export type Tournament = {
   rules: Scalars['String'];
   startDateAndTime: Scalars['LocalDateTime'];
   status: TournamentStatus;
-  teamRegistrations: Array<TournamentRegistration>;
+  tournamentRegistrations: Array<TournamentRegistration>;
 };
 
 export enum TournamentFormat {
@@ -520,14 +521,14 @@ export type GetMatchesByParentIdsQueryVariables = Exact<{
 }>;
 
 
-export type GetMatchesByParentIdsQuery = { __typename?: 'Query', getMatchesByParentIds: Array<{ __typename?: 'Match', id?: number, team1?: { __typename?: 'Team', id?: number, name: string, picture?: string, users: Array<{ __typename?: 'User', id?: number }> }, team2?: { __typename?: 'Team', id?: number, name: string, picture?: string, users: Array<{ __typename?: 'User', id?: number }> } }> };
+export type GetMatchesByParentIdsQuery = { __typename?: 'Query', getMatchesByParentIds: Array<{ __typename?: 'Match', id?: number, tournamentRegistration1?: { __typename?: 'TournamentRegistration', team: { __typename?: 'Team', id?: number, name: string, picture?: string, users: Array<{ __typename?: 'User', id?: number }> } }, tournamentRegistration2?: { __typename?: 'TournamentRegistration', team: { __typename?: 'Team', id?: number, name: string, picture?: string, users: Array<{ __typename?: 'User', id?: number }> } } }> };
 
 export type GetMatchByIdQueryVariables = Exact<{
   matchId: Scalars['Int'];
 }>;
 
 
-export type GetMatchByIdQuery = { __typename?: 'Query', getMatchById?: { __typename?: 'Match', id?: number, team1?: { __typename?: 'Team', id?: number, name: string, picture?: string, users: Array<{ __typename?: 'User', id?: number, playertag: string, picture?: string }> }, team2?: { __typename?: 'Team', id?: number, name: string, picture?: string, users: Array<{ __typename?: 'User', id?: number, playertag: string, picture?: string }> }, currentPhase: { __typename?: 'MatchPhase', phaseType: MatchPhaseType, state?: { __typename?: 'MatchReadyCheckPhaseState', createdTs: any, endTs?: any } } } };
+export type GetMatchByIdQuery = { __typename?: 'Query', getMatchById?: { __typename?: 'Match', id?: number, tournamentRegistration1?: { __typename?: 'TournamentRegistration', team: { __typename?: 'Team', id?: number, name: string, picture?: string, users: Array<{ __typename?: 'User', id?: number, playertag: string, picture?: string }> } }, tournamentRegistration2?: { __typename?: 'TournamentRegistration', team: { __typename?: 'Team', id?: number, name: string, picture?: string, users: Array<{ __typename?: 'User', id?: number, playertag: string, picture?: string }> } }, currentPhase: { __typename?: 'MatchPhase', phaseType: MatchPhaseType, state?: { __typename?: 'MatchReadyCheckPhaseState', createdTs: any, endTs?: any } } } };
 
 export type GetAllNotificationsQueryVariables = Exact<{
   userId: Scalars['Int'];
@@ -558,7 +559,7 @@ export type RegisterTeamOrPlayerMutationVariables = Exact<{
 }>;
 
 
-export type RegisterTeamOrPlayerMutation = { __typename?: 'Mutation', registerTeamOrPlayer?: { __typename?: 'Tournament', id?: number, teamRegistrations: Array<{ __typename?: 'TournamentRegistration', id?: number, captain: { __typename?: 'User', id?: number, playertag: string, picture?: string }, team: { __typename?: 'Team', id?: number, name: string } }> } };
+export type RegisterTeamOrPlayerMutation = { __typename?: 'Mutation', registerTeamOrPlayer?: { __typename?: 'Tournament', id?: number, tournamentRegistrations: Array<{ __typename?: 'TournamentRegistration', id?: number, captain: { __typename?: 'User', id?: number, playertag: string, picture?: string }, team: { __typename?: 'Team', id?: number, name: string } }> } };
 
 export type GetAllTeamsQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -610,21 +611,21 @@ export type CreateTournamentMutation = { __typename?: 'Mutation', createTourname
 export type GetAllTournamentsQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type GetAllTournamentsQuery = { __typename?: 'Query', getAllTournaments: Array<{ __typename?: 'Tournament', id?: number, name: string, picture?: string, description: string, format: TournamentFormat, rules: string, startDateAndTime: any, numberOfTeamsAllowed: number, createdTs: any, status: TournamentStatus, published: boolean, bracket?: { __typename?: 'Bracket', id?: number, root?: { __typename?: 'Match', id?: number, left?: { __typename?: 'Match', id?: number }, right?: { __typename?: 'Match', id?: number } } }, teamRegistrations: Array<{ __typename?: 'TournamentRegistration', id?: number, team: { __typename?: 'Team', id?: number } }> }> };
+export type GetAllTournamentsQuery = { __typename?: 'Query', getAllTournaments: Array<{ __typename?: 'Tournament', id?: number, name: string, picture?: string, description: string, format: TournamentFormat, rules: string, startDateAndTime: any, numberOfTeamsAllowed: number, createdTs: any, status: TournamentStatus, published: boolean, bracket?: { __typename?: 'Bracket', id?: number, root?: { __typename?: 'Match', id?: number, left?: { __typename?: 'Match', id?: number }, right?: { __typename?: 'Match', id?: number } } }, tournamentRegistrations: Array<{ __typename?: 'TournamentRegistration', id?: number, team: { __typename?: 'Team', id?: number } }> }> };
 
 export type GenerateBracketMutationVariables = Exact<{
   tournamentId: Scalars['Int'];
 }>;
 
 
-export type GenerateBracketMutation = { __typename?: 'Mutation', generateBracket?: { __typename?: 'Tournament', id?: number, bracket?: { __typename?: 'Bracket', id?: number, root?: { __typename?: 'Match', id?: number, left?: { __typename?: 'Match', id?: number }, right?: { __typename?: 'Match', id?: number }, parent?: { __typename?: 'Match', id?: number }, team1?: { __typename?: 'Team', id?: number, name: string }, team2?: { __typename?: 'Team', id?: number, name: string } } } } };
+export type GenerateBracketMutation = { __typename?: 'Mutation', generateBracket?: { __typename?: 'Tournament', id?: number, bracket?: { __typename?: 'Bracket', id?: number, root?: { __typename?: 'Match', id?: number, left?: { __typename?: 'Match', id?: number }, right?: { __typename?: 'Match', id?: number }, parent?: { __typename?: 'Match', id?: number }, tournamentRegistration1?: { __typename?: 'TournamentRegistration', team: { __typename?: 'Team', id?: number, name: string } }, tournamentRegistration2?: { __typename?: 'TournamentRegistration', team: { __typename?: 'Team', id?: number, name: string } } } } } };
 
 export type GetTournamentByIdQueryVariables = Exact<{
   id: Scalars['Int'];
 }>;
 
 
-export type GetTournamentByIdQuery = { __typename?: 'Query', getTournamentById?: { __typename?: 'Tournament', id?: number, name: string, picture?: string, description: string, format: TournamentFormat, rules: string, startDateAndTime: any, numberOfTeamsAllowed: number, teamRegistrations: Array<{ __typename?: 'TournamentRegistration', id?: number, createdTs: any, captain: { __typename?: 'User', id?: number, playertag: string, picture?: string }, team: { __typename?: 'Team', id?: number, name: string, picture?: string, users: Array<{ __typename?: 'User', id?: number, picture?: string, playertag: string }> } }>, bracket?: { __typename?: 'Bracket', id?: number, root?: { __typename?: 'Match', id?: number, team1?: { __typename?: 'Team', id?: number, name: string, picture?: string, users: Array<{ __typename?: 'User', id?: number, playertag: string, picture?: string }> }, team2?: { __typename?: 'Team', id?: number, name: string, picture?: string, users: Array<{ __typename?: 'User', id?: number, playertag: string, picture?: string }> } } } } };
+export type GetTournamentByIdQuery = { __typename?: 'Query', getTournamentById?: { __typename?: 'Tournament', id?: number, name: string, picture?: string, description: string, format: TournamentFormat, rules: string, startDateAndTime: any, numberOfTeamsAllowed: number, tournamentRegistrations: Array<{ __typename?: 'TournamentRegistration', id?: number, createdTs: any, captain: { __typename?: 'User', id?: number, playertag: string, picture?: string }, team: { __typename?: 'Team', id?: number, name: string, picture?: string, users: Array<{ __typename?: 'User', id?: number, picture?: string, playertag: string }> } }>, bracket?: { __typename?: 'Bracket', id?: number, root?: { __typename?: 'Match', id?: number, tournamentRegistration1?: { __typename?: 'TournamentRegistration', team: { __typename?: 'Team', id?: number, name: string, picture?: string, users: Array<{ __typename?: 'User', id?: number, playertag: string, picture?: string }> } }, tournamentRegistration2?: { __typename?: 'TournamentRegistration', team: { __typename?: 'Team', id?: number, name: string, picture?: string, users: Array<{ __typename?: 'User', id?: number, playertag: string, picture?: string }> } } } } } };
 
 export type PublishTournamentMutationVariables = Exact<{
   tournamentId: Scalars['Int'];
@@ -662,7 +663,7 @@ export type DeregisterTeamFromTournamentMutationVariables = Exact<{
 }>;
 
 
-export type DeregisterTeamFromTournamentMutation = { __typename?: 'Mutation', deregisterTeamFromTournament?: { __typename?: 'Tournament', id?: number, teamRegistrations: Array<{ __typename?: 'TournamentRegistration', id?: number, team: { __typename?: 'Team', id?: number, name: string, picture?: string }, players: Array<{ __typename?: 'User', id?: number, playertag: string, picture?: string }> }> } };
+export type DeregisterTeamFromTournamentMutation = { __typename?: 'Mutation', deregisterTeamFromTournament?: { __typename?: 'Tournament', id?: number, tournamentRegistrations: Array<{ __typename?: 'TournamentRegistration', id?: number, team: { __typename?: 'Team', id?: number, name: string, picture?: string }, players: Array<{ __typename?: 'User', id?: number, playertag: string, picture?: string }> }> } };
 
 export type DeregisterPlayerFromTournamentMutationVariables = Exact<{
   tournamentId: Scalars['Int'];
@@ -670,7 +671,7 @@ export type DeregisterPlayerFromTournamentMutationVariables = Exact<{
 }>;
 
 
-export type DeregisterPlayerFromTournamentMutation = { __typename?: 'Mutation', deregisterPlayerFromTournament?: { __typename?: 'Tournament', id?: number, teamRegistrations: Array<{ __typename?: 'TournamentRegistration', id?: number, team: { __typename?: 'Team', id?: number, name: string, picture?: string }, players: Array<{ __typename?: 'User', id?: number, playertag: string, picture?: string }> }> } };
+export type DeregisterPlayerFromTournamentMutation = { __typename?: 'Mutation', deregisterPlayerFromTournament?: { __typename?: 'Tournament', id?: number, tournamentRegistrations: Array<{ __typename?: 'TournamentRegistration', id?: number, team: { __typename?: 'Team', id?: number, name: string, picture?: string }, players: Array<{ __typename?: 'User', id?: number, playertag: string, picture?: string }> }> } };
 
 export type GetUserByIdQueryVariables = Exact<{
   id: Scalars['Int'];
@@ -732,6 +733,11 @@ export type ChangeMatchPhaseMutationVariables = Exact<{
 
 
 export type ChangeMatchPhaseMutation = { __typename?: 'Mutation', changeMatchPhase?: { __typename?: 'Match', id?: number, currentPhase: { __typename?: 'MatchPhase', id: number, phaseType: MatchPhaseType, state?: { __typename?: 'MatchReadyCheckPhaseState', id: number, createdTs: any, endTs?: any } } } };
+
+export type CreateTestDataMutationVariables = Exact<{ [key: string]: never; }>;
+
+
+export type CreateTestDataMutation = { __typename?: 'Mutation', createTestData?: { __typename?: 'Tournament', id?: number } };
 
 export type NewNotificationFragment = { __typename?: 'Notification', id?: number, isSeen: boolean };
 
@@ -1012,20 +1018,24 @@ export const GetMatchesByParentIdsDocument = gql`
     query getMatchesByParentIds($parentIds: [Int!]!) {
   getMatchesByParentIds(parentIds: $parentIds) {
     id
-    team1 {
-      id
-      name
-      picture
-      users {
+    tournamentRegistration1 {
+      team {
         id
+        name
+        picture
+        users {
+          id
+        }
       }
     }
-    team2 {
-      id
-      name
-      picture
-      users {
+    tournamentRegistration2 {
+      team {
         id
+        name
+        picture
+        users {
+          id
+        }
       }
     }
   }
@@ -1063,24 +1073,28 @@ export const GetMatchByIdDocument = gql`
     query getMatchById($matchId: Int!) {
   getMatchById(matchId: $matchId) {
     id
-    team1 {
-      id
-      name
-      picture
-      users {
+    tournamentRegistration1 {
+      team {
         id
-        playertag
+        name
         picture
+        users {
+          id
+          playertag
+          picture
+        }
       }
     }
-    team2 {
-      id
-      name
-      picture
-      users {
+    tournamentRegistration2 {
+      team {
         id
-        playertag
+        name
         picture
+        users {
+          id
+          playertag
+          picture
+        }
       }
     }
     currentPhase {
@@ -1269,7 +1283,7 @@ export const RegisterTeamOrPlayerDocument = gql`
     playerId: $playerId
   ) {
     id
-    teamRegistrations {
+    tournamentRegistrations {
       id
       captain {
         id
@@ -1597,7 +1611,7 @@ export const GetAllTournamentsDocument = gql`
     }
     startDateAndTime
     numberOfTeamsAllowed
-    teamRegistrations {
+    tournamentRegistrations {
       team {
         id
       }
@@ -1653,13 +1667,17 @@ export const GenerateBracketDocument = gql`
         parent {
           id
         }
-        team1 {
-          id
-          name
+        tournamentRegistration1 {
+          team {
+            id
+            name
+          }
         }
-        team2 {
-          id
-          name
+        tournamentRegistration2 {
+          team {
+            id
+            name
+          }
         }
       }
     }
@@ -1703,7 +1721,7 @@ export const GetTournamentByIdDocument = gql`
     rules
     startDateAndTime
     numberOfTeamsAllowed
-    teamRegistrations {
+    tournamentRegistrations {
       id
       captain {
         id
@@ -1726,24 +1744,28 @@ export const GetTournamentByIdDocument = gql`
       id
       root {
         id
-        team1 {
-          id
-          name
-          picture
-          users {
+        tournamentRegistration1 {
+          team {
             id
-            playertag
+            name
             picture
+            users {
+              id
+              playertag
+              picture
+            }
           }
         }
-        team2 {
-          id
-          name
-          picture
-          users {
+        tournamentRegistration2 {
+          team {
             id
-            playertag
+            name
             picture
+            users {
+              id
+              playertag
+              picture
+            }
           }
         }
       }
@@ -1955,7 +1977,7 @@ export const DeregisterTeamFromTournamentDocument = gql`
     mutation deregisterTeamFromTournament($tournamentId: Int!, $teamId: Int!) {
   deregisterTeamFromTournament(tournamentId: $tournamentId, teamId: $teamId) {
     id
-    teamRegistrations {
+    tournamentRegistrations {
       id
       team {
         id
@@ -2002,7 +2024,7 @@ export const DeregisterPlayerFromTournamentDocument = gql`
     mutation deregisterPlayerFromTournament($tournamentId: Int!, $playerId: Int!) {
   deregisterPlayerFromTournament(tournamentId: $tournamentId, playerId: $playerId) {
     id
-    teamRegistrations {
+    tournamentRegistrations {
       id
       team {
         id
@@ -2367,6 +2389,38 @@ export function useChangeMatchPhaseMutation(baseOptions?: Apollo.MutationHookOpt
 export type ChangeMatchPhaseMutationHookResult = ReturnType<typeof useChangeMatchPhaseMutation>;
 export type ChangeMatchPhaseMutationResult = Apollo.MutationResult<ChangeMatchPhaseMutation>;
 export type ChangeMatchPhaseMutationOptions = Apollo.BaseMutationOptions<ChangeMatchPhaseMutation, ChangeMatchPhaseMutationVariables>;
+export const CreateTestDataDocument = gql`
+    mutation createTestData {
+  createTestData {
+    id
+  }
+}
+    `;
+export type CreateTestDataMutationFn = Apollo.MutationFunction<CreateTestDataMutation, CreateTestDataMutationVariables>;
+
+/**
+ * __useCreateTestDataMutation__
+ *
+ * To run a mutation, you first call `useCreateTestDataMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useCreateTestDataMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [createTestDataMutation, { data, loading, error }] = useCreateTestDataMutation({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useCreateTestDataMutation(baseOptions?: Apollo.MutationHookOptions<CreateTestDataMutation, CreateTestDataMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<CreateTestDataMutation, CreateTestDataMutationVariables>(CreateTestDataDocument, options);
+      }
+export type CreateTestDataMutationHookResult = ReturnType<typeof useCreateTestDataMutation>;
+export type CreateTestDataMutationResult = Apollo.MutationResult<CreateTestDataMutation>;
+export type CreateTestDataMutationOptions = Apollo.BaseMutationOptions<CreateTestDataMutation, CreateTestDataMutationVariables>;
 export const ListAllOperations = {
   Query: {
     findAllInvitesForPlayer: 'findAllInvitesForPlayer',
@@ -2404,7 +2458,8 @@ export const ListAllOperations = {
     updateUser: 'updateUser',
     changePassword: 'changePassword',
     createTestMatch: 'createTestMatch',
-    changeMatchPhase: 'changeMatchPhase'
+    changeMatchPhase: 'changeMatchPhase',
+    createTestData: 'createTestData'
   },
   Fragment: {
     NewNotification: 'NewNotification'

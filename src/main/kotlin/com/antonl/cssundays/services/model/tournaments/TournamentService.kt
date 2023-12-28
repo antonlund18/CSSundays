@@ -79,7 +79,7 @@ class TournamentService(
         val numberOfMatches = calculateNumberOfMatches(registeredTeams.size)
 
         BracketMatchInitializer(numberOfMatches).traverseTree(bracket)
-        BracketTeamPopulator(registeredTeams, matchService).populateTree(bracket)
+        BracketTeamPopulator(tournament.tournamentRegistrations, matchService).populateTree(bracket)
         return saveTournament(tournament)
     }
 

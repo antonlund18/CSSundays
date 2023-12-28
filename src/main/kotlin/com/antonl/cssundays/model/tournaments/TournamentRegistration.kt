@@ -24,7 +24,7 @@ class TournamentRegistration(
         @ManyToOne
         val captain: User,
 
-        @ManyToMany
+        @ManyToMany(cascade = [CascadeType.ALL])
         @JoinTable(
                 name = "player_registered_in_tournament",
                 joinColumns = [JoinColumn(name = "tournament_registration_id")],

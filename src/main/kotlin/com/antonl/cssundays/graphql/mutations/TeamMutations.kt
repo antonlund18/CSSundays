@@ -24,7 +24,6 @@ class TeamMutations : Mutation {
     suspend fun createTeam(name: String, ownerId: Int): Team? {
         val user = userService.findUserById(ownerId) ?: return null
         val team = teamService.createTeam(name, user)
-        sharedTeamAndUserService.addUserToTeam(user, team)
         return team;
     }
 

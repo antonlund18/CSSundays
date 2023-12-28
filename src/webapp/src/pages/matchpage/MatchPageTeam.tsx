@@ -60,10 +60,10 @@ export const MatchPageTeam = (props: MatchPageTeamProps) => {
         <div style={{
             width: "100%",
             display: "flex",
-            justifyContent: props.position === MagePageTeamPosition.LEFT ? "end" : "start",
+            justifyContent: props.position === MagePageTeamPosition.RIGHT ? "end" : "start",
             marginTop: "32px"
         }}>
-            {new Array(5).fill(props.team?.users[0]).map(player => {
+            {props.team?.users.slice(0, 5).map(player => {
                 return <PlayerPicture player={player}/>
             })}
         </div>

@@ -43,9 +43,11 @@ class MatchService(val matchRepository: MatchRepository) {
                 match.currentPhase.phaseType = MatchPhaseType.WAITING_TO_START
             }
             ChangeMatchPhaseStrategy.READY_CHECK_ONE_CAPTAIN_PER_TEAM -> {
-                if (match.team1?.users?.get(0) != null && match.team2?.users?.get(0) != null) {
-                    val teamOneAction = MatchReadyCheckPhaseCaptainPerTeamAction(captain = match.team1?.users?.get(0)!!)
-                    val teamTwoAction = MatchReadyCheckPhaseCaptainPerTeamAction(captain = match.team2?.users?.get(0)!!)
+                val tournamentRegistration1 = match.tournamentRegistration1
+                val tournamentRegistration2 = match.tournamentRegistration2
+                if (tournamentRegistration1?.captain != null && tournamentRegistration2?.captain != null) {
+                    val teamOneAction = MatchReadyCheckPhaseCaptainPerTeamAction(captain = tournamentRegistration1.captain)
+                    val teamTwoAction = MatchReadyCheckPhaseCaptainPerTeamAction(captain = tournamentRegistration2.captain)
                     match.currentPhase.phaseType = MatchPhaseType.READY_CHECK
                     match.currentPhase.state = MatchReadyCheckPhaseState(teamOneAction, teamTwoAction)
                 }

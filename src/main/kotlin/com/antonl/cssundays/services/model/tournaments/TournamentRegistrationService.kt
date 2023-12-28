@@ -16,7 +16,7 @@ class TournamentRegistrationService(val tournamentRegistrationRepository: Tourna
     }
 
     fun getRegisteredTeams(tournament: Tournament): List<Team> {
-        return tournament.teamRegistrations.map { it.team }
+        return tournament.tournamentRegistrations.map { it.team }
     }
 
     fun getTournamentRegistrationByPlayer(tournament: Tournament, player: User): TournamentRegistration? {

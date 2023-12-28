@@ -5,7 +5,7 @@ gql`
     mutation registerTeamOrPlayer($tournamentId: Int!, $teamId: Int!, $playerId: Int!) {
         registerTeamOrPlayer(teamId: $teamId, tournamentId: $tournamentId, playerId: $playerId) {
             id,
-            teamRegistrations {
+            tournamentRegistrations {
                 id,
                 captain {
                     id,

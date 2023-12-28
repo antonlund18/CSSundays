@@ -1,15 +1,10 @@
 import * as React from "react"
 import {useCallback, useMemo, useState} from "react"
 import {IconButton, TextField, Tooltip, Typography} from "@mui/material";
-import {
-    ChangeMatchPhaseStrategy,
-    useChangeMatchPhaseMutation,
-    useCreateTestMatchMutation
-} from "../../codegen/generated-types";
+import {ChangeMatchPhaseStrategy, useChangeMatchPhaseMutation} from "../../codegen/generated-types";
 import {PriorityHigh} from "@mui/icons-material";
 
 export const AdminCommandChangeMatchPhase = () => {
-    const [createTestMatch] = useCreateTestMatchMutation()
     const [matchId, setMatchId] = useState<string>("")
     const [matchPhase, setMatchPhase] = useState<string>("")
     const [activeStep, setActiveStep] = useState<number>(0)

@@ -15,7 +15,7 @@ class SharedTournamentAndTournamentRegistrationService(val tournamentRepository:
     fun createTournamentRegistration(tournament: Tournament, team: Team, captain: User): TournamentRegistration {
         var registration = TournamentRegistration(tournament = tournament, team = team, captain = captain)
         registration = tournamentRegistrationRepository.save(registration)
-        tournament.teamRegistrations.add(registration)
+        tournament.tournamentRegistrations.add(registration)
         tournamentRepository.save(tournament)
         return registration
     }
@@ -29,9 +29,9 @@ class SharedTournamentAndTournamentRegistrationService(val tournamentRepository:
 
     fun deregisterTeamFromTournament(tournament: Tournament, team: Team): Tournament? {
         val registration = tournamentRegistrationRepository.findByTournamentAndTeam(tournament, team) ?: return null
-        tournament.teamRegistrations.remove(registration)
+        registration.players.clear()
         tournamentRegistrationRepository.delete(registration)
-        return tournamentRepository.save(tournament)
+        return tournament
     }
 
     fun registerPlayer(tournamentRegistration: TournamentRegistration, player: User) {

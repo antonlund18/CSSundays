@@ -4,20 +4,24 @@ gql`
     query getMatchesByParentIds($parentIds: [Int!]!) {
         getMatchesByParentIds(parentIds: $parentIds) {
             id,
-            team1 {
-                id,
-                name,
-                picture,
-                users {
-                    id
+            tournamentRegistration1 {
+                team {
+                    id,
+                    name,
+                    picture,
+                    users {
+                        id
+                    }
                 }
             },
-            team2 {
-                id,
-                name,
-                picture
-                users {
-                    id
+            tournamentRegistration2 {
+                team {
+                    id,
+                    name,
+                    picture
+                    users {
+                        id
+                    }
                 }
             }
         }
@@ -28,25 +32,29 @@ gql`
     query getMatchById($matchId: Int!) {
         getMatchById(matchId: $matchId) {
             id,
-            team1 {
-                id,
-                name,
-                picture,
-                users {
+            tournamentRegistration1 {
+                team {
                     id,
-                    playertag,
-                    picture
+                    name,
+                    picture,
+                    users {
+                        id,
+                        playertag,
+                        picture
+                    }
                 }
             },
-            team2 {
-                id,
-                name,
-                picture
-                users {
+            tournamentRegistration2 {
+                team {
                     id,
-                    playertag,
+                    name,
                     picture
-                }
+                    users {
+                        id,
+                        playertag,
+                        picture
+                    }
+                },
             },
             currentPhase {
                 phaseType,

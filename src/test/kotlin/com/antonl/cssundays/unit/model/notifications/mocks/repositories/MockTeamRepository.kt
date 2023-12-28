@@ -5,7 +5,7 @@ import com.antonl.cssundays.repositories.TeamRepository
 import java.util.*
 
 class MockTeamRepository() : TeamRepository {
-    override fun findTeamBySlug(slug: String): Team {
+    override fun findTeamByName(name: String): Team? {
         TODO("Not yet implemented")
     }
 

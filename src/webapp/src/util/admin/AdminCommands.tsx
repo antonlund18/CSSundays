@@ -1,8 +1,9 @@
 import * as React from "react"
 import {useEffect, useRef, useState} from "react"
 import {Autocomplete, TextField} from "@mui/material";
-import {AdminCommandCreateMatch} from "./AdminChangePlayerName";
+import {AdminCommandCreateTestMatch} from "./AdminChangeCreateTestMatch";
 import {AdminCommandChangeMatchPhase} from "./AdminCommandChangeMatchPhase";
+import {AdminCommandCreateTestData} from "./AdminCommandCreateTestData";
 
 
 export const AdminCommands = (props: React.PropsWithChildren<any>) => {
@@ -16,8 +17,9 @@ export const AdminCommands = (props: React.PropsWithChildren<any>) => {
     const inputRef = useRef<HTMLInputElement>()
 
     const Commands = {
-        createMatch: <AdminCommandCreateMatch/>,
-        changeMatchPhase: <AdminCommandChangeMatchPhase/>
+        createTestMatch: <AdminCommandCreateTestMatch/>,
+        changeMatchPhase: <AdminCommandChangeMatchPhase/>,
+        createTestData: <AdminCommandCreateTestData/>
     }
     const possibleCommands = Object.keys(Commands)
 

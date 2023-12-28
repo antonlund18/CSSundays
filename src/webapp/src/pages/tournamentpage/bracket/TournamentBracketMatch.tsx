@@ -103,7 +103,7 @@ export const TournamentBracketMatch = (props: TournamentBracketMatchProps): JSX.
         return team.users.map(user => user.id).includes(currentUser.id)
     }, [currentUser])
 
-    if (!props.connectorBefore && !props.match.team1 && !props.match.team2) {
+    if (!props.connectorBefore && !props.match?.tournamentRegistration1?.team && !props.match?.tournamentRegistration2?.team) {
         return <List component={"nav"} className={classes.cancelledMatch}>
             <ListItem style={{padding: "none", backgroundColor: "#bfbfbf", height: "24px"}}/>
             <Divider/>
@@ -111,7 +111,8 @@ export const TournamentBracketMatch = (props: TournamentBracketMatchProps): JSX.
         </List>
     }
 
-    const {team1, team2} = props.match
+    const team1 = props.match.tournamentRegistration1?.team
+    const team2 = props.match.tournamentRegistration2?.team
 
     return <Button className={classes.match} onClick={() => navigate(`/matches/${props.match.id}` ?? "")}>
         <ListItem className={classes.team}>

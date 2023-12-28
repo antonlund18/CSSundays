@@ -50,7 +50,7 @@ gql`
             }
             startDateAndTime,
             numberOfTeamsAllowed,
-            teamRegistrations {
+            tournamentRegistrations {
                 team {
                     id
                 },
@@ -80,15 +80,19 @@ gql`
                     parent {
                         id
                     },
-                    team1 {
-                        id,
-                        name
+                    tournamentRegistration1 {
+                        team {
+                            id,
+                            name
+                        }
                     },
-                    team2 {
-                        id,
-                        name
+                    tournamentRegistration2 {
+                        team {
+                            id,
+                            name
+                        }
                     }
-                }                
+                }
             }
         }
     }
@@ -105,7 +109,7 @@ gql`
             rules,
             startDateAndTime,
             numberOfTeamsAllowed,
-            teamRegistrations {
+            tournamentRegistrations {
                 id,
                 captain {
                     id,
@@ -128,24 +132,28 @@ gql`
                 id,
                 root {
                     id,
-                    team1 {
-                        id,
-                        name,
-                        picture
-                        users {
-                            id
-                            playertag
+                    tournamentRegistration1 {
+                        team {
+                            id,
+                            name,
                             picture
+                            users {
+                                id
+                                playertag
+                                picture
+                            }
                         }
                     },
-                    team2 {
-                        id,
-                        name,
-                        picture
-                        users {
-                            id
-                            playertag
+                    tournamentRegistration2 {
+                        team {
+                            id,
+                            name,
                             picture
+                            users {
+                                id
+                                playertag
+                                picture
+                            }
                         }
                     }
                 }
@@ -221,7 +229,7 @@ gql`
     mutation deregisterTeamFromTournament($tournamentId: Int!, $teamId: Int!) {
         deregisterTeamFromTournament(tournamentId: $tournamentId, teamId: $teamId) {
             id
-            teamRegistrations {
+            tournamentRegistrations {
                 id
                 team {
                     id
@@ -242,7 +250,7 @@ gql`
     mutation deregisterPlayerFromTournament($tournamentId: Int!, $playerId: Int!) {
         deregisterPlayerFromTournament(tournamentId: $tournamentId, playerId: $playerId) {
             id
-            teamRegistrations {
+            tournamentRegistrations {
                 id
                 team {
                     id

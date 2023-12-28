@@ -18,11 +18,13 @@ class TeamService(val teamRepository: TeamRepository) {
 
     fun createTeam(name: String, owner: User): Team {
         val team = Team(name = name, owner = owner);
+        team.users.add(owner)
+        owner.teams.add(team)
         return saveTeam(team);
     }
 
-    suspend fun findTeamBySlug(slug: String): Team? {
-        return teamRepository.findTeamBySlug(slug)
+    suspend fun findTeamByName(name: String): Team? {
+        return teamRepository.findTeamByName(name)
     }
 
     suspend fun findTeamById(id: Int): Team? {
@@ -37,7 +39,7 @@ class TeamService(val teamRepository: TeamRepository) {
         if (team == null || user == null) {
             return;
         }
-        if (!team.users.contains(user)) {
+        if (team.users.find { it.id == user.id } == null) {
             team.users.add(user);
             saveTeam(team);
         }

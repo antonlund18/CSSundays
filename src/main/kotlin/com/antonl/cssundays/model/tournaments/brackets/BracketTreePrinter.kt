@@ -12,8 +12,8 @@ class BracketTreePrinter : BracketTreeTraverser {
             for (node in currentLevel) {
                 var teamsInMatch = 0
 
-                node.team1?.let { teamsInMatch++ }
-                node.team2?.let { teamsInMatch++ }
+                node.tournamentRegistration1?.let { teamsInMatch++ }
+                node.tournamentRegistration2?.let { teamsInMatch++ }
 
                 print("${teamsInMatch} ")
 

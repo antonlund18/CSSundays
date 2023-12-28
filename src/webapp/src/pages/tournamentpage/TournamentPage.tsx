@@ -69,7 +69,7 @@ export const TournamentPage = () => {
         navigate(TABS[str])
     }
 
-    const numberOfRegisteredTeams = tournament.teamRegistrations?.length ?? 0
+    const numberOfRegisteredTeams = tournament.tournamentRegistrations?.length ?? 0
 
     return <CenteredPage>
         <div className={classes.headerSection}>
@@ -105,7 +105,7 @@ export const TournamentPage = () => {
             <RulesTab tournament={tournament}/>
         </TabPanel>
         <TabPanel value={value} index={3}>
-            <TeamsTab tournamentRegistrations={tournament.teamRegistrations}/>
+            <TeamsTab tournamentRegistrations={tournament.tournamentRegistrations}/>
         </TabPanel>
         <TabPanel value={value} index={4}>
             <MediaTab/>
