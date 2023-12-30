@@ -1,5 +1,5 @@
 import * as React from "react"
-import {ObjectType, Team} from "../../codegen/generated-types";
+import {ObjectType, Team, User} from "../../codegen/generated-types";
 import {Grid, Typography} from "@mui/material";
 import {getPictureLinkFromKey} from "../../util/StorageHelper";
 import {makeStyles} from "@mui/styles";
@@ -29,6 +29,7 @@ export enum MagePageTeamPosition {
 type MatchPageTeamProps = {
     position: MagePageTeamPosition
     team: Team | undefined
+    players: User[]
 }
 
 export const MatchPageTeam = (props: MatchPageTeamProps) => {
@@ -63,7 +64,7 @@ export const MatchPageTeam = (props: MatchPageTeamProps) => {
             justifyContent: props.position === MagePageTeamPosition.RIGHT ? "end" : "start",
             marginTop: "32px"
         }}>
-            {props.team?.users.slice(0, 5).map(player => {
+            {props.players?.slice(0, 5).map(player => {
                 return <PlayerPicture player={player}/>
             })}
         </div>

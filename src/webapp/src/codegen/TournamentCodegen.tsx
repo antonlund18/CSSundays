@@ -120,12 +120,12 @@ gql`
                     id,
                     name
                     picture
-                    users {
-                        id,
-                        picture,
-                        playertag
-                    }
                 },
+                players {
+                    id,
+                    playertag,
+                    picture,
+                }
                 createdTs
             },
             bracket {
@@ -137,11 +137,11 @@ gql`
                             id,
                             name,
                             picture
-                            users {
-                                id
-                                playertag
-                                picture
-                            }
+                        }
+                        players {
+                            id,
+                            playertag,
+                            picture,
                         }
                     },
                     tournamentRegistration2 {
@@ -149,11 +149,11 @@ gql`
                             id,
                             name,
                             picture
-                            users {
-                                id
-                                playertag
-                                picture
-                            }
+                        }
+                        players {
+                            id,
+                            playertag,
+                            picture,
                         }
                     }
                 }

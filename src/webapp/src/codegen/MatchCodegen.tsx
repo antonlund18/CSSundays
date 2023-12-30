@@ -8,10 +8,12 @@ gql`
                 team {
                     id,
                     name,
+                    picture
+                },
+                players {
+                    id,
+                    playertag,
                     picture,
-                    users {
-                        id
-                    }
                 }
             },
             tournamentRegistration2 {
@@ -19,9 +21,11 @@ gql`
                     id,
                     name,
                     picture
-                    users {
-                        id
-                    }
+                }
+                players {
+                    id,
+                    playertag,
+                    picture,
                 }
             }
         }
@@ -37,11 +41,11 @@ gql`
                     id,
                     name,
                     picture,
-                    users {
-                        id,
-                        playertag,
-                        picture
-                    }
+                }
+                players {
+                    id,
+                    playertag,
+                    picture,
                 }
             },
             tournamentRegistration2 {
@@ -49,12 +53,12 @@ gql`
                     id,
                     name,
                     picture
-                    users {
-                        id,
-                        playertag,
-                        picture
-                    }
                 },
+                players {
+                    id,
+                    playertag,
+                    picture,
+                }
             },
             currentPhase {
                 phaseType,

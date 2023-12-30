@@ -1,4 +1,4 @@
-import {Match, Team} from "../../../codegen/generated-types";
+import {Match, Team, TournamentRegistration} from "../../../codegen/generated-types";
 import {Button, Divider, List, ListItem, Theme, Typography} from "@mui/material";
 import {makeStyles} from "@mui/styles"
 import {Constants} from "../../../util/Constants";
@@ -96,11 +96,11 @@ export const TournamentBracketMatch = (props: TournamentBracketMatchProps): JSX.
     const {currentUser} = useGetCurrentUser()
     const navigate = useNavigate()
 
-    const currentPlayerIsOnTeam = useCallback((team: Team): boolean => {
-        if (!currentUser?.id) {
+    const currentPlayerIsOnTeam = useCallback((tournamentRegistration: TournamentRegistration | undefined): boolean => {
+        if (!currentUser?.id || !tournamentRegistration) {
             return false
         }
-        return team.users.map(user => user.id).includes(currentUser.id)
+        return tournamentRegistration.players.map(player => player.id).includes(currentUser.id)
     }, [currentUser])
 
     if (!props.connectorBefore && !props.match?.tournamentRegistration1?.team && !props.match?.tournamentRegistration2?.team) {
@@ -117,7 +117,7 @@ export const TournamentBracketMatch = (props: TournamentBracketMatchProps): JSX.
     return <Button className={classes.match} onClick={() => navigate(`/matches/${props.match.id}` ?? "")}>
         <ListItem className={classes.team}>
             {team1 ?
-                <TournamentBracketMatchTeam team={team1} isCurrentUserOnTeam={currentPlayerIsOnTeam(team1)}/> :
+                <TournamentBracketMatchTeam team={team1} isCurrentUserOnTeam={currentPlayerIsOnTeam(props.match.tournamentRegistration1)}/> :
                 <Typography noWrap fontWeight={"bold"} style={{textOverflow: "ellipsis", fontSize: "12px"}}>
                     <i>TBD</i>
                 </Typography>
@@ -126,7 +126,7 @@ export const TournamentBracketMatch = (props: TournamentBracketMatchProps): JSX.
         <Divider flexItem/>
         <ListItem className={classes.team}>
             {team2 ?
-                <TournamentBracketMatchTeam team={team2} isCurrentUserOnTeam={currentPlayerIsOnTeam(team2)}/> :
+                <TournamentBracketMatchTeam team={team2} isCurrentUserOnTeam={currentPlayerIsOnTeam(props.match.tournamentRegistration2)}/> :
                 <Typography noWrap fontWeight={"bold"} style={{textOverflow: "ellipsis", fontSize: "12px"}}>
                     <i>TBD</i>
                 </Typography>
