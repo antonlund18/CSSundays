@@ -1,74 +1,57 @@
+import {CsMap} from "../codegen/generated-types";
+
 export type CS2Map = {
+    map: CsMap
     label: string
     picture: string
 }
 
-enum MapType {
-    MIRAGE,
-    VERTIGO,
-    NUKE,
-    ANCIENT,
-    ANUBIS,
-    INFERNO,
-    OVERPASS,
-    DUST2,
-    TRAIN,
-    COBBLESTONE,
-}
-
-type MapPool = Record<MapType, CS2Map>
+type MapPool = Record<CsMap, CS2Map>
 
 export const mapPool: MapPool = {
-    [MapType.MIRAGE]: {
+    [CsMap.Mirage]: {
+        map: CsMap.Mirage,
         label: "Mirage",
         picture: "https://tradeit.gg/blog/wp-content/uploads/2023/07/image-18.webp"
     },
-    [MapType.VERTIGO]: {
+    [CsMap.Vertigo]: {
+        map: CsMap.Vertigo,
         label: "Vertigo",
         picture: "https://tradeit.gg/blog/wp-content/uploads/2023/07/image-19-1024x576.webp"
     },
-    [MapType.NUKE]: {
+    [CsMap.Nuke]: {
+        map: CsMap.Nuke,
         label: "Nuke",
         picture: "https://tradeit.gg/blog/wp-content/uploads/2023/07/image-20-1024x576.webp"
     },
-    [MapType.ANCIENT]: {
+    [CsMap.Ancient]: {
+        map: CsMap.Ancient,
         label: "Ancient",
         picture: "https://tradeit.gg/blog/wp-content/uploads/2023/07/image-21-1024x576.webp"
     },
-    [MapType.ANUBIS]: {
+    [CsMap.Anubis]: {
+        map: CsMap.Anubis,
         label: "Anubis",
         picture: "https://tradeit.gg/blog/wp-content/uploads/2023/07/image-27-1024x576.webp"
     },
-    [MapType.INFERNO]: {
+    [CsMap.Inferno]: {
+        map: CsMap.Inferno,
         label: "Inferno",
         picture: "https://tradeit.gg/blog/wp-content/uploads/2023/07/image-22.webp"
     },
-    [MapType.OVERPASS]: {
+    [CsMap.Overpass]: {
+        map: CsMap.Overpass,
         label: "Overpass",
         picture: "https://tradeit.gg/blog/wp-content/uploads/2023/07/image-23.webp"
-    },
-    [MapType.DUST2]: {
-        label: "",
-        picture: ""
-    },
-    [MapType.TRAIN]: {
-        label: "",
-        picture: ""
-    },
-    [MapType.COBBLESTONE]: {
-        label: "",
-        picture: ""
     }
 }
 
 export const activeDutyMapPool: CS2Map[] = [
-    mapPool[MapType.MIRAGE],
-    mapPool[MapType.ANCIENT],
-    mapPool[MapType.ANUBIS],
-    mapPool[MapType.NUKE],
-    mapPool[MapType.OVERPASS],
-    mapPool[MapType.VERTIGO],
-    mapPool[MapType.INFERNO],
+    mapPool[CsMap.Mirage],
+    mapPool[CsMap.Ancient],
+    mapPool[CsMap.Anubis],
+    mapPool[CsMap.Nuke],
+    mapPool[CsMap.Overpass],
+    mapPool[CsMap.Vertigo],
+    mapPool[CsMap.Inferno],
 ]
-
-

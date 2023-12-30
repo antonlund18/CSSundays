@@ -25,6 +25,6 @@ class MatchPhase(
 
     val createdTs: LocalDateTime = LocalDateTime.now(ZoneOffset.UTC),
 
-    val endTs: LocalDateTime? = null
+    var endTs: LocalDateTime? = null
 )
 

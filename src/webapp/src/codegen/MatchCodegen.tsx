@@ -88,6 +88,18 @@ gql`
                             ready
                         }
                     }
+                    ... on MatchPickAndBanPhaseState {
+                        id,
+                        firstTeamToBan
+                        votingTimeInSeconds
+                        actions {
+                            id
+                            captain {
+                                id
+                            }
+                            ban
+                        }
+                    }
                 }
             }
         }
@@ -111,6 +123,44 @@ gql`
                         }
                         teamTwoAction {
                             ready
+                        }
+                    },
+                    ... on MatchPickAndBanPhaseState {
+                        id,
+                        firstTeamToBan
+                        votingTimeInSeconds
+                        actions {
+                            id
+                            captain {
+                                id
+                            }
+                            ban
+                        }
+                    }
+                }
+            }
+        }
+    }
+`
+
+gql`
+    mutation banMap($matchId: Int!, $playerId: Int!, $ban: CSMap!) {
+        banMap(matchId: $matchId, playerId: $playerId, ban: $ban) {
+            id,
+            currentPhase {
+                id,
+                endTs,
+                state {
+                    ... on MatchPickAndBanPhaseState {
+                        id,
+                        firstTeamToBan
+                        votingTimeInSeconds
+                        actions {
+                            id
+                            captain {
+                                id
+                            }
+                            ban
                         }
                     }
                 }

@@ -1,7 +1,7 @@
 import * as React from "react"
 import {useEffect, useState} from "react"
 import {makeStyles} from "@mui/styles";
-import {MatchPhase, MatchReadyCheckPhaseState, useMarkReadyMutation, User} from "../../../codegen/generated-types";
+import {Match, MatchReadyCheckPhaseState, useMarkReadyMutation, User} from "../../../codegen/generated-types";
 import {Box, Button, CircularProgress, Grid, Typography} from "@mui/material";
 import {PlayerPicture} from "../../teamspage/team/PlayerPicture";
 import {Check} from "@mui/icons-material";
@@ -23,7 +23,7 @@ const useStyles = makeStyles(theme => ({
 }))
 
 type MatchPageReadyCheckPhaseProps = {
-    phase: MatchPhase
+    match: Match
     team1Captain: User | undefined
     team2Captain: User | undefined
 }
@@ -34,9 +34,11 @@ export const MatchPageReadyCheckPhase = (props: MatchPageReadyCheckPhaseProps) =
     const {currentUser} = useGetCurrentUser()
     const [markReady] = useMarkReadyMutation()
 
+    const phase = props.match.currentPhase
+
     useEffect(() => {
         const interval = setInterval(() => {
-            const endTime = new Date(props.phase.endTs).getTime()
+            const endTime = new Date(phase.endTs).getTime()
             const currentTime = new Date().getTime()
             const deltaTimeInSeconds = (endTime - currentTime) / 1000
 
@@ -46,7 +48,7 @@ export const MatchPageReadyCheckPhase = (props: MatchPageReadyCheckPhaseProps) =
         }, 1000);
 
         return () => clearInterval(interval);
-    }, [props.phase.endTs])
+    }, [phase.endTs])
 
     const addStartZero = (countdown: String | undefined) => {
         if (!countdown) return `00`
@@ -58,19 +60,19 @@ export const MatchPageReadyCheckPhase = (props: MatchPageReadyCheckPhaseProps) =
     const minutes = countdown ? parseInt(String(countdown / 60)) : 0
     const countdownString = countdown !== null ? `${addStartZero(minutes?.toString())}:${addStartZero(seconds?.toString())}` : ""
 
-    const state = props.phase.state as MatchReadyCheckPhaseState
+    const state = phase.state as MatchReadyCheckPhaseState
 
     const isCurrentUserTeamOneCaptain = props.team1Captain?.id === currentUser.id
     const isCurrentUserTeamTwoCaptain = props.team2Captain?.id === currentUser.id
 
     const handleCaptainReady = () => {
-        console.log(props.phase.match?.id)
-        if (!props.phase.match?.id || !currentUser.id) {
+        console.log(phase.match?.id)
+        if (!phase.match?.id || !currentUser.id) {
             return
         }
         markReady({
             variables: {
-                matchId: props.phase.match.id,
+                matchId: phase.match.id,
                 playerId: currentUser.id
             }
         })

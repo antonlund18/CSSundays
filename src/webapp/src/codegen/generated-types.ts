@@ -41,6 +41,7 @@ export enum ChangeMatchPhaseStrategy {
   FinishedWinTeam_2 = 'FINISHED_WIN_TEAM_2',
   InProgress = 'IN_PROGRESS',
   PickAndBanBo1 = 'PICK_AND_BAN_BO1',
+  PickAndBanTimeout = 'PICK_AND_BAN_TIMEOUT',
   ReadyCheckOneCaptainPerTeam = 'READY_CHECK_ONE_CAPTAIN_PER_TEAM',
   ReadyCheckTimeOut = 'READY_CHECK_TIME_OUT',
   WaitingForTeams = 'WAITING_FOR_TEAMS',
@@ -127,6 +128,7 @@ export type MatchPickAndBanPhaseState = MatchPhaseState & {
   actions: Array<MatchPickAndBanPhaseAction>;
   firstTeamToBan: Scalars['Int'];
   id: Scalars['Int'];
+  votingTimeInSeconds: Scalars['Int'];
 };
 
 export type MatchReadyCheckPhaseCaptainPerTeamAction = {
@@ -146,6 +148,7 @@ export type MatchReadyCheckPhaseState = MatchPhaseState & {
 export type Mutation = {
   __typename?: 'Mutation';
   acceptInvitation?: Maybe<InviteToTeam>;
+  banMap?: Maybe<Match>;
   changeMatchPhase?: Maybe<Match>;
   changePassword?: Maybe<User>;
   createInviteToTeam?: Maybe<InviteToTeam>;
@@ -175,6 +178,13 @@ export type Mutation = {
 
 export type MutationAcceptInvitationArgs = {
   invitationId: Scalars['Int'];
+};
+
+
+export type MutationBanMapArgs = {
+  ban: CsMap;
+  matchId: Scalars['Int'];
+  playerId: Scalars['Int'];
 };
 
 
@@ -561,7 +571,7 @@ export type GetMatchByIdQueryVariables = Exact<{
 }>;
 
 
-export type GetMatchByIdQuery = { __typename?: 'Query', getMatchById?: { __typename?: 'Match', id?: number, tournamentRegistration1?: { __typename?: 'TournamentRegistration', team: { __typename?: 'Team', id?: number, name: string, picture?: string }, players: Array<{ __typename?: 'User', id?: number, playertag: string, picture?: string }>, captain: { __typename?: 'User', id?: number, playertag: string, picture?: string } }, tournamentRegistration2?: { __typename?: 'TournamentRegistration', team: { __typename?: 'Team', id?: number, name: string, picture?: string }, players: Array<{ __typename?: 'User', id?: number, playertag: string, picture?: string }>, captain: { __typename?: 'User', id?: number, playertag: string, picture?: string } }, currentPhase: { __typename?: 'MatchPhase', id: number, phaseType: MatchPhaseType, createdTs: any, endTs?: any, match?: { __typename?: 'Match', id?: number }, state?: { __typename?: 'MatchPickAndBanPhaseState' } | { __typename?: 'MatchReadyCheckPhaseState', id: number, teamOneAction: { __typename?: 'MatchReadyCheckPhaseCaptainPerTeamAction', ready: boolean }, teamTwoAction: { __typename?: 'MatchReadyCheckPhaseCaptainPerTeamAction', ready: boolean } } } } };
+export type GetMatchByIdQuery = { __typename?: 'Query', getMatchById?: { __typename?: 'Match', id?: number, tournamentRegistration1?: { __typename?: 'TournamentRegistration', team: { __typename?: 'Team', id?: number, name: string, picture?: string }, players: Array<{ __typename?: 'User', id?: number, playertag: string, picture?: string }>, captain: { __typename?: 'User', id?: number, playertag: string, picture?: string } }, tournamentRegistration2?: { __typename?: 'TournamentRegistration', team: { __typename?: 'Team', id?: number, name: string, picture?: string }, players: Array<{ __typename?: 'User', id?: number, playertag: string, picture?: string }>, captain: { __typename?: 'User', id?: number, playertag: string, picture?: string } }, currentPhase: { __typename?: 'MatchPhase', id: number, phaseType: MatchPhaseType, createdTs: any, endTs?: any, match?: { __typename?: 'Match', id?: number }, state?: { __typename?: 'MatchPickAndBanPhaseState', id: number, firstTeamToBan: number, votingTimeInSeconds: number, actions: Array<{ __typename?: 'MatchPickAndBanPhaseAction', id?: number, ban: CsMap, captain: { __typename?: 'User', id?: number } }> } | { __typename?: 'MatchReadyCheckPhaseState', id: number, teamOneAction: { __typename?: 'MatchReadyCheckPhaseCaptainPerTeamAction', ready: boolean }, teamTwoAction: { __typename?: 'MatchReadyCheckPhaseCaptainPerTeamAction', ready: boolean } } } } };
 
 export type MarkReadyMutationVariables = Exact<{
   matchId: Scalars['Int'];
@@ -569,7 +579,16 @@ export type MarkReadyMutationVariables = Exact<{
 }>;
 
 
-export type MarkReadyMutation = { __typename?: 'Mutation', markReady?: { __typename?: 'Match', id?: number, currentPhase: { __typename?: 'MatchPhase', id: number, phaseType: MatchPhaseType, createdTs: any, endTs?: any, state?: { __typename?: 'MatchPickAndBanPhaseState' } | { __typename?: 'MatchReadyCheckPhaseState', id: number, teamOneAction: { __typename?: 'MatchReadyCheckPhaseCaptainPerTeamAction', ready: boolean }, teamTwoAction: { __typename?: 'MatchReadyCheckPhaseCaptainPerTeamAction', ready: boolean } } } } };
+export type MarkReadyMutation = { __typename?: 'Mutation', markReady?: { __typename?: 'Match', id?: number, currentPhase: { __typename?: 'MatchPhase', id: number, phaseType: MatchPhaseType, createdTs: any, endTs?: any, state?: { __typename?: 'MatchPickAndBanPhaseState', id: number, firstTeamToBan: number, votingTimeInSeconds: number, actions: Array<{ __typename?: 'MatchPickAndBanPhaseAction', id?: number, ban: CsMap, captain: { __typename?: 'User', id?: number } }> } | { __typename?: 'MatchReadyCheckPhaseState', id: number, teamOneAction: { __typename?: 'MatchReadyCheckPhaseCaptainPerTeamAction', ready: boolean }, teamTwoAction: { __typename?: 'MatchReadyCheckPhaseCaptainPerTeamAction', ready: boolean } } } } };
+
+export type BanMapMutationVariables = Exact<{
+  matchId: Scalars['Int'];
+  playerId: Scalars['Int'];
+  ban: CsMap;
+}>;
+
+
+export type BanMapMutation = { __typename?: 'Mutation', banMap?: { __typename?: 'Match', id?: number, currentPhase: { __typename?: 'MatchPhase', id: number, endTs?: any, state?: { __typename?: 'MatchPickAndBanPhaseState', id: number, firstTeamToBan: number, votingTimeInSeconds: number, actions: Array<{ __typename?: 'MatchPickAndBanPhaseAction', id?: number, ban: CsMap, captain: { __typename?: 'User', id?: number } }> } | { __typename?: 'MatchReadyCheckPhaseState' } } } };
 
 export type GetAllNotificationsQueryVariables = Exact<{
   userId: Scalars['Int'];
@@ -1170,6 +1189,18 @@ export const GetMatchByIdDocument = gql`
             ready
           }
         }
+        ... on MatchPickAndBanPhaseState {
+          id
+          firstTeamToBan
+          votingTimeInSeconds
+          actions {
+            id
+            captain {
+              id
+            }
+            ban
+          }
+        }
       }
     }
   }
@@ -1222,6 +1253,18 @@ export const MarkReadyDocument = gql`
             ready
           }
         }
+        ... on MatchPickAndBanPhaseState {
+          id
+          firstTeamToBan
+          votingTimeInSeconds
+          actions {
+            id
+            captain {
+              id
+            }
+            ban
+          }
+        }
       }
     }
   }
@@ -1254,6 +1297,59 @@ export function useMarkReadyMutation(baseOptions?: Apollo.MutationHookOptions<Ma
 export type MarkReadyMutationHookResult = ReturnType<typeof useMarkReadyMutation>;
 export type MarkReadyMutationResult = Apollo.MutationResult<MarkReadyMutation>;
 export type MarkReadyMutationOptions = Apollo.BaseMutationOptions<MarkReadyMutation, MarkReadyMutationVariables>;
+export const BanMapDocument = gql`
+    mutation banMap($matchId: Int!, $playerId: Int!, $ban: CSMap!) {
+  banMap(matchId: $matchId, playerId: $playerId, ban: $ban) {
+    id
+    currentPhase {
+      id
+      endTs
+      state {
+        ... on MatchPickAndBanPhaseState {
+          id
+          firstTeamToBan
+          votingTimeInSeconds
+          actions {
+            id
+            captain {
+              id
+            }
+            ban
+          }
+        }
+      }
+    }
+  }
+}
+    `;
+export type BanMapMutationFn = Apollo.MutationFunction<BanMapMutation, BanMapMutationVariables>;
+
+/**
+ * __useBanMapMutation__
+ *
+ * To run a mutation, you first call `useBanMapMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useBanMapMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [banMapMutation, { data, loading, error }] = useBanMapMutation({
+ *   variables: {
+ *      matchId: // value for 'matchId'
+ *      playerId: // value for 'playerId'
+ *      ban: // value for 'ban'
+ *   },
+ * });
+ */
+export function useBanMapMutation(baseOptions?: Apollo.MutationHookOptions<BanMapMutation, BanMapMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<BanMapMutation, BanMapMutationVariables>(BanMapDocument, options);
+      }
+export type BanMapMutationHookResult = ReturnType<typeof useBanMapMutation>;
+export type BanMapMutationResult = Apollo.MutationResult<BanMapMutation>;
+export type BanMapMutationOptions = Apollo.BaseMutationOptions<BanMapMutation, BanMapMutationVariables>;
 export const GetAllNotificationsDocument = gql`
     query getAllNotifications($userId: Int!) {
   getAllNotifications(userId: $userId) {
@@ -2557,6 +2653,7 @@ export const ListAllOperations = {
     declineInvitation: 'declineInvitation',
     createInviteToTeam: 'createInviteToTeam',
     markReady: 'markReady',
+    banMap: 'banMap',
     markAllNotificationsAsSeenForUser: 'markAllNotificationsAsSeenForUser',
     setPictureAndGetPresignedRequest: 'setPictureAndGetPresignedRequest',
     registerTeamOrPlayer: 'registerTeamOrPlayer',

@@ -2,7 +2,10 @@ package com.antonl.cssundays.services.model.tournaments
 
 import com.antonl.cssundays.model.core.User
 import com.antonl.cssundays.model.tournaments.brackets.Match
-import com.antonl.cssundays.model.tournaments.brackets.matches.*
+import com.antonl.cssundays.model.tournaments.brackets.matches.CSMap
+import com.antonl.cssundays.model.tournaments.brackets.matches.MatchPickAndBanPhaseAction
+import com.antonl.cssundays.model.tournaments.brackets.matches.MatchPickAndBanPhaseState
+import com.antonl.cssundays.model.tournaments.brackets.matches.MatchReadyCheckPhaseState
 import com.antonl.cssundays.quartz.ScheduledChangeMatchPhaseService
 import com.antonl.cssundays.repositories.MatchRepository
 import com.antonl.cssundays.services.model.tournaments.matchphase.ChangeMatchPhaseStrategy
@@ -71,5 +74,29 @@ class MatchService(val matchRepository: MatchRepository) {
         }
 
         return saveMatch(match)
+    }
+
+    fun banMap(match: Match, player: User, ban: CSMap) {
+        if (match.currentPhase.phaseType !== MatchPhaseType.PICK_AND_BAN || match.currentPhase.state !is MatchPickAndBanPhaseState) {
+            return
+        }
+
+        val state = match.currentPhase.state as MatchPickAndBanPhaseState
+
+        val isTeamOnesTurnToBan = (state.firstTeamToBan + state.actions.size) % 2 == 1
+        if ((match.tournamentRegistration1?.captain == player && isTeamOnesTurnToBan) ||
+            (match.tournamentRegistration2?.captain == player && !isTeamOnesTurnToBan)
+        ) {
+            val action = MatchPickAndBanPhaseAction(captain = player, ban = ban, state = state)
+            state.actions.add(action)
+            val endTs = LocalDateTime.now(ZoneOffset.UTC).plusSeconds(state.votingTimeInSeconds.toLong())
+            match.currentPhase.endTs = endTs
+            scheduleChangeMatchPhase(match, ChangeMatchPhaseStrategy.PICK_AND_BAN_TIMEOUT, endTs)
+        }
+
+        val wasLastBan = CSMap.values().size - state.actions.size == 1
+        if (wasLastBan) {
+            changeMatchPhase(match, ChangeMatchPhaseStrategy.IN_PROGRESS)
+        }
     }
 }

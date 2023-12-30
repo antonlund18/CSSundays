@@ -1,21 +1,33 @@
 import * as React from "react"
-import {Box, Button, CircularProgress, Typography} from "@mui/material";
+import {useEffect, useState} from "react"
+import {Box, Button, CircularProgress, Theme, Typography} from "@mui/material";
 import {PlayerPicture} from "../../teamspage/team/PlayerPicture";
-import {Test} from "../Test";
-import {activeDutyMapPool, CS2Map} from "../../../util/MapPool";
-import {useEffect, useState} from "react";
+import {activeDutyMapPool} from "../../../util/MapPool";
 import {makeStyles} from "@mui/styles";
-import {User} from "../../../codegen/generated-types";
+import {
+    CsMap,
+    Match,
+    MatchPickAndBanPhaseState,
+    TournamentRegistration,
+    useBanMapMutation,
+    User
+} from "../../../codegen/generated-types";
+import {useGetCurrentUser} from "../../../hooks/api/useUser";
 
-const useStyles = makeStyles(theme => ({
-    mapButton: {
+interface StylesProps {
+    isVoting: boolean
+}
+
+const useStyles = makeStyles<Theme, StylesProps>((theme) => ({
+    mapButton: props => ({
         "&:hover": {
-            transform: "scale(1.2)"
+            transform: props.isVoting ? "scale(1.2)" : "none"
         },
         "&.MuiButtonBase-root:disabled": {
             boxShadow: "inset 0 0 0 1000px rgba(0,0,0,.8)",
             color: "rgba(255, 255, 255, 0.2)"
         },
+        cursor: props.isVoting ? "pointer" : "default",
         width: "100%",
         padding: 0,
         borderRadius: 0,
@@ -27,7 +39,7 @@ const useStyles = makeStyles(theme => ({
         backgroundSize: "cover",
         textShadow: "#000000 0px 0px 10px",
         color: "rgba(255, 255, 255, 1)"
-    },
+    }),
     mapContainer: {
         width: "14%",
         height: "100%",
@@ -63,35 +75,71 @@ const useStyles = makeStyles(theme => ({
 }))
 
 type MatchPageMapPickPhaseProps = {
+    match: Match
     team1Captain: User | undefined
     team2Captain: User | undefined
 }
 
 export const MatchPagePickAndBanPhase = (props: MatchPageMapPickPhaseProps) => {
-    const COUNTDOWN_TIME = 1000 * 20 // 20 seconds
-    const classes = useStyles()
-    const [count, setCount] = useState(0)
-    const [bannedMaps, setBannedMaps] = useState<CS2Map[]>([])
-    const [countdownDate, setCountdownDate] = useState<number>(new Date().getTime() + COUNTDOWN_TIME)
-    const [countdown, setCountDown] = useState<number>(new Date().getTime() - countdownDate);
+    const {currentUser} = useGetCurrentUser()
+    const [banMap] = useBanMapMutation()
+
+    const [countdown, setCountdown] = useState<number | null>(null);
+    const countdownInSeconds = countdown ? parseInt(String(countdown % 60)) : 0
+
+    const phase = props.match.currentPhase
+    const state = phase.state as MatchPickAndBanPhaseState
+    const bannedMaps = state.actions.map(action => action.ban)
+
+    const tournamentRegistration1 = props.match.tournamentRegistration1
+    const tournamentRegistration2 = props.match.tournamentRegistration2
+
+    const isTeamOneToBan = (state.firstTeamToBan + state.actions.length) % 2 == 1
+    const currentCaptainToVote = isTeamOneToBan ? tournamentRegistration1?.captain : tournamentRegistration2?.captain
+    const isCurrentUserVoting = currentCaptainToVote?.id === currentUser?.id
+
+    const classes = useStyles({isVoting: isCurrentUserVoting})
+
+    const isPlayerCaptainForTournamentRegistration = (tournamentRegistration?: TournamentRegistration, player?: User) => {
+        if (!tournamentRegistration?.captain.id || !player?.id) {
+            return false
+        }
+        return tournamentRegistration.captain.id === player.id
+    }
+
+    const isCurrentCaptainToVoteCaptainForTeamOne = isPlayerCaptainForTournamentRegistration(tournamentRegistration1, currentCaptainToVote)
 
     useEffect(() => {
         const interval = setInterval(() => {
-            const newCountdown = countdownDate - new Date().getTime()
-            if (newCountdown > 0) {
-                setCountDown(countdownDate - new Date().getTime());
+            const endTime = new Date(phase.endTs).getTime()
+            const currentTime = new Date().getTime()
+            const deltaTimeInSeconds = (endTime - currentTime) / 1000
+
+            if (deltaTimeInSeconds > 0) {
+                setCountdown(deltaTimeInSeconds);
             }
         }, 1000);
 
         return () => clearInterval(interval);
-    }, [countdownDate]);
+    }, [phase.endTs])
 
-    const countdownInSeconds = Math.floor((countdown % (1000 * 60)) / 1000)
+    const handleMapBan = (map: CsMap) => {
+        if (!props.match?.id || !currentUser?.id) {
+            return
+        }
+        banMap({
+            variables: {
+                matchId: props.match.id,
+                playerId: currentUser.id,
+                ban: map
+            }
+        })
+    }
 
     return <>
         <div className={classes.captainAndCountdownContainer}>
             <div className={classes.captainContainer}>
-                {count % 2 === 0 &&
+                {isTeamOneToBan &&
                     <Box className={classes.captainSpinner}>
                         <CircularProgress style={{zIndex: 100}}/>
                         {props.team1Captain &&
@@ -101,15 +149,20 @@ export const MatchPagePickAndBanPhase = (props: MatchPageMapPickPhaseProps) => {
                     </Box>}
             </div>
             <div style={{display: "flex", justifyContent: "center", width: "33%"}}>
-                <Test countdown={countdownInSeconds}/>
+                <Typography variant={"h4"} style={{textTransform: "none"}}>
+                    <Typography variant={"h4"} style={{display: "inline", textTransform: "none"}} color={isCurrentCaptainToVoteCaptainForTeamOne ? "primary" : "error"}>
+                        {currentCaptainToVote?.playertag}
+                    </Typography>
+                    {` TIL AT BANNE (${countdownInSeconds}s)`}
+                </Typography>
             </div>
             <div className={classes.captainContainer}>
-                {count % 2 === 1 &&
+                {!isTeamOneToBan &&
                     <Box className={classes.captainSpinner}>
                         <CircularProgress style={{zIndex: 100}}/>
-                        {props.team1Captain &&
+                        {props.team2Captain &&
                             <Box className={classes.captain}>
-                                <PlayerPicture player={props.team1Captain} style={{width: "150%", padding: 0}}/>
+                                <PlayerPicture player={props.team2Captain} style={{width: "150%", padding: 0}}/>
                             </Box>}
                     </Box>}
             </div>
@@ -119,12 +172,8 @@ export const MatchPagePickAndBanPhase = (props: MatchPageMapPickPhaseProps) => {
                 {activeDutyMapPool.map(map => {
                     return <Button
                         className={classes.mapButton}
-                        onClick={() => {
-                            setBannedMaps([...bannedMaps, map])
-                            setCount(count + 1)
-                            setCountdownDate(new Date().getTime() + COUNTDOWN_TIME)
-                        }}
-                        disabled={bannedMaps.includes(map)}
+                        onClick={() => handleMapBan(map.map)}
+                        disabled={bannedMaps.includes(map.map)}
                         style={{backgroundImage: `url(${map.picture})`}}>
                         <Typography variant={"h2"}>{map.label}</Typography>
                     </Button>
