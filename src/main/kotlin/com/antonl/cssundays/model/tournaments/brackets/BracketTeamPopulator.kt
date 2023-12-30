@@ -3,8 +3,16 @@ package com.antonl.cssundays.model.tournaments.brackets
 import com.antonl.cssundays.model.tournaments.TournamentRegistration
 import com.antonl.cssundays.model.tournaments.brackets.matches.ChangeMatchPhaseStrategy
 import com.antonl.cssundays.services.model.tournaments.MatchService
+import org.hibernate.Hibernate
+import org.hibernate.SessionFactory
+import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.stereotype.Component
+import org.springframework.stereotype.Service
+import javax.persistence.EntityManager
+import javax.persistence.Persistence
 
-class BracketTeamPopulator(val tournamentRegistrations: List<TournamentRegistration>, val matchService: MatchService) {
+@Service
+class BracketTeamPopulator(val tournamentRegistrations: List<TournamentRegistration>) {
     var numberOfRemainingAutoAdvancedTeams = BracketCalculator.numberOfTeamsToAutomaticallyAdvanceFirstRound(tournamentRegistrations.size)
 
     fun populateTree(tree: Bracket) {
@@ -13,42 +21,12 @@ class BracketTeamPopulator(val tournamentRegistrations: List<TournamentRegistrat
         if (parentsOfLeafNodes.isEmpty() && tournamentRegistrations.isNotEmpty()) {
             tree.root?.tournamentRegistration1 = tournamentRegistrations.getOrNull(0)
             tree.root?.tournamentRegistration2 = tournamentRegistrations.getOrNull(1)
-            changeMatchPhase(tree.root)
             return
         }
 
         val remainingTournamentRegistrations = tournamentRegistrations.toMutableList()
         populateMatches(parentsOfLeafNodes, remainingTournamentRegistrations)
-        initializeMatchPhases(parentsOfLeafNodes)
     }
-
-    private fun initializeMatchPhases(parentsOfLeafNodes: List<Match>) {
-        parentsOfLeafNodes.forEach {
-            changeMatchPhase(it)
-            changeMatchPhase(it.left)
-            changeMatchPhase(it.right)
-        }
-    }
-
-    private fun changeMatchPhase(match: Match?) {
-        match ?: return
-
-        val hasTwoTeams = match.tournamentRegistration1 != null && match.tournamentRegistration2 != null
-        val hasNoTeams = match.tournamentRegistration1 == null && match.tournamentRegistration2 == null
-        if (hasTwoTeams) {
-            matchService.changeMatchPhase(
-                match,
-                changeMatchPhaseStrategy = ChangeMatchPhaseStrategy.READY_CHECK_ONE_CAPTAIN_PER_TEAM
-            )
-        }
-        if (hasNoTeams) {
-            matchService.changeMatchPhase(
-                match,
-                changeMatchPhaseStrategy = ChangeMatchPhaseStrategy.CANCELLED
-            )
-        }
-    }
-
 
     private fun populateMatches(matches: List<Match>, remainingTournamentRegistrations: MutableList<TournamentRegistration>) {
         matches.forEach {

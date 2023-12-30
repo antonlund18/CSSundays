@@ -61,6 +61,13 @@ class UserMutations : Mutation {
             .error(UserNotFoundError())
             .build()
 
+        if (currentPassword.isEmpty() || newPassword.isEmpty() || newPasswordRepeated.isEmpty()) {
+            return DataFetcherResult.newResult<User?>()
+                .data(null)
+                .error(InvalidPasswordError())
+                .build()
+        }
+
         val errors = mutableListOf<GraphQLError>()
 
         if (!newPassword.equals(newPasswordRepeated)) {

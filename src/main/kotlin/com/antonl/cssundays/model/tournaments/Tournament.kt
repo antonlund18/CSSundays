@@ -4,6 +4,7 @@ import com.antonl.cssundays.model.tournaments.brackets.Bracket
 import org.hibernate.annotations.LazyCollection
 import org.hibernate.annotations.LazyCollectionOption
 import java.time.LocalDateTime
+import java.time.ZoneOffset
 import javax.persistence.*
 
 @Entity
@@ -45,9 +46,9 @@ class Tournament(
     var published: Boolean = false,
 
     @GeneratedValue
-    val createdTs: LocalDateTime = LocalDateTime.now()
+    val createdTs: LocalDateTime = LocalDateTime.now(ZoneOffset.UTC)
 ) {
-    constructor() : this(null, "", null, "", "", TournamentFormat.SINGLE_ELIMINATION, LocalDateTime.now(), 64)
+    constructor() : this(null, "", null, "", "", TournamentFormat.SINGLE_ELIMINATION, LocalDateTime.now(ZoneOffset.UTC), 64)
     constructor(
         name: String,
         picture: String? = null,
@@ -60,7 +61,7 @@ class Tournament(
         teamRegistrations: MutableList<TournamentRegistration> = mutableListOf(),
         status: TournamentStatus = TournamentStatus.OPEN_FOR_REGISTRATIONS,
         published: Boolean = false,
-        createdTs: LocalDateTime = LocalDateTime.now()
+        createdTs: LocalDateTime = LocalDateTime.now(ZoneOffset.UTC)
     ) :
             this(
                 null,

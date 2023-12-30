@@ -38,7 +38,7 @@ class InviteToTeamService(val inviteToTeamRepository: InviteToTeamRepository,
     fun createInviteToTeam(recipient: User, team: Team, sender: User): InviteToTeam {
         val inviteToTeam = InviteToTeam(team = team, sender = sender, recipient = recipient)
         notificationService.createNotification(recipient, NotificationType.INVITE_TO_TEAM, inviteToTeam)
-        return saveInviteToTeam(inviteToTeam);
+        return inviteToTeam
     }
 
     fun acceptInvite(inviteToTeam: InviteToTeam): InviteToTeam {

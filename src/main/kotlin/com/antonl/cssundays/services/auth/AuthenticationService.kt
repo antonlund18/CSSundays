@@ -6,6 +6,7 @@ import com.antonl.cssundays.util.AuthorizationConstants
 import io.github.nefilim.kjwt.JWT
 import org.springframework.stereotype.Service
 import java.time.LocalDateTime
+import java.time.ZoneOffset
 import java.util.regex.Pattern
 import javax.transaction.Transactional
 
@@ -39,7 +40,7 @@ class AuthenticationService() {
             val issuer = user?.id.toString();
             val jwt = JWT.rs256 {
                 issuer(issuer);
-                expiresAt(LocalDateTime.now().plusDays(7))
+                expiresAt(LocalDateTime.now(ZoneOffset.UTC).plusDays(7))
                 issuedNow()
                 claim(AuthorizationConstants.JWT_USER_ROLE_CLAIM, user?.role.toString())
             }

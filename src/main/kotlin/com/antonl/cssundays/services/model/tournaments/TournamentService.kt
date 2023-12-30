@@ -12,6 +12,8 @@ import com.antonl.cssundays.services.storage.TournamentStorageService
 import org.springframework.stereotype.Service
 import java.time.LocalDateTime
 import java.util.*
+import javax.persistence.EntityManager
+import javax.persistence.PersistenceContext
 import javax.transaction.Transactional
 
 @Service
@@ -21,6 +23,9 @@ class TournamentService(
     val tournamentRegistrationService: TournamentRegistrationService,
     val matchService: MatchService,
 ) {
+    @PersistenceContext
+    private var entityManager: EntityManager? = null
+
     fun saveTournament(tournament: Tournament): Tournament {
         return tournamentRepository.save(tournament)
     }
@@ -79,7 +84,11 @@ class TournamentService(
         val numberOfMatches = calculateNumberOfMatches(registeredTeams.size)
 
         BracketMatchInitializer(numberOfMatches).traverseTree(bracket)
-        BracketTeamPopulator(tournament.tournamentRegistrations, matchService).populateTree(bracket)
+        BracketTeamPopulator(tournament.tournamentRegistrations).populateTree(bracket)
+
+        entityManager?.let { it.flush() }
+
+        BracketMatchPhaseInitializer(matchService).initializeMatchPhases(bracket)
         return saveTournament(tournament)
     }
 

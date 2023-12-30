@@ -5,6 +5,7 @@ import com.antonl.cssundays.model.core.User
 import org.hibernate.annotations.LazyCollection
 import org.hibernate.annotations.LazyCollectionOption
 import java.time.LocalDateTime
+import java.time.ZoneOffset
 import javax.persistence.*
 
 @Entity
@@ -34,5 +35,5 @@ class TournamentRegistration(
         val players: MutableList<User> = mutableListOf(captain),
 
         @GeneratedValue
-        val createdTs: LocalDateTime = LocalDateTime.now()
+        val createdTs: LocalDateTime = LocalDateTime.now(ZoneOffset.UTC)
 )

@@ -8,7 +8,8 @@ export const useFindAllNotificationsForPlayer = (playerId: number) => {
     const {data} = useGetAllNotificationsQuery({
         variables: {
             userId: playerId
-        }
+        },
+        pollInterval: 15000 // 15 seconds
     })
 
     return {
