@@ -100,10 +100,10 @@ export const TournamentBracketMatch = (props: TournamentBracketMatchProps): JSX.
         if (!currentUser?.id || !tournamentRegistration) {
             return false
         }
-        return tournamentRegistration.players.map(player => player.id).includes(currentUser.id)
+        return tournamentRegistration.players?.map(player => player.id).includes(currentUser.id)
     }, [currentUser])
 
-    if (!props.connectorBefore && !props.match?.tournamentRegistration1?.team && !props.match?.tournamentRegistration2?.team) {
+    if (!props.connectorBefore && !props.match?.tournamentRegistration1 && !props.match?.tournamentRegistration2) {
         return <List component={"nav"} className={classes.cancelledMatch}>
             <ListItem style={{padding: "none", backgroundColor: "#bfbfbf", height: "24px"}}/>
             <Divider/>
