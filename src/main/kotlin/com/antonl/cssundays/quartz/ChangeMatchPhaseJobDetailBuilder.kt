@@ -1,7 +1,7 @@
 package com.antonl.cssundays.quartz
 
 import com.antonl.cssundays.model.tournaments.brackets.Match
-import com.antonl.cssundays.model.tournaments.brackets.matches.ChangeMatchPhaseStrategy
+import com.antonl.cssundays.services.model.tournaments.matchphase.ChangeMatchPhaseStrategy
 import org.quartz.JobBuilder
 import org.quartz.JobDataMap
 import org.quartz.JobDetail

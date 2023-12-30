@@ -1,15 +1,7 @@
 package com.antonl.cssundays.model.tournaments.brackets
 
 import com.antonl.cssundays.model.tournaments.TournamentRegistration
-import com.antonl.cssundays.model.tournaments.brackets.matches.ChangeMatchPhaseStrategy
-import com.antonl.cssundays.services.model.tournaments.MatchService
-import org.hibernate.Hibernate
-import org.hibernate.SessionFactory
-import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.stereotype.Component
 import org.springframework.stereotype.Service
-import javax.persistence.EntityManager
-import javax.persistence.Persistence
 
 @Service
 class BracketTeamPopulator(val tournamentRegistrations: List<TournamentRegistration>) {

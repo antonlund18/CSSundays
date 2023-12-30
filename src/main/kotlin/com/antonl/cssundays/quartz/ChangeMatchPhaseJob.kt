@@ -1,6 +1,6 @@
 package com.antonl.cssundays.quartz
 
-import com.antonl.cssundays.model.tournaments.brackets.matches.ChangeMatchPhaseStrategy
+import com.antonl.cssundays.services.model.tournaments.matchphase.ChangeMatchPhaseStrategy
 import com.antonl.cssundays.services.model.tournaments.MatchService
 import org.quartz.JobExecutionContext
 import org.springframework.beans.factory.annotation.Autowired
