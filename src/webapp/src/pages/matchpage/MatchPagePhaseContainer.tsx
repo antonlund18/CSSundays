@@ -31,7 +31,7 @@ export const MatchPagePhaseContainer = (props: MatchPagePhaseContainerProps) => 
             case MatchPhaseType.PickAndBan:
                 return <MatchPagePickAndBanPhase team1Captain={team1Captain} team2Captain={team2Captain}/>
             case MatchPhaseType.ReadyCheck:
-                return <MatchPageReadyCheckPhase team1Captain={team1Captain} team2Captain={team2Captain}/>
+                return <MatchPageReadyCheckPhase team1Captain={team1Captain} team2Captain={team2Captain} phase={props.match.currentPhase}/>
         }
     }
 

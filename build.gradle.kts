@@ -56,6 +56,9 @@ dependencies {
     // JUnit
     testImplementation("org.springframework.boot:spring-boot-starter-test")
     testImplementation("io.mockk:mockk:1.12.7")
+
+    // Quartz
+    implementation("org.springframework.boot:spring-boot-starter-quartz:3.2.1")
 }
 
 tasks.withType<KotlinCompile> {

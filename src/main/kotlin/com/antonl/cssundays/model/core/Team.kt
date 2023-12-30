@@ -2,6 +2,7 @@ package com.antonl.cssundays.model.core
 
 import com.antonl.cssundays.extensions.toSlug
 import java.time.LocalDateTime
+import java.time.ZoneOffset
 import javax.persistence.*
 
 @Entity
@@ -19,7 +20,7 @@ class Team(
     @ManyToOne
     var owner: User,
 
-    @ManyToMany(fetch = FetchType.EAGER)
+    @ManyToMany(fetch = FetchType.EAGER, cascade = [CascadeType.ALL])
     @JoinTable(
         name = "user_on_team",
         joinColumns = [JoinColumn(name = "team_id")],
@@ -33,5 +34,5 @@ class Team(
 
     var slug: String = name.toSlug(),
 
-    var createdTs: LocalDateTime = LocalDateTime.now(),
+    var createdTs: LocalDateTime = LocalDateTime.now(ZoneOffset.UTC),
 )

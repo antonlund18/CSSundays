@@ -1,10 +1,10 @@
 package com.antonl.cssundays.model.tournaments.brackets
 
-import com.antonl.cssundays.model.core.Team
 import com.antonl.cssundays.model.tournaments.TournamentRegistration
 import com.antonl.cssundays.model.tournaments.brackets.matches.MatchPhase
 import com.antonl.cssundays.model.util.PersistedNodeWithParent
 import java.time.LocalDateTime
+import java.time.ZoneOffset
 import javax.persistence.*
 
 @Entity
@@ -16,10 +16,10 @@ class Match(
     @OneToOne(cascade = [CascadeType.ALL])
     var tournamentRegistration2: TournamentRegistration? = null,
 
-    val createdTs: LocalDateTime = LocalDateTime.now(),
+    val createdTs: LocalDateTime = LocalDateTime.now(ZoneOffset.UTC),
 
     @OneToOne(cascade = [CascadeType.ALL])
-    val currentPhase: MatchPhase = MatchPhase(),
+    var currentPhase: MatchPhase = MatchPhase(),
 
     @OneToMany(mappedBy = "match")
     val allPhases: MutableList<MatchPhase> = mutableListOf(currentPhase),

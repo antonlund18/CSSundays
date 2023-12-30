@@ -32,6 +32,7 @@ export enum ChangeMatchPhaseStrategy {
   InProgress = 'IN_PROGRESS',
   PickAndBanBo1 = 'PICK_AND_BAN_BO1',
   ReadyCheckOneCaptainPerTeam = 'READY_CHECK_ONE_CAPTAIN_PER_TEAM',
+  ReadyCheckTimeOut = 'READY_CHECK_TIME_OUT',
   WaitingForTeams = 'WAITING_FOR_TEAMS',
   WaitingToStart = 'WAITING_TO_START'
 }
@@ -79,6 +80,8 @@ export type Match = {
 
 export type MatchPhase = {
   __typename?: 'MatchPhase';
+  createdTs: Scalars['LocalDateTime'];
+  endTs?: Maybe<Scalars['LocalDateTime']>;
   id: Scalars['Int'];
   match?: Maybe<Match>;
   phaseType: MatchPhaseType;
@@ -86,8 +89,6 @@ export type MatchPhase = {
 };
 
 export type MatchPhaseState = {
-  createdTs: Scalars['LocalDateTime'];
-  endTs?: Maybe<Scalars['LocalDateTime']>;
   id: Scalars['Int'];
 };
 
@@ -110,8 +111,6 @@ export type MatchReadyCheckPhaseCaptainPerTeamAction = {
 
 export type MatchReadyCheckPhaseState = MatchPhaseState & {
   __typename?: 'MatchReadyCheckPhaseState';
-  createdTs: Scalars['LocalDateTime'];
-  endTs?: Maybe<Scalars['LocalDateTime']>;
   id: Scalars['Int'];
   teamOneAction: MatchReadyCheckPhaseCaptainPerTeamAction;
   teamTwoAction: MatchReadyCheckPhaseCaptainPerTeamAction;
@@ -528,7 +527,7 @@ export type GetMatchByIdQueryVariables = Exact<{
 }>;
 
 
-export type GetMatchByIdQuery = { __typename?: 'Query', getMatchById?: { __typename?: 'Match', id?: number, tournamentRegistration1?: { __typename?: 'TournamentRegistration', team: { __typename?: 'Team', id?: number, name: string, picture?: string, users: Array<{ __typename?: 'User', id?: number, playertag: string, picture?: string }> } }, tournamentRegistration2?: { __typename?: 'TournamentRegistration', team: { __typename?: 'Team', id?: number, name: string, picture?: string, users: Array<{ __typename?: 'User', id?: number, playertag: string, picture?: string }> } }, currentPhase: { __typename?: 'MatchPhase', phaseType: MatchPhaseType, state?: { __typename?: 'MatchReadyCheckPhaseState', createdTs: any, endTs?: any } } } };
+export type GetMatchByIdQuery = { __typename?: 'Query', getMatchById?: { __typename?: 'Match', id?: number, tournamentRegistration1?: { __typename?: 'TournamentRegistration', team: { __typename?: 'Team', id?: number, name: string, picture?: string, users: Array<{ __typename?: 'User', id?: number, playertag: string, picture?: string }> } }, tournamentRegistration2?: { __typename?: 'TournamentRegistration', team: { __typename?: 'Team', id?: number, name: string, picture?: string, users: Array<{ __typename?: 'User', id?: number, playertag: string, picture?: string }> } }, currentPhase: { __typename?: 'MatchPhase', phaseType: MatchPhaseType, createdTs: any, endTs?: any, state?: { __typename?: 'MatchReadyCheckPhaseState', id: number } } } };
 
 export type GetAllNotificationsQueryVariables = Exact<{
   userId: Scalars['Int'];
@@ -732,7 +731,7 @@ export type ChangeMatchPhaseMutationVariables = Exact<{
 }>;
 
 
-export type ChangeMatchPhaseMutation = { __typename?: 'Mutation', changeMatchPhase?: { __typename?: 'Match', id?: number, currentPhase: { __typename?: 'MatchPhase', id: number, phaseType: MatchPhaseType, state?: { __typename?: 'MatchReadyCheckPhaseState', id: number, createdTs: any, endTs?: any } } } };
+export type ChangeMatchPhaseMutation = { __typename?: 'Mutation', changeMatchPhase?: { __typename?: 'Match', id?: number, currentPhase: { __typename?: 'MatchPhase', id: number, phaseType: MatchPhaseType, createdTs: any, endTs?: any, state?: { __typename?: 'MatchReadyCheckPhaseState', id: number } } } };
 
 export type CreateTestDataMutationVariables = Exact<{ [key: string]: never; }>;
 
@@ -1099,10 +1098,11 @@ export const GetMatchByIdDocument = gql`
     }
     currentPhase {
       phaseType
+      createdTs
+      endTs
       state {
         ... on MatchReadyCheckPhaseState {
-          createdTs
-          endTs
+          id
         }
       }
     }
@@ -2346,16 +2346,14 @@ export const ChangeMatchPhaseDocument = gql`
     currentPhase {
       id
       phaseType
+      createdTs
+      endTs
       state {
         ... on MatchPhaseState {
           id
-          createdTs
-          endTs
         }
         ... on MatchReadyCheckPhaseState {
           id
-          createdTs
-          endTs
         }
       }
     }

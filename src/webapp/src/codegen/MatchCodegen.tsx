@@ -58,10 +58,11 @@ gql`
             },
             currentPhase {
                 phaseType,
+                createdTs,
+                endTs,
                 state {
                     ... on MatchReadyCheckPhaseState {
-                        createdTs,
-                        endTs
+                        id
                     }
                 }
             }

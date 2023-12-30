@@ -2,6 +2,7 @@ package com.antonl.cssundays.model.notifications
 
 import com.antonl.cssundays.model.core.User
 import java.time.LocalDateTime
+import java.time.ZoneOffset
 import javax.persistence.*
 
 @Entity
@@ -25,7 +26,7 @@ class Notification(
     var isSeen: Boolean = false,
 
     @GeneratedValue
-    var createdTs: LocalDateTime = LocalDateTime.now()
+    var createdTs: LocalDateTime = LocalDateTime.now(ZoneOffset.UTC)
 )
 
 enum class NotificationType {

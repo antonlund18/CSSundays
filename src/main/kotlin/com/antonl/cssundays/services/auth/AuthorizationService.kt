@@ -5,6 +5,7 @@ import com.antonl.cssundays.util.AuthorizationConstants
 import graphql.GraphQLContext
 import io.github.nefilim.kjwt.JWT
 import java.time.LocalDateTime
+import java.time.ZoneOffset
 
 class AuthorizationService {
     companion object {
@@ -16,7 +17,7 @@ class AuthorizationService {
             return JWT.decode(token)
                 .fold(
                     { true },
-                    { decodedJWT -> decodedJWT.expiresAt().orNull()?.isBefore(LocalDateTime.now()) ?: true }
+                    { decodedJWT -> decodedJWT.expiresAt().orNull()?.isBefore(LocalDateTime.now(ZoneOffset.UTC)) ?: true }
                 )
         }
 

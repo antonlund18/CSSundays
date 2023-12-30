@@ -2,6 +2,7 @@ package com.antonl.cssundays.model.core
 
 import com.antonl.cssundays.extensions.toSlug
 import java.time.LocalDateTime
+import java.time.ZoneOffset
 import javax.persistence.*
 
 @Entity
@@ -27,7 +28,7 @@ class User(
     var role: UserRole = UserRole.USER,
 
     @GeneratedValue
-    var createdTs: LocalDateTime = LocalDateTime.now(),
+    var createdTs: LocalDateTime = LocalDateTime.now(ZoneOffset.UTC),
 
     var slug: String = playertag.toSlug(),
 

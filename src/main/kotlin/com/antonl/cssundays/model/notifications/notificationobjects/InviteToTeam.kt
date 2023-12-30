@@ -4,6 +4,7 @@ import com.antonl.cssundays.model.core.Team
 import com.antonl.cssundays.model.core.User
 import com.antonl.cssundays.model.notifications.NotifiableObject
 import java.time.LocalDateTime
+import java.time.ZoneOffset
 import javax.persistence.*
 
 @Entity
@@ -21,7 +22,7 @@ class InviteToTeam(
     @Enumerated(EnumType.STRING)
     var status: InviteToTeamStatus = InviteToTeamStatus.PENDING,
 
-    var createdTs: LocalDateTime = LocalDateTime.now()
+    var createdTs: LocalDateTime = LocalDateTime.now(ZoneOffset.UTC)
 ) : NotifiableObject();
 
 enum class InviteToTeamStatus {

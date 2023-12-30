@@ -5,6 +5,7 @@ import com.antonl.cssundays.model.core.User
 import com.antonl.cssundays.model.tournaments.Tournament
 import com.antonl.cssundays.unit.environment.TestEnvironment
 import java.time.LocalDateTime
+import java.time.ZoneOffset
 
 class BracketTestHelpers {
     companion object {
@@ -13,7 +14,7 @@ class BracketTestHelpers {
         private val sharedTournamentAndTournamentRegistrationService = testEnvironment.sharedTournamentAndTournamentRegistrationService
 
         fun populateTournamentAndGenerateBracket(numberOfTeams: Int): Tournament {
-            var tournament = tournamentService.createTournament("Tournament with 10 teams", LocalDateTime.now(), 16)
+            var tournament = tournamentService.createTournament("Tournament with 10 teams", LocalDateTime.now(ZoneOffset.UTC), 16)
             createAndRegisterTeams(tournament, numberOfTeams)
             tournamentService.generateBracket(tournament)
             return tournament

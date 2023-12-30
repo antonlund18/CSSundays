@@ -1,6 +1,8 @@
 package com.antonl.cssundays.model.tournaments.brackets.matches
 
 import com.antonl.cssundays.model.tournaments.brackets.Match
+import java.time.LocalDateTime
+import java.time.ZoneOffset
 import javax.persistence.*
 
 @Entity
@@ -11,22 +13,22 @@ class MatchPhase(
     val id: Int = -1,
 
     @ManyToOne
-    @JoinTable(
-        name = "match_and_match_phase",
-        joinColumns = [JoinColumn(name = "match_phase_id")],
-        inverseJoinColumns = [JoinColumn(name = "match_id")]
-    )
     var match: Match? = null,
 
     @Enumerated(EnumType.STRING)
-    var phaseType: MatchPhaseType = MatchPhaseType.WAITING_FOR_TEAMS,
+    var phaseType: MatchPhaseType = MatchPhaseType.INITIALIZING,
 
     @OneToOne(cascade = [CascadeType.ALL])
     @JoinColumn(name = "match_phase_state_id", referencedColumnName = "id")
     var state: MatchPhaseState? = null,
+
+    val createdTs: LocalDateTime = LocalDateTime.now(ZoneOffset.UTC),
+
+    val endTs: LocalDateTime? = null
 )
 
 enum class MatchPhaseType {
+    INITIALIZING,
     CANCELLED,
     WAITING_FOR_TEAMS,
     WAITING_TO_START,
@@ -41,6 +43,7 @@ enum class ChangeMatchPhaseStrategy {
     WAITING_FOR_TEAMS,
     WAITING_TO_START,
     READY_CHECK_ONE_CAPTAIN_PER_TEAM,
+    READY_CHECK_TIME_OUT,
     PICK_AND_BAN_BO1,
     IN_PROGRESS,
     FINISHED_WIN_TEAM_1,
