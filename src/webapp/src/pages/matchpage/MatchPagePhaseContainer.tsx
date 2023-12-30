@@ -4,6 +4,7 @@ import {Match, MatchPhaseType} from "../../codegen/generated-types";
 import {MatchPagePickAndBanPhase} from "./phases/MatchPagePickAndBanPhase";
 import {MatchPageWaitingForTeamsPhase} from "./phases/MatchPageWaitingForTeamsPhase";
 import {MatchPageReadyCheckPhase} from "./phases/MatchPageReadyCheckPhase";
+import {MatchPageCancelledPhase} from "./MatchPageCancelledPhase";
 
 const useStyles = makeStyles(theme => ({
     phaseContainer: {
@@ -26,6 +27,8 @@ export const MatchPagePhaseContainer = (props: MatchPagePhaseContainerProps) => 
 
     const getCurrentPhaseComponent = () => {
         switch (props.match.currentPhase.phaseType) {
+            case MatchPhaseType.Cancelled:
+                return <MatchPageCancelledPhase/>
             case MatchPhaseType.WaitingForTeams:
                 return <MatchPageWaitingForTeamsPhase/>
             case MatchPhaseType.PickAndBan:
