@@ -1,10 +1,11 @@
 import * as React from "react"
+import {useEffect, useState} from "react"
 import {makeStyles} from "@mui/styles";
-import {MatchPhase, User} from "../../../codegen/generated-types";
-import {Box, CircularProgress, Grid, Typography} from "@mui/material";
+import {MatchPhase, MatchReadyCheckPhaseState, useMarkReadyMutation, User} from "../../../codegen/generated-types";
+import {Box, Button, CircularProgress, Grid, Typography} from "@mui/material";
 import {PlayerPicture} from "../../teamspage/team/PlayerPicture";
 import {Check} from "@mui/icons-material";
-import {useEffect, useState} from "react";
+import {useGetCurrentUser} from "../../../hooks/api/useUser";
 
 const useStyles = makeStyles(theme => ({
     captain: {
@@ -30,6 +31,8 @@ type MatchPageReadyCheckPhaseProps = {
 export const MatchPageReadyCheckPhase = (props: MatchPageReadyCheckPhaseProps) => {
     const classes = useStyles()
     const [countdown, setCountdown] = useState<number | null>(null)
+    const {currentUser} = useGetCurrentUser()
+    const [markReady] = useMarkReadyMutation()
 
     useEffect(() => {
         const interval = setInterval(() => {
@@ -55,25 +58,47 @@ export const MatchPageReadyCheckPhase = (props: MatchPageReadyCheckPhaseProps) =
     const minutes = countdown ? parseInt(String(countdown / 60)) : 0
     const countdownString = countdown !== null ? `${addStartZero(minutes?.toString())}:${addStartZero(seconds?.toString())}` : ""
 
+    const state = props.phase.state as MatchReadyCheckPhaseState
+
+    const isCurrentUserTeamOneCaptain = props.team1Captain?.id === currentUser.id
+    const isCurrentUserTeamTwoCaptain = props.team2Captain?.id === currentUser.id
+
+    const handleCaptainReady = () => {
+        console.log(props.phase.match?.id)
+        if (!props.phase.match?.id || !currentUser.id) {
+            return
+        }
+        markReady({
+            variables: {
+                matchId: props.phase.match.id,
+                playerId: currentUser.id
+            }
+        })
+    }
+
     return <Grid container sx={{height: "100%", justifyContent: "center", alignItems: "center"}}>
         <Grid item xs={4} sx={{display: "flex", justifyContent: "center"}}>
             {props.team1Captain &&
                 <Box className={classes.captain}>
                     <PlayerPicture player={props.team1Captain} style={{width: "100px"}}/>
                     <Box className={classes.captainSpinner}>
-                        <CircularProgress style={{zIndex: 100}}/>
+                        {state.teamOneAction.ready ? <Check style={{fontSize: "48px", color: "#39c900"}}/> :
+                            <CircularProgress style={{zIndex: 100}}/>}
                     </Box>
                 </Box>}
         </Grid>
         <Grid item xs={4} sx={{textAlign: "center"}}>
             <Typography variant={"h2"}>Venter på hold bliver klar</Typography>
             {countdown && countdown > 0 && <Typography variant={"h2"}>{countdownString}</Typography>}
+            {(isCurrentUserTeamOneCaptain || isCurrentUserTeamTwoCaptain) &&
+                <Button size={"large"} sx={{marginTop: "16px"}} onClick={handleCaptainReady}>Klar</Button>}
         </Grid>
         <Grid item xs={4} sx={{display: "flex", justifyContent: "center"}}>
             {props.team2Captain &&
                 <Box className={classes.captain}>
                     <Box className={classes.captainSpinner}>
-                        <Check style={{fontSize: "48px", color: "#39c900"}}/>
+                        {state.teamTwoAction.ready ? <Check style={{fontSize: "48px", color: "#39c900"}}/> :
+                            <CircularProgress style={{zIndex: 100}}/>}
                     </Box>
                     <PlayerPicture player={props.team2Captain} style={{width: "100px"}}/>
                 </Box>}

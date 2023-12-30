@@ -47,6 +47,11 @@ gql`
                     playertag,
                     picture,
                 }
+                captain {
+                    id
+                    playertag
+                    picture
+                }
             },
             tournamentRegistration2 {
                 team {
@@ -59,14 +64,54 @@ gql`
                     playertag,
                     picture,
                 }
+                captain {
+                    id
+                    playertag
+                    picture
+                }
             },
             currentPhase {
+                id,
+                phaseType,
+                createdTs,
+                endTs,
+                match {
+                    id
+                }
+                state {
+                    ... on MatchReadyCheckPhaseState {
+                        id
+                        teamOneAction {
+                            ready
+                        }
+                        teamTwoAction {
+                            ready
+                        }
+                    }
+                }
+            }
+        }
+    }
+`
+
+gql`
+    mutation markReady($matchId: Int!, $playerId: Int!) {
+        markReady(matchId: $matchId, playerId: $playerId) {
+            id,
+            currentPhase {
+                id,
                 phaseType,
                 createdTs,
                 endTs,
                 state {
                     ... on MatchReadyCheckPhaseState {
                         id
+                        teamOneAction {
+                            ready
+                        }
+                        teamTwoAction {
+                            ready
+                        }
                     }
                 }
             }

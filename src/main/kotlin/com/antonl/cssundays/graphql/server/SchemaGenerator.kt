@@ -53,7 +53,8 @@ abstract class SchemaGenerator {
                     TopLevelObject(TournamentMutations()),
                     TopLevelObject(SharedTournamentAndTournamentRegistrationMutations()),
                     TopLevelObject(AdminMatchMutations()),
-                    TopLevelObject(AdminTestDataMutations())
+                    TopLevelObject(AdminTestDataMutations()),
+                    TopLevelObject(MatchMutations())
                 ),
             )
         }

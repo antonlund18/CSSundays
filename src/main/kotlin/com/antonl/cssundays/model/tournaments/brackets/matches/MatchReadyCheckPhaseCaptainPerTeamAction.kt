@@ -13,5 +13,5 @@ class MatchReadyCheckPhaseCaptainPerTeamAction(
     @ManyToOne
     val captain: User,
 
-    val ready: Boolean = false
+    var ready: Boolean = false
 )

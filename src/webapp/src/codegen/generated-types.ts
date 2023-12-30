@@ -25,6 +25,16 @@ export type Bracket = {
   tournament?: Maybe<Tournament>;
 };
 
+export enum CsMap {
+  Ancient = 'ANCIENT',
+  Anubis = 'ANUBIS',
+  Inferno = 'INFERNO',
+  Mirage = 'MIRAGE',
+  Nuke = 'NUKE',
+  Overpass = 'OVERPASS',
+  Vertigo = 'VERTIGO'
+}
+
 export enum ChangeMatchPhaseStrategy {
   Cancelled = 'CANCELLED',
   FinishedWinTeam_1 = 'FINISHED_WIN_TEAM_1',
@@ -95,12 +105,29 @@ export type MatchPhaseState = {
 export enum MatchPhaseType {
   Cancelled = 'CANCELLED',
   Finished = 'FINISHED',
+  Initializing = 'INITIALIZING',
   InProgress = 'IN_PROGRESS',
   PickAndBan = 'PICK_AND_BAN',
   ReadyCheck = 'READY_CHECK',
   WaitingForTeams = 'WAITING_FOR_TEAMS',
   WaitingToStart = 'WAITING_TO_START'
 }
+
+export type MatchPickAndBanPhaseAction = {
+  __typename?: 'MatchPickAndBanPhaseAction';
+  ban: CsMap;
+  captain: User;
+  createdTs: Scalars['LocalDateTime'];
+  id?: Maybe<Scalars['Int']>;
+  state: MatchPickAndBanPhaseState;
+};
+
+export type MatchPickAndBanPhaseState = MatchPhaseState & {
+  __typename?: 'MatchPickAndBanPhaseState';
+  actions: Array<MatchPickAndBanPhaseAction>;
+  firstTeamToBan: Scalars['Int'];
+  id: Scalars['Int'];
+};
 
 export type MatchReadyCheckPhaseCaptainPerTeamAction = {
   __typename?: 'MatchReadyCheckPhaseCaptainPerTeamAction';
@@ -137,6 +164,7 @@ export type Mutation = {
   incrementWins?: Maybe<Team>;
   loginUser: Scalars['String'];
   markAllNotificationsAsSeenForUser: Array<Notification>;
+  markReady?: Maybe<Match>;
   publishTournament?: Maybe<Tournament>;
   registerTeamOrPlayer?: Maybe<Tournament>;
   removePublicationFromTournament?: Maybe<Tournament>;
@@ -246,6 +274,12 @@ export type MutationLoginUserArgs = {
 
 export type MutationMarkAllNotificationsAsSeenForUserArgs = {
   userId: Scalars['Int'];
+};
+
+
+export type MutationMarkReadyArgs = {
+  matchId: Scalars['Int'];
+  playerId: Scalars['Int'];
 };
 
 
@@ -527,7 +561,15 @@ export type GetMatchByIdQueryVariables = Exact<{
 }>;
 
 
-export type GetMatchByIdQuery = { __typename?: 'Query', getMatchById?: { __typename?: 'Match', id?: number, tournamentRegistration1?: { __typename?: 'TournamentRegistration', team: { __typename?: 'Team', id?: number, name: string, picture?: string }, players: Array<{ __typename?: 'User', id?: number, playertag: string, picture?: string }> }, tournamentRegistration2?: { __typename?: 'TournamentRegistration', team: { __typename?: 'Team', id?: number, name: string, picture?: string }, players: Array<{ __typename?: 'User', id?: number, playertag: string, picture?: string }> }, currentPhase: { __typename?: 'MatchPhase', phaseType: MatchPhaseType, createdTs: any, endTs?: any, state?: { __typename?: 'MatchReadyCheckPhaseState', id: number } } } };
+export type GetMatchByIdQuery = { __typename?: 'Query', getMatchById?: { __typename?: 'Match', id?: number, tournamentRegistration1?: { __typename?: 'TournamentRegistration', team: { __typename?: 'Team', id?: number, name: string, picture?: string }, players: Array<{ __typename?: 'User', id?: number, playertag: string, picture?: string }>, captain: { __typename?: 'User', id?: number, playertag: string, picture?: string } }, tournamentRegistration2?: { __typename?: 'TournamentRegistration', team: { __typename?: 'Team', id?: number, name: string, picture?: string }, players: Array<{ __typename?: 'User', id?: number, playertag: string, picture?: string }>, captain: { __typename?: 'User', id?: number, playertag: string, picture?: string } }, currentPhase: { __typename?: 'MatchPhase', id: number, phaseType: MatchPhaseType, createdTs: any, endTs?: any, match?: { __typename?: 'Match', id?: number }, state?: { __typename?: 'MatchPickAndBanPhaseState' } | { __typename?: 'MatchReadyCheckPhaseState', id: number, teamOneAction: { __typename?: 'MatchReadyCheckPhaseCaptainPerTeamAction', ready: boolean }, teamTwoAction: { __typename?: 'MatchReadyCheckPhaseCaptainPerTeamAction', ready: boolean } } } } };
+
+export type MarkReadyMutationVariables = Exact<{
+  matchId: Scalars['Int'];
+  playerId: Scalars['Int'];
+}>;
+
+
+export type MarkReadyMutation = { __typename?: 'Mutation', markReady?: { __typename?: 'Match', id?: number, currentPhase: { __typename?: 'MatchPhase', id: number, phaseType: MatchPhaseType, createdTs: any, endTs?: any, state?: { __typename?: 'MatchPickAndBanPhaseState' } | { __typename?: 'MatchReadyCheckPhaseState', id: number, teamOneAction: { __typename?: 'MatchReadyCheckPhaseCaptainPerTeamAction', ready: boolean }, teamTwoAction: { __typename?: 'MatchReadyCheckPhaseCaptainPerTeamAction', ready: boolean } } } } };
 
 export type GetAllNotificationsQueryVariables = Exact<{
   userId: Scalars['Int'];
@@ -731,7 +773,7 @@ export type ChangeMatchPhaseMutationVariables = Exact<{
 }>;
 
 
-export type ChangeMatchPhaseMutation = { __typename?: 'Mutation', changeMatchPhase?: { __typename?: 'Match', id?: number, currentPhase: { __typename?: 'MatchPhase', id: number, phaseType: MatchPhaseType, createdTs: any, endTs?: any, state?: { __typename?: 'MatchReadyCheckPhaseState', id: number } } } };
+export type ChangeMatchPhaseMutation = { __typename?: 'Mutation', changeMatchPhase?: { __typename?: 'Match', id?: number, currentPhase: { __typename?: 'MatchPhase', id: number, phaseType: MatchPhaseType, createdTs: any, endTs?: any, state?: { __typename?: 'MatchPickAndBanPhaseState', id: number } | { __typename?: 'MatchReadyCheckPhaseState', id: number } } } };
 
 export type CreateTestDataMutationVariables = Exact<{ [key: string]: never; }>;
 
@@ -1087,6 +1129,11 @@ export const GetMatchByIdDocument = gql`
         playertag
         picture
       }
+      captain {
+        id
+        playertag
+        picture
+      }
     }
     tournamentRegistration2 {
       team {
@@ -1099,14 +1146,29 @@ export const GetMatchByIdDocument = gql`
         playertag
         picture
       }
+      captain {
+        id
+        playertag
+        picture
+      }
     }
     currentPhase {
+      id
       phaseType
       createdTs
       endTs
+      match {
+        id
+      }
       state {
         ... on MatchReadyCheckPhaseState {
           id
+          teamOneAction {
+            ready
+          }
+          teamTwoAction {
+            ready
+          }
         }
       }
     }
@@ -1141,6 +1203,57 @@ export function useGetMatchByIdLazyQuery(baseOptions?: Apollo.LazyQueryHookOptio
 export type GetMatchByIdQueryHookResult = ReturnType<typeof useGetMatchByIdQuery>;
 export type GetMatchByIdLazyQueryHookResult = ReturnType<typeof useGetMatchByIdLazyQuery>;
 export type GetMatchByIdQueryResult = Apollo.QueryResult<GetMatchByIdQuery, GetMatchByIdQueryVariables>;
+export const MarkReadyDocument = gql`
+    mutation markReady($matchId: Int!, $playerId: Int!) {
+  markReady(matchId: $matchId, playerId: $playerId) {
+    id
+    currentPhase {
+      id
+      phaseType
+      createdTs
+      endTs
+      state {
+        ... on MatchReadyCheckPhaseState {
+          id
+          teamOneAction {
+            ready
+          }
+          teamTwoAction {
+            ready
+          }
+        }
+      }
+    }
+  }
+}
+    `;
+export type MarkReadyMutationFn = Apollo.MutationFunction<MarkReadyMutation, MarkReadyMutationVariables>;
+
+/**
+ * __useMarkReadyMutation__
+ *
+ * To run a mutation, you first call `useMarkReadyMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useMarkReadyMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [markReadyMutation, { data, loading, error }] = useMarkReadyMutation({
+ *   variables: {
+ *      matchId: // value for 'matchId'
+ *      playerId: // value for 'playerId'
+ *   },
+ * });
+ */
+export function useMarkReadyMutation(baseOptions?: Apollo.MutationHookOptions<MarkReadyMutation, MarkReadyMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<MarkReadyMutation, MarkReadyMutationVariables>(MarkReadyDocument, options);
+      }
+export type MarkReadyMutationHookResult = ReturnType<typeof useMarkReadyMutation>;
+export type MarkReadyMutationResult = Apollo.MutationResult<MarkReadyMutation>;
+export type MarkReadyMutationOptions = Apollo.BaseMutationOptions<MarkReadyMutation, MarkReadyMutationVariables>;
 export const GetAllNotificationsDocument = gql`
     query getAllNotifications($userId: Int!) {
   getAllNotifications(userId: $userId) {
@@ -2443,6 +2556,7 @@ export const ListAllOperations = {
     acceptInvitation: 'acceptInvitation',
     declineInvitation: 'declineInvitation',
     createInviteToTeam: 'createInviteToTeam',
+    markReady: 'markReady',
     markAllNotificationsAsSeenForUser: 'markAllNotificationsAsSeenForUser',
     setPictureAndGetPresignedRequest: 'setPictureAndGetPresignedRequest',
     registerTeamOrPlayer: 'registerTeamOrPlayer',

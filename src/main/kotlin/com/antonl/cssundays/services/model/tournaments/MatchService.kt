@@ -1,5 +1,6 @@
 package com.antonl.cssundays.services.model.tournaments
 
+import com.antonl.cssundays.model.core.User
 import com.antonl.cssundays.model.tournaments.brackets.Match
 import com.antonl.cssundays.model.tournaments.brackets.matches.*
 import com.antonl.cssundays.quartz.ScheduledChangeMatchPhaseService
@@ -48,5 +49,27 @@ class MatchService(val matchRepository: MatchRepository) {
         val factory = ChangeMatchPhaseStrategyHandlerFactory(this)
         val handler = factory.getHandler(changeMatchPhaseStrategy)
         handler.execute(match)
+    }
+
+
+    fun markReady(match: Match, player: User): Match {
+        if (match.currentPhase.phaseType != MatchPhaseType.READY_CHECK || match.currentPhase.state !is MatchReadyCheckPhaseState) {
+            return match
+        }
+
+        val state = match.currentPhase.state as MatchReadyCheckPhaseState
+
+        if (match.tournamentRegistration1?.captain == player) {
+            state.teamOneAction.ready = true
+        }
+        if (match.tournamentRegistration2?.captain == player) {
+            state.teamTwoAction.ready = true
+        }
+
+        if (state.teamOneAction.ready && state.teamTwoAction.ready) {
+            changeMatchPhase(match, ChangeMatchPhaseStrategy.PICK_AND_BAN_BO1)
+        }
+
+        return saveMatch(match)
     }
 }

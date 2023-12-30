@@ -62,7 +62,7 @@ export const MatchPage = () => {
         </Grid>
         <Divider sx={{marginTop: "16px"}}/>
         <MatchPagePhaseContainer match={match}/>
-        <Divider sx={{margin: "16px"}}/>
+        <Divider sx={{marginTop: "16px", marginBottom: "16px"}}/>
         <Grid container xs={12}>
             <MatchPageChatContainer/>
         </Grid>
