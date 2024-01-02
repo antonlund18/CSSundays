@@ -12,12 +12,11 @@ import {PlayersPage} from "../pages/teamspage/team/PlayersPage";
 import {AdminPage} from "../pages/admin/AdminPage";
 import {Error404} from "../pages/Error404";
 import {MatchPage} from "../pages/matchpage/MatchPage";
-import {Joke} from "../pages/homepage/Joke";
 
 export const Router = (): JSX.Element => {
     const mainRoutes = [{
         path: "/",
-        element: <Joke/>,
+        element: <HomePage/>,
         children: []
     }, {
         path: "/tournaments",

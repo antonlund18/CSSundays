@@ -20,7 +20,7 @@ ReactDOM.render(
                         <AdminCommands>
                             <BrowserRouter>
                                 <CssBaseline>
-                                    {/*<NavigationBar/>*/}
+                                    <NavigationBar/>
                                     <Router/>
                                 </CssBaseline>
                             </BrowserRouter>
