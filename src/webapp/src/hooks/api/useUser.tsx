@@ -9,7 +9,7 @@ import {
     useUpdateUserMutation,
 } from "../../codegen/generated-types";
 
-export const useGetCurrentUser = (): { currentUser: User, isLoggedIn: boolean } => {
+export const useGetCurrentUser = (): { currentUser: User | null, isLoggedIn: boolean } => {
     const token = localStorage.getItem(Constants.JWT_TOKEN);
     const {data} = useGetCurrentUserQuery({
         variables: {
@@ -18,7 +18,7 @@ export const useGetCurrentUser = (): { currentUser: User, isLoggedIn: boolean } 
     })
     const isLoggedIn = data !== null;
     return {
-        currentUser: data?.getCurrentUser as User,
+        currentUser: data?.getCurrentUser ? data?.getCurrentUser as User : null,
         isLoggedIn
     }
 }

@@ -12,7 +12,7 @@ import {Constants} from "../../../util/Constants";
 export const NotificationsButton = (): JSX.Element => {
     const {currentUser} = useGetCurrentUser();
     const {markAllNotificationsAsSeenForUser} = useNotifications()
-    const {allNotificationsForPlayer} = useFindAllNotificationsForPlayer(currentUser.id ?? -1)
+    const {allNotificationsForPlayer} = useFindAllNotificationsForPlayer(currentUser?.id ?? -1)
     const [isNotificationsMenuOpen, setIsNotificationsMenuOpen] = useState(false);
     const [notificationsMenuAnchor, setNotificationsMenuAnchor] = useState<HTMLElement | null>(null);
 

@@ -75,7 +75,6 @@ export const NavBarProfile = (): JSX.Element => {
                 <Typography variant={"button"}>Log ind</Typography>
             </Button>
         }
-        {loginDialogIsOpen &&
-            <LoginDialog setOpen={handleOpenLoginDialog}/>}
+        <LoginDialog open={loginDialogIsOpen} setOpen={handleOpenLoginDialog}/>
     </div>
 }

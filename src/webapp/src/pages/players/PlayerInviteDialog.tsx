@@ -84,7 +84,7 @@ export const PlayerInviteDialog = (props: PlayerInviteDialogProps): JSX.Element 
     }, [allInvitesForPlayer, props.targetPlayer.teams])
 
     const filteredTeams = useMemo(() => {
-        return currentUser?.teams.slice().filter(team => team.name.toLowerCase().includes(searchText.toLowerCase().trim()))
+        return currentUser?.teams.slice().filter(team => team.name.toLowerCase().includes(searchText.toLowerCase().trim())) ?? []
     }, [currentUser?.teams, searchText])
 
     const teamsSorted = useMemo(() => {

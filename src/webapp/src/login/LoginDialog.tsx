@@ -6,6 +6,7 @@ import {LoginHeading} from "./LoginHeading";
 import {LoginFormBody} from "./LoginFormBody";
 
 interface LoginDialogProps {
+    open: boolean
     setOpen: (open: boolean) => void,
 }
 
@@ -47,7 +48,7 @@ export const LoginDialog = (props: LoginDialogProps): JSX.Element => {
     const styleProps = {isLogin: isLoginTabSelected}
     const classes = useStyles(styleProps);
 
-    return <Dialog open={true}
+    return <Dialog open={props.open}
                    onClose={() => props.setOpen(false)}
                    maxWidth={"xl"}>
         <div className={classes.loginDialogContainer}>

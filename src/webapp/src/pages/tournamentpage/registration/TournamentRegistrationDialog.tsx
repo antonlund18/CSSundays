@@ -34,6 +34,10 @@ export const TournamentRegistrationDialog = (props: TournamentRegistrationDialog
 
     const existingTournamentRegistrationForPlayer = data?.getTournamentRegistrationByPlayer as TournamentRegistration
 
+    if (!currentUser) {
+        return <></>
+    }
+
     return <Dialog open={props.open} onClose={() => props.setOpen(false)} maxWidth={"xl"}>
         <DialogTitle><Typography variant={"h2"} style={{textTransform: "none"}}>Tilmeld
             turnering</Typography></DialogTitle>

@@ -11,6 +11,8 @@ import {MediaTab} from "./tabs/MediaTab";
 import {TeamsTab} from "./tabs/TeamsTab";
 import {BracketContextProvider} from "./tabs/BracketContextProvider";
 import {TournamentRegistrationDialog} from "./registration/TournamentRegistrationDialog";
+import {useGetCurrentUser} from "../../hooks/api/useUser";
+import {LoginDialog} from "../../login/LoginDialog";
 
 const useStyles = makeStyles(theme => ({
     headerSection: {
@@ -48,6 +50,8 @@ export const TournamentPage = () => {
     const {tournament} = useGetTournamentById(parseInt(urlParams.tournamentId ?? "-1"))
     const [value, setValue] = useState(0)
     const [registrationDialogOpen, setRegistrationDialogOpen] = useState(false)
+    const [loginDialogOpen, setLoginDialogOpen] = useState(false)
+    const {currentUser} = useGetCurrentUser()
     const navigate = useNavigate()
 
     useEffect(() => {
@@ -69,6 +73,14 @@ export const TournamentPage = () => {
         navigate(TABS[str])
     }
 
+    const handleOpenRegistrationDialog = () => {
+        if (!currentUser) {
+            setLoginDialogOpen(true)
+        } else {
+            setRegistrationDialogOpen(true)
+        }
+    }
+
     const numberOfRegisteredTeams = tournament.tournamentRegistrations?.length ?? 0
 
     return <CenteredPage>
@@ -80,7 +92,7 @@ export const TournamentPage = () => {
                         variant={"caption"}>{numberOfRegisteredTeams} {numberOfRegisteredTeams === 1 ? "tilmeldt" : "tilmeldte"} hold</Typography>
                 </div>
                 <div>
-                    <Button variant={"contained"} onClick={() => setRegistrationDialogOpen(true)}>+ Tilmeld</Button>
+                    <Button variant={"contained"} onClick={handleOpenRegistrationDialog}>+ Tilmeld</Button>
                 </div>
             </div>
             <Divider/>
@@ -111,6 +123,7 @@ export const TournamentPage = () => {
             <MediaTab/>
         </TabPanel>
         <TournamentRegistrationDialog open={registrationDialogOpen} setOpen={setRegistrationDialogOpen} tournament={tournament}/>
+        <LoginDialog open={registrationDialogOpen} setOpen={setLoginDialogOpen}/>
     </CenteredPage>
 }
 

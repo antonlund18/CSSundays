@@ -1,5 +1,5 @@
 import * as React from "react";
-import {useNavigate, useParams} from "react-router-dom";
+import {useParams} from "react-router-dom";
 import {CenteredPage} from "../../../components/CenteredPage";
 import {Grid, Typography} from "@mui/material";
 import {Divider as CSDivider} from "../../../components/Divider";
@@ -12,7 +12,6 @@ import {TeamStatsContainer} from "./TeamStatsContainer";
 export const TeamPage = (): JSX.Element => {
     const urlParams = useParams();
 
-    const {currentUser} = useGetCurrentUser()
     const {team} = useGetTeamById(parseInt(urlParams.teamId ?? ""))
 
     if (team === null) {
@@ -31,7 +30,7 @@ export const TeamPage = (): JSX.Element => {
                 <CSDivider/>
             </Grid>
             <Grid item xs={12} md={4}>
-                <TeamInfo team={team!} currentUser={currentUser}/>
+                <TeamInfo team={team!}/>
             </Grid>
             <Grid item xs={12} md={8}>
                 <TeamPlayersContainer team={team}/>

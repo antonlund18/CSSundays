@@ -8,8 +8,9 @@ type TournamentRegistrationDialogNewRegistrationProps = {
 }
 
 export const TournamentRegistrationDialogNewRegistration = (props: TournamentRegistrationDialogNewRegistrationProps) => {
+
     return <div style={{padding: "16px"}}>
-        {props.currentUser?.teams.map((team, index) => {
+        {props.currentUser.teams.map((team, index) => {
             return <TournamentRegistrationDialogNewRegistrationTeamRow
                 key={index}
                 tournament={props.tournament}

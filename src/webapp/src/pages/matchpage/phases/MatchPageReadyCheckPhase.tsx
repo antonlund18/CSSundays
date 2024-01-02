@@ -62,18 +62,18 @@ export const MatchPageReadyCheckPhase = (props: MatchPageReadyCheckPhaseProps) =
 
     const state = phase.state as MatchReadyCheckPhaseState
 
-    const isCurrentUserTeamOneCaptain = props.team1Captain?.id === currentUser.id
-    const isCurrentUserTeamTwoCaptain = props.team2Captain?.id === currentUser.id
+    const isCurrentUserTeamOneCaptain = props.team1Captain?.id === currentUser?.id
+    const isCurrentUserTeamTwoCaptain = props.team2Captain?.id === currentUser?.id
 
     const handleCaptainReady = () => {
         console.log(phase.match?.id)
-        if (!phase.match?.id || !currentUser.id) {
+        if (!phase.match?.id || !currentUser?.id) {
             return
         }
         markReady({
             variables: {
                 matchId: phase.match.id,
-                playerId: currentUser.id
+                playerId: currentUser?.id
             }
         })
     }

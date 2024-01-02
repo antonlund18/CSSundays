@@ -7,6 +7,7 @@ import {ObjectType, Team, User} from "../../../codegen/generated-types";
 import {useSharedTeamAndUser} from "../../../hooks/api/useSharedTeamAndUser";
 import {useDateFormatter} from "../../../hooks/useDateFormatter";
 import {useNavigate} from "react-router-dom";
+import {useGetCurrentUser} from "../../../hooks/api/useUser";
 
 interface StylesProps {
     isCurrentUserOwner: boolean
@@ -32,14 +33,14 @@ const useStyles = makeStyles<Theme, StylesProps>(theme => ({
 
 export type TeamInfoProps = {
     team: Team
-    currentUser: User
 }
 
 export const TeamInfo = (props: TeamInfoProps): JSX.Element => {
-    const {team, currentUser} = props
+    const {team} = props
+    const {currentUser} = useGetCurrentUser()
     const teamPictureURL = getPictureLinkFromKey(team?.picture ?? "", ObjectType.Team)
-    const isCurrenUserOwner = currentUser?.id === team?.owner?.id;
-    const classes = useStyles({isCurrentUserOwner: isCurrenUserOwner, teamPictureURL: teamPictureURL});
+    const isCurrentUserOwner = currentUser?.id === team?.owner?.id;
+    const classes = useStyles({isCurrentUserOwner: isCurrentUserOwner, teamPictureURL: teamPictureURL});
     const [fileSelector, setFileSelector] = useState<HTMLInputElement | null>(null);
     const {formatDate} = useDateFormatter()
     const navigate = useNavigate()
@@ -68,7 +69,7 @@ export const TeamInfo = (props: TeamInfoProps): JSX.Element => {
 
     return <Grid container spacing={2} style={{width: "100%"}}>
         <Grid item style={{width: "100%"}}>
-            <Tooltip title={"Upload billede"} disableHoverListener={!isCurrenUserOwner} arrow>
+            <Tooltip title={"Upload billede"} disableHoverListener={!isCurrentUserOwner} arrow>
                 <div className={classes.teamPicture} onClick={handleFileSelect}/>
             </Tooltip>
         </Grid>
