@@ -1,4 +1,4 @@
-package com.antonl.cssundays.services.model.tournaments.matchphase
+package com.antonl.cssundays.model.tournaments.brackets.matches
 
 enum class MatchPhaseType {
     INITIALIZING,

@@ -2,12 +2,8 @@ package com.antonl.cssundays.services.model.tournaments.matchphase.changehandler
 
 import com.antonl.cssundays.model.tournaments.brackets.Match
 import com.antonl.cssundays.model.tournaments.brackets.matches.MatchPhase
-import com.antonl.cssundays.model.tournaments.brackets.matches.MatchPickAndBanPhaseState
 import com.antonl.cssundays.services.model.tournaments.MatchService
-import com.antonl.cssundays.services.model.tournaments.matchphase.ChangeMatchPhaseStrategy
-import com.antonl.cssundays.services.model.tournaments.matchphase.MatchPhaseType
-import java.time.LocalDateTime
-import java.time.ZoneOffset
+import com.antonl.cssundays.model.tournaments.brackets.matches.MatchPhaseType
 
 class ChangeMatchPhaseStrategyHandlerInProgress(val matchService: MatchService) :
     ChangeMatchPhaseStrategyHandler {

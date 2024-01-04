@@ -3,7 +3,7 @@ package com.antonl.cssundays.services.model.tournaments.matchphase.changehandler
 import com.antonl.cssundays.model.tournaments.brackets.Match
 import com.antonl.cssundays.services.model.tournaments.MatchService
 import com.antonl.cssundays.services.model.tournaments.matchphase.ChangeMatchPhaseStrategy
-import com.antonl.cssundays.services.model.tournaments.matchphase.MatchPhaseType
+import com.antonl.cssundays.model.tournaments.brackets.matches.MatchPhaseType
 
 class ChangeMatchPhaseStrategyHandlerReadyCheckTimeOut(val matchService: MatchService) :
     ChangeMatchPhaseStrategyHandler {

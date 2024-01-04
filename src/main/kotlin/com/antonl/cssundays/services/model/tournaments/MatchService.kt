@@ -10,7 +10,7 @@ import com.antonl.cssundays.quartz.ScheduledChangeMatchPhaseService
 import com.antonl.cssundays.repositories.MatchRepository
 import com.antonl.cssundays.services.model.tournaments.matchphase.ChangeMatchPhaseStrategy
 import com.antonl.cssundays.services.model.tournaments.matchphase.ChangeMatchPhaseStrategyHandlerFactory
-import com.antonl.cssundays.services.model.tournaments.matchphase.MatchPhaseType
+import com.antonl.cssundays.model.tournaments.brackets.matches.MatchPhaseType
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
 import java.time.LocalDateTime

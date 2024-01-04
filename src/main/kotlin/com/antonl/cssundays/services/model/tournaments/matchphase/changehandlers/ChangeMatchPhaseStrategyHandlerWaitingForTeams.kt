@@ -2,10 +2,7 @@ package com.antonl.cssundays.services.model.tournaments.matchphase.changehandler
 
 import com.antonl.cssundays.model.tournaments.brackets.Match
 import com.antonl.cssundays.model.tournaments.brackets.matches.MatchPhase
-import com.antonl.cssundays.model.tournaments.brackets.matches.MatchReadyCheckPhaseState
-import com.antonl.cssundays.services.model.tournaments.MatchService
-import com.antonl.cssundays.services.model.tournaments.matchphase.ChangeMatchPhaseStrategy
-import com.antonl.cssundays.services.model.tournaments.matchphase.MatchPhaseType
+import com.antonl.cssundays.model.tournaments.brackets.matches.MatchPhaseType
 
 class ChangeMatchPhaseStrategyHandlerWaitingForTeams : ChangeMatchPhaseStrategyHandler {
     override fun execute(match: Match) {

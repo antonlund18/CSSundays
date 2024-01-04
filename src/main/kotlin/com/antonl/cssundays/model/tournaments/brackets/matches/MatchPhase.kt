@@ -1,7 +1,6 @@
 package com.antonl.cssundays.model.tournaments.brackets.matches
 
 import com.antonl.cssundays.model.tournaments.brackets.Match
-import com.antonl.cssundays.services.model.tournaments.matchphase.MatchPhaseType
 import java.time.LocalDateTime
 import java.time.ZoneOffset
 import javax.persistence.*

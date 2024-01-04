@@ -5,7 +5,7 @@ import com.antonl.cssundays.model.tournaments.brackets.matches.MatchPhase
 import com.antonl.cssundays.model.tournaments.brackets.matches.MatchPickAndBanPhaseState
 import com.antonl.cssundays.services.model.tournaments.MatchService
 import com.antonl.cssundays.services.model.tournaments.matchphase.ChangeMatchPhaseStrategy
-import com.antonl.cssundays.services.model.tournaments.matchphase.MatchPhaseType
+import com.antonl.cssundays.model.tournaments.brackets.matches.MatchPhaseType
 import java.time.LocalDateTime
 import java.time.ZoneOffset
 
