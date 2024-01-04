@@ -2,15 +2,11 @@ package com.antonl.cssundays.services.model.tournaments
 
 import com.antonl.cssundays.model.core.User
 import com.antonl.cssundays.model.tournaments.brackets.Match
-import com.antonl.cssundays.model.tournaments.brackets.matches.CSMap
-import com.antonl.cssundays.model.tournaments.brackets.matches.MatchPickAndBanPhaseAction
-import com.antonl.cssundays.model.tournaments.brackets.matches.MatchPickAndBanPhaseState
-import com.antonl.cssundays.model.tournaments.brackets.matches.MatchReadyCheckPhaseState
+import com.antonl.cssundays.model.tournaments.brackets.matches.*
 import com.antonl.cssundays.quartz.ScheduledChangeMatchPhaseService
 import com.antonl.cssundays.repositories.MatchRepository
 import com.antonl.cssundays.services.model.tournaments.matchphase.ChangeMatchPhaseStrategy
 import com.antonl.cssundays.services.model.tournaments.matchphase.ChangeMatchPhaseStrategyHandlerFactory
-import com.antonl.cssundays.model.tournaments.brackets.matches.MatchPhaseType
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
 import java.time.LocalDateTime
@@ -54,6 +50,18 @@ class MatchService(val matchRepository: MatchRepository) {
         handler.execute(match)
     }
 
+    fun startMatch(match: Match, map: CSMap): Match {
+        changeMatchPhase(match, ChangeMatchPhaseStrategy.IN_PROGRESS)
+
+        var state = match.currentPhase.state
+        if (state !is MatchInProgressPhaseState) {
+            return match
+        }
+
+        state.map = map
+
+        return saveMatch(match)
+    }
 
     fun markReady(match: Match, player: User): Match {
         if (match.currentPhase.phaseType != MatchPhaseType.READY_CHECK || match.currentPhase.state !is MatchReadyCheckPhaseState) {
@@ -77,11 +85,10 @@ class MatchService(val matchRepository: MatchRepository) {
     }
 
     fun banMap(match: Match, player: User, ban: CSMap) {
-        if (match.currentPhase.phaseType !== MatchPhaseType.PICK_AND_BAN || match.currentPhase.state !is MatchPickAndBanPhaseState) {
+        val state = match.currentPhase.state
+        if (match.currentPhase.phaseType !== MatchPhaseType.PICK_AND_BAN || state !is MatchPickAndBanPhaseState) {
             return
         }
-
-        val state = match.currentPhase.state as MatchPickAndBanPhaseState
 
         val isTeamOnesTurnToBan = (state.firstTeamToBan + state.actions.size) % 2 == 1
         if ((match.tournamentRegistration1?.captain == player && isTeamOnesTurnToBan) ||
@@ -94,9 +101,11 @@ class MatchService(val matchRepository: MatchRepository) {
             scheduleChangeMatchPhase(match, ChangeMatchPhaseStrategy.PICK_AND_BAN_TIMEOUT, endTs)
         }
 
-        val wasLastBan = CSMap.values().size - state.actions.size == 1
+        val bans = state.actions.map { it.ban }
+        val remainingMaps = CSMap.values().filter { !bans.contains(it) }
+        val wasLastBan = remainingMaps.size == 1
         if (wasLastBan) {
-            changeMatchPhase(match, ChangeMatchPhaseStrategy.IN_PROGRESS)
+            startMatch(match, remainingMaps[0])
         }
     }
 }

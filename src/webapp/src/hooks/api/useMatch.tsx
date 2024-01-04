@@ -17,7 +17,7 @@ export const useGetMatchById = (matchId: number) => {
         variables: {
             matchId
         },
-        pollInterval: 1000
+        pollInterval: 5000
     });
     return {
         match: data?.getMatchById as Match,

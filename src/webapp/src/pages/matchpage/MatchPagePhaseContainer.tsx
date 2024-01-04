@@ -32,12 +32,12 @@ export const MatchPagePhaseContainer = (props: MatchPagePhaseContainerProps) => 
                 return <MatchPageCancelledPhase/>
             case MatchPhaseType.WaitingForTeams:
                 return <MatchPageWaitingForTeamsPhase/>
-            case MatchPhaseType.PickAndBan:
-                return <MatchPagePickAndBanPhase team1Captain={team1Captain} team2Captain={team2Captain} match={props.match}/>
             case MatchPhaseType.ReadyCheck:
                 return <MatchPageReadyCheckPhase team1Captain={team1Captain} team2Captain={team2Captain} match={props.match}/>
+            case MatchPhaseType.PickAndBan:
+                return <MatchPagePickAndBanPhase team1Captain={team1Captain} team2Captain={team2Captain} match={props.match}/>
             case MatchPhaseType.InProgress:
-                return <MatchPageInProgressPhase/>
+                return <MatchPageInProgressPhase match={props.match}/>
         }
     }
 

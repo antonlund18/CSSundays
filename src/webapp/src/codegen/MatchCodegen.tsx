@@ -100,6 +100,10 @@ gql`
                             ban
                         }
                     }
+                    ... on MatchInProgressPhaseState {
+                        id,
+                        map
+                    }
                 }
             }
         }
@@ -162,6 +166,10 @@ gql`
                             }
                             ban
                         }
+                    }
+                    ... on MatchInProgressPhaseState {
+                        id,
+                        map
                     }
                 }
             }

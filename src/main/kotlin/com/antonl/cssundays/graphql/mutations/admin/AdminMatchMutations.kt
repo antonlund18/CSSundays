@@ -19,6 +19,7 @@ class AdminMatchMutations : Mutation {
     suspend fun changeMatchPhase(matchId: Int, changeMatchPhaseStrategy: ChangeMatchPhaseStrategy): Match? {
         val match: Match = matchService.getMatchById(matchId) ?: return null
         matchService.changeMatchPhase(match, changeMatchPhaseStrategy)
+        matchService.saveMatch(match)
         return match
     }
 }
