@@ -1,4 +1,3 @@
-import com.github.gradle.node.npm.task.NpmTask
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
@@ -38,13 +37,14 @@ dependencies {
 
     // Spring
     implementation("org.springframework.boot:spring-boot-starter-data-jpa")
+    implementation("org.springframework.boot:spring-boot-starter-webflux")
 
     // Amazon Web Services
     implementation("aws.sdk.kotlin:s3:0.9.4-beta")
 
     // GraphQL
-    implementation("com.expediagroup:graphql-kotlin-spring-server:6.0.0-alpha.5")
-    implementation("com.expediagroup:graphql-kotlin-schema-generator:6.0.0-alpha.5")
+    implementation("com.expediagroup:graphql-kotlin-spring-server:6.1.0")
+    implementation("com.expediagroup:graphql-kotlin-schema-generator:6.1.0")
     implementation("com.tailrocks.graphql:graphql-datetime-spring-boot-starter:6.0.0")
 
     // Jackson

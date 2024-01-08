@@ -48,6 +48,11 @@ export enum ChangeMatchPhaseStrategy {
   WaitingToStart = 'WAITING_TO_START'
 }
 
+export type Counter = {
+  __typename?: 'Counter';
+  number: Scalars['Int'];
+};
+
 export type EditUserInput = {
   description: Scalars['String'];
   email: Scalars['String'];
@@ -456,6 +461,27 @@ export type RequestDto = {
   url: Scalars['String'];
 };
 
+export type Subscription = {
+  __typename?: 'Subscription';
+  /** Returns a random number every second */
+  counter: Counter;
+  /** Returns a random number every second, errors if even */
+  counterWithError: Scalars['Int'];
+  /** Returns stream of values */
+  flow: Scalars['Int'];
+  /** Returns stream of errors */
+  flowOfErrors?: Maybe<Scalars['String']>;
+  /** Returns a single value */
+  singleValueSubscription: Scalars['Int'];
+  /** Returns one value then an error */
+  singleValueThenError: Scalars['Int'];
+};
+
+
+export type SubscriptionCounterArgs = {
+  limit?: InputMaybe<Scalars['Int']>;
+};
+
 export type Team = {
   __typename?: 'Team';
   createdTs: Scalars['LocalDateTime'];
@@ -626,6 +652,18 @@ export type RegisterTeamOrPlayerMutationVariables = Exact<{
 
 
 export type RegisterTeamOrPlayerMutation = { __typename?: 'Mutation', registerTeamOrPlayer?: { __typename?: 'Tournament', id?: number, tournamentRegistrations: Array<{ __typename?: 'TournamentRegistration', id?: number, captain: { __typename?: 'User', id?: number, playertag: string, picture?: string }, team: { __typename?: 'Team', id?: number, name: string } }> } };
+
+export type FlowSubscriptionVariables = Exact<{ [key: string]: never; }>;
+
+
+export type FlowSubscription = { __typename?: 'Subscription', flow: number };
+
+export type CounterSubscriptionVariables = Exact<{
+  limit?: InputMaybe<Scalars['Int']>;
+}>;
+
+
+export type CounterSubscription = { __typename?: 'Subscription', counter: { __typename?: 'Counter', number: number } };
 
 export type GetAllTeamsQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -1553,6 +1591,63 @@ export function useRegisterTeamOrPlayerMutation(baseOptions?: Apollo.MutationHoo
 export type RegisterTeamOrPlayerMutationHookResult = ReturnType<typeof useRegisterTeamOrPlayerMutation>;
 export type RegisterTeamOrPlayerMutationResult = Apollo.MutationResult<RegisterTeamOrPlayerMutation>;
 export type RegisterTeamOrPlayerMutationOptions = Apollo.BaseMutationOptions<RegisterTeamOrPlayerMutation, RegisterTeamOrPlayerMutationVariables>;
+export const FlowDocument = gql`
+    subscription flow {
+  flow
+}
+    `;
+
+/**
+ * __useFlowSubscription__
+ *
+ * To run a query within a React component, call `useFlowSubscription` and pass it any options that fit your needs.
+ * When your component renders, `useFlowSubscription` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the subscription, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useFlowSubscription({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useFlowSubscription(baseOptions?: Apollo.SubscriptionHookOptions<FlowSubscription, FlowSubscriptionVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useSubscription<FlowSubscription, FlowSubscriptionVariables>(FlowDocument, options);
+      }
+export type FlowSubscriptionHookResult = ReturnType<typeof useFlowSubscription>;
+export type FlowSubscriptionResult = Apollo.SubscriptionResult<FlowSubscription>;
+export const CounterDocument = gql`
+    subscription counter($limit: Int) {
+  counter(limit: $limit) {
+    number
+  }
+}
+    `;
+
+/**
+ * __useCounterSubscription__
+ *
+ * To run a query within a React component, call `useCounterSubscription` and pass it any options that fit your needs.
+ * When your component renders, `useCounterSubscription` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the subscription, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useCounterSubscription({
+ *   variables: {
+ *      limit: // value for 'limit'
+ *   },
+ * });
+ */
+export function useCounterSubscription(baseOptions?: Apollo.SubscriptionHookOptions<CounterSubscription, CounterSubscriptionVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useSubscription<CounterSubscription, CounterSubscriptionVariables>(CounterDocument, options);
+      }
+export type CounterSubscriptionHookResult = ReturnType<typeof useCounterSubscription>;
+export type CounterSubscriptionResult = Apollo.SubscriptionResult<CounterSubscription>;
 export const GetAllTeamsDocument = gql`
     query getAllTeams {
   getAllTeams {
@@ -2687,6 +2782,10 @@ export const ListAllOperations = {
     createTestMatch: 'createTestMatch',
     changeMatchPhase: 'changeMatchPhase',
     createTestData: 'createTestData'
+  },
+  Subscription: {
+    flow: 'flow',
+    counter: 'counter'
   },
   Fragment: {
     NewNotification: 'NewNotification'

@@ -56,6 +56,9 @@ abstract class SchemaGenerator {
                     TopLevelObject(AdminTestDataMutations()),
                     TopLevelObject(MatchMutations())
                 ),
+                subscriptions = listOf(
+                    TopLevelObject(SimpleSubscription())
+                )
             )
         }
     }

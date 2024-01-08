@@ -11,6 +11,14 @@ import {Theme} from '@mui/material/styles';
 import {SnackbarContextProvider} from "./SnackbarContextProvider";
 import {AdminCommands} from "./util/admin/AdminCommands";
 
+import { loadErrorMessages, loadDevMessages } from "@apollo/client/dev";
+import {__DEV__} from "@apollo/client/utilities/globals";
+
+if (__DEV__) {  // Adds messages only in a dev environment
+    loadDevMessages();
+    loadErrorMessages();
+}
+
 ReactDOM.render(
     <StyledEngineProvider injectFirst>
         <SnackbarContextProvider>
