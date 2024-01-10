@@ -48,11 +48,6 @@ export enum ChangeMatchPhaseStrategy {
   WaitingToStart = 'WAITING_TO_START'
 }
 
-export type Counter = {
-  __typename?: 'Counter';
-  number: Scalars['Int'];
-};
-
 export type EditUserInput = {
   description: Scalars['String'];
   email: Scalars['String'];
@@ -464,22 +459,12 @@ export type RequestDto = {
 export type Subscription = {
   __typename?: 'Subscription';
   /** Returns a random number every second */
-  counter: Counter;
-  /** Returns a random number every second, errors if even */
-  counterWithError: Scalars['Int'];
-  /** Returns stream of values */
-  flow: Scalars['Int'];
-  /** Returns stream of errors */
-  flowOfErrors?: Maybe<Scalars['String']>;
-  /** Returns a single value */
-  singleValueSubscription: Scalars['Int'];
-  /** Returns one value then an error */
-  singleValueThenError: Scalars['Int'];
+  onMatchPhaseChanged: MatchPhase;
 };
 
 
-export type SubscriptionCounterArgs = {
-  limit?: InputMaybe<Scalars['Int']>;
+export type SubscriptionOnMatchPhaseChangedArgs = {
+  matchId: Scalars['Int'];
 };
 
 export type Team = {
@@ -603,7 +588,7 @@ export type GetMatchByIdQueryVariables = Exact<{
 }>;
 
 
-export type GetMatchByIdQuery = { __typename?: 'Query', getMatchById?: { __typename?: 'Match', id?: number, tournamentRegistration1?: { __typename?: 'TournamentRegistration', team: { __typename?: 'Team', id?: number, name: string, picture?: string }, players: Array<{ __typename?: 'User', id?: number, playertag: string, picture?: string }>, captain: { __typename?: 'User', id?: number, playertag: string, picture?: string } }, tournamentRegistration2?: { __typename?: 'TournamentRegistration', team: { __typename?: 'Team', id?: number, name: string, picture?: string }, players: Array<{ __typename?: 'User', id?: number, playertag: string, picture?: string }>, captain: { __typename?: 'User', id?: number, playertag: string, picture?: string } }, currentPhase: { __typename?: 'MatchPhase', id: number, phaseType: MatchPhaseType, createdTs: any, endTs?: any, match?: { __typename?: 'Match', id?: number }, state?: { __typename?: 'MatchInProgressPhaseState', id: number, map?: CsMap } | { __typename?: 'MatchPickAndBanPhaseState', id: number, firstTeamToBan: number, votingTimeInSeconds: number, actions: Array<{ __typename?: 'MatchPickAndBanPhaseAction', id?: number, ban: CsMap, captain: { __typename?: 'User', id?: number } }> } | { __typename?: 'MatchReadyCheckPhaseState', id: number, teamOneAction: { __typename?: 'MatchReadyCheckPhaseCaptainPerTeamAction', ready: boolean }, teamTwoAction: { __typename?: 'MatchReadyCheckPhaseCaptainPerTeamAction', ready: boolean } } } } };
+export type GetMatchByIdQuery = { __typename?: 'Query', getMatchById?: { __typename?: 'Match', id?: number, tournamentRegistration1?: { __typename?: 'TournamentRegistration', team: { __typename?: 'Team', id?: number, name: string, picture?: string }, players: Array<{ __typename?: 'User', id?: number, playertag: string, picture?: string }>, captain: { __typename?: 'User', id?: number, playertag: string, picture?: string } }, tournamentRegistration2?: { __typename?: 'TournamentRegistration', team: { __typename?: 'Team', id?: number, name: string, picture?: string }, players: Array<{ __typename?: 'User', id?: number, playertag: string, picture?: string }>, captain: { __typename?: 'User', id?: number, playertag: string, picture?: string } }, currentPhase: { __typename?: 'MatchPhase', id: number, phaseType: MatchPhaseType, createdTs: any, endTs?: any, match?: { __typename?: 'Match', id?: number }, state?: { __typename: 'MatchInProgressPhaseState', id: number, map?: CsMap } | { __typename: 'MatchPickAndBanPhaseState', id: number, firstTeamToBan: number, votingTimeInSeconds: number, actions: Array<{ __typename?: 'MatchPickAndBanPhaseAction', id?: number, ban: CsMap, captain: { __typename?: 'User', id?: number } }> } | { __typename: 'MatchReadyCheckPhaseState', id: number, teamOneAction: { __typename?: 'MatchReadyCheckPhaseCaptainPerTeamAction', ready: boolean }, teamTwoAction: { __typename?: 'MatchReadyCheckPhaseCaptainPerTeamAction', ready: boolean } } } } };
 
 export type MarkReadyMutationVariables = Exact<{
   matchId: Scalars['Int'];
@@ -611,7 +596,7 @@ export type MarkReadyMutationVariables = Exact<{
 }>;
 
 
-export type MarkReadyMutation = { __typename?: 'Mutation', markReady?: { __typename?: 'Match', id?: number, currentPhase: { __typename?: 'MatchPhase', id: number, phaseType: MatchPhaseType, createdTs: any, endTs?: any, state?: { __typename?: 'MatchInProgressPhaseState' } | { __typename?: 'MatchPickAndBanPhaseState', id: number, firstTeamToBan: number, votingTimeInSeconds: number, actions: Array<{ __typename?: 'MatchPickAndBanPhaseAction', id?: number, ban: CsMap, captain: { __typename?: 'User', id?: number } }> } | { __typename?: 'MatchReadyCheckPhaseState', id: number, teamOneAction: { __typename?: 'MatchReadyCheckPhaseCaptainPerTeamAction', ready: boolean }, teamTwoAction: { __typename?: 'MatchReadyCheckPhaseCaptainPerTeamAction', ready: boolean } } } } };
+export type MarkReadyMutation = { __typename?: 'Mutation', markReady?: { __typename?: 'Match', id?: number, currentPhase: { __typename?: 'MatchPhase', id: number, phaseType: MatchPhaseType, createdTs: any, endTs?: any, state?: { __typename: 'MatchInProgressPhaseState' } | { __typename: 'MatchPickAndBanPhaseState', id: number, firstTeamToBan: number, votingTimeInSeconds: number, actions: Array<{ __typename?: 'MatchPickAndBanPhaseAction', id?: number, ban: CsMap, captain: { __typename?: 'User', id?: number } }> } | { __typename: 'MatchReadyCheckPhaseState', id: number, teamOneAction: { __typename?: 'MatchReadyCheckPhaseCaptainPerTeamAction', ready: boolean }, teamTwoAction: { __typename?: 'MatchReadyCheckPhaseCaptainPerTeamAction', ready: boolean } } } } };
 
 export type BanMapMutationVariables = Exact<{
   matchId: Scalars['Int'];
@@ -620,7 +605,14 @@ export type BanMapMutationVariables = Exact<{
 }>;
 
 
-export type BanMapMutation = { __typename?: 'Mutation', banMap?: { __typename?: 'Match', id?: number, currentPhase: { __typename?: 'MatchPhase', id: number, endTs?: any, state?: { __typename?: 'MatchInProgressPhaseState', id: number, map?: CsMap } | { __typename?: 'MatchPickAndBanPhaseState', id: number, firstTeamToBan: number, votingTimeInSeconds: number, actions: Array<{ __typename?: 'MatchPickAndBanPhaseAction', id?: number, ban: CsMap, captain: { __typename?: 'User', id?: number } }> } | { __typename?: 'MatchReadyCheckPhaseState' } } } };
+export type BanMapMutation = { __typename?: 'Mutation', banMap?: { __typename?: 'Match', id?: number, currentPhase: { __typename?: 'MatchPhase', id: number, endTs?: any, state?: { __typename: 'MatchInProgressPhaseState', id: number, map?: CsMap } | { __typename: 'MatchPickAndBanPhaseState', id: number, firstTeamToBan: number, votingTimeInSeconds: number, actions: Array<{ __typename?: 'MatchPickAndBanPhaseAction', id?: number, ban: CsMap, captain: { __typename?: 'User', id?: number } }> } | { __typename: 'MatchReadyCheckPhaseState' } } } };
+
+export type OnMatchPhaseChangedSubscriptionVariables = Exact<{
+  matchId: Scalars['Int'];
+}>;
+
+
+export type OnMatchPhaseChangedSubscription = { __typename?: 'Subscription', onMatchPhaseChanged: { __typename?: 'MatchPhase', id: number, phaseType: MatchPhaseType, createdTs: any, endTs?: any, match?: { __typename?: 'Match', id?: number }, state?: { __typename: 'MatchInProgressPhaseState', id: number, map?: CsMap } | { __typename: 'MatchPickAndBanPhaseState', id: number, firstTeamToBan: number, votingTimeInSeconds: number, actions: Array<{ __typename?: 'MatchPickAndBanPhaseAction', id?: number, ban: CsMap, captain: { __typename?: 'User', id?: number } }> } | { __typename: 'MatchReadyCheckPhaseState', id: number, teamOneAction: { __typename?: 'MatchReadyCheckPhaseCaptainPerTeamAction', ready: boolean }, teamTwoAction: { __typename?: 'MatchReadyCheckPhaseCaptainPerTeamAction', ready: boolean } } } };
 
 export type GetAllNotificationsQueryVariables = Exact<{
   userId: Scalars['Int'];
@@ -652,18 +644,6 @@ export type RegisterTeamOrPlayerMutationVariables = Exact<{
 
 
 export type RegisterTeamOrPlayerMutation = { __typename?: 'Mutation', registerTeamOrPlayer?: { __typename?: 'Tournament', id?: number, tournamentRegistrations: Array<{ __typename?: 'TournamentRegistration', id?: number, captain: { __typename?: 'User', id?: number, playertag: string, picture?: string }, team: { __typename?: 'Team', id?: number, name: string } }> } };
-
-export type FlowSubscriptionVariables = Exact<{ [key: string]: never; }>;
-
-
-export type FlowSubscription = { __typename?: 'Subscription', flow: number };
-
-export type CounterSubscriptionVariables = Exact<{
-  limit?: InputMaybe<Scalars['Int']>;
-}>;
-
-
-export type CounterSubscription = { __typename?: 'Subscription', counter: { __typename?: 'Counter', number: number } };
 
 export type GetAllTeamsQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -1224,6 +1204,7 @@ export const GetMatchByIdDocument = gql`
         id
       }
       state {
+        __typename
         ... on MatchReadyCheckPhaseState {
           id
           teamOneAction {
@@ -1292,6 +1273,7 @@ export const MarkReadyDocument = gql`
       createdTs
       endTs
       state {
+        __typename
         ... on MatchReadyCheckPhaseState {
           id
           teamOneAction {
@@ -1353,6 +1335,7 @@ export const BanMapDocument = gql`
       id
       endTs
       state {
+        __typename
         ... on MatchPickAndBanPhaseState {
           id
           firstTeamToBan
@@ -1402,6 +1385,70 @@ export function useBanMapMutation(baseOptions?: Apollo.MutationHookOptions<BanMa
 export type BanMapMutationHookResult = ReturnType<typeof useBanMapMutation>;
 export type BanMapMutationResult = Apollo.MutationResult<BanMapMutation>;
 export type BanMapMutationOptions = Apollo.BaseMutationOptions<BanMapMutation, BanMapMutationVariables>;
+export const OnMatchPhaseChangedDocument = gql`
+    subscription onMatchPhaseChanged($matchId: Int!) {
+  onMatchPhaseChanged(matchId: $matchId) {
+    id
+    phaseType
+    createdTs
+    endTs
+    match {
+      id
+    }
+    state {
+      __typename
+      ... on MatchReadyCheckPhaseState {
+        id
+        teamOneAction {
+          ready
+        }
+        teamTwoAction {
+          ready
+        }
+      }
+      ... on MatchPickAndBanPhaseState {
+        id
+        firstTeamToBan
+        votingTimeInSeconds
+        actions {
+          id
+          captain {
+            id
+          }
+          ban
+        }
+      }
+      ... on MatchInProgressPhaseState {
+        id
+        map
+      }
+    }
+  }
+}
+    `;
+
+/**
+ * __useOnMatchPhaseChangedSubscription__
+ *
+ * To run a query within a React component, call `useOnMatchPhaseChangedSubscription` and pass it any options that fit your needs.
+ * When your component renders, `useOnMatchPhaseChangedSubscription` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the subscription, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useOnMatchPhaseChangedSubscription({
+ *   variables: {
+ *      matchId: // value for 'matchId'
+ *   },
+ * });
+ */
+export function useOnMatchPhaseChangedSubscription(baseOptions: Apollo.SubscriptionHookOptions<OnMatchPhaseChangedSubscription, OnMatchPhaseChangedSubscriptionVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useSubscription<OnMatchPhaseChangedSubscription, OnMatchPhaseChangedSubscriptionVariables>(OnMatchPhaseChangedDocument, options);
+      }
+export type OnMatchPhaseChangedSubscriptionHookResult = ReturnType<typeof useOnMatchPhaseChangedSubscription>;
+export type OnMatchPhaseChangedSubscriptionResult = Apollo.SubscriptionResult<OnMatchPhaseChangedSubscription>;
 export const GetAllNotificationsDocument = gql`
     query getAllNotifications($userId: Int!) {
   getAllNotifications(userId: $userId) {
@@ -1591,63 +1638,6 @@ export function useRegisterTeamOrPlayerMutation(baseOptions?: Apollo.MutationHoo
 export type RegisterTeamOrPlayerMutationHookResult = ReturnType<typeof useRegisterTeamOrPlayerMutation>;
 export type RegisterTeamOrPlayerMutationResult = Apollo.MutationResult<RegisterTeamOrPlayerMutation>;
 export type RegisterTeamOrPlayerMutationOptions = Apollo.BaseMutationOptions<RegisterTeamOrPlayerMutation, RegisterTeamOrPlayerMutationVariables>;
-export const FlowDocument = gql`
-    subscription flow {
-  flow
-}
-    `;
-
-/**
- * __useFlowSubscription__
- *
- * To run a query within a React component, call `useFlowSubscription` and pass it any options that fit your needs.
- * When your component renders, `useFlowSubscription` returns an object from Apollo Client that contains loading, error, and data properties
- * you can use to render your UI.
- *
- * @param baseOptions options that will be passed into the subscription, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
- *
- * @example
- * const { data, loading, error } = useFlowSubscription({
- *   variables: {
- *   },
- * });
- */
-export function useFlowSubscription(baseOptions?: Apollo.SubscriptionHookOptions<FlowSubscription, FlowSubscriptionVariables>) {
-        const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useSubscription<FlowSubscription, FlowSubscriptionVariables>(FlowDocument, options);
-      }
-export type FlowSubscriptionHookResult = ReturnType<typeof useFlowSubscription>;
-export type FlowSubscriptionResult = Apollo.SubscriptionResult<FlowSubscription>;
-export const CounterDocument = gql`
-    subscription counter($limit: Int) {
-  counter(limit: $limit) {
-    number
-  }
-}
-    `;
-
-/**
- * __useCounterSubscription__
- *
- * To run a query within a React component, call `useCounterSubscription` and pass it any options that fit your needs.
- * When your component renders, `useCounterSubscription` returns an object from Apollo Client that contains loading, error, and data properties
- * you can use to render your UI.
- *
- * @param baseOptions options that will be passed into the subscription, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
- *
- * @example
- * const { data, loading, error } = useCounterSubscription({
- *   variables: {
- *      limit: // value for 'limit'
- *   },
- * });
- */
-export function useCounterSubscription(baseOptions?: Apollo.SubscriptionHookOptions<CounterSubscription, CounterSubscriptionVariables>) {
-        const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useSubscription<CounterSubscription, CounterSubscriptionVariables>(CounterDocument, options);
-      }
-export type CounterSubscriptionHookResult = ReturnType<typeof useCounterSubscription>;
-export type CounterSubscriptionResult = Apollo.SubscriptionResult<CounterSubscription>;
 export const GetAllTeamsDocument = gql`
     query getAllTeams {
   getAllTeams {
@@ -2784,8 +2774,7 @@ export const ListAllOperations = {
     createTestData: 'createTestData'
   },
   Subscription: {
-    flow: 'flow',
-    counter: 'counter'
+    onMatchPhaseChanged: 'onMatchPhaseChanged'
   },
   Fragment: {
     NewNotification: 'NewNotification'

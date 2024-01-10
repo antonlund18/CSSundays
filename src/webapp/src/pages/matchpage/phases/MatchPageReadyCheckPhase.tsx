@@ -1,11 +1,18 @@
 import * as React from "react"
 import {useEffect, useState} from "react"
 import {makeStyles} from "@mui/styles";
-import {Match, MatchReadyCheckPhaseState, useMarkReadyMutation, User} from "../../../codegen/generated-types";
+import {
+    Match,
+    MatchPhase,
+    MatchReadyCheckPhaseState,
+    useMarkReadyMutation,
+    User
+} from "../../../codegen/generated-types";
 import {Box, Button, CircularProgress, Grid, Typography} from "@mui/material";
 import {PlayerPicture} from "../../teamspage/team/PlayerPicture";
 import {Check} from "@mui/icons-material";
 import {useGetCurrentUser} from "../../../hooks/api/useUser";
+import {MatchPhaseStateWithType} from "../MatchPagePhaseContainer";
 
 const useStyles = makeStyles(theme => ({
     captain: {
@@ -24,6 +31,7 @@ const useStyles = makeStyles(theme => ({
 
 type MatchPageReadyCheckPhaseProps = {
     match: Match
+    phase: MatchPhase
     team1Captain: User | undefined
     team2Captain: User | undefined
 }
@@ -34,7 +42,7 @@ export const MatchPageReadyCheckPhase = (props: MatchPageReadyCheckPhaseProps) =
     const {currentUser} = useGetCurrentUser()
     const [markReady] = useMarkReadyMutation()
 
-    const phase = props.match.currentPhase
+    const phase = props.phase
 
     useEffect(() => {
         const interval = setInterval(() => {
@@ -59,6 +67,10 @@ export const MatchPageReadyCheckPhase = (props: MatchPageReadyCheckPhaseProps) =
     const seconds = countdown ? parseInt(String(countdown % 60)) : 0
     const minutes = countdown ? parseInt(String(countdown / 60)) : 0
     const countdownString = countdown !== null ? `${addStartZero(minutes?.toString())}:${addStartZero(seconds?.toString())}` : ""
+
+    if ((phase.state as MatchPhaseStateWithType).__typename !== "MatchReadyCheckPhaseState") {
+        return <></>
+    }
 
     const state = phase.state as MatchReadyCheckPhaseState
 

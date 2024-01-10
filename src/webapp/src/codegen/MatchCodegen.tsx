@@ -79,6 +79,7 @@ gql`
                     id
                 }
                 state {
+                    __typename
                     ... on MatchReadyCheckPhaseState {
                         id
                         teamOneAction {
@@ -120,6 +121,7 @@ gql`
                 createdTs,
                 endTs,
                 state {
+                    __typename
                     ... on MatchReadyCheckPhaseState {
                         id
                         teamOneAction {
@@ -155,6 +157,7 @@ gql`
                 id,
                 endTs,
                 state {
+                    __typename
                     ... on MatchPickAndBanPhaseState {
                         id,
                         firstTeamToBan

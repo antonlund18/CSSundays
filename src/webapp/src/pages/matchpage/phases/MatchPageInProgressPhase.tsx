@@ -1,12 +1,13 @@
 import * as React from "react"
 import {useContext, useEffect, useMemo, useState} from "react"
 import {Box, Button, IconButton, TextField, Theme, Typography} from "@mui/material";
-import {Match, MatchInProgressPhaseState, User} from "../../../codegen/generated-types";
+import {Match, MatchInProgressPhaseState, MatchPhase, User} from "../../../codegen/generated-types";
 import {CS2Map, mapPool} from "../../../util/MapPool";
 import {makeStyles} from "@mui/styles";
 import {ContentCopy} from "@mui/icons-material";
 import {SnackbarContext} from "../../../SnackbarContextProvider";
 import {useGetCurrentUser} from "../../../hooks/api/useUser";
+import {MatchPhaseStateWithType} from "../MatchPagePhaseContainer";
 
 interface StylesProps {
     mapName: string
@@ -43,10 +44,12 @@ const TEST_IP = "127.0.0.1"
 
 type MatchPageInProgressPhaseProps = {
     match: Match
+    phase: MatchPhase
 }
 
 export const MatchPageInProgressPhase = (props: MatchPageInProgressPhaseProps) => {
-    const state = props.match.currentPhase.state as MatchInProgressPhaseState
+    const {phase} = props
+    const state = phase.state as MatchInProgressPhaseState
     const [map, setMap] = useState<CS2Map | null>(null)
     const classes = useStyles({mapName: map?.label ?? "", mapPicture: map?.picture ?? ""})
     const {openSnackbar} = useContext(SnackbarContext)
@@ -68,6 +71,10 @@ export const MatchPageInProgressPhase = (props: MatchPageInProgressPhaseProps) =
     }, [currentUser, props.match])
 
     if (!map) {
+        return <></>
+    }
+
+    if ((phase.state as MatchPhaseStateWithType).__typename !== "MatchInProgressPhaseState") {
         return <></>
     }
 

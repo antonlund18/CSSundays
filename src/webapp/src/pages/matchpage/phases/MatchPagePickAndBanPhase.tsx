@@ -6,13 +6,14 @@ import {activeDutyMapPool} from "../../../util/MapPool";
 import {makeStyles} from "@mui/styles";
 import {
     CsMap,
-    Match,
+    Match, MatchPhase,
     MatchPickAndBanPhaseState,
     TournamentRegistration,
     useBanMapMutation,
     User
 } from "../../../codegen/generated-types";
 import {useGetCurrentUser} from "../../../hooks/api/useUser";
+import {MatchPhaseStateWithType} from "../MatchPagePhaseContainer";
 
 interface StylesProps {
     isVoting: boolean
@@ -76,6 +77,7 @@ const useStyles = makeStyles<Theme, StylesProps>((theme) => ({
 
 type MatchPageMapPickPhaseProps = {
     match: Match
+    phase: MatchPhase
     team1Captain: User | undefined
     team2Captain: User | undefined
 }
@@ -87,14 +89,14 @@ export const MatchPagePickAndBanPhase = (props: MatchPageMapPickPhaseProps) => {
     const [countdown, setCountdown] = useState<number | null>(null);
     const countdownInSeconds = countdown ? parseInt(String(countdown % 60)) : 0
 
-    const phase = props.match.currentPhase
+    const phase = props.phase
     const state = phase.state as MatchPickAndBanPhaseState
-    const bannedMaps = state.actions.map(action => action.ban)
+    const bannedMaps = state.actions?.map(action => action.ban)
 
     const tournamentRegistration1 = props.match.tournamentRegistration1
     const tournamentRegistration2 = props.match.tournamentRegistration2
 
-    const isTeamOneToBan = (state.firstTeamToBan + state.actions.length) % 2 == 1
+    const isTeamOneToBan = (state.firstTeamToBan + state.actions?.length) % 2 == 1
     const currentCaptainToVote = isTeamOneToBan ? tournamentRegistration1?.captain : tournamentRegistration2?.captain
     const isCurrentUserVoting = currentCaptainToVote?.id === currentUser?.id
 
@@ -134,6 +136,10 @@ export const MatchPagePickAndBanPhase = (props: MatchPageMapPickPhaseProps) => {
                 ban: map
             }
         })
+    }
+
+    if ((phase.state as MatchPhaseStateWithType).__typename !== "MatchPickAndBanPhaseState") {
+        return <></>
     }
 
     return <>

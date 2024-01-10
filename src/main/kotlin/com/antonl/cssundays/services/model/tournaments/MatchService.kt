@@ -1,5 +1,6 @@
 package com.antonl.cssundays.services.model.tournaments
 
+import com.antonl.cssundays.graphql.subscriptions.MatchPublisher
 import com.antonl.cssundays.model.core.User
 import com.antonl.cssundays.model.tournaments.brackets.Match
 import com.antonl.cssundays.model.tournaments.brackets.matches.*
@@ -48,6 +49,7 @@ class MatchService(val matchRepository: MatchRepository) {
         val factory = ChangeMatchPhaseStrategyHandlerFactory(this)
         val handler = factory.getHandler(changeMatchPhaseStrategy)
         handler.execute(match)
+        MatchPublisher.publish(match)
     }
 
     fun startMatch(match: Match, map: CSMap): Match {
@@ -81,6 +83,7 @@ class MatchService(val matchRepository: MatchRepository) {
             changeMatchPhase(match, ChangeMatchPhaseStrategy.PICK_AND_BAN_BO1)
         }
 
+        MatchPublisher.publish(match)
         return saveMatch(match)
     }
 
@@ -99,6 +102,7 @@ class MatchService(val matchRepository: MatchRepository) {
             val endTs = LocalDateTime.now(ZoneOffset.UTC).plusSeconds(state.votingTimeInSeconds.toLong())
             match.currentPhase.endTs = endTs
             scheduleChangeMatchPhase(match, ChangeMatchPhaseStrategy.PICK_AND_BAN_TIMEOUT, endTs)
+            MatchPublisher.publish(match)
         }
 
         val bans = state.actions.map { it.ban }

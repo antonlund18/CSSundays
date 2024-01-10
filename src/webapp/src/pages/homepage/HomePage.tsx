@@ -1,7 +1,6 @@
 import * as React from "react";
 import {Typography} from "@mui/material";
 import {makeStyles} from "@mui/styles"
-import {useCounterSubscription} from "../../codegen/generated-types";
 
 const useStyles = makeStyles((theme) => ({
     homePageContainer: {
@@ -23,24 +22,6 @@ const useStyles = makeStyles((theme) => ({
 
 export const HomePage = () => {
     const classes = useStyles();
-    const {data, loading, error} = useCounterSubscription({variables: {limit: 4}})
-
-    if (loading) {
-        console.log("loading")
-        return <></>
-    }
-
-    if (error) {
-        console.log(error)
-        return <></>
-    }
-
-    if (!data) {
-        console.log("no data")
-        return <></>
-    }
-
-    console.log(data)
 
     return <div className={classes.homePageContainer}>
         <div className={classes.nameContainer}>

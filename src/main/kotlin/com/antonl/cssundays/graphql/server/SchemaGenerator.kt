@@ -5,6 +5,7 @@ import com.antonl.cssundays.graphql.mutations.admin.AdminMatchMutations
 import com.antonl.cssundays.graphql.mutations.admin.AdminTestDataMutations
 import com.antonl.cssundays.graphql.queries.*
 import com.antonl.cssundays.graphql.server.hooks.CustomSchemaGeneratorHooks
+import com.antonl.cssundays.graphql.subscriptions.MatchSubscriptions
 import com.expediagroup.graphql.generator.SchemaGeneratorConfig
 import com.expediagroup.graphql.generator.TopLevelObject
 import com.expediagroup.graphql.generator.toSchema
@@ -57,7 +58,7 @@ abstract class SchemaGenerator {
                     TopLevelObject(MatchMutations())
                 ),
                 subscriptions = listOf(
-                    TopLevelObject(SimpleSubscription())
+                    TopLevelObject(MatchSubscriptions())
                 )
             )
         }
