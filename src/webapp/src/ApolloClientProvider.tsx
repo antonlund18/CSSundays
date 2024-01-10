@@ -18,7 +18,7 @@ const httpLink = createHttpLink({
 const wsLink = new WebSocketLink(
     new SubscriptionClient(
         process.env.NODE_ENV === "development" ?
-            `ws://${DEV_DOMAIN + SUBSCRIPTIONS_ROUTE}` : `ws://${PROD_DOMAIN + SUBSCRIPTIONS_ROUTE}`)
+            `ws://${DEV_DOMAIN + SUBSCRIPTIONS_ROUTE}` : `wss://${PROD_DOMAIN + SUBSCRIPTIONS_ROUTE}`)
 );
 
 const authLink = setContext((_, { headers }) => {
