@@ -5,14 +5,20 @@ import {WebSocketLink} from "@apollo/client/link/ws";
 import {SubscriptionClient} from "subscriptions-transport-ws";
 import {getMainDefinition} from "@apollo/client/utilities";
 
-const DEV_DOMAIN = "http://localhost:8080/graphql"
-const PROD_DOMAIN = "https://backend.cssundays.dk/graphql"
+const DEV_DOMAIN = "localhost:8080"
+const PROD_DOMAIN = "backend.cssundays.dk"
+const GRAPHQL_ROUTE = "/graphql"
+const SUBSCRIPTIONS_ROUTE = "/subscriptions"
+
 const httpLink = createHttpLink({
-    uri: process.env.NODE_ENV === "development" ? DEV_DOMAIN : PROD_DOMAIN,
+    uri: process.env.NODE_ENV === "development" ?
+        `http://${DEV_DOMAIN + GRAPHQL_ROUTE}` : `https://${PROD_DOMAIN + GRAPHQL_ROUTE}`,
 });
 
 const wsLink = new WebSocketLink(
-    new SubscriptionClient("ws://localhost:8080/subscriptions")
+    new SubscriptionClient(
+        process.env.NODE_ENV === "development" ?
+            `ws://${DEV_DOMAIN + SUBSCRIPTIONS_ROUTE}` : `ws://${PROD_DOMAIN + SUBSCRIPTIONS_ROUTE}`)
 );
 
 const authLink = setContext((_, { headers }) => {
