@@ -10,6 +10,7 @@ import {
     useSendChatMessageMutation
 } from "../../codegen/generated-types";
 import {useGetCurrentUser} from "../../hooks/api/useUser";
+import {useDateFormatter} from "../../hooks/useDateFormatter";
 
 enum Color {
     RED,
@@ -20,20 +21,8 @@ type Message = {
     sender: string,
     message: string
     color: Color
+    createdTs: Date
 }
-
-const messagesDemo: Message[] = [
-    {
-        sender: "Anton",
-        message: "Anton er mega sej",
-        color: Color.RED
-    },
-    {
-        sender: "xXxDrag0nSl4yerxXx",
-        message: "Kan vi ikke godt banne nuke???? :(((",
-        color: Color.BLUE
-    },
-]
 
 type MatchPageChatContainerProps = {
     match: Match
@@ -45,6 +34,7 @@ export const MatchPageChatContainer = (props: MatchPageChatContainerProps) => {
     const [messages, setMessages] = useState<MatchChatMessage[]>(props.match.chatMessages)
     const {data} = useOnNewMatchChatMessageSubscription({variables: {matchId: props.match?.id ?? -1}})
     const [sendChatMessage] = useSendChatMessageMutation()
+    const {formatTime} = useDateFormatter()
 
     useEffect(() => {
         if (data && !messages.find(message => message.id === data.onNewMatchChatMessage?.id)) {
@@ -104,11 +94,12 @@ export const MatchPageChatContainer = (props: MatchPageChatContainerProps) => {
                 {messages.slice().reverse().map(message => {
                     return <div
                         style={{whiteSpace: "pre-wrap", width: "100%", overflowWrap: "break-word"}}>
-                            <Typography color={getSenderColor(message.sender)} style={{display: "inline"}}
-                                        fontWeight={"bold"}>{`${message.sender.playertag}: `}</Typography>
-                            <Typography style={{display: "inline"}}>{message.message}</Typography>
+                        <Typography color={getSenderColor(message.sender)} style={{display: "inline"}}
+                                    fontWeight={"bold"}>{`[${formatTime(message.createdTs)}] ${message.sender.playertag}: `}</Typography>
+                        <Typography style={{display: "inline"}}>{message.message}</Typography>
                     </div>
                 })}
+                <Typography style={{display: "inline", color: "#7c7c7c"}} fontWeight={"bold"}>Velkommen til chatten</Typography>
             </div>
             <div style={{height: "10%", paddingLeft: "8px", paddingRight: "8px"}}>
                 <TextField variant={"standard"} style={{width: "100%"}}

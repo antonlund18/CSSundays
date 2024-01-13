@@ -7,9 +7,10 @@ export const useDateFormatter = () => {
     }
 
     const formatTime = (date: string | number | Date): string => {
-        const formattedDate = new Date(date)
-        return addZero(formattedDate.getHours())
-        + ":" + addZero(formattedDate.getMinutes())
+        const utcDate = new Date(date)
+        const danishTime = utcDate.getTime() + (utcDate.getTimezoneOffset() * 1000 * 60)
+        const danishDate = new Date(danishTime)
+        return `${addZero(danishDate.getHours())}:${addZero(danishDate.getMinutes())}`
     }
 
     const formatDateTime = (date: string | number | Date): string => {
@@ -26,17 +27,10 @@ export const useDateFormatter = () => {
     }
     
     const formatDateRelatively = (date: string | number | Date): string => {
-        const time = Math.floor((toUTC(new Date()).valueOf() - new Date(date).valueOf()) / 1000);
+        const time = Math.floor((new Date().valueOf() - new Date(date).valueOf()) / 1000);
         const { interval, unit, pluralSuffix } = calculateTimeDifference(time);
         const suffix = interval === 1 ? '' : pluralSuffix;
         return `${interval} ${unit}${suffix} siden`;
-    }
-
-    const toUTC = (date: Date): Date => {
-        const timeDiffInMinutes = date.getTimezoneOffset() * -1
-        const timeDiffInMilliseconds = timeDiffInMinutes * 60 * 1000
-        const utcDate = new Date(new Date().valueOf() + timeDiffInMilliseconds)
-        return utcDate
     }
 
     const calculateTimeDifference = (time: number) => {

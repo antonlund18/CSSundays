@@ -76,6 +76,7 @@ gql`
                     playertag
                 }
                 message
+                createdTs
             }
             currentPhase {
                 id,

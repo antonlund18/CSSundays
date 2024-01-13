@@ -51,6 +51,7 @@ gql`
                 playertag
             }
             message
+            createdTs
         }
     }
 `
