@@ -17,16 +17,25 @@ interface StylesProps {
 const useStyles = makeStyles<Theme, StylesProps>(theme => ({
     mapPicture: props => ({
         "&::after": {
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
             position: "absolute",
-            bottom: 0,
+            bottom: "50%",
             left: 0,
+            height: "33%",
+            minHeight: "50px",
             textAlign: "center",
+            transform: "translate(0%, 50%)",
             width: "100%",
-            background: "rgba(0, 0, 0, .4)",
+            background: "rgba(0, 0, 0, .7)",
             color: "rgb(241,241,241)",
             overflow: "hidden",
             textOverflow: "ellipsis",
-            content: "'" + props.mapName + "'"
+            fontFamily: "Exo, sans-sarif",
+            fontSize: "24px",
+            content: "'" + props.mapName + "'",
+            textTransform: "uppercase",
         },
         width: "100%",
         aspectRatio: "2/1",
@@ -100,7 +109,8 @@ export const MatchPageInProgressPhase = (props: MatchPageInProgressPhaseProps) =
             alignItems: "center"
         }}>
             <Typography variant={"h2"}>Kamp i gang</Typography>
-            <Box className={classes.mapPicture}/>
+            <Box className={classes.mapPicture}>
+            </Box>
             <TextField label={"Server IP"} disabled={!isCurrentUserInMatch} value={isCurrentUserInMatch ? TEST_IP : "XXX.XXX.XXX.XXX"} style={{marginTop: "16px", width: "100%"}} InputProps={{
                 endAdornment: isCurrentUserInMatch && <IconButton>
                     <ContentCopy onClick={handleCopyIp}/>
