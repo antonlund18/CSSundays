@@ -1,10 +1,12 @@
 package com.antonl.cssundays.services.model.tournaments
 
-import com.antonl.cssundays.graphql.subscriptions.MatchPublisher
+import com.antonl.cssundays.graphql.subscriptions.MatchChatMessagePublisher
+import com.antonl.cssundays.graphql.subscriptions.MatchPhasePublisher
 import com.antonl.cssundays.model.core.User
 import com.antonl.cssundays.model.tournaments.brackets.Match
 import com.antonl.cssundays.model.tournaments.brackets.matches.*
 import com.antonl.cssundays.quartz.ScheduledChangeMatchPhaseService
+import com.antonl.cssundays.repositories.MatchChatMessageRepository
 import com.antonl.cssundays.repositories.MatchRepository
 import com.antonl.cssundays.services.model.tournaments.matchphase.ChangeMatchPhaseStrategy
 import com.antonl.cssundays.services.model.tournaments.matchphase.ChangeMatchPhaseStrategyHandlerFactory
@@ -16,7 +18,7 @@ import javax.transaction.Transactional
 
 @Service
 @Transactional
-class MatchService(val matchRepository: MatchRepository) {
+class MatchService(val matchRepository: MatchRepository, val matchChatMessageRepository: MatchChatMessageRepository) {
     @Autowired
     private var scheduledChangeMatchPhaseService: ScheduledChangeMatchPhaseService? = null
 
@@ -49,13 +51,13 @@ class MatchService(val matchRepository: MatchRepository) {
         val factory = ChangeMatchPhaseStrategyHandlerFactory(this)
         val handler = factory.getHandler(changeMatchPhaseStrategy)
         handler.execute(match)
-        MatchPublisher.publish(match)
+        MatchPhasePublisher.publish(match.currentPhase)
     }
 
     fun startMatch(match: Match, map: CSMap): Match {
         changeMatchPhase(match, ChangeMatchPhaseStrategy.IN_PROGRESS)
 
-        var state = match.currentPhase.state
+        val state = match.currentPhase.state
         if (state !is MatchInProgressPhaseState) {
             return match
         }
@@ -83,7 +85,7 @@ class MatchService(val matchRepository: MatchRepository) {
             changeMatchPhase(match, ChangeMatchPhaseStrategy.PICK_AND_BAN_BO1)
         }
 
-        MatchPublisher.publish(match)
+        MatchPhasePublisher.publish(match.currentPhase)
         return saveMatch(match)
     }
 
@@ -102,7 +104,7 @@ class MatchService(val matchRepository: MatchRepository) {
             val endTs = LocalDateTime.now(ZoneOffset.UTC).plusSeconds(state.votingTimeInSeconds.toLong())
             match.currentPhase.endTs = endTs
             scheduleChangeMatchPhase(match, ChangeMatchPhaseStrategy.PICK_AND_BAN_TIMEOUT, endTs)
-            MatchPublisher.publish(match)
+            MatchPhasePublisher.publish(match.currentPhase)
         }
 
         val bans = state.actions.map { it.ban }
@@ -111,5 +113,15 @@ class MatchService(val matchRepository: MatchRepository) {
         if (wasLastBan) {
             startMatch(match, remainingMaps[0])
         }
+    }
+
+    fun sendChatMessage(match: Match, user: User, message: String): MatchChatMessage? {
+        if (message.length > 256) {
+            return null
+        }
+
+        val message = matchChatMessageRepository.save(MatchChatMessage(match = match, sender = user, message = message))
+        MatchChatMessagePublisher.publish(message)
+        return message
     }
 }

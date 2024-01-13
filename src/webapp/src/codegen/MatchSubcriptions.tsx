@@ -41,3 +41,16 @@ gql`
         }
     }
 `
+
+gql`
+    subscription onNewMatchChatMessage($matchId: Int!) {
+        onNewMatchChatMessage(matchId: $matchId) {
+            id
+            sender {
+                id
+                playertag
+            }
+            message
+        }
+    }
+`

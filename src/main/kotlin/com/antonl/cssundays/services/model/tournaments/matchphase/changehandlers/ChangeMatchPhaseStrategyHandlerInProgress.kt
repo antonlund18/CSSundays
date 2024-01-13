@@ -11,7 +11,7 @@ class ChangeMatchPhaseStrategyHandlerInProgress(val matchService: MatchService) 
     override fun execute(match: Match) {
         val phaseType = MatchPhaseType.IN_PROGRESS
         val state = MatchInProgressPhaseState()
-        val phase = MatchPhase(phaseType = phaseType, state = state)
+        val phase = MatchPhase(match = match, phaseType = phaseType, state = state)
         match.currentPhase = phase
     }
 }

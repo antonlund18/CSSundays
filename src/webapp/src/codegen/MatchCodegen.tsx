@@ -70,6 +70,13 @@ gql`
                     picture
                 }
             },
+            chatMessages {
+                sender {
+                    id
+                    playertag
+                }
+                message
+            }
             currentPhase {
                 id,
                 phaseType,
@@ -176,6 +183,14 @@ gql`
                     }
                 }
             }
+        }
+    }
+`
+
+gql`
+    mutation sendChatMessage($matchId: Int!, $senderId: Int!, $message: String!) {
+        sendChatMessage(matchId: $matchId, senderId: $senderId, message: $message) {
+            id
         }
     }
 `

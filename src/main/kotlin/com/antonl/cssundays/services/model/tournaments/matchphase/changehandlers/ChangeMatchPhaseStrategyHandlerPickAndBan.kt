@@ -15,7 +15,7 @@ class ChangeMatchPhaseStrategyHandlerPickAndBan(val matchService: MatchService) 
         val phaseType = MatchPhaseType.PICK_AND_BAN
         val state = MatchPickAndBanPhaseState()
         val endTs = LocalDateTime.now(ZoneOffset.UTC).plusSeconds(state.votingTimeInSeconds.toLong())
-        val phase = MatchPhase(phaseType = phaseType, state = state, endTs = endTs)
+        val phase = MatchPhase(match = match, phaseType = phaseType, state = state, endTs = endTs)
         match.currentPhase = phase
         matchService.scheduleChangeMatchPhase(match, ChangeMatchPhaseStrategy.PICK_AND_BAN_TIMEOUT, endTs)
     }

@@ -20,7 +20,7 @@ class ChangeMatchPhaseStrategyHandlerReadyCheckOneCaptainPerTeam(val matchServic
             val teamTwoAction = MatchReadyCheckPhaseCaptainPerTeamAction(captain = tournamentRegistration2.captain)
             val state = MatchReadyCheckPhaseState(teamOneAction, teamTwoAction)
             val phaseType = MatchPhaseType.READY_CHECK
-            val endTs = LocalDateTime.now(ZoneOffset.UTC).plusMinutes(10)
+            val endTs = LocalDateTime.now(ZoneOffset.UTC).plusSeconds(10)
             match.currentPhase = MatchPhase(match = match, phaseType = phaseType, state = state, endTs = endTs)
             matchService.scheduleChangeMatchPhase(match, ChangeMatchPhaseStrategy.READY_CHECK_TIME_OUT, endTs)
         }

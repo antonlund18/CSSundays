@@ -2,6 +2,7 @@ package com.antonl.cssundays.graphql.mutations
 
 import com.antonl.cssundays.model.tournaments.brackets.Match
 import com.antonl.cssundays.model.tournaments.brackets.matches.CSMap
+import com.antonl.cssundays.model.tournaments.brackets.matches.MatchChatMessage
 import com.antonl.cssundays.services.model.core.UserService
 import com.antonl.cssundays.services.model.tournaments.MatchService
 import com.expediagroup.graphql.server.operations.Mutation
@@ -29,5 +30,11 @@ class MatchMutations : Mutation {
         val player = userService.findUserById(playerId) ?: return null
         matchService.banMap(match, player, ban)
         return matchService.saveMatch(match)
+    }
+
+    suspend fun sendChatMessage(matchId: Int, senderId: Int, message: String): MatchChatMessage? {
+        val match = matchService.getMatchById(matchId) ?: return null
+        val sender = userService.findUserById(senderId) ?: return null
+        return matchService.sendChatMessage(match, sender, message)
     }
 }

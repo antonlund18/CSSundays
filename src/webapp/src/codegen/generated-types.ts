@@ -79,6 +79,7 @@ export enum InviteToTeamStatus {
 export type Match = {
   __typename?: 'Match';
   allPhases: Array<MatchPhase>;
+  chatMessages: Array<MatchChatMessage>;
   createdTs: Scalars['LocalDateTime'];
   currentPhase: MatchPhase;
   id?: Maybe<Scalars['Int']>;
@@ -87,6 +88,15 @@ export type Match = {
   right?: Maybe<Match>;
   tournamentRegistration1?: Maybe<TournamentRegistration>;
   tournamentRegistration2?: Maybe<TournamentRegistration>;
+};
+
+export type MatchChatMessage = {
+  __typename?: 'MatchChatMessage';
+  createdTs: Scalars['LocalDateTime'];
+  id?: Maybe<Scalars['Int']>;
+  match: Match;
+  message: Scalars['String'];
+  sender: User;
 };
 
 export type MatchInProgressPhaseState = MatchPhaseState & {
@@ -177,6 +187,7 @@ export type Mutation = {
   publishTournament?: Maybe<Tournament>;
   registerTeamOrPlayer?: Maybe<Tournament>;
   removePublicationFromTournament?: Maybe<Tournament>;
+  sendChatMessage?: Maybe<MatchChatMessage>;
   setPictureAndGetPresignedRequest?: Maybe<RequestDto>;
   updateUser?: Maybe<User>;
 };
@@ -313,6 +324,13 @@ export type MutationRegisterTeamOrPlayerArgs = {
 
 export type MutationRemovePublicationFromTournamentArgs = {
   tournamentId: Scalars['Int'];
+};
+
+
+export type MutationSendChatMessageArgs = {
+  matchId: Scalars['Int'];
+  message: Scalars['String'];
+  senderId: Scalars['Int'];
 };
 
 
@@ -458,12 +476,17 @@ export type RequestDto = {
 
 export type Subscription = {
   __typename?: 'Subscription';
-  /** Returns a random number every second */
   onMatchPhaseChanged: MatchPhase;
+  onNewMatchChatMessage: MatchChatMessage;
 };
 
 
 export type SubscriptionOnMatchPhaseChangedArgs = {
+  matchId: Scalars['Int'];
+};
+
+
+export type SubscriptionOnNewMatchChatMessageArgs = {
   matchId: Scalars['Int'];
 };
 
@@ -588,7 +611,7 @@ export type GetMatchByIdQueryVariables = Exact<{
 }>;
 
 
-export type GetMatchByIdQuery = { __typename?: 'Query', getMatchById?: { __typename?: 'Match', id?: number, tournamentRegistration1?: { __typename?: 'TournamentRegistration', team: { __typename?: 'Team', id?: number, name: string, picture?: string }, players: Array<{ __typename?: 'User', id?: number, playertag: string, picture?: string }>, captain: { __typename?: 'User', id?: number, playertag: string, picture?: string } }, tournamentRegistration2?: { __typename?: 'TournamentRegistration', team: { __typename?: 'Team', id?: number, name: string, picture?: string }, players: Array<{ __typename?: 'User', id?: number, playertag: string, picture?: string }>, captain: { __typename?: 'User', id?: number, playertag: string, picture?: string } }, currentPhase: { __typename?: 'MatchPhase', id: number, phaseType: MatchPhaseType, createdTs: any, endTs?: any, match?: { __typename?: 'Match', id?: number }, state?: { __typename: 'MatchInProgressPhaseState', id: number, map?: CsMap } | { __typename: 'MatchPickAndBanPhaseState', id: number, firstTeamToBan: number, votingTimeInSeconds: number, actions: Array<{ __typename?: 'MatchPickAndBanPhaseAction', id?: number, ban: CsMap, captain: { __typename?: 'User', id?: number } }> } | { __typename: 'MatchReadyCheckPhaseState', id: number, teamOneAction: { __typename?: 'MatchReadyCheckPhaseCaptainPerTeamAction', ready: boolean }, teamTwoAction: { __typename?: 'MatchReadyCheckPhaseCaptainPerTeamAction', ready: boolean } } } } };
+export type GetMatchByIdQuery = { __typename?: 'Query', getMatchById?: { __typename?: 'Match', id?: number, tournamentRegistration1?: { __typename?: 'TournamentRegistration', team: { __typename?: 'Team', id?: number, name: string, picture?: string }, players: Array<{ __typename?: 'User', id?: number, playertag: string, picture?: string }>, captain: { __typename?: 'User', id?: number, playertag: string, picture?: string } }, tournamentRegistration2?: { __typename?: 'TournamentRegistration', team: { __typename?: 'Team', id?: number, name: string, picture?: string }, players: Array<{ __typename?: 'User', id?: number, playertag: string, picture?: string }>, captain: { __typename?: 'User', id?: number, playertag: string, picture?: string } }, chatMessages: Array<{ __typename?: 'MatchChatMessage', message: string, sender: { __typename?: 'User', id?: number, playertag: string } }>, currentPhase: { __typename?: 'MatchPhase', id: number, phaseType: MatchPhaseType, createdTs: any, endTs?: any, match?: { __typename?: 'Match', id?: number }, state?: { __typename: 'MatchInProgressPhaseState', id: number, map?: CsMap } | { __typename: 'MatchPickAndBanPhaseState', id: number, firstTeamToBan: number, votingTimeInSeconds: number, actions: Array<{ __typename?: 'MatchPickAndBanPhaseAction', id?: number, ban: CsMap, captain: { __typename?: 'User', id?: number } }> } | { __typename: 'MatchReadyCheckPhaseState', id: number, teamOneAction: { __typename?: 'MatchReadyCheckPhaseCaptainPerTeamAction', ready: boolean }, teamTwoAction: { __typename?: 'MatchReadyCheckPhaseCaptainPerTeamAction', ready: boolean } } } } };
 
 export type MarkReadyMutationVariables = Exact<{
   matchId: Scalars['Int'];
@@ -607,12 +630,28 @@ export type BanMapMutationVariables = Exact<{
 
 export type BanMapMutation = { __typename?: 'Mutation', banMap?: { __typename?: 'Match', id?: number, currentPhase: { __typename?: 'MatchPhase', id: number, endTs?: any, state?: { __typename: 'MatchInProgressPhaseState', id: number, map?: CsMap } | { __typename: 'MatchPickAndBanPhaseState', id: number, firstTeamToBan: number, votingTimeInSeconds: number, actions: Array<{ __typename?: 'MatchPickAndBanPhaseAction', id?: number, ban: CsMap, captain: { __typename?: 'User', id?: number } }> } | { __typename: 'MatchReadyCheckPhaseState' } } } };
 
+export type SendChatMessageMutationVariables = Exact<{
+  matchId: Scalars['Int'];
+  senderId: Scalars['Int'];
+  message: Scalars['String'];
+}>;
+
+
+export type SendChatMessageMutation = { __typename?: 'Mutation', sendChatMessage?: { __typename?: 'MatchChatMessage', id?: number } };
+
 export type OnMatchPhaseChangedSubscriptionVariables = Exact<{
   matchId: Scalars['Int'];
 }>;
 
 
 export type OnMatchPhaseChangedSubscription = { __typename?: 'Subscription', onMatchPhaseChanged: { __typename?: 'MatchPhase', id: number, phaseType: MatchPhaseType, createdTs: any, endTs?: any, match?: { __typename?: 'Match', id?: number }, state?: { __typename: 'MatchInProgressPhaseState', id: number, map?: CsMap } | { __typename: 'MatchPickAndBanPhaseState', id: number, firstTeamToBan: number, votingTimeInSeconds: number, actions: Array<{ __typename?: 'MatchPickAndBanPhaseAction', id?: number, ban: CsMap, captain: { __typename?: 'User', id?: number } }> } | { __typename: 'MatchReadyCheckPhaseState', id: number, teamOneAction: { __typename?: 'MatchReadyCheckPhaseCaptainPerTeamAction', ready: boolean }, teamTwoAction: { __typename?: 'MatchReadyCheckPhaseCaptainPerTeamAction', ready: boolean } } } };
+
+export type OnNewMatchChatMessageSubscriptionVariables = Exact<{
+  matchId: Scalars['Int'];
+}>;
+
+
+export type OnNewMatchChatMessageSubscription = { __typename?: 'Subscription', onNewMatchChatMessage: { __typename?: 'MatchChatMessage', id?: number, message: string, sender: { __typename?: 'User', id?: number, playertag: string } } };
 
 export type GetAllNotificationsQueryVariables = Exact<{
   userId: Scalars['Int'];
@@ -1195,6 +1234,13 @@ export const GetMatchByIdDocument = gql`
         picture
       }
     }
+    chatMessages {
+      sender {
+        id
+        playertag
+      }
+      message
+    }
     currentPhase {
       id
       phaseType
@@ -1385,6 +1431,41 @@ export function useBanMapMutation(baseOptions?: Apollo.MutationHookOptions<BanMa
 export type BanMapMutationHookResult = ReturnType<typeof useBanMapMutation>;
 export type BanMapMutationResult = Apollo.MutationResult<BanMapMutation>;
 export type BanMapMutationOptions = Apollo.BaseMutationOptions<BanMapMutation, BanMapMutationVariables>;
+export const SendChatMessageDocument = gql`
+    mutation sendChatMessage($matchId: Int!, $senderId: Int!, $message: String!) {
+  sendChatMessage(matchId: $matchId, senderId: $senderId, message: $message) {
+    id
+  }
+}
+    `;
+export type SendChatMessageMutationFn = Apollo.MutationFunction<SendChatMessageMutation, SendChatMessageMutationVariables>;
+
+/**
+ * __useSendChatMessageMutation__
+ *
+ * To run a mutation, you first call `useSendChatMessageMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useSendChatMessageMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [sendChatMessageMutation, { data, loading, error }] = useSendChatMessageMutation({
+ *   variables: {
+ *      matchId: // value for 'matchId'
+ *      senderId: // value for 'senderId'
+ *      message: // value for 'message'
+ *   },
+ * });
+ */
+export function useSendChatMessageMutation(baseOptions?: Apollo.MutationHookOptions<SendChatMessageMutation, SendChatMessageMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<SendChatMessageMutation, SendChatMessageMutationVariables>(SendChatMessageDocument, options);
+      }
+export type SendChatMessageMutationHookResult = ReturnType<typeof useSendChatMessageMutation>;
+export type SendChatMessageMutationResult = Apollo.MutationResult<SendChatMessageMutation>;
+export type SendChatMessageMutationOptions = Apollo.BaseMutationOptions<SendChatMessageMutation, SendChatMessageMutationVariables>;
 export const OnMatchPhaseChangedDocument = gql`
     subscription onMatchPhaseChanged($matchId: Int!) {
   onMatchPhaseChanged(matchId: $matchId) {
@@ -1449,6 +1530,41 @@ export function useOnMatchPhaseChangedSubscription(baseOptions: Apollo.Subscript
       }
 export type OnMatchPhaseChangedSubscriptionHookResult = ReturnType<typeof useOnMatchPhaseChangedSubscription>;
 export type OnMatchPhaseChangedSubscriptionResult = Apollo.SubscriptionResult<OnMatchPhaseChangedSubscription>;
+export const OnNewMatchChatMessageDocument = gql`
+    subscription onNewMatchChatMessage($matchId: Int!) {
+  onNewMatchChatMessage(matchId: $matchId) {
+    id
+    sender {
+      id
+      playertag
+    }
+    message
+  }
+}
+    `;
+
+/**
+ * __useOnNewMatchChatMessageSubscription__
+ *
+ * To run a query within a React component, call `useOnNewMatchChatMessageSubscription` and pass it any options that fit your needs.
+ * When your component renders, `useOnNewMatchChatMessageSubscription` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the subscription, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useOnNewMatchChatMessageSubscription({
+ *   variables: {
+ *      matchId: // value for 'matchId'
+ *   },
+ * });
+ */
+export function useOnNewMatchChatMessageSubscription(baseOptions: Apollo.SubscriptionHookOptions<OnNewMatchChatMessageSubscription, OnNewMatchChatMessageSubscriptionVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useSubscription<OnNewMatchChatMessageSubscription, OnNewMatchChatMessageSubscriptionVariables>(OnNewMatchChatMessageDocument, options);
+      }
+export type OnNewMatchChatMessageSubscriptionHookResult = ReturnType<typeof useOnNewMatchChatMessageSubscription>;
+export type OnNewMatchChatMessageSubscriptionResult = Apollo.SubscriptionResult<OnNewMatchChatMessageSubscription>;
 export const GetAllNotificationsDocument = gql`
     query getAllNotifications($userId: Int!) {
   getAllNotifications(userId: $userId) {
@@ -2753,6 +2869,7 @@ export const ListAllOperations = {
     createInviteToTeam: 'createInviteToTeam',
     markReady: 'markReady',
     banMap: 'banMap',
+    sendChatMessage: 'sendChatMessage',
     markAllNotificationsAsSeenForUser: 'markAllNotificationsAsSeenForUser',
     setPictureAndGetPresignedRequest: 'setPictureAndGetPresignedRequest',
     registerTeamOrPlayer: 'registerTeamOrPlayer',
@@ -2774,7 +2891,8 @@ export const ListAllOperations = {
     createTestData: 'createTestData'
   },
   Subscription: {
-    onMatchPhaseChanged: 'onMatchPhaseChanged'
+    onMatchPhaseChanged: 'onMatchPhaseChanged',
+    onNewMatchChatMessage: 'onNewMatchChatMessage'
   },
   Fragment: {
     NewNotification: 'NewNotification'

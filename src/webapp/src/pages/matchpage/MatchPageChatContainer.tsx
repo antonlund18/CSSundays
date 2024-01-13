@@ -1,7 +1,15 @@
 import * as React from "react"
+import {useEffect, useState} from "react"
 import {Grid, TextField, Tooltip, Typography} from "@mui/material";
 import {SubdirectoryArrowLeft} from "@mui/icons-material";
-import {useEffect, useState} from "react";
+import {
+    Match,
+    MatchChatMessage,
+    useOnNewMatchChatMessageSubscription,
+    User,
+    useSendChatMessageMutation
+} from "../../codegen/generated-types";
+import {useGetCurrentUser} from "../../hooks/api/useUser";
 
 enum Color {
     RED,
@@ -27,23 +35,50 @@ const messagesDemo: Message[] = [
     },
 ]
 
-export const MatchPageChatContainer = () => {
+type MatchPageChatContainerProps = {
+    match: Match
+}
+
+export const MatchPageChatContainer = (props: MatchPageChatContainerProps) => {
     const [message, setMessage] = useState<string>("")
-    const [messages, setMessages] = useState<Message[]>([])
+    const {currentUser} = useGetCurrentUser()
+    const [messages, setMessages] = useState<MatchChatMessage[]>(props.match.chatMessages)
+    const {data} = useOnNewMatchChatMessageSubscription({variables: {matchId: props.match?.id ?? -1}})
+    const [sendChatMessage] = useSendChatMessageMutation()
 
     useEffect(() => {
-        const sorted = new Array(100).fill(messagesDemo).flat().sort(() => Math.random() > 0.5 ? 1 : -1)
-        setMessages(sorted)
-    }, [])
+        if (data && !messages.find(message => message.id === data.onNewMatchChatMessage?.id)) {
+            setMessages([...messages, data.onNewMatchChatMessage as MatchChatMessage])
+        }
+    }, [data])
 
     const handleSubmitMessage = () => {
-        setMessage("")
+        if (!currentUser) {
+            return
+        }
+        sendChatMessage({
+            variables: {
+                matchId: props.match?.id ?? -1,
+                senderId: currentUser?.id ?? -1,
+                message: message
+            }
+        }).then(() => setMessage(""))
+    }
+
+    const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const maxLength = Math.min(e.target.value.length, 255)
+        setMessage(e.target.value.substring(0, maxLength))
     }
 
     const handleKeyPress = (e: React.KeyboardEvent<HTMLDivElement>) => {
         if (e.key === "Enter") {
             handleSubmitMessage()
         }
+    }
+
+    const getSenderColor = (sender: User): "primary" | "error" => {
+        const isSenderOnTeamOne = props.match.tournamentRegistration1?.players.find(player => player.id === sender.id)
+        return isSenderOnTeamOne ? "primary" : "error"
     }
 
     return <Grid item xs={12}>
@@ -60,26 +95,32 @@ export const MatchPageChatContainer = () => {
                 borderBottom: "1px solid gray",
                 overflowY: "scroll",
                 padding: "8px",
-                paddingBottom: "0px"
+                paddingBottom: "0px",
+                display: "flex",
+                width: "100%",
+                flexDirection: "column-reverse",
             }}>
-
-                {messages.map(message => {
-                    return <div style={{display: "flex", whiteSpace: "pre"}}>
-                        <Typography color={message.color === Color.BLUE ? "primary" : "error"}
-                                    fontWeight={"bold"}>{`${message.sender}: `}</Typography>
-                        <Typography>{message.message}</Typography>
+                {/* Reverse list and set 'column-reverse' on parent, to show new messages last and have a nice auto-scroll */}
+                {messages.slice().reverse().map(message => {
+                    return <div
+                        style={{whiteSpace: "pre-wrap", width: "100%", overflowWrap: "break-word"}}>
+                            <Typography color={getSenderColor(message.sender)} style={{display: "inline"}}
+                                        fontWeight={"bold"}>{`${message.sender.playertag}: `}</Typography>
+                            <Typography style={{display: "inline"}}>{message.message}</Typography>
                     </div>
                 })}
             </div>
             <div style={{height: "10%", paddingLeft: "8px", paddingRight: "8px"}}>
                 <TextField variant={"standard"} style={{width: "100%"}}
                            value={message}
-                           onChange={(e) => setMessage(e.target.value)}
+                           autoComplete={"off"}
+                           onChange={handleChange}
                            onKeyPress={e => handleKeyPress(e)}
                            InputProps={{
                                disableUnderline: true,
                                endAdornment: <Tooltip title={"Send besked"} arrow placement={"top"}>
-                                   <SubdirectoryArrowLeft style={{fontSize: "120%", cursor: "pointer"}} onClick={handleSubmitMessage}/>
+                                   <SubdirectoryArrowLeft style={{fontSize: "120%", cursor: "pointer"}}
+                                                          onClick={handleSubmitMessage}/>
                                </Tooltip>
                            }}/>
             </div>
