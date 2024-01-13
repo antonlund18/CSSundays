@@ -9,14 +9,14 @@ export const AdminCommandChangeMatchPhase = () => {
     const [matchPhase, setMatchPhase] = useState<string>("")
     const [activeStep, setActiveStep] = useState<number>(0)
     const [changeMatchPhase] = useChangeMatchPhaseMutation()
-    const steps = Object.entries(ChangeMatchPhaseStrategy)
+    const strategies = Object.entries(ChangeMatchPhaseStrategy)
 
     const executeChangeMatchPhase = (e: React.KeyboardEvent) => {
         if (e.code === "Enter") {
             changeMatchPhase({
                 variables: {
                     matchId: parseInt(matchId),
-                    changeMatchPhaseStrategy: steps[parseInt(matchPhase)][1]
+                    changeMatchPhaseStrategy: strategies[parseInt(matchPhase)][1] ?? ChangeMatchPhaseStrategy.WaitingToStart
                 }
             })
         }
@@ -59,7 +59,7 @@ export const AdminCommandChangeMatchPhase = () => {
                          InputProps={{
                              endAdornment:
                                  <Tooltip title={
-                                     <>{steps.map((value, index) =>
+                                     <>{strategies.map((value, index) =>
                                          <Typography>{`${index}: ${value[0]}`}</Typography>)}
                                      </>}
                                  >

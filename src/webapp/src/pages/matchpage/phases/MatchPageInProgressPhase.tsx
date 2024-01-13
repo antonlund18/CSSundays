@@ -17,25 +17,16 @@ interface StylesProps {
 const useStyles = makeStyles<Theme, StylesProps>(theme => ({
     mapPicture: props => ({
         "&::after": {
-            display: "flex",
-            justifyContent: "center",
-            alignItems: "center",
             position: "absolute",
-            bottom: "50%",
+            bottom: 0,
             left: 0,
-            height: "33%",
-            minHeight: "50px",
             textAlign: "center",
-            transform: "translate(0%, 50%)",
             width: "100%",
-            background: "rgba(0, 0, 0, .7)",
+            background: "rgba(0, 0, 0, .4)",
             color: "rgb(241,241,241)",
             overflow: "hidden",
             textOverflow: "ellipsis",
-            fontFamily: "Exo, sans-sarif",
-            fontSize: "24px",
-            content: "'" + props.mapName + "'",
-            textTransform: "uppercase",
+            content: "'" + props.mapName + "'"
         },
         width: "100%",
         aspectRatio: "2/1",
@@ -109,11 +100,10 @@ export const MatchPageInProgressPhase = (props: MatchPageInProgressPhaseProps) =
             alignItems: "center"
         }}>
             <Typography variant={"h2"}>Kamp i gang</Typography>
-            <Box className={classes.mapPicture}>
-            </Box>
+            <Box className={classes.mapPicture}/>
             <TextField label={"Server IP"} disabled={!isCurrentUserInMatch} value={isCurrentUserInMatch ? TEST_IP : "XXX.XXX.XXX.XXX"} style={{marginTop: "16px", width: "100%"}} InputProps={{
-                endAdornment: isCurrentUserInMatch && <IconButton>
-                    <ContentCopy onClick={handleCopyIp}/>
+                endAdornment: isCurrentUserInMatch && <IconButton onClick={handleCopyIp}>
+                    <ContentCopy/>
                 </IconButton>
             }}/>
             <Button variant={"contained"} style={{width: "100%", marginTop: "16px", height: "52px"}} disabled={!isCurrentUserInMatch}>join kamp</Button>
