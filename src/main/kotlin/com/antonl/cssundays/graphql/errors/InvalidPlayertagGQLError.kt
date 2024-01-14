@@ -2,16 +2,16 @@ package com.antonl.cssundays.graphql.errors
 
 import graphql.ErrorClassification
 
-class UserNotFoundError : CssundaysGraphQLError {
+class InvalidPlayertagGQLError : CssundaysGraphQLError {
     override fun getMessage(): String {
-        return "User not found"
+        return "Invalid playertag"
     }
 
     override fun getErrorType(): ErrorClassification {
-        return ErrorTypes.USER_NOT_FOUND
+        return ErrorTypes.INVALID_PLAYERTAG
     }
 
     override fun getErrorCode(): Int {
-        return ErrorTypes.USER_NOT_FOUND.errorCode
+        return ErrorTypes.INVALID_PLAYERTAG.errorCode
     }
 }

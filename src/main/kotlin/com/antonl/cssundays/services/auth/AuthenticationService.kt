@@ -21,10 +21,24 @@ class AuthenticationService() {
             return "";
         }
 
+        fun validateEmail(email: String): Boolean {
+            val EMAIL_PATTERN = "^\\S+@\\S+\\.\\S+"
+            val pattern = Pattern.compile(EMAIL_PATTERN)
+            val matcher = pattern.matcher(email)
+            return matcher.matches()
+        }
+
         fun validatePassword(password: String): Boolean {
             val PASSWORD_PATTERN = "^(?=.*[a-zA-Z0-9æøåÆØÅ!@\$#%&.,]).{6,32}$"
             val pattern = Pattern.compile(PASSWORD_PATTERN)
             val matcher = pattern.matcher(password)
+            return matcher.matches()
+        }
+
+        fun validateUsername(username: String): Boolean {
+            val USERNAME_PATTERN = "^(?=.*[a-zA-Z0-9æøåÆØÅ!@\$#%&.,]).{2,20}$"
+            val pattern = Pattern.compile(USERNAME_PATTERN)
+            val matcher = pattern.matcher(username)
             return matcher.matches()
         }
 

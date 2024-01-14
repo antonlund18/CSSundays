@@ -2,6 +2,9 @@ package com.antonl.cssundays.services.model.core
 
 import com.antonl.cssundays.graphql.dto.RequestDTO
 import com.antonl.cssundays.graphql.mutations.EditUserInput
+import com.antonl.cssundays.graphql.validation.configurations.CreateUserValidationConfiguration
+import com.antonl.cssundays.graphql.validation.validators.UserMutationInput
+import com.antonl.cssundays.graphql.validation.validators.Error
 import com.antonl.cssundays.model.core.User
 import com.antonl.cssundays.model.core.UserRole
 import com.antonl.cssundays.repositories.UserRepository
@@ -42,9 +45,16 @@ class UserService(val userRepository: UserRepository) {
         if (!correctPassword) throw IncorrectPasswordException("Incorrect password")
     }
 
-    fun validatePassword(password: String) {
-        val validPassword: Boolean = AuthenticationService.validatePassword(password)
-        if (!validPassword) throw InvalidPasswordException("Invalid password")
+    fun isValidEmail(email: String): Boolean {
+        return AuthenticationService.validateEmail(email)
+    }
+
+    fun isValidPassword(password: String): Boolean {
+        return AuthenticationService.validatePassword(password)
+    }
+
+    fun isValidPlayertag(playertag: String): Boolean {
+        return AuthenticationService.validateUsername(playertag)
     }
 
     fun changePassword(player: User, newPassword: String): User? {
@@ -89,19 +99,11 @@ class UserService(val userRepository: UserRepository) {
         return userRepository.findAll().toList();
     }
 
+    fun validateCreateUser(input: UserMutationInput): CreateUserValidationConfiguration {
+        return CreateUserValidationConfiguration().validate(input)
+    }
+
     fun handleSignUp(playertag: String, email: String, password: String): String {
-        val emailInUse: Boolean = findUserByEmail(email) != null;
-
-        // TODO: Better error handling
-        if (emailInUse) {
-            throw Exception("Email is already in use")
-        }
-
-        val playerTagInUse: Boolean = findUserByPlayertag(playertag) != null;
-        if (playerTagInUse) {
-            throw Exception("Playertag is already in use")
-        }
-
         val user = createUser(playertag, email, password);
         val jwtToken = AuthenticationService.generateJWTToken(user);
         return jwtToken;

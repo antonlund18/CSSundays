@@ -2,7 +2,7 @@ package com.antonl.cssundays.graphql.errors
 
 import graphql.ErrorClassification
 
-class PasswordsNotMatchingError : CssundaysGraphQLError {
+class PasswordsNotMatchingGQLError : CssundaysGraphQLError {
     override fun getErrorCode(): Int {
         return ErrorTypes.PASSWORDS_NOT_MATCHING.errorCode
     }

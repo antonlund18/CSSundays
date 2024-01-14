@@ -1,9 +1,10 @@
 package com.antonl.cssundays.graphql.mutations
 
-import com.antonl.cssundays.graphql.errors.IncorrectPasswordError
-import com.antonl.cssundays.graphql.errors.InvalidPasswordError
-import com.antonl.cssundays.graphql.errors.PasswordsNotMatchingError
-import com.antonl.cssundays.graphql.errors.UserNotFoundError
+import com.antonl.cssundays.graphql.errors.IncorrectPasswordGQLError
+import com.antonl.cssundays.graphql.errors.InvalidPasswordGQLError
+import com.antonl.cssundays.graphql.errors.PasswordsNotMatchingGQLError
+import com.antonl.cssundays.graphql.errors.UserNotFoundGQLError
+import com.antonl.cssundays.graphql.validation.validators.UserMutationInput
 import com.antonl.cssundays.model.core.User
 import com.antonl.cssundays.services.auth.AuthenticationService
 import com.antonl.cssundays.services.model.core.IncorrectPasswordException
@@ -11,12 +12,8 @@ import com.antonl.cssundays.services.model.core.InvalidPasswordException
 import com.antonl.cssundays.services.model.core.TeamService
 import com.antonl.cssundays.services.model.core.UserService
 import com.expediagroup.graphql.server.operations.Mutation
-import graphql.ErrorClassification
 import graphql.GraphQLError
-import graphql.GraphqlErrorBuilder
-import graphql.InvalidSyntaxError
 import graphql.execution.DataFetcherResult
-import graphql.language.SourceLocation
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Component
 import javax.transaction.Transactional
@@ -36,8 +33,21 @@ class UserMutations : Mutation {
         return AuthenticationService.handleLogin(user, password);
     }
 
-    suspend fun createUser(playertag: String, email: String, password: String): String {
-        return userService.handleSignUp(playertag, email, password);
+    suspend fun createUser(playertag: String, email: String, password: String, passwordRepeated: String): DataFetcherResult<String?> {
+        val input = UserMutationInput(playertag = playertag, email = email, password = password, passwordRepeated = passwordRepeated)
+        val validationResult = userService.validateCreateUser(input)
+
+        if (validationResult.getErrors().isNotEmpty()) {
+            return DataFetcherResult.newResult<String?>()
+            .data(null)
+            .errors(validationResult.toGQL())
+            .build()
+        }
+
+        val jwtToken = userService.handleSignUp(playertag, email, password)
+        return DataFetcherResult.newResult<String?>()
+            .data(jwtToken)
+            .build();
     }
 
     suspend fun deletePicture(userId: Int): User? {
@@ -58,32 +68,32 @@ class UserMutations : Mutation {
     ): DataFetcherResult<User?> {
         var user = userService.findUserById(userId) ?: return DataFetcherResult.newResult<User?>()
             .data(null)
-            .error(UserNotFoundError())
+            .error(UserNotFoundGQLError())
             .build()
 
         if (currentPassword.isEmpty() || newPassword.isEmpty() || newPasswordRepeated.isEmpty()) {
             return DataFetcherResult.newResult<User?>()
                 .data(null)
-                .error(InvalidPasswordError())
+                .error(InvalidPasswordGQLError())
                 .build()
         }
 
         val errors = mutableListOf<GraphQLError>()
 
-        if (!newPassword.equals(newPasswordRepeated)) {
-            errors.add(PasswordsNotMatchingError())
+        if (newPassword != newPasswordRepeated) {
+            errors.add(PasswordsNotMatchingGQLError())
         }
 
         try {
             userService.verifyPassword(user, currentPassword)
         } catch (e: IncorrectPasswordException) {
-            errors.add(IncorrectPasswordError())
+            errors.add(IncorrectPasswordGQLError())
         }
 
         try {
-            userService.validatePassword(newPassword)
+            userService.isValidPassword(newPassword)
         } catch (e: InvalidPasswordException) {
-            errors.add(InvalidPasswordError())
+            errors.add(InvalidPasswordGQLError())
         }
 
         if (errors.isEmpty()) {

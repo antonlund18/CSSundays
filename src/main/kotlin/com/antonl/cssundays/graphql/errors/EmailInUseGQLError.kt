@@ -2,16 +2,16 @@ package com.antonl.cssundays.graphql.errors
 
 import graphql.ErrorClassification
 
-class InvalidPasswordError : CssundaysGraphQLError {
+class EmailInUseGQLError : CssundaysGraphQLError {
     override fun getMessage(): String {
-        return "Invalid password"
+        return "E-mail in use"
     }
 
     override fun getErrorType(): ErrorClassification {
-        return ErrorTypes.INVALID_PASSWORD
+        return ErrorTypes.EMAIL_IN_USE
     }
 
     override fun getErrorCode(): Int {
-        return ErrorTypes.INVALID_PASSWORD.errorCode
+        return ErrorTypes.EMAIL_IN_USE.errorCode
     }
 }
