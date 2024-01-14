@@ -1,5 +1,6 @@
 package com.antonl.cssundays.services.model.notifications
 
+import com.antonl.cssundays.graphql.subscriptions.NotificationPublisher
 import com.antonl.cssundays.model.core.User
 import com.antonl.cssundays.model.notifications.NotifiableObject
 import com.antonl.cssundays.model.notifications.Notification
@@ -24,12 +25,14 @@ class NotificationService(val notificationRepository: NotificationRepository) {
         notificationType: NotificationType,
         notifiableObject: NotifiableObject? = null
     ): Notification {
-        val notification = Notification(
+        var notification = Notification(
             recipient = recipient,
             notificationType = notificationType,
             notifiableObject = notifiableObject
         );
-        return saveNotification(notification)
+        notification = saveNotification(notification)
+        NotificationPublisher.publish(notification)
+        return notification
     }
 
     fun getUnseenNotifications(user: User): List<Notification> {

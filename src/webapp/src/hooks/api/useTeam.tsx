@@ -1,4 +1,5 @@
 import {
+    GetCurrentUserDocument,
     Team,
     useCreateTeamMutation,
     useGetAllTeamsQuery,
@@ -33,7 +34,10 @@ export const useMutateTeam = () => {
             variables: {
                 name,
                 ownerId
-            }
+            },
+            refetchQueries: [
+                GetCurrentUserDocument
+            ]
         });
     }
 

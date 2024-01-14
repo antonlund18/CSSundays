@@ -478,6 +478,7 @@ export type Subscription = {
   __typename?: 'Subscription';
   onMatchPhaseChanged: MatchPhase;
   onNewMatchChatMessage: MatchChatMessage;
+  onNewNotification: Notification;
 };
 
 
@@ -488,6 +489,11 @@ export type SubscriptionOnMatchPhaseChangedArgs = {
 
 export type SubscriptionOnNewMatchChatMessageArgs = {
   matchId: Scalars['Int'];
+};
+
+
+export type SubscriptionOnNewNotificationArgs = {
+  userId?: InputMaybe<Scalars['Int']>;
 };
 
 export type Team = {
@@ -666,6 +672,13 @@ export type MarkAllNotificationsAsSeenForUserMutationVariables = Exact<{
 
 
 export type MarkAllNotificationsAsSeenForUserMutation = { __typename?: 'Mutation', markAllNotificationsAsSeenForUser: Array<{ __typename?: 'Notification', id?: number, isSeen: boolean }> };
+
+export type OnNewNotificationSubscriptionVariables = Exact<{
+  userId?: InputMaybe<Scalars['Int']>;
+}>;
+
+
+export type OnNewNotificationSubscription = { __typename?: 'Subscription', onNewNotification: { __typename?: 'Notification', id?: number, isSeen: boolean, notificationType: NotificationType, createdTs: any, recipient: { __typename?: 'User', id?: number, playertag: string, picture?: string }, notifiableObject?: { __typename?: 'InviteToTeam', id?: number, createdTs: any, status: InviteToTeamStatus, recipient: { __typename?: 'User', id?: number, playertag: string, picture?: string }, sender: { __typename?: 'User', id?: number, playertag: string, picture?: string }, team: { __typename?: 'Team', id?: number, name: string, picture?: string } } } };
 
 export type SetPictureAndGetPresignedRequestMutationVariables = Exact<{
   id: Scalars['Int'];
@@ -1675,6 +1688,66 @@ export function useMarkAllNotificationsAsSeenForUserMutation(baseOptions?: Apoll
 export type MarkAllNotificationsAsSeenForUserMutationHookResult = ReturnType<typeof useMarkAllNotificationsAsSeenForUserMutation>;
 export type MarkAllNotificationsAsSeenForUserMutationResult = Apollo.MutationResult<MarkAllNotificationsAsSeenForUserMutation>;
 export type MarkAllNotificationsAsSeenForUserMutationOptions = Apollo.BaseMutationOptions<MarkAllNotificationsAsSeenForUserMutation, MarkAllNotificationsAsSeenForUserMutationVariables>;
+export const OnNewNotificationDocument = gql`
+    subscription onNewNotification($userId: Int) {
+  onNewNotification(userId: $userId) {
+    id
+    isSeen
+    recipient {
+      id
+      playertag
+      picture
+    }
+    notificationType
+    notifiableObject {
+      ... on InviteToTeam {
+        id
+        recipient {
+          id
+          playertag
+          picture
+        }
+        sender {
+          id
+          playertag
+          picture
+        }
+        createdTs
+        team {
+          id
+          name
+          picture
+        }
+        status
+      }
+    }
+    createdTs
+  }
+}
+    `;
+
+/**
+ * __useOnNewNotificationSubscription__
+ *
+ * To run a query within a React component, call `useOnNewNotificationSubscription` and pass it any options that fit your needs.
+ * When your component renders, `useOnNewNotificationSubscription` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the subscription, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useOnNewNotificationSubscription({
+ *   variables: {
+ *      userId: // value for 'userId'
+ *   },
+ * });
+ */
+export function useOnNewNotificationSubscription(baseOptions?: Apollo.SubscriptionHookOptions<OnNewNotificationSubscription, OnNewNotificationSubscriptionVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useSubscription<OnNewNotificationSubscription, OnNewNotificationSubscriptionVariables>(OnNewNotificationDocument, options);
+      }
+export type OnNewNotificationSubscriptionHookResult = ReturnType<typeof useOnNewNotificationSubscription>;
+export type OnNewNotificationSubscriptionResult = Apollo.SubscriptionResult<OnNewNotificationSubscription>;
 export const SetPictureAndGetPresignedRequestDocument = gql`
     mutation setPictureAndGetPresignedRequest($id: Int!, $objectType: ObjectType!) {
   setPictureAndGetPresignedRequest(id: $id, objectType: $objectType) {
@@ -2903,7 +2976,8 @@ export const ListAllOperations = {
   },
   Subscription: {
     onMatchPhaseChanged: 'onMatchPhaseChanged',
-    onNewMatchChatMessage: 'onNewMatchChatMessage'
+    onNewMatchChatMessage: 'onNewMatchChatMessage',
+    onNewNotification: 'onNewNotification'
   },
   Fragment: {
     NewNotification: 'NewNotification'

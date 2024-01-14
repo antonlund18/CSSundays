@@ -1,6 +1,8 @@
 import {
+    GetAllNotificationsDocument,
     Notification,
-    useGetAllNotificationsQuery, useMarkAllNotificationsAsSeenForUserMutation
+    useGetAllNotificationsQuery,
+    useMarkAllNotificationsAsSeenForUserMutation
 } from "../../codegen/generated-types";
 import {gql} from "@apollo/client";
 
@@ -8,12 +10,11 @@ export const useFindAllNotificationsForPlayer = (playerId: number) => {
     const {data} = useGetAllNotificationsQuery({
         variables: {
             userId: playerId
-        },
-        pollInterval: 15000 // 15 seconds
+        }
     })
 
     return {
-        allNotificationsForPlayer: data?.getAllNotifications
+        allNotificationsForPlayer: data?.getAllNotifications as Notification[]
     }
 }
 
@@ -40,7 +41,10 @@ export const useNotifications = () => {
                     }
                 }
             })
-        }
+        },
+        refetchQueries: [
+            GetAllNotificationsDocument
+        ]
     })
 
     return {
