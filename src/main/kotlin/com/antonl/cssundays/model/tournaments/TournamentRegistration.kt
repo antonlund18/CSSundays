@@ -17,7 +17,7 @@ class TournamentRegistration(
 
         @ManyToOne
         @JoinColumn(name = "tournament_id")
-        val tournament: Tournament,
+        var tournament: Tournament?,
 
         @ManyToOne
         val team: Team,
