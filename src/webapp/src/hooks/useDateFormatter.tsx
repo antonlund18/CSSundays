@@ -7,10 +7,8 @@ export const useDateFormatter = () => {
     }
 
     const formatTime = (date: string | number | Date): string => {
-        const utcDate = new Date(date)
-        const danishTime = utcDate.getTime() + (utcDate.getTimezoneOffset() * 1000 * 60)
-        const danishDate = new Date(danishTime)
-        return `${addZero(danishDate.getHours())}:${addZero(danishDate.getMinutes())}`
+        const formattedDate = new Date(date)
+        return `${addZero(formattedDate.getHours())}:${addZero(formattedDate.getMinutes())}`
     }
 
     const formatDateTime = (date: string | number | Date): string => {
