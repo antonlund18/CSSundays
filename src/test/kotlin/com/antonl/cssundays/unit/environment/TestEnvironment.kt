@@ -19,10 +19,11 @@ class TestEnvironment {
     private val tournamentRepository = MockTournamentRepository()
     private val tournamentRegistrationRepository = MockTournamentRegistrationRepository()
     private val matchRepository = MockMatchRepository()
+    private val matchChatMessageRepository = MockMatchChatMessageRepository()
 
     val userService = UserService(userRepository)
     val teamService = TeamService(teamRepository)
-    val matchService = MatchService(matchRepository)
+    val matchService = MatchService(matchRepository, matchChatMessageRepository)
     val sharedTeamAndUserService = SharedTeamAndUserService(userRepository, teamRepository)
     val notificationService = NotificationService(notificationRepository)
     val inviteToTeamService = InviteToTeamService(inviteToTeamRepository, sharedTeamAndUserService, notificationService)
