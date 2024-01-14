@@ -123,7 +123,7 @@ export const TournamentPage = () => {
             <MediaTab/>
         </TabPanel>
         <TournamentRegistrationDialog open={registrationDialogOpen} setOpen={setRegistrationDialogOpen} tournament={tournament}/>
-        <LoginDialog open={registrationDialogOpen} setOpen={setLoginDialogOpen}/>
+        <LoginDialog open={loginDialogOpen} setOpen={setLoginDialogOpen}/>
     </CenteredPage>
 }
 

@@ -192,6 +192,15 @@ gql`
     mutation sendChatMessage($matchId: Int!, $senderId: Int!, $message: String!) {
         sendChatMessage(matchId: $matchId, senderId: $senderId, message: $message) {
             id
+            match {
+                id
+            }
+            sender {
+                id
+                playertag
+            }
+            message
+            createdTs
         }
     }
 `

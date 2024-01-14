@@ -637,7 +637,7 @@ export type SendChatMessageMutationVariables = Exact<{
 }>;
 
 
-export type SendChatMessageMutation = { __typename?: 'Mutation', sendChatMessage?: { __typename?: 'MatchChatMessage', id?: number } };
+export type SendChatMessageMutation = { __typename?: 'Mutation', sendChatMessage?: { __typename?: 'MatchChatMessage', id?: number, message: string, createdTs: any, match: { __typename?: 'Match', id?: number }, sender: { __typename?: 'User', id?: number, playertag: string } } };
 
 export type OnMatchPhaseChangedSubscriptionVariables = Exact<{
   matchId: Scalars['Int'];
@@ -1436,6 +1436,15 @@ export const SendChatMessageDocument = gql`
     mutation sendChatMessage($matchId: Int!, $senderId: Int!, $message: String!) {
   sendChatMessage(matchId: $matchId, senderId: $senderId, message: $message) {
     id
+    match {
+      id
+    }
+    sender {
+      id
+      playertag
+    }
+    message
+    createdTs
   }
 }
     `;

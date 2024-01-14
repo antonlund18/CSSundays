@@ -43,7 +43,7 @@ export const MatchPageChatContainer = (props: MatchPageChatContainerProps) => {
     }, [data])
 
     const handleSubmitMessage = () => {
-        if (!currentUser) {
+        if (!currentUser || message.trim().length === 0) {
             return
         }
         sendChatMessage({
@@ -52,7 +52,8 @@ export const MatchPageChatContainer = (props: MatchPageChatContainerProps) => {
                 senderId: currentUser?.id ?? -1,
                 message: message
             }
-        }).then(() => setMessage(""))
+        })
+        setMessage("")
     }
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -103,8 +104,9 @@ export const MatchPageChatContainer = (props: MatchPageChatContainerProps) => {
             </div>
             <div style={{height: "10%", paddingLeft: "8px", paddingRight: "8px"}}>
                 <TextField variant={"standard"} style={{width: "100%"}}
-                           value={message}
+                           value={!currentUser ? "Du skal være logget ind for at sende en besked" : message}
                            autoComplete={"off"}
+                           disabled={!currentUser}
                            onChange={handleChange}
                            onKeyPress={e => handleKeyPress(e)}
                            InputProps={{
