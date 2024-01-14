@@ -29,7 +29,7 @@ export const LoginHeading = (props: LoginHeadingProps): JSX.Element => {
                     <Typography variant={"h1"} style={{color: "white"}}>Velkommen tilbage!</Typography>
                 </div>
                 <div className={classes.bottomTextContainer}>
-                    <Typography style={{color: "white"}}>Har du ikke en konto?</Typography>
+                    <Typography style={{color: "white"}}>Har du ikke en konto? {' '}</Typography>
                     <Typography className={classes.registerText} onClick={() => props.setIsLogin(false)}>Tilmeld dig nu!</Typography>
                 </div>
             </React.Fragment>

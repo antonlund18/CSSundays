@@ -78,10 +78,10 @@ export const PlayerEditChangePasswordDialog = (props: PlayerEditChangePasswordDi
                        error={incorrectPassword}
                        helperText={incorrectPassword ? "*Forkert kodeord" : " "}/>
 
-            <div style={{display: "flex", alignItems: "center"}}>
+            <div style={{display: "flex", alignItems: "center", marginTop: "8px"}}>
                 <Typography variant={"subtitle2"}>Nyt kodeord</Typography>
                 <Tooltip  title={<span style={{whiteSpace: "pre-wrap"}}>{Strings.PASSWORD_REQUIREMENTS}</span>} arrow placement={"right"}>
-                    <ErrorOutline sx={{marginLeft: "4px", marginTop: "-2px", verticalAlign: "middle", fontSize: "14px"}}/>
+                    <ErrorOutline sx={{marginLeft: "4px", marginTop: "8px", verticalAlign: "middle", fontSize: "14px"}}/>
                 </Tooltip>
             </div>
             <TextField type={"password"}

@@ -2,13 +2,14 @@ import {Dialog, DialogContent, DialogTitle, Divider, Typography} from "@mui/mate
 import * as React from "react"
 import {useGetCurrentUser} from "../../../hooks/api/useUser";
 import {makeStyles} from "@mui/styles";
-import {TournamentRegistrationDialogNewRegistration} from "./TournamentRegistrationDialogNewRegistration";
-import {TournamentRegistrationDialogAlreadyRegistered} from "./TournamentRegistrationDialogAlreadyRegistered";
 import {
     Tournament,
     TournamentRegistration,
     useGetTournamentRegistrationByPlayerQuery
 } from "../../../codegen/generated-types";
+import {TournamentRegistrationDialogEmptyState} from "./TournamentRegistrationDialogEmptyState";
+import {TournamentRegistrationDialogNewRegistration} from "./TournamentRegistrationDialogNewRegistration";
+import {TournamentRegistrationDialogAlreadyRegistered} from "./TournamentRegistrationDialogAlreadyRegistered";
 
 const useStyles = makeStyles(theme => ({
     dialog: {
@@ -20,6 +21,7 @@ const useStyles = makeStyles(theme => ({
 export type TournamentRegistrationDialogProps = {
     open: boolean
     setOpen: (open: boolean) => void
+    setCreateTeamDialogOpen: (open: boolean) => void
     tournament: Tournament
 }
 
@@ -38,15 +40,17 @@ export const TournamentRegistrationDialog = (props: TournamentRegistrationDialog
         return <></>
     }
 
+    const userHasTeams = currentUser.teams.length > 0 && false
+
     return <Dialog open={props.open} onClose={() => props.setOpen(false)} maxWidth={"xl"}>
         <DialogTitle><Typography variant={"h2"} style={{textTransform: "none"}}>Tilmeld
             turnering</Typography></DialogTitle>
         <Divider/>
         <DialogContent sx={{padding: 0, margin: 0, height: "400px", width: "600px"}}>
-            {!existingTournamentRegistrationForPlayer ?
-                <TournamentRegistrationDialogNewRegistration tournament={props.tournament}
-                                                             currentUser={currentUser}/>
-                : <TournamentRegistrationDialogAlreadyRegistered tournamentRegistration={existingTournamentRegistrationForPlayer} currentUser={currentUser}/>}
+            {!userHasTeams && <TournamentRegistrationDialogEmptyState setRegistrationDialogOpen={props.setOpen} setCreateTeamDialogOpen={props.setCreateTeamDialogOpen}/>}
+            {(userHasTeams && !existingTournamentRegistrationForPlayer) && <TournamentRegistrationDialogNewRegistration tournament={props.tournament} currentUser={currentUser}/>}
+            {(userHasTeams && existingTournamentRegistrationForPlayer) &&  <TournamentRegistrationDialogAlreadyRegistered
+                tournamentRegistration={existingTournamentRegistrationForPlayer} currentUser={currentUser}/>}
         </DialogContent>
     </Dialog>
 }

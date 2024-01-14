@@ -10,7 +10,7 @@ const useStyles = makeStyles(theme => ({
         paddingTop: theme.spacing(1),
     },
     loginInput: {
-        "&:focus": {
+        "&.MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-notchedOutline": {
             borderColor: theme.palette.primary.main,
         },
         transition: "border-color .2s ease-in-out",

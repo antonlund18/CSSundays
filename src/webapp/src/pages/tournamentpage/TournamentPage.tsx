@@ -13,6 +13,7 @@ import {BracketContextProvider} from "./tabs/BracketContextProvider";
 import {TournamentRegistrationDialog} from "./registration/TournamentRegistrationDialog";
 import {useGetCurrentUser} from "../../hooks/api/useUser";
 import {LoginDialog} from "../../login/LoginDialog";
+import {CreateTeamDialog} from "../teamspage/CreateTeamDialog";
 
 const useStyles = makeStyles(theme => ({
     headerSection: {
@@ -51,6 +52,7 @@ export const TournamentPage = () => {
     const [value, setValue] = useState(0)
     const [registrationDialogOpen, setRegistrationDialogOpen] = useState(false)
     const [loginDialogOpen, setLoginDialogOpen] = useState(false)
+    const [createTeamDialogOpen, setCreateTeamDialogOpen] = useState(false)
     const {currentUser} = useGetCurrentUser()
     const navigate = useNavigate()
 
@@ -122,8 +124,9 @@ export const TournamentPage = () => {
         <TabPanel value={value} index={4}>
             <MediaTab/>
         </TabPanel>
-        <TournamentRegistrationDialog open={registrationDialogOpen} setOpen={setRegistrationDialogOpen} tournament={tournament}/>
+        <TournamentRegistrationDialog open={registrationDialogOpen} setOpen={setRegistrationDialogOpen} setCreateTeamDialogOpen={setCreateTeamDialogOpen} tournament={tournament}/>
         <LoginDialog open={loginDialogOpen} setOpen={setLoginDialogOpen}/>
+        <CreateTeamDialog open={createTeamDialogOpen} setOpen={setCreateTeamDialogOpen}/>
     </CenteredPage>
 }
 

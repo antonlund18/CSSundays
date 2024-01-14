@@ -8,19 +8,20 @@ import {makeStyles} from "@mui/styles"
 
 const useStyles = makeStyles(theme => ({
     nameTextfield: {
+        marginTop: "16px",
         minWidth: "min(400px, 90vh)",
     },
     nameInput: {
         transition: "border-color 2s ease-in-out",
     },
     red: {
-        "&:focus": {
+        "&.MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-notchedOutline": {
             borderColor: theme.palette.secondary.main,
 
         },
     },
     green: {
-        "&:focus": {
+        "&.MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-notchedOutline": {
             borderColor: "#34da56",
         }
     },
@@ -47,7 +48,7 @@ export const CreateTeamDialog = (props: CreateTeamDialogProps): JSX.Element => {
         setError("");
 
         if (name.length < 2) {
-            const errorString = "Dit holdnavn skal mindst være 2 bogstaver langt";
+            const errorString = "Dit holdnavn skal mindst være 2 tegn";
             setError(errorString);
             return;
         }
@@ -61,12 +62,13 @@ export const CreateTeamDialog = (props: CreateTeamDialogProps): JSX.Element => {
                    onClose={() => props.setOpen(false)}
     >
         <DialogContent>
-            <Typography variant={"h4"} color={"primary"} gutterBottom>Vælg navn</Typography>
+            <Typography variant={"h4"} color={"primary"} gutterBottom>Opret hold</Typography>
             <TextField variant={"outlined"}
+                       label={"Holdnavn"}
                        value={name}
-                       placeholder={"Holdnavn"}
                        className={classes.nameTextfield}
-                       inputProps={{className: classes.nameInput + " " + (name.length < 2 ? classes.red : classes.green)}}
+                       InputLabelProps={{shrink: true}}
+                       InputProps={{className: classes.nameInput + " " + (name.length < 2 ? classes.red : classes.green)}}
                        onChange={(e) => setName(e.target.value)}
             />
             {error.length > 0 &&
