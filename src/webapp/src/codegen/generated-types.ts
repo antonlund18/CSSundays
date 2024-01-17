@@ -173,7 +173,7 @@ export type Mutation = {
   createTestData?: Maybe<Tournament>;
   createTestMatch?: Maybe<Match>;
   createTournament?: Maybe<Tournament>;
-  createUser: Scalars['String'];
+  createUser?: Maybe<Scalars['String']>;
   declineInvitation?: Maybe<InviteToTeam>;
   deletePicture?: Maybe<User>;
   deregisterPlayerFromTournament?: Maybe<Tournament>;
@@ -252,6 +252,7 @@ export type MutationCreateTournamentArgs = {
 export type MutationCreateUserArgs = {
   email: Scalars['String'];
   password: Scalars['String'];
+  passwordRepeated: Scalars['String'];
   playertag: Scalars['String'];
 };
 
@@ -537,7 +538,7 @@ export type TournamentRegistration = {
   id?: Maybe<Scalars['Int']>;
   players: Array<User>;
   team: Team;
-  tournament: Tournament;
+  tournament?: Maybe<Tournament>;
 };
 
 export enum TournamentStatus {
@@ -783,7 +784,7 @@ export type GetTournamentRegistrationByPlayerQueryVariables = Exact<{
 }>;
 
 
-export type GetTournamentRegistrationByPlayerQuery = { __typename?: 'Query', getTournamentRegistrationByPlayer?: { __typename?: 'TournamentRegistration', id?: number, team: { __typename?: 'Team', id?: number, name: string, picture?: string, users: Array<{ __typename?: 'User', id?: number, playertag: string, picture?: string }> }, tournament: { __typename?: 'Tournament', id?: number }, captain: { __typename?: 'User', id?: number }, players: Array<{ __typename?: 'User', id?: number, playertag: string, picture?: string }> } };
+export type GetTournamentRegistrationByPlayerQuery = { __typename?: 'Query', getTournamentRegistrationByPlayer?: { __typename?: 'TournamentRegistration', id?: number, team: { __typename?: 'Team', id?: number, name: string, picture?: string, users: Array<{ __typename?: 'User', id?: number, playertag: string, picture?: string }> }, tournament?: { __typename?: 'Tournament', id?: number }, captain: { __typename?: 'User', id?: number }, players: Array<{ __typename?: 'User', id?: number, playertag: string, picture?: string }> } };
 
 export type GetTournamentRegistrationByTeamQueryVariables = Exact<{
   tournamentId: Scalars['Int'];
@@ -827,10 +828,11 @@ export type CreateUserMutationVariables = Exact<{
   playertag: Scalars['String'];
   email: Scalars['String'];
   password: Scalars['String'];
+  passwordRepeated: Scalars['String'];
 }>;
 
 
-export type CreateUserMutation = { __typename?: 'Mutation', createUser: string };
+export type CreateUserMutation = { __typename?: 'Mutation', createUser?: string };
 
 export type LoginUserMutationVariables = Exact<{
   email: Scalars['String'];
@@ -2676,8 +2678,13 @@ export type GetCurrentUserQueryHookResult = ReturnType<typeof useGetCurrentUserQ
 export type GetCurrentUserLazyQueryHookResult = ReturnType<typeof useGetCurrentUserLazyQuery>;
 export type GetCurrentUserQueryResult = Apollo.QueryResult<GetCurrentUserQuery, GetCurrentUserQueryVariables>;
 export const CreateUserDocument = gql`
-    mutation createUser($playertag: String!, $email: String!, $password: String!) {
-  createUser(playertag: $playertag, email: $email, password: $password)
+    mutation createUser($playertag: String!, $email: String!, $password: String!, $passwordRepeated: String!) {
+  createUser(
+    playertag: $playertag
+    email: $email
+    password: $password
+    passwordRepeated: $passwordRepeated
+  )
 }
     `;
 export type CreateUserMutationFn = Apollo.MutationFunction<CreateUserMutation, CreateUserMutationVariables>;
@@ -2698,6 +2705,7 @@ export type CreateUserMutationFn = Apollo.MutationFunction<CreateUserMutation, C
  *      playertag: // value for 'playertag'
  *      email: // value for 'email'
  *      password: // value for 'password'
+ *      passwordRepeated: // value for 'passwordRepeated'
  *   },
  * });
  */

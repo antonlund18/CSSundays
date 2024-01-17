@@ -43,8 +43,8 @@ gql`
 `
 
 gql`
-    mutation createUser($playertag: String!, $email: String!, $password: String!) {
-        createUser(playertag: $playertag, email: $email, password: $password)
+    mutation createUser($playertag: String!, $email: String!, $password: String!, $passwordRepeated: String!) {
+        createUser(playertag: $playertag, email: $email, password: $password, passwordRepeated: $passwordRepeated)
     }
 `
 

@@ -1,16 +1,10 @@
 package com.antonl.cssundays.graphql.validation.validators
 
-import com.antonl.cssundays.services.model.core.UserService
-import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.stereotype.Component
+import com.antonl.cssundays.services.auth.AuthenticationService
 
-@Component
 class EmailValidator : Validator() {
-    @Autowired
-    private lateinit var userService: UserService
-
     override fun hasError(input: UserMutationInput): Boolean {
-        return input.email?.let { userService.isValidEmail(it) } ?: true
+        return input.email?.let { !AuthenticationService.validateEmail(it) } ?: true
     }
 
     override fun getError(): Error {

@@ -1,7 +1,6 @@
 import * as React from "react"
+import {useContext, useEffect, useState} from "react"
 import {Button, Dialog, DialogActions, DialogContent, DialogTitle, TextField, Tooltip, Typography} from "@mui/material";
-import {makeStyles} from "@mui/styles";
-import {useContext, useEffect, useState} from "react";
 import {useChangePasswordMutation, User} from "../../../codegen/generated-types";
 import {ApolloError} from "@apollo/client";
 import {Errors} from "../../../util/Errors";

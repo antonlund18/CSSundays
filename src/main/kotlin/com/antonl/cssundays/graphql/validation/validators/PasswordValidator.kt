@@ -1,14 +1,10 @@
 package com.antonl.cssundays.graphql.validation.validators
 
-import com.antonl.cssundays.services.model.core.UserService
-import org.springframework.beans.factory.annotation.Autowired
+import com.antonl.cssundays.services.auth.AuthenticationService
 
 class PasswordValidator : Validator() {
-    @Autowired
-    private lateinit var userService: UserService
-
     override fun hasError(input: UserMutationInput): Boolean {
-        return input.password?.let { userService.isValidPassword(it) } ?: true
+        return input.password?.let { !AuthenticationService.validatePassword(it) } ?: true
     }
 
     override fun getError(): Error {

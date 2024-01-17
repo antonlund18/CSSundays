@@ -40,7 +40,7 @@ class UserMutations : Mutation {
         if (validationResult.getErrors().isNotEmpty()) {
             return DataFetcherResult.newResult<String?>()
             .data(null)
-            .errors(validationResult.toGQL())
+            .errors(validationResult.getGQLErrors())
             .build()
         }
 

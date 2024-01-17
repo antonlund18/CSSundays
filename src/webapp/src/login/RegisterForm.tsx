@@ -1,11 +1,13 @@
 import * as React from "react";
-import {useState} from "react";
+import {useContext, useState} from "react";
 import {Button, TextField, Tooltip, Typography} from "@mui/material";
 import {makeStyles} from "@mui/styles"
-import {theme} from "../theme/theme";
 import {useMutateUser} from "../hooks/api/useUser";
 import {Strings} from "../util/Strings";
 import {ErrorOutline} from "@mui/icons-material";
+import {SnackbarContext} from "../SnackbarContextProvider";
+import {ApolloError} from "@apollo/client";
+import {Errors} from "../util/Errors";
 
 const useStyles = makeStyles(theme => ({
     inputLabel: {
@@ -13,6 +15,7 @@ const useStyles = makeStyles(theme => ({
     },
     loginTextField: {
         paddingTop: theme.spacing(1),
+        whiteSpace: "pre-wrap"
     },
     registerButton: {
         height: "46px",
@@ -51,33 +54,19 @@ export const RegisterForm = (props: RegisterFormProps): JSX.Element => {
     const [username, setUsername] = useState<string>("");
     const [password, setPassword] = useState<string>("");
     const [confirmPassword, setConfirmPassword] = useState<string>("");
-    const [errors, setErrors] = useState<string[]>([]);
+    const [errors, setErrors] = useState<number[]>([]);
+    const {openSnackbar} = useContext(SnackbarContext)
 
 
     const handleRegistration = () => {
-        let errorsAccumulated: string[] = []
-
-        if (username.length < 3) {
-            errorsAccumulated = [...errorsAccumulated, "Dit brugernavn skal mindst være 3 tegn"]
-        }
-
-        if (password !== confirmPassword) {
-            errorsAccumulated = [...errorsAccumulated, "De to passwords er ikke ens"]
-        }
-
-        if (!new RegExp(/^\S+@\S+\.\S+/).test(email)) {
-            errorsAccumulated = [...errorsAccumulated, "Ugyldig e-mail"]
-        }
-
-        if (errorsAccumulated.length > 0) {
-            setErrors(errorsAccumulated)
-            return
-        }
-
-        createUser(username, email, password).then(() => {
+        createUser(username, email, password, confirmPassword).then(() => {
             props.setDialogOpen(false);
-        }).then(() => window.location.reload())
-
+            openSnackbar("Velkommen til CSSundays!", "success")
+        }).catch((e: ApolloError) => {
+            const gqlErrors: number[] = e.graphQLErrors.map(error => error.extensions.errorCode as number)
+            setErrors(errors => [...errors, ...gqlErrors])
+            openSnackbar("Vi kunne ikke oprette dig som bruger. Ret fejlene og prøv igen.", "error")
+        })
         clearFields();
     };
 
@@ -87,11 +76,20 @@ export const RegisterForm = (props: RegisterFormProps): JSX.Element => {
         setConfirmPassword("");
     }
 
+    const invalidPassword = errors.includes(Errors.INVALID_PASSWORD)
+    const invalidEmail = errors.includes(Errors.INVALID_EMAIL)
+    const invalidPlayertag = errors.includes(Errors.INVALID_PLAYERTAG)
+    const emailInUse = errors.includes(Errors.EMAIL_IN_USE)
+    const playertagInUse = errors.includes(Errors.PLAYERTAG_IN_USE)
+    const passwordsNotMatching = errors.includes(Errors.PASSWORDS_NOT_MATCHING)
+
     return <React.Fragment>
         <Typography variant={"subtitle2"}>E-mail</Typography>
         <TextField placeholder={"Indtast din e-mail"}
                    variant={"outlined"}
                    className={classes.loginTextField}
+                   error={invalidEmail || emailInUse}
+                   helperText={(invalidEmail ? "*Ugyldig e-mail\n" : "") + (emailInUse ? "*E-mail i brug" : "")}
                    InputProps={{className: classes.registerInput + " " + (new RegExp(/^\S+@\S+\.\S+/).test(email) ? classes.green : classes.red)}}
                    onChange={(e) => setEmail(e.target.value)}
         />
@@ -100,15 +98,17 @@ export const RegisterForm = (props: RegisterFormProps): JSX.Element => {
         <TextField placeholder={"Vælg dit brugernavn"}
                    variant={"outlined"}
                    className={classes.loginTextField}
-                   InputProps={{className: classes.registerInput + " " + (username.length < 3 ? classes.red : classes.green)}}
+                   error={invalidPlayertag || playertagInUse}
+                   helperText={(invalidPlayertag ? "*Ugyldigt brugernavn\n" : "") + (playertagInUse ? "*Brugernavn i brug" : "")}
+                   InputProps={{className: classes.registerInput + " " + (new RegExp(/^[a-zA-Z0-9æøåÆØÅ!@$#%&,]{2,16}$/).test(username) ? classes.green : classes.red)}}
                    onChange={(e) => setUsername(e.target.value)}
         />
 
 
-
         <div style={{display: "flex", alignItems: "center", marginTop: "8px"}}>
             <Typography variant={"subtitle2"}>Password</Typography>
-            <Tooltip  title={<span style={{whiteSpace: "pre-wrap"}}>{Strings.PASSWORD_REQUIREMENTS}</span>} arrow placement={"right"}>
+            <Tooltip title={<span style={{whiteSpace: "pre-wrap"}}>{Strings.PASSWORD_REQUIREMENTS}</span>} arrow
+                     placement={"right"}>
                 <ErrorOutline sx={{marginLeft: "4px", fontSize: "14px"}}/>
             </Tooltip>
         </div>
@@ -117,7 +117,9 @@ export const RegisterForm = (props: RegisterFormProps): JSX.Element => {
                    value={password}
                    placeholder={"Indtast dit password"}
                    className={classes.loginTextField}
-                   InputProps={{className: classes.registerInput + " " + (password.length > 5 ? classes.green : classes.red)}}
+                   error={invalidPassword}
+                   helperText={invalidPassword && "*Ugyldigt kodeord"}
+                   InputProps={{className: classes.registerInput + " " + (new RegExp(/^[a-zA-Z0-9æøåÆØÅ!@$#%&,]{6,32}$/).test(username) ? classes.green : classes.red)}}
                    onChange={(e) => setPassword(e.target.value)}
         />
 
@@ -127,6 +129,8 @@ export const RegisterForm = (props: RegisterFormProps): JSX.Element => {
                    value={confirmPassword}
                    placeholder={"Indtast dit password igen"}
                    className={classes.loginTextField}
+                   error={passwordsNotMatching}
+                   helperText={passwordsNotMatching && "*Kodeord er ikke ens"}
                    InputProps={{className: classes.registerInput + " " + (confirmPassword.length > 5 && password === confirmPassword ? classes.green : classes.red)}}
                    onChange={(e) => setConfirmPassword(e.target.value)}
         />
@@ -134,9 +138,5 @@ export const RegisterForm = (props: RegisterFormProps): JSX.Element => {
         <Button className={classes.registerButton} onClick={() => handleRegistration()}>
             <Typography variant={"subtitle2"} style={{color: "white"}}>Tilmeld</Typography>
         </Button>
-
-        {errors.length > 0 && errors.map(error => {
-            return <Typography style={{marginTop: theme.spacing(1), color: "red"}}>{"* " + error}</Typography>}
-        )}
     </React.Fragment>
 }

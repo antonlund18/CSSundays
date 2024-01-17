@@ -39,12 +39,13 @@ export const useMutateUser = () => {
     const [loginUserMutation] = useLoginUserMutation();
     const [updateUser] = useUpdateUserMutation()
 
-    const createUser = (playertag: string, email: string, password: string) => {
+    const createUser = (playertag: string, email: string, password: string, passwordRepeated: string) => {
         return createUserMutation({
             variables: {
                 playertag,
                 email,
-                password
+                password,
+                passwordRepeated
             }
         }).then((data) => {
             localStorage.setItem(Constants.JWT_TOKEN, data.data?.createUser ?? "");

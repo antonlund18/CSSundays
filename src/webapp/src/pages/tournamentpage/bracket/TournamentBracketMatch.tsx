@@ -96,7 +96,7 @@ export const TournamentBracketMatch = (props: TournamentBracketMatchProps): JSX.
     const {currentUser} = useGetCurrentUser()
     const navigate = useNavigate()
 
-    const currentPlayerIsOnTeam = useCallback((tournamentRegistration: TournamentRegistration | undefined): boolean => {
+    const isCurrentPlayerOnTeam = useCallback((tournamentRegistration: TournamentRegistration | undefined): boolean => {
         if (!currentUser?.id || !tournamentRegistration) {
             return false
         }
@@ -117,7 +117,7 @@ export const TournamentBracketMatch = (props: TournamentBracketMatchProps): JSX.
     return <Button className={classes.match} onClick={() => navigate(`/matches/${props.match.id}` ?? "")}>
         <ListItem className={classes.team}>
             {team1 ?
-                <TournamentBracketMatchTeam team={team1} isCurrentUserOnTeam={currentPlayerIsOnTeam(props.match.tournamentRegistration1)}/> :
+                <TournamentBracketMatchTeam team={team1} isCurrentUserOnTeam={isCurrentPlayerOnTeam(props.match.tournamentRegistration1)}/> :
                 <Typography noWrap fontWeight={"bold"} style={{textOverflow: "ellipsis", fontSize: "12px"}}>
                     <i>TBD</i>
                 </Typography>
@@ -126,7 +126,7 @@ export const TournamentBracketMatch = (props: TournamentBracketMatchProps): JSX.
         <Divider flexItem/>
         <ListItem className={classes.team}>
             {team2 ?
-                <TournamentBracketMatchTeam team={team2} isCurrentUserOnTeam={currentPlayerIsOnTeam(props.match.tournamentRegistration2)}/> :
+                <TournamentBracketMatchTeam team={team2} isCurrentUserOnTeam={isCurrentPlayerOnTeam(props.match.tournamentRegistration2)}/> :
                 <Typography noWrap fontWeight={"bold"} style={{textOverflow: "ellipsis", fontSize: "12px"}}>
                     <i>TBD</i>
                 </Typography>

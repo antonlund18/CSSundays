@@ -100,7 +100,7 @@ class UserService(val userRepository: UserRepository) {
     }
 
     fun validateCreateUser(input: UserMutationInput): CreateUserValidationConfiguration {
-        return CreateUserValidationConfiguration().validate(input)
+        return CreateUserValidationConfiguration(this).validate(input)
     }
 
     fun handleSignUp(playertag: String, email: String, password: String): String {
