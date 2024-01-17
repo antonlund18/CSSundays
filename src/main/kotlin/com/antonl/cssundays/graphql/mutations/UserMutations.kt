@@ -1,18 +1,13 @@
 package com.antonl.cssundays.graphql.mutations
 
 import com.antonl.cssundays.graphql.errors.IncorrectPasswordGQLError
-import com.antonl.cssundays.graphql.errors.InvalidPasswordGQLError
-import com.antonl.cssundays.graphql.errors.PasswordsNotMatchingGQLError
-import com.antonl.cssundays.graphql.errors.UserNotFoundGQLError
 import com.antonl.cssundays.graphql.validation.validators.UserMutationInput
 import com.antonl.cssundays.model.core.User
 import com.antonl.cssundays.services.auth.AuthenticationService
 import com.antonl.cssundays.services.model.core.IncorrectPasswordException
-import com.antonl.cssundays.services.model.core.InvalidPasswordException
 import com.antonl.cssundays.services.model.core.TeamService
 import com.antonl.cssundays.services.model.core.UserService
 import com.expediagroup.graphql.server.operations.Mutation
-import graphql.GraphQLError
 import graphql.execution.DataFetcherResult
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Component
@@ -33,23 +28,6 @@ class UserMutations : Mutation {
         return AuthenticationService.handleLogin(user, password);
     }
 
-    suspend fun createUser(playertag: String, email: String, password: String, passwordRepeated: String): DataFetcherResult<String?> {
-        val input = UserMutationInput(playertag = playertag, email = email, password = password, passwordRepeated = passwordRepeated)
-        val validationResult = userService.validateCreateUser(input)
-
-        if (validationResult.getErrors().isNotEmpty()) {
-            return DataFetcherResult.newResult<String?>()
-            .data(null)
-            .errors(validationResult.getGQLErrors())
-            .build()
-        }
-
-        val jwtToken = userService.handleSignUp(playertag, email, password)
-        return DataFetcherResult.newResult<String?>()
-            .data(jwtToken)
-            .build();
-    }
-
     suspend fun deletePicture(userId: Int): User? {
         val user = userService.findUserById(userId) ?: return null
         return userService.deletePicture(user);
@@ -60,49 +38,43 @@ class UserMutations : Mutation {
         return userService.updatePlayer(user, editUserInput);
     }
 
+    suspend fun createUser(playertag: String, email: String, password: String, passwordRepeated: String): DataFetcherResult<String?> {
+        val input = UserMutationInput(playertag = playertag, email = email, newPassword = password, newPasswordRepeated = passwordRepeated)
+        val validationResult = userService.validateCreateUser(input)
+
+        if (validationResult.getErrors().isNotEmpty()) {
+            return DataFetcherResult.newResult<String?>()
+                .data(null)
+                .errors(validationResult.getGQLErrors())
+                .build()
+        }
+
+        val jwtToken = userService.handleSignUp(playertag, email, password)
+        return DataFetcherResult.newResult<String?>()
+            .data(jwtToken)
+            .build();
+    }
+
     suspend fun changePassword(
         userId: Int,
         currentPassword: String,
         newPassword: String,
         newPasswordRepeated: String
     ): DataFetcherResult<User?> {
-        var user = userService.findUserById(userId) ?: return DataFetcherResult.newResult<User?>()
-            .data(null)
-            .error(UserNotFoundGQLError())
-            .build()
+        val input = UserMutationInput(id = userId, password = currentPassword, newPassword = newPassword, newPasswordRepeated = newPasswordRepeated)
+        val validationResult = userService.validateChangePassword(input)
 
-        if (currentPassword.isEmpty() || newPassword.isEmpty() || newPasswordRepeated.isEmpty()) {
+        if (validationResult.getErrors().isNotEmpty()) {
             return DataFetcherResult.newResult<User?>()
                 .data(null)
-                .error(InvalidPasswordGQLError())
+                .errors(validationResult.getGQLErrors())
                 .build()
         }
 
-        val errors = mutableListOf<GraphQLError>()
-
-        if (newPassword != newPasswordRepeated) {
-            errors.add(PasswordsNotMatchingGQLError())
-        }
-
-        try {
-            userService.verifyPassword(user, currentPassword)
-        } catch (e: IncorrectPasswordException) {
-            errors.add(IncorrectPasswordGQLError())
-        }
-
-        try {
-            userService.isValidPassword(newPassword)
-        } catch (e: InvalidPasswordException) {
-            errors.add(InvalidPasswordGQLError())
-        }
-
-        if (errors.isEmpty()) {
-            user = userService.changePassword(user, newPassword)!!
-        }
-
+        val user = userService.findUserById(userId)!!
+        userService.changePassword(user, newPassword)
         return DataFetcherResult.newResult<User?>()
             .data(user)
-            .errors(errors)
             .build()
     }
 }

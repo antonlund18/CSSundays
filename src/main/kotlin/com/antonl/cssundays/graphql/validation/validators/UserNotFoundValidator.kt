@@ -5,7 +5,7 @@ import com.antonl.cssundays.services.model.core.UserService
 class UserNotFoundValidator(val userService: UserService) : Validator() {
     override fun hasError(input: UserMutationInput): Boolean {
         input.id?.let { userService.findUserById(it) } ?: return true
-        return true
+        return false
     }
 
     override fun getError(): Error {

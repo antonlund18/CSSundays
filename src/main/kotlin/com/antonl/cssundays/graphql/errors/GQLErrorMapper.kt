@@ -27,6 +27,9 @@ class GQLErrorMapper {
                 Error.PLAYERTAG_IN_USE -> {
                     return PlayertagInUseGQLError()
                 }
+                Error.INCORRECT_PASSWORD -> {
+                    return IncorrectPasswordGQLError()
+                }
             }
         }
     }

@@ -4,7 +4,7 @@ import com.antonl.cssundays.services.auth.AuthenticationService
 
 class PasswordValidator : Validator() {
     override fun hasError(input: UserMutationInput): Boolean {
-        return input.password?.let { !AuthenticationService.validatePassword(it) } ?: true
+        return input.newPassword?.let { !AuthenticationService.validatePassword(it) } ?: true
     }
 
     override fun getError(): Error {

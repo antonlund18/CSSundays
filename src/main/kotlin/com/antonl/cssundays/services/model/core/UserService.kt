@@ -2,6 +2,7 @@ package com.antonl.cssundays.services.model.core
 
 import com.antonl.cssundays.graphql.dto.RequestDTO
 import com.antonl.cssundays.graphql.mutations.EditUserInput
+import com.antonl.cssundays.graphql.validation.configurations.ChangePasswordValidationConfiguration
 import com.antonl.cssundays.graphql.validation.configurations.CreateUserValidationConfiguration
 import com.antonl.cssundays.graphql.validation.validators.UserMutationInput
 import com.antonl.cssundays.graphql.validation.validators.Error
@@ -40,21 +41,12 @@ class UserService(val userRepository: UserRepository) {
         return saveUser(player)
     }
 
-    fun verifyPassword(player: User, password: String) {
-        val correctPassword: Boolean = AuthenticationService.verifyPassword(player, password)
-        if (!correctPassword) throw IncorrectPasswordException("Incorrect password")
-    }
-
-    fun isValidEmail(email: String): Boolean {
-        return AuthenticationService.validateEmail(email)
+    fun verifyPassword(player: User, password: String): Boolean {
+        return AuthenticationService.verifyPassword(player, password)
     }
 
     fun isValidPassword(password: String): Boolean {
         return AuthenticationService.validatePassword(password)
-    }
-
-    fun isValidPlayertag(playertag: String): Boolean {
-        return AuthenticationService.validateUsername(playertag)
     }
 
     fun changePassword(player: User, newPassword: String): User? {
@@ -101,6 +93,10 @@ class UserService(val userRepository: UserRepository) {
 
     fun validateCreateUser(input: UserMutationInput): CreateUserValidationConfiguration {
         return CreateUserValidationConfiguration(this).validate(input)
+    }
+
+    fun validateChangePassword(input: UserMutationInput): ChangePasswordValidationConfiguration {
+        return ChangePasswordValidationConfiguration(this).validate(input)
     }
 
     fun handleSignUp(playertag: String, email: String, password: String): String {

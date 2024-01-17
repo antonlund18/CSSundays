@@ -5,5 +5,6 @@ class UserMutationInput(
     val playertag: String? = null,
     val email: String? = null,
     val password: String? = null,
-    val passwordRepeated: String? = null,
+    val newPassword: String? = null,
+    val newPasswordRepeated: String? = null,
 )
