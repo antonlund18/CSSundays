@@ -119,7 +119,7 @@ export const RegisterForm = (props: RegisterFormProps): JSX.Element => {
                    className={classes.loginTextField}
                    error={invalidPassword}
                    helperText={invalidPassword && "*Ugyldigt kodeord"}
-                   InputProps={{className: classes.registerInput + " " + (new RegExp(/^[a-zA-Z0-9æøåÆØÅ!@$#%&,]{6,32}$/).test(username) ? classes.green : classes.red)}}
+                   InputProps={{className: classes.registerInput + " " + (new RegExp(/^[a-zA-Z0-9æøåÆØÅ!@$#%&,]{6,32}$/).test(password) ? classes.green : classes.red)}}
                    onChange={(e) => setPassword(e.target.value)}
         />
 
@@ -131,7 +131,7 @@ export const RegisterForm = (props: RegisterFormProps): JSX.Element => {
                    className={classes.loginTextField}
                    error={passwordsNotMatching}
                    helperText={passwordsNotMatching && "*Kodeord er ikke ens"}
-                   InputProps={{className: classes.registerInput + " " + (confirmPassword.length > 5 && password === confirmPassword ? classes.green : classes.red)}}
+                   InputProps={{className: classes.registerInput + " " + (password === confirmPassword ? classes.green : classes.red)}}
                    onChange={(e) => setConfirmPassword(e.target.value)}
         />
 

@@ -1,5 +1,5 @@
 import * as React from "react"
-import {ObjectType, Team} from "../../../codegen/generated-types";
+import {ObjectType, TournamentRegistration} from "../../../codegen/generated-types";
 import {makeStyles} from "@mui/styles";
 import {TableCell, TableRow, Theme, Typography} from "@mui/material";
 import {getPictureLinkFromKey} from "../../../util/StorageHelper";
@@ -32,12 +32,12 @@ const useStyles = makeStyles<Theme, StylesProps>(theme => ({
 }))
 
 type TeamRowProps = {
-    team: Team,
+    tournamentRegistration: TournamentRegistration
     index: number
 }
 
 export const TeamRow = (props: TeamRowProps): JSX.Element => {
-    const pictureUrl = getPictureLinkFromKey(props.team.picture ?? "", ObjectType.Team)
+    const pictureUrl = getPictureLinkFromKey(props.tournamentRegistration.team.picture ?? "", ObjectType.Team)
     const classes = useStyles({pictureUrl: pictureUrl})
     const navigate = useNavigate()
 
@@ -45,15 +45,15 @@ export const TeamRow = (props: TeamRowProps): JSX.Element => {
         <TableCell>
             <Typography variant={"h4"}>#{props.index}</Typography>
         </TableCell>
-        <TableCell style={{cursor: "pointer"}} onClick={() => navigate("/teams/" + props.team.id)}>
+        <TableCell style={{cursor: "pointer"}} onClick={() => navigate("/teams/" + props.tournamentRegistration.team.id)}>
             <div style={{display: "flex", flexDirection: "row", alignItems: "center"}}>
                 <div className={classes.picture}/>
-                <Typography variant={"h4"}>{props.team.name}</Typography>
+                <Typography variant={"h4"}>{props.tournamentRegistration.team.name}</Typography>
             </div>
         </TableCell>
         <TableCell>
             <div style={{display: "flex", flexDirection: "row"}}>
-                {props.team.users.slice(0, 5).map(player => {
+                {props.tournamentRegistration.players.slice(0, 5).map(player => {
                     return <PlayerBox player={player}/>
                 })}
             </div>

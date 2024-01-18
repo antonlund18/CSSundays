@@ -118,7 +118,7 @@ export const TeamsTab = (props: TeamsTabProps): JSX.Element => {
                     </TableHead>
                     <TableBody>
                         {sortedRegistrationEntries.map((entry) => {
-                            return <TeamRow team={entry.registration.team} index={entry.number}/>
+                            return <TeamRow tournamentRegistration={entry.registration} index={entry.number}/>
                         })}
                     </TableBody>
                 </Table>
