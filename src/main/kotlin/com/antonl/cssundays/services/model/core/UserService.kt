@@ -2,10 +2,12 @@ package com.antonl.cssundays.services.model.core
 
 import com.antonl.cssundays.graphql.dto.RequestDTO
 import com.antonl.cssundays.graphql.mutations.EditUserInput
-import com.antonl.cssundays.graphql.validation.configurations.ChangePasswordValidationConfiguration
-import com.antonl.cssundays.graphql.validation.configurations.CreateUserValidationConfiguration
+import com.antonl.cssundays.graphql.validation.results.ChangePasswordValidationResult
+import com.antonl.cssundays.graphql.validation.results.CreateUserValidationResult
+import com.antonl.cssundays.graphql.validation.results.ValidationResult
 import com.antonl.cssundays.graphql.validation.validators.UserMutationInput
-import com.antonl.cssundays.graphql.validation.validators.Error
+import com.antonl.cssundays.graphql.verification.results.LoginVerificationResult
+import com.antonl.cssundays.graphql.verification.results.VerificationResult
 import com.antonl.cssundays.model.core.User
 import com.antonl.cssundays.model.core.UserRole
 import com.antonl.cssundays.repositories.UserRepository
@@ -91,12 +93,16 @@ class UserService(val userRepository: UserRepository) {
         return userRepository.findAll().toList();
     }
 
-    fun validateCreateUser(input: UserMutationInput): CreateUserValidationConfiguration {
-        return CreateUserValidationConfiguration(this).validate(input)
+    fun verifyLogin(input: UserMutationInput): VerificationResult {
+        return LoginVerificationResult(this, input).verify()
     }
 
-    fun validateChangePassword(input: UserMutationInput): ChangePasswordValidationConfiguration {
-        return ChangePasswordValidationConfiguration(this).validate(input)
+    fun validateCreateUser(input: UserMutationInput): ValidationResult {
+        return CreateUserValidationResult(this, input).validate()
+    }
+
+    fun validateChangePassword(input: UserMutationInput): ValidationResult {
+        return ChangePasswordValidationResult(this, input).validate()
     }
 
     fun handleSignUp(playertag: String, email: String, password: String): String {

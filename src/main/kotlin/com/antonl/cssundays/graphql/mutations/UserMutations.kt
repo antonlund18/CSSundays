@@ -1,10 +1,8 @@
 package com.antonl.cssundays.graphql.mutations
 
-import com.antonl.cssundays.graphql.errors.IncorrectPasswordGQLError
 import com.antonl.cssundays.graphql.validation.validators.UserMutationInput
 import com.antonl.cssundays.model.core.User
 import com.antonl.cssundays.services.auth.AuthenticationService
-import com.antonl.cssundays.services.model.core.IncorrectPasswordException
 import com.antonl.cssundays.services.model.core.TeamService
 import com.antonl.cssundays.services.model.core.UserService
 import com.expediagroup.graphql.server.operations.Mutation
@@ -23,9 +21,22 @@ class UserMutations : Mutation {
     @Autowired
     private lateinit var teamService: TeamService;
 
-    suspend fun loginUser(email: String, password: String): String {
+    suspend fun loginUser(email: String, password: String): DataFetcherResult<String?> {
+        val input = UserMutationInput(email = email, password = password)
+        val verificationResult = userService.verifyLogin(input)
+
+        if (verificationResult.hasErrors()) {
+            return DataFetcherResult.newResult<String?>()
+                .data(null)
+                .errors(verificationResult.getGQLErrors())
+                .build()
+        }
+
         val user = userService.findUserByEmail(email);
-        return AuthenticationService.handleLogin(user, password);
+        val jwtToken = AuthenticationService.generateJWTToken(user, password)
+        return DataFetcherResult.newResult<String>()
+            .data(jwtToken)
+            .build();
     }
 
     suspend fun deletePicture(userId: Int): User? {
@@ -42,7 +53,7 @@ class UserMutations : Mutation {
         val input = UserMutationInput(playertag = playertag, email = email, newPassword = password, newPasswordRepeated = passwordRepeated)
         val validationResult = userService.validateCreateUser(input)
 
-        if (validationResult.getErrors().isNotEmpty()) {
+        if (validationResult.hasErrors()) {
             return DataFetcherResult.newResult<String?>()
                 .data(null)
                 .errors(validationResult.getGQLErrors())
@@ -64,7 +75,7 @@ class UserMutations : Mutation {
         val input = UserMutationInput(id = userId, password = currentPassword, newPassword = newPassword, newPasswordRepeated = newPasswordRepeated)
         val validationResult = userService.validateChangePassword(input)
 
-        if (validationResult.getErrors().isNotEmpty()) {
+        if (validationResult.hasErrors()) {
             return DataFetcherResult.newResult<User?>()
                 .data(null)
                 .errors(validationResult.getGQLErrors())

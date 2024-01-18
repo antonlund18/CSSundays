@@ -1,5 +1,6 @@
 package com.antonl.cssundays.graphql.validation.validators
 
+import com.antonl.cssundays.model.errors.Error
 import com.antonl.cssundays.services.auth.AuthenticationService
 
 class PasswordValidator : Validator() {

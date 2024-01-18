@@ -11,5 +11,6 @@ enum class ErrorTypes(val errorCode: Int) : ErrorClassification {
     EMAIL_IN_USE(106),
     INVALID_PLAYERTAG(107),
     PLAYERTAG_IN_USE(108),
+    INCORRECT_LOGIN(109),
     INTERNAL_ERROR(503)
 }

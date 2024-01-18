@@ -10,4 +10,5 @@ export enum Errors {
     EMAIL_IN_USE = 106,
     INVALID_PLAYERTAG = 107,
     PLAYERTAG_IN_USE = 108,
+    INCORRECT_LOGIN = 109,
 }

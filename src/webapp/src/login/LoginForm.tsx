@@ -1,9 +1,13 @@
 import * as React from "react";
+import {useContext, useState} from "react";
 import {Button, TextField, Typography} from "@mui/material";
 import {makeStyles} from "@mui/styles"
-import {useState} from "react";
 import {theme} from "../theme/theme";
-import {useMutateUser} from "../hooks/api/useUser";
+import {Constants} from "../util/Constants";
+import {useLoginUserMutation} from "../codegen/generated-types";
+import {SnackbarContext} from "../SnackbarContextProvider";
+import {ApolloError} from "@apollo/client";
+import {Errors} from "../util/Errors";
 
 const useStyles = makeStyles(theme => ({
     loginTextField: {
@@ -36,20 +40,32 @@ interface LoginFormProps {
 
 export const LoginForm = (props: LoginFormProps): JSX.Element => {
     const classes = useStyles();
-    const {loginUser} = useMutateUser();
+    const [loginUser] = useLoginUserMutation();
 
     const [email, setEmail] = useState<string>("");
     const [password, setPassword] = useState<string>("");
-    const [error, setError] = useState<string>("");
+    const [errors, setErrors] = useState<number[]>([]);
+    const {openSnackbar} = useContext(SnackbarContext)
 
     const signUserIn = () => {
         setPassword("");
 
-        loginUser(email, password).then(() => {
-                props.setDialogOpen(false);
-                setError("");
-            })
+        return loginUser({
+            variables: {
+                email,
+                password
+            }
+        }).then((data) => {
+            localStorage.setItem(Constants.JWT_TOKEN, data.data?.loginUser ?? "");
+            window.location.reload()
+        }).catch((errors: ApolloError) => {
+            openSnackbar("Login fejlede", "error")
+            const gqlErrors: number[] = errors.graphQLErrors.map(error => error.extensions.errorCode as number)
+            setErrors(errors => [...errors, ...gqlErrors])
+        })
     }
+
+    const isIncorrectLogin = errors.includes(Errors.INCORRECT_LOGIN)
 
     return <React.Fragment>
         <Typography variant={"subtitle2"}>E-mail</Typography>
@@ -75,6 +91,9 @@ export const LoginForm = (props: LoginFormProps): JSX.Element => {
             <Typography variant={"subtitle2"} style={{color: "white"}}>Log ind</Typography>
         </Button>
 
-        {error.length > 0 ? <Typography style={{marginTop: theme.spacing(1), color: "red"}}>{"* " + error}</Typography> : <></>}
+        {isIncorrectLogin &&
+            <Typography style={{marginTop: theme.spacing(1), color: "red"}}>
+                {"*Forkert brugernavn eller adgangskode. Prøv igen"}
+            </Typography>}
     </React.Fragment>
 }

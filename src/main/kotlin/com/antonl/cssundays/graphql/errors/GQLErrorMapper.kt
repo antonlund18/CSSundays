@@ -1,6 +1,6 @@
 package com.antonl.cssundays.graphql.errors
 
-import com.antonl.cssundays.graphql.validation.validators.Error
+import com.antonl.cssundays.model.errors.Error
 
 class GQLErrorMapper {
     companion object {
@@ -29,6 +29,9 @@ class GQLErrorMapper {
                 }
                 Error.INCORRECT_PASSWORD -> {
                     return IncorrectPasswordGQLError()
+                }
+                Error.INCORRECT_LOGIN -> {
+                    return IncorrectLoginGQLError()
                 }
             }
         }

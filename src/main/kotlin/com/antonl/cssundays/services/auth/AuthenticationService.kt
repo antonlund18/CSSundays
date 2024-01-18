@@ -14,7 +14,7 @@ import javax.transaction.Transactional
 @Transactional
 class AuthenticationService() {
     companion object {
-        fun handleLogin(user: User?, password: String): String {
+        fun generateJWTToken(user: User?, password: String): String {
             if (verifyPassword(user, password)) {
                 return generateJWTToken(user);
             }
@@ -43,6 +43,7 @@ class AuthenticationService() {
         }
 
         fun verifyPassword(user: User?, password: String): Boolean {
+            if (password.isEmpty()) return false
             return BCrypt.verifyer().verify(password.toCharArray(), user?.password).verified;
         }
 

@@ -36,7 +36,6 @@ export const useGetUserById = (id: number) => {
 
 export const useMutateUser = () => {
     const [createUserMutation] = useCreateUserMutation();
-    const [loginUserMutation] = useLoginUserMutation();
     const [updateUser] = useUpdateUserMutation()
 
     const createUser = (playertag: string, email: string, password: string, passwordRepeated: string) => {
@@ -52,18 +51,6 @@ export const useMutateUser = () => {
         })
     }
 
-    const loginUser = (email: string, password: string) => {
-        return loginUserMutation({
-            variables: {
-                email,
-                password
-            }
-        }).then((data) => {
-            localStorage.setItem(Constants.JWT_TOKEN, data.data?.loginUser ?? "");
-            window.location.reload();
-        })
-    }
-
     const editUser = (editUserInput: EditUserInput) => {
         return updateUser({variables: {editUserInput: editUserInput}})
     }
@@ -75,7 +62,6 @@ export const useMutateUser = () => {
 
     return {
         createUser,
-        loginUser,
         editUser,
         logOutUser,
     }

@@ -181,7 +181,7 @@ export type Mutation = {
   generateBracket?: Maybe<Tournament>;
   incrementLosses?: Maybe<Team>;
   incrementWins?: Maybe<Team>;
-  loginUser: Scalars['String'];
+  loginUser?: Maybe<Scalars['String']>;
   markAllNotificationsAsSeenForUser: Array<Notification>;
   markReady?: Maybe<Match>;
   publishTournament?: Maybe<Tournament>;
@@ -840,7 +840,7 @@ export type LoginUserMutationVariables = Exact<{
 }>;
 
 
-export type LoginUserMutation = { __typename?: 'Mutation', loginUser: string };
+export type LoginUserMutation = { __typename?: 'Mutation', loginUser?: string };
 
 export type UpdateUserMutationVariables = Exact<{
   editUserInput: EditUserInput;
