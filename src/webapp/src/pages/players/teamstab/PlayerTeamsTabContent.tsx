@@ -11,8 +11,8 @@ type PlayerTeamsTabContent = {
 export const PlayerTeamsTabContent = (props: PlayerTeamsTabContent): JSX.Element => {
 
     return <>
-        <Grid container spacing={4}>
-            <PlayerTeamsTabTeamList teams={props.player.teams}/>
+        <Grid container spacing={2}>
+            <PlayerTeamsTabTeamList player={props.player}/>
         </Grid>
     </>
 }

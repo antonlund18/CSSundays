@@ -6,7 +6,7 @@ import {ObjectType, Team} from "../../../codegen/generated-types";
 import {getPictureLinkFromKey} from "../../../util/StorageHelper";
 import {PlayerBox} from "../../tournamentpage/tabs/PlayerBox";
 
-const IMAGE_SIZE = "64px"
+const IMAGE_SIZE = "32px"
 
 type StylesProps = {
     pictureUrl: string

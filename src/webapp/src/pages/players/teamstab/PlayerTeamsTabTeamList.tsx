@@ -2,66 +2,53 @@ import * as React from "react"
 import {useMemo, useState} from "react"
 import {SortDirection, SortOption} from "../../../components/SortTypes";
 import {HeadCell} from "../../../components/TableTypes";
-import {
-    Grid,
-    InputAdornment,
-    Table,
-    TableBody,
-    TableCell,
-    TableContainer,
-    TableHead,
-    TableRow,
-    TextField,
-    Typography
-} from "@mui/material";
+import {Grid, InputAdornment, TextField, Typography} from "@mui/material";
 import {Search} from "@mui/icons-material";
-import {TableHeadSortWrapper} from "../../../components/TableHeadSortWrapper";
-import {Team} from "../../../codegen/generated-types";
-import {PlayerTeamsTabTeamRow} from "./PlayerTeamsTabTeamRow";
+import {ObjectType, User} from "../../../codegen/generated-types";
 import {useTeamSort} from "../../../hooks/useTeamSort";
+import {getPictureLinkFromKey} from "../../../util/StorageHelper";
+import {useNavigate} from "react-router-dom";
+import {makeStyles} from "@mui/styles";
+
+const useStyles = makeStyles(theme => ({
+    team: {
+        "&:hover": {
+            color: theme.palette.primary.main
+        },
+        display: "flex",
+        flexDirection: "column",
+        cursor: "pointer",
+        justifyContent: "center",
+        alignItems: "center",
+        textAlign: "center",
+        width: "100%",
+        padding: "8px",
+    }
+}))
 
 type PlayerTeamsTabTeamListProps = {
-    teams: Team[]
+    player: User
 }
 
 export const PlayerTeamsTabTeamList = (props: PlayerTeamsTabTeamListProps): JSX.Element => {
-    const [sortDirection, setSortDirection] = useState<SortDirection>(SortDirection.ASC)
+    const {teams} = props.player
     const [searchText, setSearchText] = useState<string>("")
-    const getSortPredicate = useTeamSort()
-
-    const handleRequestSort = () => {
-        setSortDirection(sortDirection === SortDirection.ASC ? SortDirection.DESC : SortDirection.ASC)
-    }
-
-    const headCells: HeadCell[] = [
-        {
-            id: "name",
-            sortOption: SortOption.NAME,
-            numeric: false,
-            disablePadding: false,
-            label: 'Hold',
-        },
-        {
-            id: "players",
-            numeric: false,
-            disablePadding: false,
-            label: 'Spillere',
-        }
-    ]
+    const navigate = useNavigate()
+    const classes = useStyles()
 
     const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
         setSearchText(e.target.value)
     }
 
     const filteredTeams = useMemo(() => {
-        return props.teams.slice().filter(team => team.name.toLowerCase().includes(searchText.toLowerCase()))
-    }, [props.teams, searchText])
-
-    const sortedTeams = useMemo(() => {
-        return filteredTeams.slice().sort(getSortPredicate(sortDirection))
-    }, [props.teams, sortDirection, filteredTeams])
+        return teams.slice().filter(team => team.name.toLowerCase().includes(searchText.toLowerCase()))
+    }, [teams, searchText])
 
     return <>
+        <Grid item xs={12}>
+            <Typography variant={"h2"}>Hold</Typography>
+        </Grid>
+
         <Grid item xs={12}>
             <TextField style={{width: "100%"}}
                        InputProps={{startAdornment: <InputAdornment position={"start"}><Search/></InputAdornment>}}
@@ -70,37 +57,27 @@ export const PlayerTeamsTabTeamList = (props: PlayerTeamsTabTeamListProps): JSX.
             />
         </Grid>
 
-        <Grid item xs={12}>
-            <TableContainer style={{maxHeight: "55vh", overflowX: "hidden"}}>
-                <Table stickyHeader>
-                    <colgroup>
-                        <col style={{width: "50%"}}/>
-                        <col style={{width: "50%"}}/>
-                    </colgroup>
-                    <TableHead>
-                        <TableRow>
-                            {headCells.map(headCell => {
-                                    return <TableCell key={headCell.id}
-                                                      align={headCell.numeric ? "right" : "left"}
-                                                      padding={headCell.disablePadding ? "none" : "normal"}
-                                                      sortDirection={sortDirection}>
-                                        <TableHeadSortWrapper condition={!!headCell.sortOption}
-                                                              direction={sortDirection}
-                                                              onClick={handleRequestSort}>
-                                            <Typography variant={"button"}>{headCell.label}</Typography>
-                                        </TableHeadSortWrapper>
-                                    </TableCell>
-                                }
-                            )}
-                        </TableRow>
-                    </TableHead>
-                    <TableBody>
-                        {sortedTeams.map((team) => {
-                            return <PlayerTeamsTabTeamRow team={team}/>
-                        })}
-                    </TableBody>
-                </Table>
-            </TableContainer>
+        <Grid item xs={12} style={{
+            display: "grid",
+            gridTemplateColumns: "repeat(4, 1fr)",
+            flexWrap: "wrap",
+            flexDirection: "row",
+            width: "100%",
+            overflow: "",
+            justifyContent: "space-between",
+        }}>
+            {filteredTeams.map((team, index) => {
+                return <div className={classes.team} onClick={() => navigate(`/teams/${team.id}`)}>
+                    <img src={getPictureLinkFromKey(team.picture ?? "", ObjectType.Team)}
+                         style={{
+                             width: "80%",
+                             objectFit: "cover",
+                             aspectRatio: "1/1",
+                         }}
+                    />
+                    <Typography variant={"h4"} style={{marginTop: "4px"}}>{team.name}</Typography>
+                </div>
+            })}
         </Grid>
     </>
 }

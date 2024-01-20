@@ -11,12 +11,12 @@ type StylesProps = {
 }
 
 const BORDER_SIZE = "2px"
-const IMAGE_SIZE = "64px"
+const IMAGE_SIZE = "32px"
 
 const useStyles = makeStyles<Theme, StylesProps>(theme => ({
     playerPicture: props => ({
         "&::after": {
-            fontSize: "12px",
+            fontSize: "8px",
             textAlign: "center",
             textOverflow: "ellipsis",
             position: "absolute",
@@ -26,7 +26,7 @@ const useStyles = makeStyles<Theme, StylesProps>(theme => ({
             overflow: "hidden",
             background: "rgba(0, 0, 0, .4)",
             color: "rgb(241,241,241)",
-            content: "'" + props.playerName + "'"
+            content: "'" + props.playerName + "'",
         },
         height: IMAGE_SIZE,
         width: IMAGE_SIZE,
