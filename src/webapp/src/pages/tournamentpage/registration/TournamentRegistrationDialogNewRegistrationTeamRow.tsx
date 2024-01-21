@@ -7,19 +7,18 @@ import {
     useGetTournamentRegistrationByTeamQuery,
     User
 } from "../../../codegen/generated-types";
-import {Button, Divider, Typography} from "@mui/material";
+import {Button, CircularProgress, Divider, Typography} from "@mui/material";
 import {useTournaments} from "../../../hooks/api/useTournament";
 
 type TournamentRegistrationDialogNewRegistrationTeamRowProps = {
     tournament: Tournament
     currentUser: User
+    registerMutation: { register: (tournamentId: number, teamId: number, userId: number) => void, loading: boolean }
     team: Team
     includeDivider: boolean
 }
 
 export const TournamentRegistrationDialogNewRegistrationTeamRow = (props: TournamentRegistrationDialogNewRegistrationTeamRowProps) => {
-    const {registerTeamOrPlayer} = useTournaments()
-
     const {data} = useGetTournamentRegistrationByTeamQuery({
         variables: {
             tournamentId: props.tournament.id ?? -1,
@@ -33,7 +32,7 @@ export const TournamentRegistrationDialogNewRegistrationTeamRow = (props: Tourna
         if (!props.tournament.id || !team.id || !props.currentUser?.id) {
             return
         }
-        registerTeamOrPlayer(props.tournament.id, team.id, props.currentUser.id)
+        props.registerMutation.register(props.tournament.id, team.id, props.currentUser.id)
     }
 
     return <>

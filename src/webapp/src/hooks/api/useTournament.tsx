@@ -32,7 +32,7 @@ export const useGetTournamentById = (id: number) => {
 export const useTournaments = () => {
     const [createTournamentMutation] = useCreateTournamentMutation();
     const [generateBracketMutation] = useGenerateBracketMutation();
-    const [registerTeamOrPlayerMutation] = useRegisterTeamOrPlayerMutation();
+    const [registerTeamOrPlayerMutation, {loading: registerTeamOrPlayerLoading}] = useRegisterTeamOrPlayerMutation();
 
     const createTournament = (name: string, date: string, numberOfTeamsAllowed: number, format: TournamentFormat, picture: string, description: string, rules: string) => createTournamentMutation({
         variables: {
@@ -66,6 +66,9 @@ export const useTournaments = () => {
     return {
         createTournament,
         generateBracket,
-        registerTeamOrPlayer
+        registerMutation: {
+            register: registerTeamOrPlayer,
+            loading: registerTeamOrPlayerLoading
+        }
     }
 }

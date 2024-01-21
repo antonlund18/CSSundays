@@ -1,6 +1,7 @@
 import * as React from "react"
 import {
-    GetTournamentRegistrationByPlayerDocument, GetTournamentRegistrationByTeamDocument,
+    GetTournamentRegistrationByPlayerDocument,
+    GetTournamentRegistrationByTeamDocument,
     ObjectType,
     TournamentRegistration,
     useDeregisterPlayerFromTournamentMutation,
@@ -8,7 +9,7 @@ import {
     User
 } from "../../../codegen/generated-types";
 import {CheckCircle} from "@mui/icons-material";
-import {Button, Typography} from "@mui/material";
+import {Button, CircularProgress, Typography} from "@mui/material";
 import {getPictureLinkFromKey} from "../../../util/StorageHelper";
 import {PlayerPicture} from "../../teamspage/team/PlayerPicture";
 
@@ -19,7 +20,7 @@ type TournamentRegistrationDialogAlreadyRegisteredProps = {
 
 export const TournamentRegistrationDialogAlreadyRegistered = (props: TournamentRegistrationDialogAlreadyRegisteredProps) => {
     const [deregisterPlayer] = useDeregisterPlayerFromTournamentMutation()
-    const [deregisterTeam] = useDeregisterTeamFromTournamentMutation()
+    const [deregisterTeam, {loading}] = useDeregisterTeamFromTournamentMutation()
 
     const handleDeregister = () => {
         const isCaptain = props.tournamentRegistration.captain?.id === props.currentUser.id
@@ -29,16 +30,15 @@ export const TournamentRegistrationDialogAlreadyRegistered = (props: TournamentR
 
         if (isCaptain && props.tournamentRegistration.team.id) {
             deregisterTeam({
-                variables: {
-                    tournamentId: props.tournamentRegistration.tournament.id,
-                    teamId: props.tournamentRegistration.team.id
+                    variables: {
+                        tournamentId: props.tournamentRegistration.tournament.id,
+                        teamId: props.tournamentRegistration.team.id
+                    },
+                    refetchQueries: [
+                        GetTournamentRegistrationByPlayerDocument,
+                        GetTournamentRegistrationByTeamDocument
+                    ]
                 },
-                refetchQueries: [
-                    GetTournamentRegistrationByPlayerDocument,
-                    GetTournamentRegistrationByTeamDocument
-                ]
-            },
-
             )
         }
 
@@ -53,6 +53,12 @@ export const TournamentRegistrationDialogAlreadyRegistered = (props: TournamentR
                 ]
             })
         }
+    }
+
+    if (loading) {
+        return <div style={{height: "100%", width: "100%", display: "flex", alignItems: "center", justifyContent: "center"}}>
+            <CircularProgress/>
+        </div>
     }
 
     const team = props.tournamentRegistration.team
@@ -74,16 +80,16 @@ export const TournamentRegistrationDialogAlreadyRegistered = (props: TournamentR
             <Typography variant={"h1"} style={{marginLeft: "16px"}}>{team.name}</Typography>
         </div>
         <div style={{display: "flex"}}>
-        {renderedPlayers.map(player => {
-            return player ?
-                <PlayerPicture player={player} style={{width: "80px"}}/> :
-                <div style={{width: "80px", padding: "8px"}}>
-                    <img
-                        src={"https://static.vecteezy.com/system/resources/previews/007/126/739/non_2x/question-mark-icon-free-vector.jpg"}
-                        style={{width: "100%", aspectRatio: "1/1", border: "1px solid black"}}
-                    />
-                </div>
-        })}
+            {renderedPlayers.map(player => {
+                return player ?
+                    <PlayerPicture player={player} style={{width: "80px"}}/> :
+                    <div style={{width: "80px", padding: "8px"}}>
+                        <img
+                            src={"https://static.vecteezy.com/system/resources/previews/007/126/739/non_2x/question-mark-icon-free-vector.jpg"}
+                            style={{width: "100%", aspectRatio: "1/1", border: "1px solid black"}}
+                        />
+                    </div>
+            })}
         </div>
         <Button onClick={handleDeregister} variant={"outlined"} sx={{marginTop: "16px"}}>Afmeld</Button>
     </div>
