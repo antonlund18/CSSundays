@@ -120,8 +120,8 @@ class MatchService(val matchRepository: MatchRepository, val matchChatMessageRep
             return null
         }
 
-        val message = matchChatMessageRepository.save(MatchChatMessage(match = match, sender = user, message = message))
-        MatchChatMessagePublisher.publish(message)
-        return message
+        val persistedMessage = matchChatMessageRepository.save(MatchChatMessage(match = match, sender = user, message = message))
+        MatchChatMessagePublisher.publish(persistedMessage)
+        return persistedMessage
     }
 }

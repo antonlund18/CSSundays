@@ -382,6 +382,7 @@ export type Query = {
   getFirstRoundMatches?: Maybe<Array<Match>>;
   getMatchById?: Maybe<Match>;
   getMatchesByParentIds: Array<Match>;
+  getSearchResults: Array<Searchable>;
   getTeamById?: Maybe<Team>;
   getTournamentById?: Maybe<Tournament>;
   getTournamentRegistrationByPlayer?: Maybe<TournamentRegistration>;
@@ -432,6 +433,12 @@ export type QueryGetMatchesByParentIdsArgs = {
 };
 
 
+export type QueryGetSearchResultsArgs = {
+  searchQuery: Scalars['String'];
+  searchType: SearchType;
+};
+
+
 export type QueryGetTeamByIdArgs = {
   teamId: Scalars['Int'];
 };
@@ -474,6 +481,15 @@ export type RequestDto = {
   method: Scalars['String'];
   url: Scalars['String'];
 };
+
+export enum SearchType {
+  All = 'ALL',
+  Players = 'PLAYERS',
+  Teams = 'TEAMS',
+  Tournaments = 'TOURNAMENTS'
+}
+
+export type Searchable = Team | Tournament | User;
 
 export type Subscription = {
   __typename?: 'Subscription';
@@ -680,6 +696,14 @@ export type OnNewNotificationSubscriptionVariables = Exact<{
 
 
 export type OnNewNotificationSubscription = { __typename?: 'Subscription', onNewNotification: { __typename?: 'Notification', id?: number, isSeen: boolean, notificationType: NotificationType, createdTs: any, recipient: { __typename?: 'User', id?: number, playertag: string, picture?: string }, notifiableObject?: { __typename?: 'InviteToTeam', id?: number, createdTs: any, status: InviteToTeamStatus, recipient: { __typename?: 'User', id?: number, playertag: string, picture?: string }, sender: { __typename?: 'User', id?: number, playertag: string, picture?: string }, team: { __typename?: 'Team', id?: number, name: string, picture?: string } } } };
+
+export type GetSearchResultsQueryVariables = Exact<{
+  searchQuery: Scalars['String'];
+  searchType: SearchType;
+}>;
+
+
+export type GetSearchResultsQuery = { __typename?: 'Query', getSearchResults: Array<{ __typename?: 'Team', id?: number, name: string, picture?: string, createdTs: any, owner: { __typename?: 'User', playertag: string }, users: Array<{ __typename?: 'User', id?: number }> } | { __typename?: 'Tournament', id?: number, name: string, picture?: string, startDateAndTime: any, tournamentRegistrations: Array<{ __typename?: 'TournamentRegistration', id?: number }> } | { __typename?: 'User', id?: number, playertag: string, picture?: string, createdTs: any }> };
 
 export type SetPictureAndGetPresignedRequestMutationVariables = Exact<{
   id: Scalars['Int'];
@@ -1750,6 +1774,68 @@ export function useOnNewNotificationSubscription(baseOptions?: Apollo.Subscripti
       }
 export type OnNewNotificationSubscriptionHookResult = ReturnType<typeof useOnNewNotificationSubscription>;
 export type OnNewNotificationSubscriptionResult = Apollo.SubscriptionResult<OnNewNotificationSubscription>;
+export const GetSearchResultsDocument = gql`
+    query getSearchResults($searchQuery: String!, $searchType: SearchType!) {
+  getSearchResults(searchQuery: $searchQuery, searchType: $searchType) {
+    ... on User {
+      id
+      playertag
+      picture
+      createdTs
+    }
+    ... on Team {
+      id
+      name
+      picture
+      createdTs
+      owner {
+        playertag
+      }
+      users {
+        id
+      }
+    }
+    ... on Tournament {
+      id
+      name
+      picture
+      startDateAndTime
+      tournamentRegistrations {
+        id
+      }
+    }
+  }
+}
+    `;
+
+/**
+ * __useGetSearchResultsQuery__
+ *
+ * To run a query within a React component, call `useGetSearchResultsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetSearchResultsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetSearchResultsQuery({
+ *   variables: {
+ *      searchQuery: // value for 'searchQuery'
+ *      searchType: // value for 'searchType'
+ *   },
+ * });
+ */
+export function useGetSearchResultsQuery(baseOptions: Apollo.QueryHookOptions<GetSearchResultsQuery, GetSearchResultsQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<GetSearchResultsQuery, GetSearchResultsQueryVariables>(GetSearchResultsDocument, options);
+      }
+export function useGetSearchResultsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetSearchResultsQuery, GetSearchResultsQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<GetSearchResultsQuery, GetSearchResultsQueryVariables>(GetSearchResultsDocument, options);
+        }
+export type GetSearchResultsQueryHookResult = ReturnType<typeof useGetSearchResultsQuery>;
+export type GetSearchResultsLazyQueryHookResult = ReturnType<typeof useGetSearchResultsLazyQuery>;
+export type GetSearchResultsQueryResult = Apollo.QueryResult<GetSearchResultsQuery, GetSearchResultsQueryVariables>;
 export const SetPictureAndGetPresignedRequestDocument = gql`
     mutation setPictureAndGetPresignedRequest($id: Int!, $objectType: ObjectType!) {
   setPictureAndGetPresignedRequest(id: $id, objectType: $objectType) {
@@ -2946,6 +3032,7 @@ export const ListAllOperations = {
     getMatchesByParentIds: 'getMatchesByParentIds',
     getMatchById: 'getMatchById',
     getAllNotifications: 'getAllNotifications',
+    getSearchResults: 'getSearchResults',
     getAllTeams: 'getAllTeams',
     getTeamById: 'getTeamById',
     getAllTournaments: 'getAllTournaments',

@@ -44,9 +44,15 @@ export const theme = createTheme({
             textTransform: "uppercase",
         },
         body1: {
-            fontFamily: 'Roboto, sans-serif',
+            fontFamily: 'Exo, sans-sarif',
             fontSize: 13,
             color: "rgba(0, 0, 0, 0.87)",
+        },
+        body2: {
+            fontFamily: 'Exo, sans-sarif',
+            fontSize: 14,
+            color: "rgba(0, 0, 0, 0.87)",
+            fontWeight: 700,
         },
         button: {
             fontFamily: 'Exo, sans-sarif',

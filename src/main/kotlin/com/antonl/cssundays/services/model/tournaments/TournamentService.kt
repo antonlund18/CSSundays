@@ -34,6 +34,14 @@ class TournamentService(
         return tournamentRepository.findAll().toList()
     }
 
+    fun findTournamentByName(name: String): Tournament? {
+        return tournamentRepository.findTournamentByName(name)
+    }
+
+    fun findTournamentsByName(name: String): List<Tournament> {
+        return tournamentRepository.findTournamentsByName(name)
+    }
+
     fun createTournament(name: String, date: LocalDateTime, numberOfTeamsAllowed: Int, format: TournamentFormat = TournamentFormat.SINGLE_ELIMINATION, picture: String? = null, description: String = "", rules: String = ""): Tournament {
         val tournament = Tournament(
             name = name,

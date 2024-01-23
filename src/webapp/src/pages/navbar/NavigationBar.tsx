@@ -49,6 +49,9 @@ export const NavigationBar = (): JSX.Element => {
                 <NavBarMenuItem link={"/teams"}>
                     <Typography variant={"button"} style={{textTransform: "capitalize"}}>Hold</Typography>
                 </NavBarMenuItem>
+                <NavBarMenuItem link={"/search"}>
+                    <Typography variant={"button"} style={{textTransform: "capitalize"}}>Søg</Typography>
+                </NavBarMenuItem>
             </div>
             <NavBarProfile/>
         </div>

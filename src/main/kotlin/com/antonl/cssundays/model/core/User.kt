@@ -1,6 +1,7 @@
 package com.antonl.cssundays.model.core
 
 import com.antonl.cssundays.extensions.toSlug
+import com.antonl.cssundays.model.search.Searchable
 import java.time.LocalDateTime
 import java.time.ZoneOffset
 import javax.persistence.*
@@ -34,7 +35,7 @@ class User(
 
     @ManyToMany(mappedBy = "users", fetch = FetchType.EAGER)
     var teams: MutableList<Team> = mutableListOf()
-)
+) : Searchable
 
 enum class UserRole {
     ADMIN,

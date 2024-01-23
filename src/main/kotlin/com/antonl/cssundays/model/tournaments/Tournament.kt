@@ -1,5 +1,6 @@
 package com.antonl.cssundays.model.tournaments
 
+import com.antonl.cssundays.model.search.Searchable
 import com.antonl.cssundays.model.tournaments.brackets.Bracket
 import org.hibernate.annotations.LazyCollection
 import org.hibernate.annotations.LazyCollectionOption
@@ -47,7 +48,9 @@ class Tournament(
 
     @GeneratedValue
     val createdTs: LocalDateTime = LocalDateTime.now(ZoneOffset.UTC)
-) {
+
+) : Searchable {
+
     constructor() : this(null, "", null, "", "", TournamentFormat.SINGLE_ELIMINATION, LocalDateTime.now(ZoneOffset.UTC), 64)
     constructor(
         name: String,

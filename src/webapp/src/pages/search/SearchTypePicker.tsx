@@ -1,8 +1,8 @@
 import * as React from "react"
-import {SearchType} from "./SearchTypes";
-import {Person} from "@mui/icons-material";
+import {AutoAwesomeMosaic, EmojiEvents, Group, Person} from "@mui/icons-material";
 import {Radio, Theme, Typography} from "@mui/material";
-import { makeStyles } from "@mui/styles";
+import {makeStyles} from "@mui/styles";
+import {SearchType} from "../../codegen/generated-types";
 
 interface StylesProps {
     isSelected: boolean
@@ -37,6 +37,18 @@ export const SearchTypePicker = (props: SearchTypePickerProps) => {
     const isSelected = searchType === searchTypeValue
     const classes = useStyles({isSelected})
 
+    const getIcon = () => {
+        switch (searchType) {
+            case SearchType.All:
+                return <AutoAwesomeMosaic style={{marginRight: "16px"}} color={"primary"}/>
+            case SearchType.Players:
+                return <Person style={{marginRight: "16px"}} color={"primary"}/>
+            case SearchType.Teams:
+                return <Group style={{marginRight: "16px"}} color={"primary"}/>
+            case SearchType.Tournaments:
+                return <EmojiEvents style={{marginRight: "16px"}} color={"primary"}/>
+        }
+    }
 
     return <div className={classes.container} onClick={() => setSearchTypeValue(searchType)}
     >
@@ -44,6 +56,6 @@ export const SearchTypePicker = (props: SearchTypePickerProps) => {
             <Radio checked={isSelected}/>
             <Typography variant={"h4"}>{searchType}</Typography>
         </div>
-        <Person style={{marginRight: "16px"}} color={"primary"}/>
+        {getIcon()}
     </div>
 }

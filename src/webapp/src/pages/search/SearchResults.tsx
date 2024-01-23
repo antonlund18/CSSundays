@@ -1,13 +1,26 @@
 import * as React from "react"
-import {SearchType} from "./SearchTypes";
+import {Searchable, Team, Tournament, User} from "../../codegen/generated-types";
+import {SearchResultUser} from "./SearchResultUser";
+import {SearchResultTeam} from "./SearchResultTeam";
+import {SearchResultTournament} from "./SearchResultTournament";
 
 type SearchResultsProps = {
-    searchQuery: string
-    searchType: SearchType
+    searchResults: Searchable[]
 }
 
 export const SearchResults = (props: SearchResultsProps) => {
-    const {searchQuery, searchType} = props
+    const {searchResults} = props
 
-    return <>{searchQuery}</>
+    return <>
+        {searchResults.map(result => {
+            switch (result.__typename) {
+                case "User":
+                    return <SearchResultUser user={result as User}/>
+                case "Team":
+                    return <SearchResultTeam team={result as Team}/>
+                case "Tournament":
+                    return <SearchResultTournament tournament={result as Tournament}/>
+            }
+        })}
+    </>
 }

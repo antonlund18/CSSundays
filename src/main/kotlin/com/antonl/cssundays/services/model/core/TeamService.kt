@@ -27,6 +27,10 @@ class TeamService(val teamRepository: TeamRepository) {
         return teamRepository.findTeamByName(name)
     }
 
+    suspend fun findTeamsByName(name: String): List<Team> {
+        return teamRepository.findTeamsByName(name)
+    }
+
     suspend fun findTeamById(id: Int): Team? {
         return teamRepository.findTeamById(id)
     }

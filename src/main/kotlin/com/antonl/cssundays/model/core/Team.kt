@@ -1,6 +1,7 @@
 package com.antonl.cssundays.model.core
 
 import com.antonl.cssundays.extensions.toSlug
+import com.antonl.cssundays.model.search.Searchable
 import java.time.LocalDateTime
 import java.time.ZoneOffset
 import javax.persistence.*
@@ -35,4 +36,4 @@ class Team(
     var slug: String = name.toSlug(),
 
     var createdTs: LocalDateTime = LocalDateTime.now(ZoneOffset.UTC),
-)
+): Searchable

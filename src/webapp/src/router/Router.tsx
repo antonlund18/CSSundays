@@ -54,10 +54,7 @@ export const Router = (): JSX.Element => {
         }]
     }, {
         path: "/search",
-        children: [{
-            index: true,
-            element: <SearchPage/>
-        }]
+        element: <SearchPage/>
     }, {
         path: "/admin",
         children: [{

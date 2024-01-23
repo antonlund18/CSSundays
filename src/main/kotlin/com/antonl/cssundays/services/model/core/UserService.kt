@@ -89,6 +89,10 @@ class UserService(val userRepository: UserRepository) {
         return userRepository.findUserByPlayertag(playertag)
     }
 
+    fun findUsersByPlayertag(playertag: String): List<User> {
+        return userRepository.findUsersByPlayertag(playertag)
+    }
+
     fun getAllUsers(): List<User> {
         return userRepository.findAll().toList();
     }
