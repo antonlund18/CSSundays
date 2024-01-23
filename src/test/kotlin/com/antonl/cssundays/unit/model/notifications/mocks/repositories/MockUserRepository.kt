@@ -17,6 +17,10 @@ class MockUserRepository : UserRepository {
         TODO("Not yet implemented")
     }
 
+    override fun findUsersByPlayertag(playertag: String): List<User> {
+        TODO("Not yet implemented")
+    }
+
     override fun findUserById(id: Int): User? {
         TODO("Not yet implemented")
     }

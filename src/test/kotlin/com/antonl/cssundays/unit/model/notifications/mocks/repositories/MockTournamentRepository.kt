@@ -13,6 +13,14 @@ class MockTournamentRepository : TournamentRepository {
         TODO("Not yet implemented")
     }
 
+    override fun findTournamentByName(name: String): Tournament? {
+        TODO("Not yet implemented")
+    }
+
+    override fun findTournamentsByName(name: String): List<Tournament> {
+        TODO("Not yet implemented")
+    }
+
     override fun <S : Tournament?> save(entity: S): S {
         return entity
     }

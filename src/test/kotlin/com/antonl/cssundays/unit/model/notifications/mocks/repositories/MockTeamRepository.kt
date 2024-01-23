@@ -9,6 +9,10 @@ class MockTeamRepository() : TeamRepository {
         TODO("Not yet implemented")
     }
 
+    override fun findTeamsByName(name: String): List<Team> {
+        TODO("Not yet implemented")
+    }
+
     override fun findTeamById(id: Int): Team {
         TODO("Not yet implemented")
     }
