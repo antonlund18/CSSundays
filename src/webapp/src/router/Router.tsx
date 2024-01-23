@@ -12,6 +12,7 @@ import {PlayersPage} from "../pages/teamspage/team/PlayersPage";
 import {AdminPage} from "../pages/admin/AdminPage";
 import {Error404} from "../pages/Error404";
 import {MatchPage} from "../pages/matchpage/MatchPage";
+import {SearchPage} from "../pages/search/SearchPage";
 
 export const Router = (): JSX.Element => {
     const mainRoutes = [{
@@ -30,21 +31,6 @@ export const Router = (): JSX.Element => {
     }, {
         path: "/matches/:matchId",
         element: <MatchPage/>
-    }, {
-        path: "/admin",
-        children: [{
-            index: true,
-            element: <AdminPage/>
-        }, {
-            path: "/admin/tournaments",
-            children: [{
-                index: true,
-                element: <AdminTournamentsPage/>
-            }, {
-                path: "/admin/tournaments/create",
-                element: <AdminCreateTournamentPage/>
-            }]
-        }]
     }, {
         path: "/teams",
         children: [{
@@ -65,6 +51,27 @@ export const Router = (): JSX.Element => {
         }, {
             path: ":player",
             element: <PlayerPage/>
+        }]
+    }, {
+        path: "/search",
+        children: [{
+            index: true,
+            element: <SearchPage/>
+        }]
+    }, {
+        path: "/admin",
+        children: [{
+            index: true,
+            element: <AdminPage/>
+        }, {
+            path: "/admin/tournaments",
+            children: [{
+                index: true,
+                element: <AdminTournamentsPage/>
+            }, {
+                path: "/admin/tournaments/create",
+                element: <AdminCreateTournamentPage/>
+            }]
         }]
     }, {
         path: "/*",
