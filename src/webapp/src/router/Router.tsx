@@ -54,7 +54,20 @@ export const Router = (): JSX.Element => {
         }]
     }, {
         path: "/search",
-        element: <SearchPage/>
+        children: [{
+            index: true,
+            element: <SearchPage/>
+        }, {
+            path: ":searchType",
+            children: [{
+                index: true,
+                element: <SearchPage/>
+            }, {
+                path: ":searchQuery",
+                element: <SearchPage/>
+            }]
+        }],
+
     }, {
         path: "/admin",
         children: [{
