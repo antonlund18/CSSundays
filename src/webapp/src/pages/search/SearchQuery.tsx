@@ -15,6 +15,7 @@ export const SearchQuery = (props: SearchQueryProps) => {
         <TextField style={{width: "100%"}}
                    value={searchQuery}
                    onChange={(e) => setSearchQuery(e.target.value)}
+                   placeholder={"Søg..."}
                    InputProps={{
                        startAdornment: <Search style={{marginRight: "8px"}}/>,
                        endAdornment: <IconButton><ContentCopy onClick={handleCopy}/></IconButton>
