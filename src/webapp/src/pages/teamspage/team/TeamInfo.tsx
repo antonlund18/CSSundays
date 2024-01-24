@@ -28,6 +28,12 @@ const useStyles = makeStyles<Theme, StylesProps>(theme => ({
     teamInfoContainer: {
         display: "flex",
         justifyContent: "space-between"
+    },
+    owner: {
+        "&:hover": {
+            color: theme.palette.primary.main
+        },
+        cursor: "pointer"
     }
 }))
 
@@ -76,7 +82,7 @@ export const TeamInfo = (props: TeamInfoProps): JSX.Element => {
         <Grid item style={{width: "100%"}}>
             <div className={classes.teamInfoContainer}>
                 <Typography variant={"h4"}>Owner</Typography>
-                    <Typography variant={"h4"} style={{cursor: "pointer"}} onClick={() => navigate("/players/" + team?.owner?.id ?? "")}>{team?.owner?.playertag} ↗</Typography>
+                    <Typography variant={"h4"} className={classes.owner} onClick={() => navigate("/players/" + team?.owner?.id ?? "")}>{team?.owner?.playertag} ↗</Typography>
             </div>
             <Divider style={{margin: "8px 0px"}}/>
             <div className={classes.teamInfoContainer}>

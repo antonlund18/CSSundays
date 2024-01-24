@@ -43,12 +43,12 @@ export const SearchPage = () => {
 
     useEffect(() => {
         if (searchQuery && searchType) {
-            updateState()
+            updateLocationState()
         }
     }, [searchQuery, searchType])
 
-    const updateState = () => {
-        navigate(``, {state: {query: searchQuery, type: searchType}, replace: true})
+    const updateLocationState = () => {
+        navigate(`/search`, {state: {query: searchQuery, type: searchType}, replace: true})
     }
 
     const handleCopy = () => {

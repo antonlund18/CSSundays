@@ -4,6 +4,7 @@ import {Grid, Typography} from "@mui/material";
 import {getPictureLinkFromKey} from "../../util/StorageHelper";
 import {makeStyles} from "@mui/styles";
 import {PlayerPicture} from "../teamspage/team/PlayerPicture";
+import {useNavigate} from "react-router-dom";
 
 const useStyles = makeStyles({
     vsContainer: {
@@ -34,6 +35,7 @@ type MatchPageTeamProps = {
 
 export const MatchPageTeam = (props: MatchPageTeamProps) => {
     const classes = useStyles()
+    const navigate = useNavigate()
 
     return <Grid item xs={5}>
         <div style={{
@@ -41,8 +43,15 @@ export const MatchPageTeam = (props: MatchPageTeamProps) => {
             height: "100px",
             display: "flex",
             alignItems: "center",
-            flexDirection: props.position === MagePageTeamPosition.LEFT ? "row" : "row-reverse"
-        }}>
+            flexDirection: props.position === MagePageTeamPosition.LEFT ? "row" : "row-reverse",
+            cursor: props.team ? "pointer" : "default",
+        }}
+             onClick={() => {
+                 if (props.team) {
+                     navigate(`/teams/${props.team?.id}`)
+                 }
+             }}
+        >
             {props.team ?
                 <>
                     <img src={getPictureLinkFromKey(props.team?.picture ?? "", ObjectType.Team)}

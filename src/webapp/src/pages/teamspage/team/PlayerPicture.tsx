@@ -33,6 +33,9 @@ const useStyles = makeStyles<Theme, StylesProps>(theme => ({
             textOverflow: "ellipsis",
             content: "'" + props.playerName + "'"
         },
+        "&:hover:after": {
+            color: theme.palette.primary.main,
+        },
         width: "100%",
         aspectRatio: "1/1",
         border: "2px solid white",

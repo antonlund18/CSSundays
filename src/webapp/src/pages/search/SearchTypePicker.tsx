@@ -22,6 +22,7 @@ const useStyles = makeStyles<Theme, StylesProps>(theme => ({
         borderRadius: "4px",
         width: "24%",
         cursor: "pointer",
+        backgroundColor: "white"
     }
 }))
 
