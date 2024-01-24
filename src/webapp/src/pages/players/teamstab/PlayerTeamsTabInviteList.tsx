@@ -51,7 +51,7 @@ export const PlayerTeamsTabInviteList = (props: PlayerTeamsTabInviteListProps): 
     const invites = data.getAllNotifications.filter(notification => notification.notificationType === NotificationType.InviteToTeam && notification.notifiableObject?.status === InviteToTeamStatus.Pending)
 
     return <>
-        <Typography variant={"h2"}>Holdinvitationer</Typography>
+        <Typography variant={"h2"}>{`Holdinvitationer (${invites.length})`}</Typography>
 
         <div style={{
             display: "grid",
@@ -63,7 +63,7 @@ export const PlayerTeamsTabInviteList = (props: PlayerTeamsTabInviteListProps): 
             {invites.slice().reverse().map(invite => {
                 return <div
                     style={{
-                        backgroundColor: "white",
+                        backgroundColor: "rgba(255, 255, 255, 0.5)",
                         margin: "8px",
                         border: "1px solid gray",
                         display: "flex",

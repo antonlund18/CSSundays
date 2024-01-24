@@ -46,7 +46,7 @@ export const PlayerTeamsTabTeamList = (props: PlayerTeamsTabTeamListProps): JSX.
 
     return <>
         <Grid item xs={12}>
-            <Typography variant={"h2"}>Hold</Typography>
+            <Typography variant={"h2"}>{`Hold (${teams.length})`}</Typography>
         </Grid>
 
         <Grid item xs={12}>
