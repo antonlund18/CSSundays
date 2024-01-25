@@ -7,7 +7,7 @@ class ChangeMatchPhaseStrategyHandlerFactory(val matchService: MatchService) {
     private val handlerMap = mapOf(
         ChangeMatchPhaseStrategy.CANCELLED to ChangeMatchPhaseStrategyHandlerCancelled(),
         ChangeMatchPhaseStrategy.WAITING_FOR_TEAMS to ChangeMatchPhaseStrategyHandlerWaitingForTeams(),
-//        ChangeMatchPhaseStrategy.WAITING_TO_START to TODO(),
+        ChangeMatchPhaseStrategy.WAITING_TO_START to ChangeMatchPhaseStrategyHandlerWaitingToStart(),
         ChangeMatchPhaseStrategy.READY_CHECK_ONE_CAPTAIN_PER_TEAM to ChangeMatchPhaseStrategyHandlerReadyCheckOneCaptainPerTeam(matchService),
         ChangeMatchPhaseStrategy.READY_CHECK_TIME_OUT to ChangeMatchPhaseStrategyHandlerReadyCheckTimeOut(matchService),
         ChangeMatchPhaseStrategy.PICK_AND_BAN_BO1 to ChangeMatchPhaseStrategyHandlerPickAndBan(matchService),

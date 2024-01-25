@@ -29,12 +29,18 @@ export const AdminCommandChangeMatchPhase = () => {
     }
 
     const handleChangeMatchId = (e: React.ChangeEvent<HTMLInputElement>) => {
+        if (e.target.value.length === 0) {
+            setMatchId("")
+        }
         if (!isNaN(parseInt(e.target.value))) {
             setMatchId(e.target.value)
         }
     }
 
     const handleChangeMatchPhase = (e: React.ChangeEvent<HTMLInputElement>) => {
+        if (e.target.value.length === 0) {
+            setMatchPhase("")
+        }
         if (!isNaN(parseInt(e.target.value))) {
             setMatchPhase(e.target.value)
         }

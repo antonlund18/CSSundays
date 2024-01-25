@@ -4,6 +4,7 @@ import {Autocomplete, TextField} from "@mui/material";
 import {AdminCommandCreateTestMatch} from "./AdminChangeCreateTestMatch";
 import {AdminCommandChangeMatchPhase} from "./AdminCommandChangeMatchPhase";
 import {AdminCommandCreateTestData} from "./AdminCommandCreateTestData";
+import {AdminCommandStartTournament} from "./AdminCommandStartTournament";
 
 
 export const AdminCommands = (props: React.PropsWithChildren<any>) => {
@@ -19,7 +20,8 @@ export const AdminCommands = (props: React.PropsWithChildren<any>) => {
     const Commands = {
         createTestMatch: <AdminCommandCreateTestMatch/>,
         changeMatchPhase: <AdminCommandChangeMatchPhase/>,
-        createTestData: <AdminCommandCreateTestData/>
+        createTestData: <AdminCommandCreateTestData/>,
+        startTournament: <AdminCommandStartTournament/>
     }
     const possibleCommands = Object.keys(Commands)
 

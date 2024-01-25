@@ -266,3 +266,11 @@ gql`
         }
     }
 `
+
+gql`
+    mutation startTournament($tournamentId: Int!) {
+        startTournament(tournamentId: $tournamentId) {
+            id
+        }
+    }
+`

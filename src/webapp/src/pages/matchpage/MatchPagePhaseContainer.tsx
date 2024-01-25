@@ -1,4 +1,5 @@
 import * as React from "react"
+import {useEffect, useState} from "react"
 import {makeStyles} from "@mui/styles";
 import {
     Match,
@@ -11,8 +12,8 @@ import {MatchPagePickAndBanPhase} from "./phases/MatchPagePickAndBanPhase";
 import {MatchPageWaitingForTeamsPhase} from "./phases/MatchPageWaitingForTeamsPhase";
 import {MatchPageReadyCheckPhase} from "./phases/MatchPageReadyCheckPhase";
 import {MatchPageCancelledPhase} from "./phases/MatchPageCancelledPhase";
-import { MatchPageInProgressPhase } from "./phases/MatchPageInProgressPhase";
-import {useEffect, useState} from "react";
+import {MatchPageInProgressPhase} from "./phases/MatchPageInProgressPhase";
+import {MatchPageWaitingToStartPhase} from "./phases/MatchPageWaitingToStartPhase";
 
 const useStyles = makeStyles(theme => ({
     phaseContainer: {
@@ -58,6 +59,8 @@ export const MatchPagePhaseContainer = (props: MatchPagePhaseContainerProps) => 
                 return <MatchPagePickAndBanPhase team1Captain={team1Captain} team2Captain={team2Captain} match={props.match} phase={currentPhase}/>
             case MatchPhaseType.InProgress:
                 return <MatchPageInProgressPhase match={props.match} phase={currentPhase}/>
+            case MatchPhaseType.WaitingToStart:
+                return <MatchPageWaitingToStartPhase/>
         }
     }
 

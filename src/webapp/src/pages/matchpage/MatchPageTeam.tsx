@@ -22,13 +22,13 @@ const useStyles = makeStyles({
     },
 })
 
-export enum MagePageTeamPosition {
+export enum MatchPageTeamPosition {
     LEFT,
     RIGHT
 }
 
 type MatchPageTeamProps = {
-    position: MagePageTeamPosition
+    position: MatchPageTeamPosition
     team: Team | undefined
     players: User[]
 }
@@ -43,7 +43,7 @@ export const MatchPageTeam = (props: MatchPageTeamProps) => {
             height: "100px",
             display: "flex",
             alignItems: "center",
-            flexDirection: props.position === MagePageTeamPosition.LEFT ? "row" : "row-reverse",
+            flexDirection: props.position === MatchPageTeamPosition.LEFT ? "row" : "row-reverse",
             cursor: props.team ? "pointer" : "default",
         }}
              onClick={() => {
@@ -57,20 +57,20 @@ export const MatchPageTeam = (props: MatchPageTeamProps) => {
                     <img src={getPictureLinkFromKey(props.team?.picture ?? "", ObjectType.Team)}
                          className={classes.teamPicture}/>
                     <Typography variant={"h2"}
-                                color={props.position !== MagePageTeamPosition.LEFT ? "error" : "primary"}
+                                color={props.position !== MatchPageTeamPosition.LEFT ? "error" : "primary"}
                                 sx={{textTransform: "none"}}>{props.team?.name}</Typography>
                 </> :
                 <>
                     <img src={getPictureLinkFromKey("unknown.png", ObjectType.Team)} className={classes.teamPicture}/>
                     <Typography variant={"h2"}
-                                color={props.position !== MagePageTeamPosition.LEFT ? "error" : "primary"}
+                                color={props.position !== MatchPageTeamPosition.LEFT ? "error" : "primary"}
                                 sx={{textTransform: "none"}}>TBD</Typography>
                 </>}
         </div>
         <div style={{
             width: "100%",
             display: "flex",
-            justifyContent: props.position === MagePageTeamPosition.RIGHT ? "end" : "start",
+            justifyContent: props.position === MatchPageTeamPosition.RIGHT ? "end" : "start",
             marginTop: "32px"
         }}>
             {props.players?.slice(0, 5).map(player => {

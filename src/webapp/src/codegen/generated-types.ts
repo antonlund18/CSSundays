@@ -189,6 +189,7 @@ export type Mutation = {
   removePublicationFromTournament?: Maybe<Tournament>;
   sendChatMessage?: Maybe<MatchChatMessage>;
   setPictureAndGetPresignedRequest?: Maybe<RequestDto>;
+  startTournament?: Maybe<Tournament>;
   updateUser?: Maybe<User>;
 };
 
@@ -338,6 +339,11 @@ export type MutationSendChatMessageArgs = {
 export type MutationSetPictureAndGetPresignedRequestArgs = {
   id: Scalars['Int'];
   objectType: ObjectType;
+};
+
+
+export type MutationStartTournamentArgs = {
+  tournamentId: Scalars['Int'];
 };
 
 
@@ -833,6 +839,13 @@ export type DeregisterPlayerFromTournamentMutationVariables = Exact<{
 
 
 export type DeregisterPlayerFromTournamentMutation = { __typename?: 'Mutation', deregisterPlayerFromTournament?: { __typename?: 'Tournament', id?: number, tournamentRegistrations: Array<{ __typename?: 'TournamentRegistration', id?: number, team: { __typename?: 'Team', id?: number, name: string, picture?: string }, players: Array<{ __typename?: 'User', id?: number, playertag: string, picture?: string }> }> } };
+
+export type StartTournamentMutationVariables = Exact<{
+  tournamentId: Scalars['Int'];
+}>;
+
+
+export type StartTournamentMutation = { __typename?: 'Mutation', startTournament?: { __typename?: 'Tournament', id?: number } };
 
 export type GetUserByIdQueryVariables = Exact<{
   id: Scalars['Int'];
@@ -2667,6 +2680,39 @@ export function useDeregisterPlayerFromTournamentMutation(baseOptions?: Apollo.M
 export type DeregisterPlayerFromTournamentMutationHookResult = ReturnType<typeof useDeregisterPlayerFromTournamentMutation>;
 export type DeregisterPlayerFromTournamentMutationResult = Apollo.MutationResult<DeregisterPlayerFromTournamentMutation>;
 export type DeregisterPlayerFromTournamentMutationOptions = Apollo.BaseMutationOptions<DeregisterPlayerFromTournamentMutation, DeregisterPlayerFromTournamentMutationVariables>;
+export const StartTournamentDocument = gql`
+    mutation startTournament($tournamentId: Int!) {
+  startTournament(tournamentId: $tournamentId) {
+    id
+  }
+}
+    `;
+export type StartTournamentMutationFn = Apollo.MutationFunction<StartTournamentMutation, StartTournamentMutationVariables>;
+
+/**
+ * __useStartTournamentMutation__
+ *
+ * To run a mutation, you first call `useStartTournamentMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useStartTournamentMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [startTournamentMutation, { data, loading, error }] = useStartTournamentMutation({
+ *   variables: {
+ *      tournamentId: // value for 'tournamentId'
+ *   },
+ * });
+ */
+export function useStartTournamentMutation(baseOptions?: Apollo.MutationHookOptions<StartTournamentMutation, StartTournamentMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<StartTournamentMutation, StartTournamentMutationVariables>(StartTournamentDocument, options);
+      }
+export type StartTournamentMutationHookResult = ReturnType<typeof useStartTournamentMutation>;
+export type StartTournamentMutationResult = Apollo.MutationResult<StartTournamentMutation>;
+export type StartTournamentMutationOptions = Apollo.BaseMutationOptions<StartTournamentMutation, StartTournamentMutationVariables>;
 export const GetUserByIdDocument = gql`
     query getUserById($id: Int!) {
   getUserById(id: $id) {
@@ -3061,6 +3107,7 @@ export const ListAllOperations = {
     removePublicationFromTournament: 'removePublicationFromTournament',
     deregisterTeamFromTournament: 'deregisterTeamFromTournament',
     deregisterPlayerFromTournament: 'deregisterPlayerFromTournament',
+    startTournament: 'startTournament',
     createUser: 'createUser',
     loginUser: 'loginUser',
     updateUser: 'updateUser',

@@ -4,7 +4,7 @@ import {CenteredPage} from "../../components/CenteredPage";
 import {makeStyles} from "@mui/styles";
 import {useParams} from "react-router-dom";
 import {useGetMatchById} from "../../hooks/api/useMatch";
-import {MagePageTeamPosition, MatchPageTeam} from "./MatchPageTeam";
+import {MatchPageTeamPosition, MatchPageTeam} from "./MatchPageTeam";
 import {MatchPagePhaseContainer} from "./MatchPagePhaseContainer";
 import {MatchPageChatContainer} from "./MatchPageChatContainer";
 import {Error404} from "../Error404";
@@ -54,11 +54,11 @@ export const MatchPage = () => {
 
     return <CenteredPage>
         <Grid container xs={12}>
-            <MatchPageTeam position={MagePageTeamPosition.LEFT} team={match.tournamentRegistration1?.team} players={match.tournamentRegistration1?.players ?? []}/>
+            <MatchPageTeam position={MatchPageTeamPosition.LEFT} team={match.tournamentRegistration1?.team} players={match.tournamentRegistration1?.players ?? []}/>
             <Grid item xs={2} className={classes.vsContainer}>
                 <Typography variant={"h2"}>VS</Typography>
             </Grid>
-            <MatchPageTeam position={MagePageTeamPosition.RIGHT} team={match.tournamentRegistration2?.team} players={match.tournamentRegistration2?.players ?? []}/>
+            <MatchPageTeam position={MatchPageTeamPosition.RIGHT} team={match.tournamentRegistration2?.team} players={match.tournamentRegistration2?.players ?? []}/>
         </Grid>
         <Divider sx={{marginTop: "16px"}}/>
         <MatchPagePhaseContainer match={match}/>

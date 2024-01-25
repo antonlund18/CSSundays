@@ -7,19 +7,23 @@ import java.util.*
 class BracketMatchPhaseInitializer(val matchService: MatchService) {
     fun initializeMatchPhases(tree: Bracket) {
         val queue: Queue<Match> = LinkedList()
-        queue.add(tree.root)
+
+        if (tree.root != null) {
+            queue.add(tree.root)
+        }
 
         while (!queue.isEmpty()) {
             val currentNode = queue.poll()
 
-            if (currentNode == null) {
-                return
-            }
-
             initializeMatchPhase(currentNode)
 
-            queue.add(currentNode.left)
-            queue.add(currentNode.right)
+            if (currentNode.left != null) {
+                queue.add(currentNode.left)
+            }
+
+            if (currentNode.right != null) {
+                queue.add(currentNode.right)
+            }
         }
     }
 
@@ -31,18 +35,22 @@ class BracketMatchPhaseInitializer(val matchService: MatchService) {
         val hasTeamTwo = tournamentRegistrationTwo != null
         val hasBothTeams = hasTeamOne && hasTeamTwo
         val hasNoTeams = !hasTeamOne && !hasTeamTwo
+        val matchIsLeaf = match.left == null && match.right == null
 
         if (hasBothTeams) {
-            matchService.changeMatchPhase(match, ChangeMatchPhaseStrategy.READY_CHECK_ONE_CAPTAIN_PER_TEAM)
+            matchService.changeMatchPhase(match, ChangeMatchPhaseStrategy.WAITING_TO_START)
             return
         }
         if (hasTeamOne || hasTeamTwo) {
             matchService.changeMatchPhase(match, ChangeMatchPhaseStrategy.WAITING_FOR_TEAMS)
             return
         }
-        if (hasNoTeams) {
+        if (matchIsLeaf && hasNoTeams) {
             matchService.changeMatchPhase(match, ChangeMatchPhaseStrategy.CANCELLED)
             return
+        }
+        if (hasNoTeams) {
+            matchService.changeMatchPhase(match, ChangeMatchPhaseStrategy.WAITING_FOR_TEAMS)
         }
     }
 }

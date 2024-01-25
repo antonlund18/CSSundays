@@ -86,6 +86,11 @@ class TournamentService(
         return saveTournament(tournament)
     }
 
+    fun startTournament(tournament: Tournament): Tournament {
+        tournament.bracket?.let { BracketTournamentStarter(matchService).startTournament(it) }
+        return saveTournament(tournament)
+    }
+
     fun generateBracket(tournament: Tournament): Tournament {
         val bracket = createBracket(tournament)
         val registeredTeams = tournamentRegistrationService.getRegisteredTeams(tournament)

@@ -49,6 +49,11 @@ class TournamentMutations : Mutation {
         return tournamentService.generateBracket(tournament)
     }
 
+    suspend fun startTournament(tournamentId: Int): Tournament? {
+        val tournament = tournamentService.getTournamentById(tournamentId) ?: return null
+        return tournamentService.startTournament(tournament)
+    }
+
     suspend fun deregisterTeamFromTournament(tournamentId: Int, teamId: Int): Tournament? {
         val tournament = tournamentService.getTournamentById(tournamentId) ?: return null
         val team = teamService.findTeamById(teamId) ?: return null
