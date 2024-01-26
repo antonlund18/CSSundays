@@ -2,9 +2,9 @@ import * as React from "react"
 import {useContext, useEffect, useState} from "react"
 import {ObjectType, User} from "../../../codegen/generated-types";
 import {Grid, IconButton, Tooltip, Typography} from "@mui/material";
-import {GroupAddRounded, Groups, Mail, Report} from "@mui/icons-material";
+import {Check, Close, Error, GroupAddRounded, Groups, Mail, Report} from "@mui/icons-material";
 import {getPictureLinkFromKey} from "../../../util/StorageHelper";
-import {makeStyles} from "@mui/styles";
+import {makeStyles, useTheme} from "@mui/styles";
 import {Theme} from "@mui/material/styles";
 import {useSharedTeamAndUser} from "../../../hooks/api/useSharedTeamAndUser";
 import {SnackbarContext} from "../../../SnackbarContextProvider";
@@ -32,7 +32,7 @@ const useStyles = makeStyles<Theme, StylesProps>(theme => ({
         flexDirection: "column",
         flexGrow: 1,
         justifyContent: "space-between",
-        padding: "64px 0px 64px 16px !important",
+        padding: "64px 0px 32px 16px !important",
     }
 }));
 
@@ -48,6 +48,7 @@ export const ProfileTabHeaderSection = (props: ProfileHeaderSectionProps): JSX.E
     const classes = useStyles({isCurrentUser: props.isCurrentUser, playerPictureUrl: playerPictureUrl})
     const [fileSelector, setFileSelector] = useState<HTMLInputElement | null>(null);
     const {setAndUploadPicture} = useSharedTeamAndUser();
+    const theme = useTheme()
 
     useEffect(() => {
         if (props.player) {
@@ -69,6 +70,8 @@ export const ProfileTabHeaderSection = (props: ProfileHeaderSectionProps): JSX.E
         }
     }
 
+    const isSteamVerified = props.player.steamId
+
     return <>
         <Grid item container xs={10}>
             <Grid item xs={3}>
@@ -77,8 +80,25 @@ export const ProfileTabHeaderSection = (props: ProfileHeaderSectionProps): JSX.E
                 </Tooltip>
             </Grid>
             <Grid item xs={9} className={classes.description}>
-                <Typography variant={"h2"} style={{textTransform: "none"}}>{props.player.playertag}</Typography>
-                <Typography>{props.player.description}</Typography>
+                <div>
+                    <div style={{display: "flex", flexDirection: "row", alignItems: "center"}}>
+                        {isSteamVerified ?
+                        <Check style={{
+                            color: theme.palette.success.main,
+                            fontSize: "13px"
+                        }}/> : <Close style={{
+                                color: theme.palette.error.main,
+                                fontSize: "13px"
+                            }}/>}
+                        <Typography variant={"body1"}
+                                    style={{marginLeft: "4px", lineHeight: "1"}}
+                                    color={isSteamVerified ? theme.palette.success.main : theme.palette.error.main}>
+                            {isSteamVerified ? "STEAM VERIFICERET" : "IKKE STEAM VERIFICERET"}
+                        </Typography>
+                    </div>
+                    <Typography variant={"h2"} style={{textTransform: "none"}}>{props.player.playertag}</Typography>
+                </div>
+                <Typography variant={"body2"} style={{marginTop: "16px"}}>{props.player.description}</Typography>
             </Grid>
         </Grid>
         <Grid item xs={2} sx={{display: "flex", flexDirection: "column", flexGrow: 1, justifyContent: "center"}}>
