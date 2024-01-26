@@ -49,6 +49,11 @@ class UserMutations : Mutation {
         return userService.updatePlayer(user, editUserInput);
     }
 
+    suspend fun setSteamId(userId: Int, steamId: String): User? {
+        val user = userService.findUserById(userId) ?: return null
+        return userService.setSteamId(user, steamId);
+    }
+
     suspend fun createUser(playertag: String, email: String, password: String, passwordRepeated: String): DataFetcherResult<String?> {
         val input = UserMutationInput(playertag = playertag, email = email, newPassword = password, newPasswordRepeated = passwordRepeated)
         val validationResult = userService.validateCreateUser(input)

@@ -9,6 +9,7 @@ import {getPictureLinkFromKey} from "../../util/StorageHelper";
 import {ObjectType} from "../../codegen/generated-types";
 import {NotificationsButton} from "./notifications/NotificationsButton";
 import {NavBarMenuItem} from "./NavBarMenuItem";
+import {openWinSteam} from "../../SteamProvider";
 
 const useStyles = makeStyles((theme) => ({
     profileSectionContainer: {

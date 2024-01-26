@@ -25,6 +25,8 @@ class User(
 
     var picture: String? = null,
 
+    var steamId: String? = null,
+
     @Enumerated(EnumType.STRING)
     var role: UserRole = UserRole.USER,
 

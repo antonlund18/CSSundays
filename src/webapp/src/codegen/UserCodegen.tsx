@@ -17,7 +17,8 @@ gql`
                 users {
                     playertag
                 }
-            }
+            },
+            steamId
         }
     }
 `
@@ -68,6 +69,15 @@ gql`
     mutation changePassword($userId: Int!, $currentPassword: String!, $newPassword: String!, $newPasswordRepeated: String!) {
         changePassword(userId: $userId, currentPassword: $currentPassword, newPassword: $newPassword, newPasswordRepeated: $newPasswordRepeated) {
             id
+        }
+    }
+`
+
+gql`
+    mutation setSteamId($userId: Int!, $steamId: String!) {
+        setSteamId(userId: $userId, steamId: $steamId) {
+            id,
+            steamId
         }
     }
 `

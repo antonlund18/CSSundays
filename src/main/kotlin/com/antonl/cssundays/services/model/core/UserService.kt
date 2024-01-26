@@ -43,6 +43,11 @@ class UserService(val userRepository: UserRepository) {
         return saveUser(player)
     }
 
+    fun setSteamId(player: User, steamId: String): User? {
+        player.steamId = steamId
+        return saveUser(player)
+    }
+
     fun verifyPassword(player: User, password: String): Boolean {
         return AuthenticationService.verifyPassword(player, password)
     }

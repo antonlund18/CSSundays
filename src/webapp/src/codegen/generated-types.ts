@@ -189,6 +189,7 @@ export type Mutation = {
   removePublicationFromTournament?: Maybe<Tournament>;
   sendChatMessage?: Maybe<MatchChatMessage>;
   setPictureAndGetPresignedRequest?: Maybe<RequestDto>;
+  setSteamId?: Maybe<User>;
   startTournament?: Maybe<Tournament>;
   updateUser?: Maybe<User>;
 };
@@ -339,6 +340,12 @@ export type MutationSendChatMessageArgs = {
 export type MutationSetPictureAndGetPresignedRequestArgs = {
   id: Scalars['Int'];
   objectType: ObjectType;
+};
+
+
+export type MutationSetSteamIdArgs = {
+  steamId: Scalars['String'];
+  userId: Scalars['Int'];
 };
 
 
@@ -581,6 +588,7 @@ export type User = {
   playertag: Scalars['String'];
   role: UserRole;
   slug: Scalars['String'];
+  steamId?: Maybe<Scalars['String']>;
   teams: Array<Team>;
 };
 
@@ -852,7 +860,7 @@ export type GetUserByIdQueryVariables = Exact<{
 }>;
 
 
-export type GetUserByIdQuery = { __typename?: 'Query', getUserById?: { __typename?: 'User', id?: number, playertag: string, email: string, role: UserRole, description: string, picture?: string, createdTs: any, teams: Array<{ __typename?: 'Team', id?: number, name: string, picture?: string, users: Array<{ __typename?: 'User', playertag: string }> }> } };
+export type GetUserByIdQuery = { __typename?: 'Query', getUserById?: { __typename?: 'User', id?: number, playertag: string, email: string, role: UserRole, description: string, picture?: string, createdTs: any, steamId?: string, teams: Array<{ __typename?: 'Team', id?: number, name: string, picture?: string, users: Array<{ __typename?: 'User', playertag: string }> }> } };
 
 export type GetCurrentUserQueryVariables = Exact<{
   token: Scalars['String'];
@@ -895,6 +903,14 @@ export type ChangePasswordMutationVariables = Exact<{
 
 
 export type ChangePasswordMutation = { __typename?: 'Mutation', changePassword?: { __typename?: 'User', id?: number } };
+
+export type SetSteamIdMutationVariables = Exact<{
+  userId: Scalars['Int'];
+  steamId: Scalars['String'];
+}>;
+
+
+export type SetSteamIdMutation = { __typename?: 'Mutation', setSteamId?: { __typename?: 'User', id?: number, steamId?: string } };
 
 export type CreateTestMatchMutationVariables = Exact<{ [key: string]: never; }>;
 
@@ -2731,6 +2747,7 @@ export const GetUserByIdDocument = gql`
         playertag
       }
     }
+    steamId
   }
 }
     `;
@@ -2956,6 +2973,41 @@ export function useChangePasswordMutation(baseOptions?: Apollo.MutationHookOptio
 export type ChangePasswordMutationHookResult = ReturnType<typeof useChangePasswordMutation>;
 export type ChangePasswordMutationResult = Apollo.MutationResult<ChangePasswordMutation>;
 export type ChangePasswordMutationOptions = Apollo.BaseMutationOptions<ChangePasswordMutation, ChangePasswordMutationVariables>;
+export const SetSteamIdDocument = gql`
+    mutation setSteamId($userId: Int!, $steamId: String!) {
+  setSteamId(userId: $userId, steamId: $steamId) {
+    id
+    steamId
+  }
+}
+    `;
+export type SetSteamIdMutationFn = Apollo.MutationFunction<SetSteamIdMutation, SetSteamIdMutationVariables>;
+
+/**
+ * __useSetSteamIdMutation__
+ *
+ * To run a mutation, you first call `useSetSteamIdMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useSetSteamIdMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [setSteamIdMutation, { data, loading, error }] = useSetSteamIdMutation({
+ *   variables: {
+ *      userId: // value for 'userId'
+ *      steamId: // value for 'steamId'
+ *   },
+ * });
+ */
+export function useSetSteamIdMutation(baseOptions?: Apollo.MutationHookOptions<SetSteamIdMutation, SetSteamIdMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<SetSteamIdMutation, SetSteamIdMutationVariables>(SetSteamIdDocument, options);
+      }
+export type SetSteamIdMutationHookResult = ReturnType<typeof useSetSteamIdMutation>;
+export type SetSteamIdMutationResult = Apollo.MutationResult<SetSteamIdMutation>;
+export type SetSteamIdMutationOptions = Apollo.BaseMutationOptions<SetSteamIdMutation, SetSteamIdMutationVariables>;
 export const CreateTestMatchDocument = gql`
     mutation createTestMatch {
   createTestMatch {
@@ -3112,6 +3164,7 @@ export const ListAllOperations = {
     loginUser: 'loginUser',
     updateUser: 'updateUser',
     changePassword: 'changePassword',
+    setSteamId: 'setSteamId',
     createTestMatch: 'createTestMatch',
     changeMatchPhase: 'changeMatchPhase',
     createTestData: 'createTestData'
