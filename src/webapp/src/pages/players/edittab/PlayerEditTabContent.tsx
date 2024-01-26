@@ -78,7 +78,7 @@ export const PlayerEditTabContent = (props: PlayerEditTabContentProps): JSX.Elem
         fileSelector?.click();
     }
 
-    const handleSave = () => {
+    const handleSave = async () => {
         if (!props.player.id) {
             return
         }
@@ -89,12 +89,8 @@ export const PlayerEditTabContent = (props: PlayerEditTabContentProps): JSX.Elem
             email
         }
 
-        updateUser({
-            variables: {
-                editUserInput: updatedPlayer
-            }
-        })
-        setAndUploadPicture(props.player.id, fileSelector, ObjectType.User, false)
+        await updateUser({variables: {editUserInput: updatedPlayer}})
+        await setAndUploadPicture(props.player.id, fileSelector, ObjectType.User, false)
 
         openSnackbar("Brugeroplysninger gemt", "success")
     }

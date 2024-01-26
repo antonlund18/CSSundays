@@ -4,7 +4,7 @@ import {Menu, MenuItem} from "@mui/material";
 import {
     Tournament, useGenerateBracketMutation,
     usePublishTournamentMutation,
-    useRemovePublicationFromTournamentMutation
+    useRemovePublicationFromTournamentMutation, useStartTournamentMutation
 } from "../../../codegen/generated-types";
 import {SnackbarContext} from "../../../SnackbarContextProvider";
 
@@ -20,6 +20,7 @@ export const AdminTournamentRowContextMenu = (props: AdminTournamentRowContextMe
     const [publishTournament] = usePublishTournamentMutation()
     const [removePublication] = useRemovePublicationFromTournamentMutation()
     const [generateBracket] = useGenerateBracketMutation()
+    const [startTournament] = useStartTournamentMutation()
 
     if (!props.tournament) {
         return <></>
@@ -83,12 +84,32 @@ export const AdminTournamentRowContextMenu = (props: AdminTournamentRowContextMe
         props.setOpen(false)
     }
 
+    const handleStartTournament = () => {
+        if (!props.tournament.id) {
+            return
+        }
+
+        startTournament({
+            variables: {
+                tournamentId: props.tournament.id
+            }
+        }).then(data => {
+            openSnackbar(`Turnering startet: '${props.tournament.name}'`, "success")
+        }).catch(error => {
+            openSnackbar('Fejl ved start af turnering', 'error')
+        })
+        props.setOpen(false)
+    }
+
     return <Menu open={props.open} onClose={handleClose} anchorEl={props.anchor} onClick={handleClick}>
         <MenuItem onClick={() => props.tournament.published ? handleRemovePublication() : handlePublish()}>
             {props.tournament.published ? "Fjern publicering" : "Publicér"}
         </MenuItem>
         <MenuItem onClick={handleGenerateBracket}>
             Opret bracket
+        </MenuItem>
+        <MenuItem onClick={handleStartTournament}>
+            Start turnering
         </MenuItem>
 
     </Menu>
