@@ -110,6 +110,11 @@ class MatchService(val matchRepository: MatchRepository, val matchChatMessageRep
             } else {
                 it.tournamentRegistration2 = tournamentRegistration
             }
+
+            val hasBothTeams = it.tournamentRegistration1 != null && it.tournamentRegistration2 != null
+            if (hasBothTeams) {
+                changeMatchPhase(it, changeMatchPhaseStrategy = ChangeMatchPhaseStrategy.READY_CHECK_ONE_CAPTAIN_PER_TEAM)
+            }
             saveMatch(it)
         }
 
