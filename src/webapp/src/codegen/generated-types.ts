@@ -99,6 +99,12 @@ export type MatchChatMessage = {
   sender: User;
 };
 
+export type MatchFinishedPhaseState = MatchPhaseState & {
+  __typename?: 'MatchFinishedPhaseState';
+  id: Scalars['Int'];
+  winTeamOne: Scalars['Boolean'];
+};
+
 export type MatchInProgressPhaseState = MatchPhaseState & {
   __typename?: 'MatchInProgressPhaseState';
   id: Scalars['Int'];
@@ -179,6 +185,7 @@ export type Mutation = {
   deregisterPlayerFromTournament?: Maybe<Tournament>;
   deregisterTeamFromTournament?: Maybe<Tournament>;
   generateBracket?: Maybe<Tournament>;
+  handleMatchFinished?: Maybe<Match>;
   incrementLosses?: Maybe<Team>;
   incrementWins?: Maybe<Team>;
   loginUser?: Maybe<Scalars['String']>;
@@ -283,6 +290,12 @@ export type MutationDeregisterTeamFromTournamentArgs = {
 
 export type MutationGenerateBracketArgs = {
   tournamentId: Scalars['Int'];
+};
+
+
+export type MutationHandleMatchFinishedArgs = {
+  matchId: Scalars['Int'];
+  winningTeamId: Scalars['Int'];
 };
 
 
@@ -641,14 +654,14 @@ export type GetMatchesByParentIdsQueryVariables = Exact<{
 }>;
 
 
-export type GetMatchesByParentIdsQuery = { __typename?: 'Query', getMatchesByParentIds: Array<{ __typename?: 'Match', id?: number, tournamentRegistration1?: { __typename?: 'TournamentRegistration', team: { __typename?: 'Team', id?: number, name: string, picture?: string }, players: Array<{ __typename?: 'User', id?: number, playertag: string, picture?: string }> }, tournamentRegistration2?: { __typename?: 'TournamentRegistration', team: { __typename?: 'Team', id?: number, name: string, picture?: string }, players: Array<{ __typename?: 'User', id?: number, playertag: string, picture?: string }> } }> };
+export type GetMatchesByParentIdsQuery = { __typename?: 'Query', getMatchesByParentIds: Array<{ __typename?: 'Match', id?: number, tournamentRegistration1?: { __typename?: 'TournamentRegistration', team: { __typename?: 'Team', id?: number, name: string, picture?: string }, players: Array<{ __typename?: 'User', id?: number, playertag: string, picture?: string }> }, tournamentRegistration2?: { __typename?: 'TournamentRegistration', team: { __typename?: 'Team', id?: number, name: string, picture?: string }, players: Array<{ __typename?: 'User', id?: number, playertag: string, picture?: string }> }, currentPhase: { __typename?: 'MatchPhase', id: number, phaseType: MatchPhaseType, createdTs: any, endTs?: any, match?: { __typename?: 'Match', id?: number }, state?: { __typename: 'MatchFinishedPhaseState', id: number, winTeamOne: boolean } | { __typename: 'MatchInProgressPhaseState', id: number, map?: CsMap } | { __typename: 'MatchPickAndBanPhaseState', id: number, firstTeamToBan: number, votingTimeInSeconds: number, actions: Array<{ __typename?: 'MatchPickAndBanPhaseAction', id?: number, ban: CsMap, captain: { __typename?: 'User', id?: number } }> } | { __typename: 'MatchReadyCheckPhaseState', id: number, teamOneAction: { __typename?: 'MatchReadyCheckPhaseCaptainPerTeamAction', ready: boolean }, teamTwoAction: { __typename?: 'MatchReadyCheckPhaseCaptainPerTeamAction', ready: boolean } } } }> };
 
 export type GetMatchByIdQueryVariables = Exact<{
   matchId: Scalars['Int'];
 }>;
 
 
-export type GetMatchByIdQuery = { __typename?: 'Query', getMatchById?: { __typename?: 'Match', id?: number, tournamentRegistration1?: { __typename?: 'TournamentRegistration', team: { __typename?: 'Team', id?: number, name: string, picture?: string }, players: Array<{ __typename?: 'User', id?: number, playertag: string, picture?: string }>, captain: { __typename?: 'User', id?: number, playertag: string, picture?: string } }, tournamentRegistration2?: { __typename?: 'TournamentRegistration', team: { __typename?: 'Team', id?: number, name: string, picture?: string }, players: Array<{ __typename?: 'User', id?: number, playertag: string, picture?: string }>, captain: { __typename?: 'User', id?: number, playertag: string, picture?: string } }, chatMessages: Array<{ __typename?: 'MatchChatMessage', message: string, createdTs: any, sender: { __typename?: 'User', id?: number, playertag: string } }>, currentPhase: { __typename?: 'MatchPhase', id: number, phaseType: MatchPhaseType, createdTs: any, endTs?: any, match?: { __typename?: 'Match', id?: number }, state?: { __typename: 'MatchInProgressPhaseState', id: number, map?: CsMap } | { __typename: 'MatchPickAndBanPhaseState', id: number, firstTeamToBan: number, votingTimeInSeconds: number, actions: Array<{ __typename?: 'MatchPickAndBanPhaseAction', id?: number, ban: CsMap, captain: { __typename?: 'User', id?: number } }> } | { __typename: 'MatchReadyCheckPhaseState', id: number, teamOneAction: { __typename?: 'MatchReadyCheckPhaseCaptainPerTeamAction', ready: boolean }, teamTwoAction: { __typename?: 'MatchReadyCheckPhaseCaptainPerTeamAction', ready: boolean } } } } };
+export type GetMatchByIdQuery = { __typename?: 'Query', getMatchById?: { __typename?: 'Match', id?: number, tournamentRegistration1?: { __typename?: 'TournamentRegistration', team: { __typename?: 'Team', id?: number, name: string, picture?: string }, players: Array<{ __typename?: 'User', id?: number, playertag: string, picture?: string }>, captain: { __typename?: 'User', id?: number, playertag: string, picture?: string } }, tournamentRegistration2?: { __typename?: 'TournamentRegistration', team: { __typename?: 'Team', id?: number, name: string, picture?: string }, players: Array<{ __typename?: 'User', id?: number, playertag: string, picture?: string }>, captain: { __typename?: 'User', id?: number, playertag: string, picture?: string } }, chatMessages: Array<{ __typename?: 'MatchChatMessage', message: string, createdTs: any, sender: { __typename?: 'User', id?: number, playertag: string } }>, currentPhase: { __typename?: 'MatchPhase', id: number, phaseType: MatchPhaseType, createdTs: any, endTs?: any, match?: { __typename?: 'Match', id?: number }, state?: { __typename: 'MatchFinishedPhaseState', id: number, winTeamOne: boolean } | { __typename: 'MatchInProgressPhaseState', id: number, map?: CsMap } | { __typename: 'MatchPickAndBanPhaseState', id: number, firstTeamToBan: number, votingTimeInSeconds: number, actions: Array<{ __typename?: 'MatchPickAndBanPhaseAction', id?: number, ban: CsMap, captain: { __typename?: 'User', id?: number } }> } | { __typename: 'MatchReadyCheckPhaseState', id: number, teamOneAction: { __typename?: 'MatchReadyCheckPhaseCaptainPerTeamAction', ready: boolean }, teamTwoAction: { __typename?: 'MatchReadyCheckPhaseCaptainPerTeamAction', ready: boolean } } } } };
 
 export type MarkReadyMutationVariables = Exact<{
   matchId: Scalars['Int'];
@@ -656,7 +669,7 @@ export type MarkReadyMutationVariables = Exact<{
 }>;
 
 
-export type MarkReadyMutation = { __typename?: 'Mutation', markReady?: { __typename?: 'Match', id?: number, currentPhase: { __typename?: 'MatchPhase', id: number, phaseType: MatchPhaseType, createdTs: any, endTs?: any, state?: { __typename: 'MatchInProgressPhaseState' } | { __typename: 'MatchPickAndBanPhaseState', id: number, firstTeamToBan: number, votingTimeInSeconds: number, actions: Array<{ __typename?: 'MatchPickAndBanPhaseAction', id?: number, ban: CsMap, captain: { __typename?: 'User', id?: number } }> } | { __typename: 'MatchReadyCheckPhaseState', id: number, teamOneAction: { __typename?: 'MatchReadyCheckPhaseCaptainPerTeamAction', ready: boolean }, teamTwoAction: { __typename?: 'MatchReadyCheckPhaseCaptainPerTeamAction', ready: boolean } } } } };
+export type MarkReadyMutation = { __typename?: 'Mutation', markReady?: { __typename?: 'Match', id?: number, currentPhase: { __typename?: 'MatchPhase', id: number, phaseType: MatchPhaseType, createdTs: any, endTs?: any, state?: { __typename: 'MatchFinishedPhaseState' } | { __typename: 'MatchInProgressPhaseState' } | { __typename: 'MatchPickAndBanPhaseState', id: number, firstTeamToBan: number, votingTimeInSeconds: number, actions: Array<{ __typename?: 'MatchPickAndBanPhaseAction', id?: number, ban: CsMap, captain: { __typename?: 'User', id?: number } }> } | { __typename: 'MatchReadyCheckPhaseState', id: number, teamOneAction: { __typename?: 'MatchReadyCheckPhaseCaptainPerTeamAction', ready: boolean }, teamTwoAction: { __typename?: 'MatchReadyCheckPhaseCaptainPerTeamAction', ready: boolean } } } } };
 
 export type BanMapMutationVariables = Exact<{
   matchId: Scalars['Int'];
@@ -665,7 +678,7 @@ export type BanMapMutationVariables = Exact<{
 }>;
 
 
-export type BanMapMutation = { __typename?: 'Mutation', banMap?: { __typename?: 'Match', id?: number, currentPhase: { __typename?: 'MatchPhase', id: number, endTs?: any, state?: { __typename: 'MatchInProgressPhaseState', id: number, map?: CsMap } | { __typename: 'MatchPickAndBanPhaseState', id: number, firstTeamToBan: number, votingTimeInSeconds: number, actions: Array<{ __typename?: 'MatchPickAndBanPhaseAction', id?: number, ban: CsMap, captain: { __typename?: 'User', id?: number } }> } | { __typename: 'MatchReadyCheckPhaseState' } } } };
+export type BanMapMutation = { __typename?: 'Mutation', banMap?: { __typename?: 'Match', id?: number, currentPhase: { __typename?: 'MatchPhase', id: number, endTs?: any, state?: { __typename: 'MatchFinishedPhaseState', id: number, winTeamOne: boolean } | { __typename: 'MatchInProgressPhaseState', id: number, map?: CsMap } | { __typename: 'MatchPickAndBanPhaseState', id: number, firstTeamToBan: number, votingTimeInSeconds: number, actions: Array<{ __typename?: 'MatchPickAndBanPhaseAction', id?: number, ban: CsMap, captain: { __typename?: 'User', id?: number } }> } | { __typename: 'MatchReadyCheckPhaseState' } } } };
 
 export type SendChatMessageMutationVariables = Exact<{
   matchId: Scalars['Int'];
@@ -681,7 +694,7 @@ export type OnMatchPhaseChangedSubscriptionVariables = Exact<{
 }>;
 
 
-export type OnMatchPhaseChangedSubscription = { __typename?: 'Subscription', onMatchPhaseChanged: { __typename?: 'MatchPhase', id: number, phaseType: MatchPhaseType, createdTs: any, endTs?: any, match?: { __typename?: 'Match', id?: number }, state?: { __typename: 'MatchInProgressPhaseState', id: number, map?: CsMap } | { __typename: 'MatchPickAndBanPhaseState', id: number, firstTeamToBan: number, votingTimeInSeconds: number, actions: Array<{ __typename?: 'MatchPickAndBanPhaseAction', id?: number, ban: CsMap, captain: { __typename?: 'User', id?: number } }> } | { __typename: 'MatchReadyCheckPhaseState', id: number, teamOneAction: { __typename?: 'MatchReadyCheckPhaseCaptainPerTeamAction', ready: boolean }, teamTwoAction: { __typename?: 'MatchReadyCheckPhaseCaptainPerTeamAction', ready: boolean } } } };
+export type OnMatchPhaseChangedSubscription = { __typename?: 'Subscription', onMatchPhaseChanged: { __typename?: 'MatchPhase', id: number, phaseType: MatchPhaseType, createdTs: any, endTs?: any, match?: { __typename?: 'Match', id?: number }, state?: { __typename: 'MatchFinishedPhaseState', id: number, winTeamOne: boolean } | { __typename: 'MatchInProgressPhaseState', id: number, map?: CsMap } | { __typename: 'MatchPickAndBanPhaseState', id: number, firstTeamToBan: number, votingTimeInSeconds: number, actions: Array<{ __typename?: 'MatchPickAndBanPhaseAction', id?: number, ban: CsMap, captain: { __typename?: 'User', id?: number } }> } | { __typename: 'MatchReadyCheckPhaseState', id: number, teamOneAction: { __typename?: 'MatchReadyCheckPhaseCaptainPerTeamAction', ready: boolean }, teamTwoAction: { __typename?: 'MatchReadyCheckPhaseCaptainPerTeamAction', ready: boolean } } } };
 
 export type OnNewMatchChatMessageSubscriptionVariables = Exact<{
   matchId: Scalars['Int'];
@@ -800,7 +813,7 @@ export type GetTournamentByIdQueryVariables = Exact<{
 }>;
 
 
-export type GetTournamentByIdQuery = { __typename?: 'Query', getTournamentById?: { __typename?: 'Tournament', id?: number, name: string, picture?: string, description: string, format: TournamentFormat, rules: string, startDateAndTime: any, numberOfTeamsAllowed: number, tournamentRegistrations: Array<{ __typename?: 'TournamentRegistration', id?: number, createdTs: any, captain: { __typename?: 'User', id?: number, playertag: string, picture?: string }, team: { __typename?: 'Team', id?: number, name: string, picture?: string }, players: Array<{ __typename?: 'User', id?: number, playertag: string, picture?: string }> }>, bracket?: { __typename?: 'Bracket', id?: number, root?: { __typename?: 'Match', id?: number, tournamentRegistration1?: { __typename?: 'TournamentRegistration', team: { __typename?: 'Team', id?: number, name: string, picture?: string }, players: Array<{ __typename?: 'User', id?: number, playertag: string, picture?: string }> }, tournamentRegistration2?: { __typename?: 'TournamentRegistration', team: { __typename?: 'Team', id?: number, name: string, picture?: string }, players: Array<{ __typename?: 'User', id?: number, playertag: string, picture?: string }> } } } } };
+export type GetTournamentByIdQuery = { __typename?: 'Query', getTournamentById?: { __typename?: 'Tournament', id?: number, name: string, picture?: string, description: string, format: TournamentFormat, rules: string, startDateAndTime: any, numberOfTeamsAllowed: number, tournamentRegistrations: Array<{ __typename?: 'TournamentRegistration', id?: number, createdTs: any, captain: { __typename?: 'User', id?: number, playertag: string, picture?: string }, team: { __typename?: 'Team', id?: number, name: string, picture?: string }, players: Array<{ __typename?: 'User', id?: number, playertag: string, picture?: string }> }>, bracket?: { __typename?: 'Bracket', id?: number, root?: { __typename?: 'Match', id?: number, tournamentRegistration1?: { __typename?: 'TournamentRegistration', team: { __typename?: 'Team', id?: number, name: string, picture?: string }, players: Array<{ __typename?: 'User', id?: number, playertag: string, picture?: string }> }, tournamentRegistration2?: { __typename?: 'TournamentRegistration', team: { __typename?: 'Team', id?: number, name: string, picture?: string }, players: Array<{ __typename?: 'User', id?: number, playertag: string, picture?: string }> }, currentPhase: { __typename?: 'MatchPhase', id: number, phaseType: MatchPhaseType, createdTs: any, endTs?: any, match?: { __typename?: 'Match', id?: number }, state?: { __typename: 'MatchFinishedPhaseState', id: number, winTeamOne: boolean } | { __typename: 'MatchInProgressPhaseState', id: number, map?: CsMap } | { __typename: 'MatchPickAndBanPhaseState', id: number, firstTeamToBan: number, votingTimeInSeconds: number, actions: Array<{ __typename?: 'MatchPickAndBanPhaseAction', id?: number, ban: CsMap, captain: { __typename?: 'User', id?: number } }> } | { __typename: 'MatchReadyCheckPhaseState', id: number, teamOneAction: { __typename?: 'MatchReadyCheckPhaseCaptainPerTeamAction', ready: boolean }, teamTwoAction: { __typename?: 'MatchReadyCheckPhaseCaptainPerTeamAction', ready: boolean } } } } } } };
 
 export type PublishTournamentMutationVariables = Exact<{
   tournamentId: Scalars['Int'];
@@ -923,7 +936,15 @@ export type ChangeMatchPhaseMutationVariables = Exact<{
 }>;
 
 
-export type ChangeMatchPhaseMutation = { __typename?: 'Mutation', changeMatchPhase?: { __typename?: 'Match', id?: number, currentPhase: { __typename?: 'MatchPhase', id: number, phaseType: MatchPhaseType, createdTs: any, endTs?: any, state?: { __typename?: 'MatchInProgressPhaseState', id: number } | { __typename?: 'MatchPickAndBanPhaseState', id: number } | { __typename?: 'MatchReadyCheckPhaseState', id: number } } } };
+export type ChangeMatchPhaseMutation = { __typename?: 'Mutation', changeMatchPhase?: { __typename?: 'Match', id?: number, currentPhase: { __typename?: 'MatchPhase', id: number, phaseType: MatchPhaseType, createdTs: any, endTs?: any, state?: { __typename?: 'MatchFinishedPhaseState', id: number } | { __typename?: 'MatchInProgressPhaseState', id: number } | { __typename?: 'MatchPickAndBanPhaseState', id: number } | { __typename?: 'MatchReadyCheckPhaseState', id: number } } } };
+
+export type HandleMatchFinishedMutationVariables = Exact<{
+  matchId: Scalars['Int'];
+  winningTeamId: Scalars['Int'];
+}>;
+
+
+export type HandleMatchFinishedMutation = { __typename?: 'Mutation', handleMatchFinished?: { __typename?: 'Match', id?: number } };
 
 export type CreateTestDataMutationVariables = Exact<{ [key: string]: never; }>;
 
@@ -1233,6 +1254,47 @@ export const GetMatchesByParentIdsDocument = gql`
         picture
       }
     }
+    currentPhase {
+      id
+      phaseType
+      createdTs
+      endTs
+      match {
+        id
+      }
+      state {
+        __typename
+        ... on MatchReadyCheckPhaseState {
+          id
+          teamOneAction {
+            ready
+          }
+          teamTwoAction {
+            ready
+          }
+        }
+        ... on MatchPickAndBanPhaseState {
+          id
+          firstTeamToBan
+          votingTimeInSeconds
+          actions {
+            id
+            captain {
+              id
+            }
+            ban
+          }
+        }
+        ... on MatchInProgressPhaseState {
+          id
+          map
+        }
+        ... on MatchFinishedPhaseState {
+          id
+          winTeamOne
+        }
+      }
+    }
   }
 }
     `;
@@ -1344,6 +1406,10 @@ export const GetMatchByIdDocument = gql`
         ... on MatchInProgressPhaseState {
           id
           map
+        }
+        ... on MatchFinishedPhaseState {
+          id
+          winTeamOne
         }
       }
     }
@@ -1467,6 +1533,10 @@ export const BanMapDocument = gql`
           id
           map
         }
+        ... on MatchFinishedPhaseState {
+          id
+          winTeamOne
+        }
       }
     }
   }
@@ -1580,6 +1650,10 @@ export const OnMatchPhaseChangedDocument = gql`
       ... on MatchInProgressPhaseState {
         id
         map
+      }
+      ... on MatchFinishedPhaseState {
+        id
+        winTeamOne
       }
     }
   }
@@ -2397,6 +2471,47 @@ export const GetTournamentByIdDocument = gql`
             picture
           }
         }
+        currentPhase {
+          id
+          phaseType
+          createdTs
+          endTs
+          match {
+            id
+          }
+          state {
+            __typename
+            ... on MatchReadyCheckPhaseState {
+              id
+              teamOneAction {
+                ready
+              }
+              teamTwoAction {
+                ready
+              }
+            }
+            ... on MatchPickAndBanPhaseState {
+              id
+              firstTeamToBan
+              votingTimeInSeconds
+              actions {
+                id
+                captain {
+                  id
+                }
+                ban
+              }
+            }
+            ... on MatchInProgressPhaseState {
+              id
+              map
+            }
+            ... on MatchFinishedPhaseState {
+              id
+              winTeamOne
+            }
+          }
+        }
       }
     }
   }
@@ -3091,6 +3206,40 @@ export function useChangeMatchPhaseMutation(baseOptions?: Apollo.MutationHookOpt
 export type ChangeMatchPhaseMutationHookResult = ReturnType<typeof useChangeMatchPhaseMutation>;
 export type ChangeMatchPhaseMutationResult = Apollo.MutationResult<ChangeMatchPhaseMutation>;
 export type ChangeMatchPhaseMutationOptions = Apollo.BaseMutationOptions<ChangeMatchPhaseMutation, ChangeMatchPhaseMutationVariables>;
+export const HandleMatchFinishedDocument = gql`
+    mutation handleMatchFinished($matchId: Int!, $winningTeamId: Int!) {
+  handleMatchFinished(matchId: $matchId, winningTeamId: $winningTeamId) {
+    id
+  }
+}
+    `;
+export type HandleMatchFinishedMutationFn = Apollo.MutationFunction<HandleMatchFinishedMutation, HandleMatchFinishedMutationVariables>;
+
+/**
+ * __useHandleMatchFinishedMutation__
+ *
+ * To run a mutation, you first call `useHandleMatchFinishedMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useHandleMatchFinishedMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [handleMatchFinishedMutation, { data, loading, error }] = useHandleMatchFinishedMutation({
+ *   variables: {
+ *      matchId: // value for 'matchId'
+ *      winningTeamId: // value for 'winningTeamId'
+ *   },
+ * });
+ */
+export function useHandleMatchFinishedMutation(baseOptions?: Apollo.MutationHookOptions<HandleMatchFinishedMutation, HandleMatchFinishedMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<HandleMatchFinishedMutation, HandleMatchFinishedMutationVariables>(HandleMatchFinishedDocument, options);
+      }
+export type HandleMatchFinishedMutationHookResult = ReturnType<typeof useHandleMatchFinishedMutation>;
+export type HandleMatchFinishedMutationResult = Apollo.MutationResult<HandleMatchFinishedMutation>;
+export type HandleMatchFinishedMutationOptions = Apollo.BaseMutationOptions<HandleMatchFinishedMutation, HandleMatchFinishedMutationVariables>;
 export const CreateTestDataDocument = gql`
     mutation createTestData {
   createTestData {
@@ -3167,6 +3316,7 @@ export const ListAllOperations = {
     setSteamId: 'setSteamId',
     createTestMatch: 'createTestMatch',
     changeMatchPhase: 'changeMatchPhase',
+    handleMatchFinished: 'handleMatchFinished',
     createTestData: 'createTestData'
   },
   Subscription: {

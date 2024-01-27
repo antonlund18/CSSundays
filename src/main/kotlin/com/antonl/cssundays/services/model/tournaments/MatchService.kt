@@ -2,7 +2,9 @@ package com.antonl.cssundays.services.model.tournaments
 
 import com.antonl.cssundays.graphql.subscriptions.MatchChatMessagePublisher
 import com.antonl.cssundays.graphql.subscriptions.MatchPhasePublisher
+import com.antonl.cssundays.model.core.Team
 import com.antonl.cssundays.model.core.User
+import com.antonl.cssundays.model.tournaments.TournamentRegistration
 import com.antonl.cssundays.model.tournaments.brackets.Match
 import com.antonl.cssundays.model.tournaments.brackets.matches.*
 import com.antonl.cssundays.quartz.ScheduledChangeMatchPhaseService
@@ -65,6 +67,53 @@ class MatchService(val matchRepository: MatchRepository, val matchChatMessageRep
         state.map = map
 
         return saveMatch(match)
+    }
+
+    fun handleMatchFinished(match: Match, winner: Team): Match {
+        val winTeamOne = winner.id == match.tournamentRegistration1?.team?.id
+        val winTeamTwo = winner.id == match.tournamentRegistration2?.team?.id
+
+        if (winTeamOne) {
+            match.tournamentRegistration1?.let { handleMatchFinished(match, it) }
+        }
+
+        if (winTeamTwo) {
+            match.tournamentRegistration2?.let { handleMatchFinished(match, it) }
+        }
+
+        return saveMatch(match)
+    }
+
+    fun handleMatchFinished(match: Match, winner: TournamentRegistration): Match {
+        val winTeamOne = winner == match.tournamentRegistration1
+        val winTeamTwo = winner == match.tournamentRegistration2
+
+        if (winTeamOne) {
+            changeMatchPhase(match, ChangeMatchPhaseStrategy.FINISHED_WIN_TEAM_1)
+            match.tournamentRegistration1?.let { advanceTournamentRegistration(match, it) }
+        }
+
+        if (winTeamTwo) {
+            changeMatchPhase(match, ChangeMatchPhaseStrategy.FINISHED_WIN_TEAM_2)
+            match.tournamentRegistration2?.let { advanceTournamentRegistration(match, it) }
+        }
+
+        return saveMatch(match)
+    }
+
+    fun advanceTournamentRegistration(match: Match, tournamentRegistration: TournamentRegistration): Match {
+        match.parent?.let {
+            val matchIsLeftInTree = it.left == match
+
+            if (matchIsLeftInTree) {
+                it.tournamentRegistration1 = tournamentRegistration
+            } else {
+                it.tournamentRegistration2 = tournamentRegistration
+            }
+            saveMatch(it)
+        }
+
+        return match
     }
 
     fun markReady(match: Match, player: User): Match {

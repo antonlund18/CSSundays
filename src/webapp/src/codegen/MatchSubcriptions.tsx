@@ -37,6 +37,10 @@ gql`
                     id,
                     map
                 }
+                ... on MatchFinishedPhaseState {
+                    id,
+                    winTeamOne
+                }
             }
         }
     }

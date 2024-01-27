@@ -29,3 +29,11 @@ gql`
         }
     }
 `
+
+gql`
+    mutation handleMatchFinished($matchId: Int!, $winningTeamId: Int!) {
+        handleMatchFinished(matchId: $matchId, winningTeamId: $winningTeamId) {
+            id
+        }
+    }
+`

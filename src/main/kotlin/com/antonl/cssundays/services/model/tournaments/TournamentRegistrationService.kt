@@ -19,6 +19,10 @@ class TournamentRegistrationService(val tournamentRegistrationRepository: Tourna
         return tournament.tournamentRegistrations.map { it.team }
     }
 
+    fun getTournamentRegistrationById(id: Int): TournamentRegistration? {
+        return tournamentRegistrationRepository.findById(id)
+    }
+
     fun getTournamentRegistrationByPlayer(tournament: Tournament, player: User): TournamentRegistration? {
         return tournamentRegistrationRepository.findByTournamentAndPlayers(tournament, player)
     }

@@ -13,8 +13,8 @@ class ChangeMatchPhaseStrategyHandlerFactory(val matchService: MatchService) {
         ChangeMatchPhaseStrategy.PICK_AND_BAN_BO1 to ChangeMatchPhaseStrategyHandlerPickAndBan(matchService),
         ChangeMatchPhaseStrategy.PICK_AND_BAN_TIMEOUT to ChangeMatchPhaseStrategyHandlerPickAndBanTimeOut(matchService),
         ChangeMatchPhaseStrategy.IN_PROGRESS to ChangeMatchPhaseStrategyHandlerInProgress(matchService),
-//        ChangeMatchPhaseStrategy.FINISHED_WIN_TEAM_1 to TODO(),
-//        ChangeMatchPhaseStrategy.FINISHED_WIN_TEAM_2 to TODO(),
+        ChangeMatchPhaseStrategy.FINISHED_WIN_TEAM_1 to ChangeMatchPhaseStrategyHandlerWinTeamOne(),
+        ChangeMatchPhaseStrategy.FINISHED_WIN_TEAM_2 to ChangeMatchPhaseStrategyHandlerWinTeamTwo(),
     )
 
     fun getHandler(strategy: ChangeMatchPhaseStrategy): ChangeMatchPhaseStrategyHandler {

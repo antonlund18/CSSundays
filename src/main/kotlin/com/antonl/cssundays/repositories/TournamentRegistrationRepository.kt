@@ -7,6 +7,7 @@ import com.antonl.cssundays.model.tournaments.TournamentRegistration
 import org.springframework.data.repository.CrudRepository
 
 interface TournamentRegistrationRepository : CrudRepository<TournamentRegistration, String> {
+    fun findById(id: Int): TournamentRegistration?
     fun findByTournamentAndPlayers(tournament: Tournament, player: User): TournamentRegistration?
     fun findByTournamentAndTeam(tournament: Tournament, team: Team): TournamentRegistration?
 }

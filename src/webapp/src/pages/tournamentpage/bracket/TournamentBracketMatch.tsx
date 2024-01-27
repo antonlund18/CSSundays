@@ -1,12 +1,19 @@
-import {Match, Team, TournamentRegistration} from "../../../codegen/generated-types";
+import {
+    Match,
+    MatchFinishedPhaseState,
+    MatchPhaseType,
+    Team,
+    TournamentRegistration
+} from "../../../codegen/generated-types";
 import {Button, Divider, List, ListItem, Theme, Typography} from "@mui/material";
-import {makeStyles} from "@mui/styles"
+import {makeStyles, useTheme} from "@mui/styles"
 import {Constants} from "../../../util/Constants";
 import * as React from "react";
 import {useCallback} from "react";
 import {useGetCurrentUser} from "../../../hooks/api/useUser";
 import {TournamentBracketMatchTeam} from "./TournamentBracketMatchTeam";
 import {useNavigate} from "react-router-dom";
+import {Property} from "csstype";
 
 interface StylesProps {
     connectorAfter: ConnectorAfter
@@ -95,6 +102,7 @@ export const TournamentBracketMatch = (props: TournamentBracketMatchProps): JSX.
     const classes = useStyles(props)
     const {currentUser} = useGetCurrentUser()
     const navigate = useNavigate()
+    const theme = useTheme()
 
     const isCurrentPlayerOnTeam = useCallback((tournamentRegistration: TournamentRegistration | undefined): boolean => {
         if (!currentUser?.id || !tournamentRegistration) {
@@ -114,19 +122,60 @@ export const TournamentBracketMatch = (props: TournamentBracketMatchProps): JSX.
     const team1 = props.match.tournamentRegistration1?.team
     const team2 = props.match.tournamentRegistration2?.team
 
+
+    const getTeamColor = (team?: Team): Property.BackgroundColor | undefined => {
+        const currentPhase = props.match.currentPhase
+        const matchIsFinished = currentPhase.phaseType === MatchPhaseType.Finished
+
+        if (!matchIsFinished || !team) {
+            return "white"
+        }
+
+        const teamIsTeamOne = team === team1
+        const teamIsTeamTwo = team === team2
+        const winTeamOne = (currentPhase.state as MatchFinishedPhaseState).winTeamOne
+
+        const winColor = hextToRgb(theme.palette.success.main, 0.25)
+        const loseColor = hextToRgb(theme.palette.error.main, 0.25)
+
+
+        if (teamIsTeamOne) {
+            return winTeamOne ? winColor : loseColor
+        }
+
+        if (teamIsTeamTwo) {
+            return winTeamOne ? loseColor : winColor
+        }
+
+        return "white"
+    }
+
+    const hextToRgb = (hex: string, opacity: number) => {
+        var result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+        return result ?
+            `rgba(
+                ${parseInt(result[1], 16)}, 
+                ${parseInt(result[2], 16)}, 
+                ${parseInt(result[3], 16)}, 
+                ${opacity})`
+            : undefined;
+    }
+
     return <Button className={classes.match} onClick={() => navigate(`/matches/${props.match.id}` ?? "")}>
-        <ListItem className={classes.team}>
+        <ListItem className={classes.team} style={{backgroundColor: getTeamColor(team1)}}>
             {team1 ?
-                <TournamentBracketMatchTeam team={team1} isCurrentUserOnTeam={isCurrentPlayerOnTeam(props.match.tournamentRegistration1)}/> :
+                <TournamentBracketMatchTeam team={team1}
+                                            isCurrentUserOnTeam={isCurrentPlayerOnTeam(props.match.tournamentRegistration1)}/> :
                 <Typography noWrap fontWeight={"bold"} style={{textOverflow: "ellipsis", fontSize: "12px"}}>
                     <i>TBD</i>
                 </Typography>
             }
         </ListItem>
         <Divider flexItem/>
-        <ListItem className={classes.team}>
+        <ListItem className={classes.team} style={{backgroundColor: getTeamColor(team2)}}>
             {team2 ?
-                <TournamentBracketMatchTeam team={team2} isCurrentUserOnTeam={isCurrentPlayerOnTeam(props.match.tournamentRegistration2)}/> :
+                <TournamentBracketMatchTeam team={team2}
+                                            isCurrentUserOnTeam={isCurrentPlayerOnTeam(props.match.tournamentRegistration2)}/> :
                 <Typography noWrap fontWeight={"bold"} style={{textOverflow: "ellipsis", fontSize: "12px"}}>
                     <i>TBD</i>
                 </Typography>

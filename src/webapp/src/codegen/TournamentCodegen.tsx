@@ -156,6 +156,47 @@ gql`
                             picture,
                         }
                     }
+                    currentPhase {
+                        id,
+                        phaseType,
+                        createdTs,
+                        endTs,
+                        match {
+                            id
+                        }
+                        state {
+                            __typename
+                            ... on MatchReadyCheckPhaseState {
+                                id
+                                teamOneAction {
+                                    ready
+                                }
+                                teamTwoAction {
+                                    ready
+                                }
+                            }
+                            ... on MatchPickAndBanPhaseState {
+                                id,
+                                firstTeamToBan
+                                votingTimeInSeconds
+                                actions {
+                                    id
+                                    captain {
+                                        id
+                                    }
+                                    ban
+                                }
+                            }
+                            ... on MatchInProgressPhaseState {
+                                id,
+                                map
+                            }
+                            ... on MatchFinishedPhaseState {
+                                id,
+                                winTeamOne
+                            }
+                        }
+                    }
                 }
             }
         }
