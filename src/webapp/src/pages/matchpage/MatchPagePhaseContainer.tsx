@@ -14,6 +14,7 @@ import {MatchPageReadyCheckPhase} from "./phases/MatchPageReadyCheckPhase";
 import {MatchPageCancelledPhase} from "./phases/MatchPageCancelledPhase";
 import {MatchPageInProgressPhase} from "./phases/MatchPageInProgressPhase";
 import {MatchPageWaitingToStartPhase} from "./phases/MatchPageWaitingToStartPhase";
+import {MatchPageFinishedPhase} from "./phases/MatchPageFinishedPhase";
 
 const useStyles = makeStyles(theme => ({
     phaseContainer: {
@@ -61,6 +62,8 @@ export const MatchPagePhaseContainer = (props: MatchPagePhaseContainerProps) => 
                 return <MatchPageInProgressPhase match={props.match} phase={currentPhase}/>
             case MatchPhaseType.WaitingToStart:
                 return <MatchPageWaitingToStartPhase/>
+            case MatchPhaseType.Finished:
+                return <MatchPageFinishedPhase match={props.match} phase={currentPhase}/>
         }
     }
 
