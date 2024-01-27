@@ -8,6 +8,15 @@ import com.antonl.cssundays.repositories.TournamentRegistrationRepository
 import java.util.*
 
 class MockTournamentRegistrationRepository : TournamentRegistrationRepository {
+
+    override fun findById(id: String): Optional<TournamentRegistration> {
+        TODO("Not yet implemented")
+    }
+
+    override fun findTournamentRegistrationById(id: Int): TournamentRegistration? {
+        TODO("Not yet implemented")
+    }
+
     override fun findByTournamentAndPlayers(tournament: Tournament, player: User): TournamentRegistration? {
         TODO("Not yet implemented")
     }
@@ -21,10 +30,6 @@ class MockTournamentRegistrationRepository : TournamentRegistrationRepository {
     }
 
     override fun <S : TournamentRegistration?> saveAll(entities: MutableIterable<S>): MutableIterable<S> {
-        TODO("Not yet implemented")
-    }
-
-    override fun findById(id: String): Optional<TournamentRegistration> {
         TODO("Not yet implemented")
     }
 
