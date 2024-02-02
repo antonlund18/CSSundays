@@ -42,6 +42,10 @@ class TournamentService(
         return tournamentRepository.findTournamentsByName(name)
     }
 
+    fun findTournamentByBracketRoot(rootMatch: Match): Tournament? {
+        return tournamentRepository.findTournamentByBracketRoot(rootMatch)
+    }
+
     fun createTournament(name: String, date: LocalDateTime, numberOfTeamsAllowed: Int, format: TournamentFormat = TournamentFormat.SINGLE_ELIMINATION, picture: String? = null, description: String = "", rules: String = ""): Tournament {
         val tournament = Tournament(
             name = name,
@@ -70,6 +74,18 @@ class TournamentService(
             saveTournament(tournament);
         }
         return tournament;
+    }
+
+    fun getTournamentByMatch(match: Match): Tournament? {
+        val rootMatch = getRootMatch(match)
+        return findTournamentByBracketRoot(rootMatch)
+    }
+
+    fun getRootMatch(match: Match): Match {
+        if (match.parent != null) {
+            return getRootMatch(match.parent!!)
+        }
+        return match
     }
 
     fun getTournamentById(id: Int): Tournament? {

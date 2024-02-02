@@ -33,8 +33,6 @@ interface BracketTabContentProps {
 
 export const BracketTabContent = (props: BracketTabContentProps): JSX.Element => {
     const classes = useStyles()
-    const {currentUser} = useGetCurrentUser()
-    const [dialogOpen, setDialogOpen] = useState(false)
     const [isLoading, setIsLoading] = useState(true)
     const {
         numberOfRoundsToBeShown,

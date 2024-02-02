@@ -1,13 +1,16 @@
-import {Divider, Grid, Typography} from "@mui/material";
+import {Divider, Grid, IconButton, Typography} from "@mui/material";
 import * as React from "react"
 import {CenteredPage} from "../../components/CenteredPage";
 import {makeStyles} from "@mui/styles";
-import {useParams} from "react-router-dom";
+import {useNavigate, useParams} from "react-router-dom";
 import {useGetMatchById} from "../../hooks/api/useMatch";
-import {MatchPageTeamPosition, MatchPageTeam} from "./MatchPageTeam";
+import {MatchPageTeam, MatchPageTeamPosition} from "./MatchPageTeam";
 import {MatchPagePhaseContainer} from "./MatchPagePhaseContainer";
 import {MatchPageChatContainer} from "./MatchPageChatContainer";
 import {Error404} from "../Error404";
+import {Divider as CSDivider} from "../../components/Divider";
+import {Tournament, useGetTournamentByMatchQuery} from "../../codegen/generated-types";
+import {ArrowBack} from "@mui/icons-material";
 
 const useStyles = makeStyles({
     teamContainer: {
@@ -43,22 +46,42 @@ export const MatchPage = () => {
     const classes = useStyles()
     const urlParams = useParams()
     const {match, loading} = useGetMatchById(parseInt(urlParams?.matchId ?? "-1"))
+    const {data: tournamentData, loading: tournamentLoading} = useGetTournamentByMatchQuery({
+        variables: {
+            matchId: match?.id ?? -1
+        }
+    })
+    const navigate = useNavigate()
 
-    if (loading) {
+    if (loading || tournamentLoading) {
         return <></>
     }
 
     if (!match) {
         return <Error404/>
     }
+    const tournament: Tournament | undefined = tournamentData?.getTournamentByMatch as Tournament
 
     return <CenteredPage>
+        {tournament &&
+            <Grid item xs={12}>
+                <div style={{display: "flex", alignItems: "center"}}>
+                    <IconButton color={"primary"} onClick={() => navigate(`/tournaments/${tournament.id}#bracket`)}>
+                        <ArrowBack/>
+                    </IconButton>
+                    <Typography variant={"h2"} color={"primary"} style={{marginLeft: "16px"}}>{tournament.name}</Typography>
+                </div>
+                <CSDivider/>
+            </Grid>
+        }
         <Grid container xs={12}>
-            <MatchPageTeam position={MatchPageTeamPosition.LEFT} team={match.tournamentRegistration1?.team} players={match.tournamentRegistration1?.players ?? []}/>
+            <MatchPageTeam position={MatchPageTeamPosition.LEFT} team={match.tournamentRegistration1?.team}
+                           players={match.tournamentRegistration1?.players ?? []}/>
             <Grid item xs={2} className={classes.vsContainer}>
                 <Typography variant={"h2"}>VS</Typography>
             </Grid>
-            <MatchPageTeam position={MatchPageTeamPosition.RIGHT} team={match.tournamentRegistration2?.team} players={match.tournamentRegistration2?.players ?? []}/>
+            <MatchPageTeam position={MatchPageTeamPosition.RIGHT} team={match.tournamentRegistration2?.team}
+                           players={match.tournamentRegistration2?.players ?? []}/>
         </Grid>
         <Divider sx={{marginTop: "16px"}}/>
         <MatchPagePhaseContainer match={match}/>

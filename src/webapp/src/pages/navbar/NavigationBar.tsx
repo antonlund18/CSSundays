@@ -41,7 +41,7 @@ export const NavigationBar = (): JSX.Element => {
             </Link>
             <div className={classes.navigationMenu}>
                 <NavBarMenuItem link={"/"}>
-                    <Typography variant={"button"} className={classes.navigationMenuItemText}>Home</Typography>
+                    <Typography variant={"button"} className={classes.navigationMenuItemText}>Hjem</Typography>
                 </NavBarMenuItem>
                 <NavBarMenuItem link={"/tournaments"}>
                     <Typography variant={"button"} style={{textTransform: "capitalize"}}>Turneringer</Typography>

@@ -21,6 +21,10 @@ class MockTournamentRepository : TournamentRepository {
         TODO("Not yet implemented")
     }
 
+    override fun findTournamentByBracketRoot(matchId: Int): Tournament? {
+        TODO("Not yet implemented")
+    }
+
     override fun <S : Tournament?> save(entity: S): S {
         return entity
     }

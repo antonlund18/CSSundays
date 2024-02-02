@@ -315,3 +315,12 @@ gql`
         }
     }
 `
+
+gql`
+    query getTournamentByMatch($matchId: Int!) {
+        getTournamentByMatch(matchId: $matchId) {
+            id
+            name
+        }
+    }
+`

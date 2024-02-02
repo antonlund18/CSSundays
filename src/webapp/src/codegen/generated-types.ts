@@ -411,6 +411,7 @@ export type Query = {
   getSearchResults: Array<Searchable>;
   getTeamById?: Maybe<Team>;
   getTournamentById?: Maybe<Tournament>;
+  getTournamentByMatch?: Maybe<Tournament>;
   getTournamentRegistrationByPlayer?: Maybe<TournamentRegistration>;
   getTournamentRegistrationByTeam?: Maybe<TournamentRegistration>;
   getUnseenNotifications: Array<Notification>;
@@ -472,6 +473,11 @@ export type QueryGetTeamByIdArgs = {
 
 export type QueryGetTournamentByIdArgs = {
   id: Scalars['Int'];
+};
+
+
+export type QueryGetTournamentByMatchArgs = {
+  matchId: Scalars['Int'];
 };
 
 
@@ -867,6 +873,13 @@ export type StartTournamentMutationVariables = Exact<{
 
 
 export type StartTournamentMutation = { __typename?: 'Mutation', startTournament?: { __typename?: 'Tournament', id?: number } };
+
+export type GetTournamentByMatchQueryVariables = Exact<{
+  matchId: Scalars['Int'];
+}>;
+
+
+export type GetTournamentByMatchQuery = { __typename?: 'Query', getTournamentByMatch?: { __typename?: 'Tournament', id?: number, name: string } };
 
 export type GetUserByIdQueryVariables = Exact<{
   id: Scalars['Int'];
@@ -2844,6 +2857,42 @@ export function useStartTournamentMutation(baseOptions?: Apollo.MutationHookOpti
 export type StartTournamentMutationHookResult = ReturnType<typeof useStartTournamentMutation>;
 export type StartTournamentMutationResult = Apollo.MutationResult<StartTournamentMutation>;
 export type StartTournamentMutationOptions = Apollo.BaseMutationOptions<StartTournamentMutation, StartTournamentMutationVariables>;
+export const GetTournamentByMatchDocument = gql`
+    query getTournamentByMatch($matchId: Int!) {
+  getTournamentByMatch(matchId: $matchId) {
+    id
+    name
+  }
+}
+    `;
+
+/**
+ * __useGetTournamentByMatchQuery__
+ *
+ * To run a query within a React component, call `useGetTournamentByMatchQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetTournamentByMatchQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetTournamentByMatchQuery({
+ *   variables: {
+ *      matchId: // value for 'matchId'
+ *   },
+ * });
+ */
+export function useGetTournamentByMatchQuery(baseOptions: Apollo.QueryHookOptions<GetTournamentByMatchQuery, GetTournamentByMatchQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<GetTournamentByMatchQuery, GetTournamentByMatchQueryVariables>(GetTournamentByMatchDocument, options);
+      }
+export function useGetTournamentByMatchLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetTournamentByMatchQuery, GetTournamentByMatchQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<GetTournamentByMatchQuery, GetTournamentByMatchQueryVariables>(GetTournamentByMatchDocument, options);
+        }
+export type GetTournamentByMatchQueryHookResult = ReturnType<typeof useGetTournamentByMatchQuery>;
+export type GetTournamentByMatchLazyQueryHookResult = ReturnType<typeof useGetTournamentByMatchLazyQuery>;
+export type GetTournamentByMatchQueryResult = Apollo.QueryResult<GetTournamentByMatchQuery, GetTournamentByMatchQueryVariables>;
 export const GetUserByIdDocument = gql`
     query getUserById($id: Int!) {
   getUserById(id: $id) {
@@ -3286,6 +3335,7 @@ export const ListAllOperations = {
     getTournamentById: 'getTournamentById',
     getTournamentRegistrationByPlayer: 'getTournamentRegistrationByPlayer',
     getTournamentRegistrationByTeam: 'getTournamentRegistrationByTeam',
+    getTournamentByMatch: 'getTournamentByMatch',
     getUserById: 'getUserById',
     getCurrentUser: 'getCurrentUser'
   },

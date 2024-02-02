@@ -14,7 +14,7 @@ const useStyles = makeStyles<Theme, StylesProps>(theme => ({
         display: "flex",
         position: "relative",
         overflow: "hidden",
-        height: "150vh",
+        height: "100vh",
         "& > div:first-child": {
             scale: props.zoom,
             transitionDuration: "200ms",

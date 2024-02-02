@@ -6,11 +6,13 @@ import com.antonl.cssundays.model.tournaments.brackets.Bracket
 import com.antonl.cssundays.model.tournaments.brackets.Match
 import com.antonl.cssundays.services.model.core.TeamService
 import com.antonl.cssundays.services.model.core.UserService
+import com.antonl.cssundays.services.model.tournaments.MatchService
 import com.antonl.cssundays.services.model.tournaments.TournamentService
 import com.expediagroup.graphql.server.operations.Query
 import org.hibernate.Hibernate
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Component
+import javax.persistence.Id
 import javax.transaction.Transactional
 
 @Component
@@ -21,6 +23,9 @@ class TournamentQueries : Query {
 
     @Autowired
     private lateinit var userService: UserService
+
+    @Autowired
+    private lateinit var matchService: MatchService
 
     @Autowired
     private lateinit var teamService: TeamService
@@ -58,5 +63,11 @@ class TournamentQueries : Query {
         val tournamentRegistration = tournamentService.getTournamentRegistrationByTeam(tournament, team)
         Hibernate.initialize(tournamentRegistration)
         return tournamentRegistration
+    }
+
+    suspend fun getTournamentByMatch(matchId: Int): Tournament? {
+        val match = matchService.getMatchById(matchId) ?: return null
+        val tournament = tournamentService.getTournamentByMatch(match) ?: return null
+        return tournament
     }
 }

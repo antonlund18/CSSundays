@@ -18,24 +18,51 @@ export const MatchPageFinishedPhase = (props: MatchPageFinishedPhaseProps) => {
 
     const state = phase.state as MatchFinishedPhaseState
 
-    const winningRegistration = state.winTeamOne ? match.tournamentRegistration1 : match.tournamentRegistration2
-    const winningTeam = winningRegistration?.team
-
     return <Grid container sx={{
         height: "100%",
-        justifyContent: "center",
-        alignItems: "center",
-        display: "flex",
-        flexDirection: "column"
     }}>
-        <Typography variant={"h1"}>Kamp overstået</Typography>
-        <Typography variant={"h2"} style={{marginTop: "16px"}}>Vinder</Typography>
-        <img src={getPictureLinkFromKey(winningTeam?.picture ?? "", ObjectType.Team)} style={{
-            width: "200px",
-            aspectRatio: "1/1",
-            objectFit: "cover",
-        }}/>
-        <Typography variant={"subtitle1"}
-                    color={state.winTeamOne ? "primary" : "error"}>{winningTeam?.name}</Typography>
+        <Grid item xs={12}
+              style={{display: "flex", flexDirection: "column", justifyContent: "center", alignItems: "center"}}>
+            <Typography variant={"h1"}>Kamp overstået</Typography>
+            <div>
+                <Typography variant={"h2"} color={state.winTeamOne ? "primary" : "error"}
+                            style={{display: "inline-flex", textTransform: "none"}}>
+                    {state.winTeamOne ? match.tournamentRegistration1?.team.name : match.tournamentRegistration2?.team.name}
+                </Typography>
+                <Typography variant={"h2"} style={{display: "inline-flex", whiteSpace: "pre", textTransform: "none"}}>
+                    {" vinder"}
+                </Typography>
+            </div>
+        </Grid>
+        <Grid item xs={4} style={{display: "flex", alignItems: "center", overflow: "hidden", justifyContent: "flex-end"}}>
+            <img src={getPictureLinkFromKey(match.tournamentRegistration1?.team.picture ?? "", ObjectType.Team)}
+                 style={{
+                     width: "40%",
+                     aspectRatio: "1/1",
+                     objectFit: "cover",
+                     marginRight: "16px"
+                 }}/>
+            <Typography variant={"subtitle1"}
+                        style={{textTransform: "none"}}
+                        color={"primary"}>{match.tournamentRegistration1?.team.name}</Typography>
+        </Grid>
+        <Grid item xs={4} style={{display: "flex", alignItems: "center", justifyContent: "center"}}>
+            <Typography variant={state.winTeamOne ? "h1" : "h2"} style={{marginRight: "8px",}}>7</Typography>
+            <Typography variant={"h2"} style={{marginRight: "8px"}}>-</Typography>
+            <Typography variant={state.winTeamOne ? "h2" : "h1"}>13</Typography>
+        </Grid>
+        <Grid item xs={4}
+              style={{display: "flex", alignItems: "center", overflow: "hidden"}}>
+            <Typography variant={"subtitle1"}
+                        style={{textTransform: "none"}}
+                        color={"error"}>{match.tournamentRegistration2?.team.name}</Typography>
+            <img src={getPictureLinkFromKey(match.tournamentRegistration2?.team.picture ?? "", ObjectType.Team)}
+                 style={{
+                     width: "40%",
+                     aspectRatio: "1/1",
+                     objectFit: "cover",
+                     marginLeft: "16px"
+                 }}/>
+        </Grid>
     </Grid>
 }
