@@ -17,6 +17,7 @@ gql`
                 users {
                     playertag
                 }
+                deletedTs
             },
             steamId
             deletedTs
@@ -88,4 +89,4 @@ gql`
 gql`
     mutation deleteUser($userId: Int!) {
         deleteUser(userId: $userId)
-}`
+    }`

@@ -32,11 +32,13 @@ export const ProfileTabSocialSection = (props: ProfileTabSocialSectionProps): JS
     const classes = useStyles();
     const navigate = useNavigate()
 
+    const teams = props.player.teams.filter(team => team.deletedTs === null)
+
     return <Grid item xs={12} sx={{}}>
-        <Typography variant={"h4"}>{"Hold (" + props.player.teams.length + ")"}</Typography>
+        <Typography variant={"h4"}>{"Hold (" + teams.length + ")"}</Typography>
         <div className={classes.container}>
             <div style={{display: "flex", minHeight: "120px"}}>
-                {props.player.teams.slice(0, 5).map(team => {
+                {teams.slice(0, 5).map(team => {
                     return <ProfileTabSocialTeamPicture team={team}/>
                 })}
             </div>

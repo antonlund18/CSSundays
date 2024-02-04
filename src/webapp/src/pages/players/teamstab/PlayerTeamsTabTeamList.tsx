@@ -31,7 +31,7 @@ type PlayerTeamsTabTeamListProps = {
 }
 
 export const PlayerTeamsTabTeamList = (props: PlayerTeamsTabTeamListProps): JSX.Element => {
-    const {teams} = props.player
+    const teams = props.player.teams.filter(team => team.deletedTs === null)
     const [searchText, setSearchText] = useState<string>("")
     const navigate = useNavigate()
     const classes = useStyles()

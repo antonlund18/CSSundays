@@ -894,7 +894,7 @@ export type GetUserByIdQueryVariables = Exact<{
 }>;
 
 
-export type GetUserByIdQuery = { __typename?: 'Query', getUserById?: { __typename?: 'User', id?: number, playertag: string, email: string, role: UserRole, description: string, picture?: string, createdTs: any, steamId?: string, deletedTs?: any, teams: Array<{ __typename?: 'Team', id?: number, name: string, picture?: string, users: Array<{ __typename?: 'User', playertag: string }> }> } };
+export type GetUserByIdQuery = { __typename?: 'Query', getUserById?: { __typename?: 'User', id?: number, playertag: string, email: string, role: UserRole, description: string, picture?: string, createdTs: any, steamId?: string, deletedTs?: any, teams: Array<{ __typename?: 'Team', id?: number, name: string, picture?: string, deletedTs?: any, users: Array<{ __typename?: 'User', playertag: string }> }> } };
 
 export type GetCurrentUserQueryVariables = Exact<{
   token: Scalars['String'];
@@ -2934,6 +2934,7 @@ export const GetUserByIdDocument = gql`
       users {
         playertag
       }
+      deletedTs
     }
     steamId
     deletedTs
