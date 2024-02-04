@@ -13,13 +13,18 @@ import com.antonl.cssundays.model.core.UserRole
 import com.antonl.cssundays.repositories.UserRepository
 import com.antonl.cssundays.services.auth.AuthenticationService
 import com.antonl.cssundays.services.storage.UserStorageService
+import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
+import java.time.LocalDateTime
 import java.util.*
 import javax.transaction.Transactional
 
 @Service
 @Transactional
 class UserService(val userRepository: UserRepository) {
+    @Autowired
+    private lateinit var teamService: TeamService
+
     fun saveUser(user: User?): User? {
         if (user != null) {
             return userRepository.save(user);
@@ -123,5 +128,13 @@ class UserService(val userRepository: UserRepository) {
     fun changeUserRole(user: User, targetRole: UserRole): User? {
         user.role = targetRole
         return saveUser(user)
+    }
+
+    suspend fun softDeleteUser(user: User) {
+        teamService.findTeamsByOwner(user).forEach {
+            teamService.softDeleteTeam(it)
+        }
+        user.deletedTs = LocalDateTime.now()
+        saveUser(user)
     }
 }

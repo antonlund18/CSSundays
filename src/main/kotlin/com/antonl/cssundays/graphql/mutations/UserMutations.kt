@@ -1,6 +1,10 @@
 package com.antonl.cssundays.graphql.mutations
 
+import com.antonl.cssundays.graphql.validation.configurations.ValidationConfiguration
+import com.antonl.cssundays.graphql.validation.results.ValidationResult
 import com.antonl.cssundays.graphql.validation.validators.UserMutationInput
+import com.antonl.cssundays.graphql.validation.validators.UserNotFoundValidator
+import com.antonl.cssundays.graphql.validation.validators.Validator
 import com.antonl.cssundays.model.core.User
 import com.antonl.cssundays.services.auth.AuthenticationService
 import com.antonl.cssundays.services.model.core.TeamService
@@ -91,6 +95,30 @@ class UserMutations : Mutation {
         userService.changePassword(user, newPassword)
         return DataFetcherResult.newResult<User?>()
             .data(user)
+            .build()
+    }
+
+    suspend fun deleteUser(userId: Int): DataFetcherResult<Int?> {
+        val input = UserMutationInput(id = userId)
+        val validationResult = object : ValidationResult(input) {
+            override fun getConfiguration(): ValidationConfiguration {
+                return object : ValidationConfiguration {
+                    override fun getValidators(): List<Validator> {
+                        return listOf(UserNotFoundValidator(userService))
+                    }
+                }
+            }
+        }.validate()
+        if (validationResult.hasErrors()) {
+            return DataFetcherResult.newResult<Int?>()
+                .data(null)
+                .errors(validationResult.getGQLErrors())
+                .build()
+        }
+        val user = userService.findUserById(userId)!!
+        userService.softDeleteUser(user)
+        return DataFetcherResult.newResult<Int?>()
+            .data(userId)
             .build()
     }
 }

@@ -19,6 +19,7 @@ gql`
                 }
             },
             steamId
+            deletedTs
         }
     }
 `
@@ -39,6 +40,7 @@ gql`
                     playertag
                 }
             }
+            deletedTs
         }
     }
 `
@@ -81,3 +83,8 @@ gql`
         }
     }
 `
+
+gql`
+    mutation deleteUser($userId: Int!) {
+        deleteUser(userId: $userId)
+}`

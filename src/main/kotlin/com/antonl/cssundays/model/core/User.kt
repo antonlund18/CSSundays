@@ -36,7 +36,9 @@ class User(
     var slug: String = playertag.toSlug(),
 
     @ManyToMany(mappedBy = "users", fetch = FetchType.EAGER)
-    var teams: MutableList<Team> = mutableListOf()
+    var teams: MutableList<Team> = mutableListOf(),
+
+    var deletedTs: LocalDateTime? = null,
 ) : Searchable
 
 enum class UserRole {

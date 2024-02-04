@@ -24,13 +24,14 @@ export const useGetCurrentUser = (): { currentUser: User | null, isLoggedIn: boo
 }
 
 export const useGetUserById = (id: number) => {
-    const {data} = useGetUserByIdQuery({
+    const {data, loading} = useGetUserByIdQuery({
         variables: {
             id
         }
     })
     return {
-        user: data?.getUserById as User
+        user: data?.getUserById as User,
+        loading
     }
 }
 

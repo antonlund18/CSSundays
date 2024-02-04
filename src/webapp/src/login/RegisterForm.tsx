@@ -72,8 +72,6 @@ export const RegisterForm = (props: RegisterFormProps): JSX.Element => {
 
     const clearFields = () => {
         setErrors([]);
-        setPassword("");
-        setConfirmPassword("");
     }
 
     const invalidPassword = errors.includes(Errors.INVALID_PASSWORD)

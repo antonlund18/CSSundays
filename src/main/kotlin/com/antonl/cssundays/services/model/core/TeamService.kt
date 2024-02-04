@@ -27,6 +27,10 @@ class TeamService(val teamRepository: TeamRepository) {
         return teamRepository.findTeamByName(name)
     }
 
+    suspend fun findTeamsByOwner(owner: User): List<Team> {
+        return teamRepository.findTeamsByOwner(owner)
+    }
+
     suspend fun findTeamsByName(name: String): List<Team> {
         return teamRepository.findTeamsByName(name)
     }
@@ -75,5 +79,11 @@ class TeamService(val teamRepository: TeamRepository) {
             saveTeam(team);
         }
         return team;
+    }
+
+    suspend fun softDeleteTeam(team: Team): Team? {
+        team.deletedTs = null
+        saveTeam(team)
+        return team
     }
 }

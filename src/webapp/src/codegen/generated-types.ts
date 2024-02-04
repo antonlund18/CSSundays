@@ -182,6 +182,7 @@ export type Mutation = {
   createUser?: Maybe<Scalars['String']>;
   declineInvitation?: Maybe<InviteToTeam>;
   deletePicture?: Maybe<User>;
+  deleteUser?: Maybe<Scalars['Int']>;
   deregisterPlayerFromTournament?: Maybe<Tournament>;
   deregisterTeamFromTournament?: Maybe<Tournament>;
   generateBracket?: Maybe<Tournament>;
@@ -272,6 +273,11 @@ export type MutationDeclineInvitationArgs = {
 
 
 export type MutationDeletePictureArgs = {
+  userId: Scalars['Int'];
+};
+
+
+export type MutationDeleteUserArgs = {
   userId: Scalars['Int'];
 };
 
@@ -599,6 +605,7 @@ export enum TournamentStatus {
 export type User = {
   __typename?: 'User';
   createdTs: Scalars['LocalDateTime'];
+  deletedTs: Scalars['LocalDateTime'];
   description: Scalars['String'];
   email: Scalars['String'];
   id?: Maybe<Scalars['Int']>;
@@ -886,14 +893,14 @@ export type GetUserByIdQueryVariables = Exact<{
 }>;
 
 
-export type GetUserByIdQuery = { __typename?: 'Query', getUserById?: { __typename?: 'User', id?: number, playertag: string, email: string, role: UserRole, description: string, picture?: string, createdTs: any, steamId?: string, teams: Array<{ __typename?: 'Team', id?: number, name: string, picture?: string, users: Array<{ __typename?: 'User', playertag: string }> }> } };
+export type GetUserByIdQuery = { __typename?: 'Query', getUserById?: { __typename?: 'User', id?: number, playertag: string, email: string, role: UserRole, description: string, picture?: string, createdTs: any, steamId?: string, deletedTs: any, teams: Array<{ __typename?: 'Team', id?: number, name: string, picture?: string, users: Array<{ __typename?: 'User', playertag: string }> }> } };
 
 export type GetCurrentUserQueryVariables = Exact<{
   token: Scalars['String'];
 }>;
 
 
-export type GetCurrentUserQuery = { __typename?: 'Query', getCurrentUser?: { __typename?: 'User', id?: number, playertag: string, email: string, role: UserRole, picture?: string, teams: Array<{ __typename?: 'Team', id?: number, name: string, picture?: string, users: Array<{ __typename?: 'User', playertag: string }> }> } };
+export type GetCurrentUserQuery = { __typename?: 'Query', getCurrentUser?: { __typename?: 'User', id?: number, playertag: string, email: string, role: UserRole, picture?: string, deletedTs: any, teams: Array<{ __typename?: 'Team', id?: number, name: string, picture?: string, users: Array<{ __typename?: 'User', playertag: string }> }> } };
 
 export type CreateUserMutationVariables = Exact<{
   playertag: Scalars['String'];
@@ -937,6 +944,13 @@ export type SetSteamIdMutationVariables = Exact<{
 
 
 export type SetSteamIdMutation = { __typename?: 'Mutation', setSteamId?: { __typename?: 'User', id?: number, steamId?: string } };
+
+export type DeleteUserMutationVariables = Exact<{
+  userId: Scalars['Int'];
+}>;
+
+
+export type DeleteUserMutation = { __typename?: 'Mutation', deleteUser?: number };
 
 export type CreateTestMatchMutationVariables = Exact<{ [key: string]: never; }>;
 
@@ -2912,6 +2926,7 @@ export const GetUserByIdDocument = gql`
       }
     }
     steamId
+    deletedTs
   }
 }
     `;
@@ -2959,6 +2974,7 @@ export const GetCurrentUserDocument = gql`
         playertag
       }
     }
+    deletedTs
   }
 }
     `;
@@ -3172,6 +3188,37 @@ export function useSetSteamIdMutation(baseOptions?: Apollo.MutationHookOptions<S
 export type SetSteamIdMutationHookResult = ReturnType<typeof useSetSteamIdMutation>;
 export type SetSteamIdMutationResult = Apollo.MutationResult<SetSteamIdMutation>;
 export type SetSteamIdMutationOptions = Apollo.BaseMutationOptions<SetSteamIdMutation, SetSteamIdMutationVariables>;
+export const DeleteUserDocument = gql`
+    mutation deleteUser($userId: Int!) {
+  deleteUser(userId: $userId)
+}
+    `;
+export type DeleteUserMutationFn = Apollo.MutationFunction<DeleteUserMutation, DeleteUserMutationVariables>;
+
+/**
+ * __useDeleteUserMutation__
+ *
+ * To run a mutation, you first call `useDeleteUserMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useDeleteUserMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [deleteUserMutation, { data, loading, error }] = useDeleteUserMutation({
+ *   variables: {
+ *      userId: // value for 'userId'
+ *   },
+ * });
+ */
+export function useDeleteUserMutation(baseOptions?: Apollo.MutationHookOptions<DeleteUserMutation, DeleteUserMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<DeleteUserMutation, DeleteUserMutationVariables>(DeleteUserDocument, options);
+      }
+export type DeleteUserMutationHookResult = ReturnType<typeof useDeleteUserMutation>;
+export type DeleteUserMutationResult = Apollo.MutationResult<DeleteUserMutation>;
+export type DeleteUserMutationOptions = Apollo.BaseMutationOptions<DeleteUserMutation, DeleteUserMutationVariables>;
 export const CreateTestMatchDocument = gql`
     mutation createTestMatch {
   createTestMatch {
@@ -3364,6 +3411,7 @@ export const ListAllOperations = {
     updateUser: 'updateUser',
     changePassword: 'changePassword',
     setSteamId: 'setSteamId',
+    deleteUser: 'deleteUser',
     createTestMatch: 'createTestMatch',
     changeMatchPhase: 'changeMatchPhase',
     handleMatchFinished: 'handleMatchFinished',

@@ -36,4 +36,6 @@ class Team(
     var slug: String = name.toSlug(),
 
     var createdTs: LocalDateTime = LocalDateTime.now(ZoneOffset.UTC),
+
+    var deletedTs: LocalDateTime? = null,
 ): Searchable

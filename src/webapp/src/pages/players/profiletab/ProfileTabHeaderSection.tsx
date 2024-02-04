@@ -2,12 +2,14 @@ import * as React from "react"
 import {useContext, useEffect, useState} from "react"
 import {ObjectType, User} from "../../../codegen/generated-types";
 import {Grid, IconButton, Tooltip, Typography} from "@mui/material";
-import {Check, Close, Error, GroupAddRounded, Groups, Mail, Report} from "@mui/icons-material";
+import {Check, Close, GroupAddRounded, Groups, Mail, Report, Warning} from "@mui/icons-material";
 import {getPictureLinkFromKey} from "../../../util/StorageHelper";
 import {makeStyles, useTheme} from "@mui/styles";
 import {Theme} from "@mui/material/styles";
 import {useSharedTeamAndUser} from "../../../hooks/api/useSharedTeamAndUser";
 import {SnackbarContext} from "../../../SnackbarContextProvider";
+import {formatDate} from "../../../helpers/helpers";
+import { useDateFormatter } from "../../../hooks/useDateFormatter";
 
 interface StylesProps {
     isCurrentUser: boolean
@@ -49,6 +51,7 @@ export const ProfileTabHeaderSection = (props: ProfileHeaderSectionProps): JSX.E
     const [fileSelector, setFileSelector] = useState<HTMLInputElement | null>(null);
     const {setAndUploadPicture} = useSharedTeamAndUser();
     const theme = useTheme()
+    const {formatDate} = useDateFormatter()
 
     useEffect(() => {
         if (props.player) {
@@ -83,10 +86,10 @@ export const ProfileTabHeaderSection = (props: ProfileHeaderSectionProps): JSX.E
                 <div>
                     <div style={{display: "flex", flexDirection: "row", alignItems: "center"}}>
                         {isSteamVerified ?
-                        <Check style={{
-                            color: theme.palette.success.main,
-                            fontSize: "13px"
-                        }}/> : <Close style={{
+                            <Check style={{
+                                color: theme.palette.success.main,
+                                fontSize: "13px"
+                            }}/> : <Close style={{
                                 color: theme.palette.error.main,
                                 fontSize: "13px"
                             }}/>}
@@ -100,6 +103,11 @@ export const ProfileTabHeaderSection = (props: ProfileHeaderSectionProps): JSX.E
                 </div>
                 <Typography variant={"body2"} style={{marginTop: "16px"}}>{props.player.description}</Typography>
             </Grid>
+            {props.player.deletedTs &&
+                <Grid item xs={12} style={{display: "flex", alignItems: "center", marginTop: "16px"}}>
+                    <Warning color={"error"} style={{display: "inline-flex"}}/>
+                    <Typography color={"error"} style={{display: "inline-flex", marginLeft: "8px"}}>{`Denne bruger blev slettet d. ${formatDate(props.player.deletedTs)}`}</Typography>
+                </Grid>}
         </Grid>
         <Grid item xs={2} sx={{display: "flex", flexDirection: "column", flexGrow: 1, justifyContent: "center"}}>
             {!props.isCurrentUser &&

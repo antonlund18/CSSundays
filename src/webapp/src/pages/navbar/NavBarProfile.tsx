@@ -1,5 +1,5 @@
 import * as React from "react";
-import {useState} from "react";
+import {useEffect, useState} from "react";
 import {Box, Button, Typography} from "@mui/material";
 import {makeStyles} from "@mui/styles"
 import {LoginDialog} from "../../login/LoginDialog";
@@ -10,6 +10,7 @@ import {ObjectType} from "../../codegen/generated-types";
 import {NotificationsButton} from "./notifications/NotificationsButton";
 import {NavBarMenuItem} from "./NavBarMenuItem";
 import {openWinSteam} from "../../SteamProvider";
+import {Constants} from "../../util/Constants";
 
 const useStyles = makeStyles((theme) => ({
     profileSectionContainer: {
@@ -58,6 +59,13 @@ export const NavBarProfile = (): JSX.Element => {
     const handleClosePlayerDropdown = () => {
         setAnchorEl(null);
     }
+
+    useEffect(() => {
+        if (currentUser && currentUser.deletedTs) {
+            localStorage.removeItem(Constants.JWT_TOKEN);
+            window.location.reload();
+        }
+    }, [currentUser])
 
     return <div className={classes.profileSectionContainer}>
         {currentUser ?

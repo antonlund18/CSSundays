@@ -3,6 +3,7 @@ import {useContext, useEffect, useState} from "react"
 import {
     GetUserByIdDocument,
     ObjectType,
+    useDeleteUserMutation,
     User,
     useSetSteamIdMutation,
     useUpdateUserMutation
@@ -65,6 +66,7 @@ export const PlayerEditTabContent = (props: PlayerEditTabContentProps): JSX.Elem
     const {openSnackbar} = useContext(SnackbarContext)
     const theme = useTheme()
     const [setSteamId] = useSetSteamIdMutation()
+    const [deleteUser] = useDeleteUserMutation()
 
     useEffect(() => {
         const selector = document.createElement("input");
@@ -124,6 +126,16 @@ export const PlayerEditTabContent = (props: PlayerEditTabContentProps): JSX.Elem
         })
     }
 
+    const handleDeleteUser = () => {
+        if (window.confirm("Er du sikker på, at du vil slette denne bruger?")) {
+            deleteUser({
+                variables: {
+                    userId: props.player.id ?? -1
+                }
+            })
+        }
+    }
+
     return <Grid item container xs={12} spacing={2}>
         <Grid item xs={3}>
             <div className={classes.playerPicture}/>
@@ -160,7 +172,7 @@ export const PlayerEditTabContent = (props: PlayerEditTabContentProps): JSX.Elem
             <div style={{display: "flex", justifyContent: "space-between", marginTop: "16px"}}>
                 <div style={{display: "flex"}}>
                     <Button variant={"contained"} color={"error"}
-                            onClick={() => setChangePasswordDialogOpen(true)}>Slet bruger</Button>
+                            onClick={handleDeleteUser}>Slet bruger</Button>
                     <Button variant={"contained"} sx={{marginLeft: "16px"}}
                             onClick={() => setChangePasswordDialogOpen(true)}>Skift kodeord</Button>
                     <img

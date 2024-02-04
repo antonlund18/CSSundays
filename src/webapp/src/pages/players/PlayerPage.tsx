@@ -9,6 +9,8 @@ import {PlayerTeamsTabContent} from "./teamstab/PlayerTeamsTabContent";
 import {useFindPendingInvitesForPlayer} from "../../hooks/api/useInviteToTeam";
 import {PlayerFriendsTabContent} from "./friendstab/PlayerFriendsTabContent";
 import {PlayerEditTabContent} from "./edittab/PlayerEditTabContent";
+import {Error404} from "../Error404";
+import {UserRole} from "../../codegen/generated-types";
 
 const TABS = {
     0: "",
@@ -19,7 +21,7 @@ const TABS = {
 
 export const PlayerPage = (): JSX.Element => {
     const urlParams = useParams();
-    const {user} = useGetUserById(parseInt(urlParams.player ?? ""))
+    const {user, loading} = useGetUserById(parseInt(urlParams.player ?? ""))
     const [value, setValue] = useState<number>(0)
     const {currentUser} = useGetCurrentUser();
     const isCurrentUser = user?.id === currentUser?.id;
@@ -42,8 +44,14 @@ export const PlayerPage = (): JSX.Element => {
         navigate(TABS[str])
     };
 
-    if (!user) {
-        return <></>
+    if (loading) {
+        return <CenteredPage>
+
+        </CenteredPage>
+    }
+
+    if (!user || (user.deletedTs && currentUser?.role !== UserRole.Admin)) {
+        return <Error404/>
     }
 
     return <CenteredPage>
