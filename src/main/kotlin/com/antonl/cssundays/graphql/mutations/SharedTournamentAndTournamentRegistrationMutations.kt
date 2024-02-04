@@ -3,6 +3,7 @@ package com.antonl.cssundays.graphql.mutations
 import com.antonl.cssundays.graphql.server.directives.AuthorizationDirective
 import com.antonl.cssundays.model.tournaments.Tournament
 import com.antonl.cssundays.model.core.UserRole
+import com.antonl.cssundays.model.tournaments.TournamentRegistration
 import com.antonl.cssundays.services.model.core.TeamService
 import com.antonl.cssundays.services.model.core.UserService
 import com.antonl.cssundays.services.model.tournaments.SharedTournamentAndTournamentRegistrationService
@@ -42,5 +43,16 @@ class SharedTournamentAndTournamentRegistrationMutations : Mutation {
         }
 
         return tournament
+    }
+
+    suspend fun deregisterTeamFromTournament(tournamentRegistrationId: Int): TournamentRegistration? {
+        val tournamentRegistration = tournamentRegistrationService.getTournamentRegistrationById(tournamentRegistrationId) ?: return null
+        return sharedTournamentAndTournamentRegistrationService.softDeleteTournamentRegistration(tournamentRegistration)
+    }
+
+    suspend fun deregisterPlayerFromTournament(tournamentRegistrationId: Int, playerId: Int): TournamentRegistration? {
+        val tournamentRegistration = tournamentRegistrationService.getTournamentRegistrationById(tournamentRegistrationId) ?: return null
+        val player = userService.findUserById(playerId) ?: return null
+        return sharedTournamentAndTournamentRegistrationService.deregisterPlayerFromTournament(tournamentRegistration, player)
     }
 }

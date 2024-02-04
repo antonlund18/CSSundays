@@ -274,48 +274,6 @@ gql`
 `
 
 gql`
-    mutation deregisterTeamFromTournament($tournamentId: Int!, $teamId: Int!) {
-        deregisterTeamFromTournament(tournamentId: $tournamentId, teamId: $teamId) {
-            id
-            tournamentRegistrations {
-                id
-                team {
-                    id
-                    name
-                    picture
-                }
-                players {
-                    id
-                    playertag
-                    picture
-                }
-            }
-        }
-    }
-`
-
-gql`
-    mutation deregisterPlayerFromTournament($tournamentId: Int!, $playerId: Int!) {
-        deregisterPlayerFromTournament(tournamentId: $tournamentId, playerId: $playerId) {
-            id
-            tournamentRegistrations {
-                id
-                team {
-                    id
-                    name
-                    picture
-                }
-                players {
-                    id
-                    playertag
-                    picture
-                }
-            }
-        }
-    }
-`
-
-gql`
     mutation startTournament($tournamentId: Int!) {
         startTournament(tournamentId: $tournamentId) {
             id

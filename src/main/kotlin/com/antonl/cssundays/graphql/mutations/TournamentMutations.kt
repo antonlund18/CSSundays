@@ -2,6 +2,7 @@ package com.antonl.cssundays.graphql.mutations
 
 import com.antonl.cssundays.model.tournaments.Tournament
 import com.antonl.cssundays.model.tournaments.TournamentFormat
+import com.antonl.cssundays.model.tournaments.TournamentRegistration
 import com.antonl.cssundays.services.model.core.TeamService
 import com.antonl.cssundays.services.model.core.UserService
 import com.antonl.cssundays.services.model.tournaments.SharedTournamentAndTournamentRegistrationService
@@ -52,17 +53,5 @@ class TournamentMutations : Mutation {
     suspend fun startTournament(tournamentId: Int): Tournament? {
         val tournament = tournamentService.getTournamentById(tournamentId) ?: return null
         return tournamentService.startTournament(tournament)
-    }
-
-    suspend fun deregisterTeamFromTournament(tournamentId: Int, teamId: Int): Tournament? {
-        val tournament = tournamentService.getTournamentById(tournamentId) ?: return null
-        val team = teamService.findTeamById(teamId) ?: return null
-        return sharedTournamentAndTournamentRegistrationService.deregisterTeamFromTournament(tournament, team)
-    }
-
-    suspend fun deregisterPlayerFromTournament(tournamentId: Int, playerId: Int): Tournament? {
-        val tournament = tournamentService.getTournamentById(tournamentId) ?: return null
-        val player = userService.findUserById(playerId) ?: return null
-        return sharedTournamentAndTournamentRegistrationService.deregisterPlayerFromTournament(tournament, player)
     }
 }

@@ -7,6 +7,8 @@ import com.antonl.cssundays.model.tournaments.TournamentRegistration
 import com.antonl.cssundays.repositories.TournamentRegistrationRepository
 import com.antonl.cssundays.repositories.TournamentRepository
 import org.springframework.stereotype.Service
+import java.time.LocalDateTime
+import java.time.ZoneOffset
 import javax.transaction.Transactional
 
 @Service
@@ -20,18 +22,14 @@ class SharedTournamentAndTournamentRegistrationService(val tournamentRepository:
         return registration
     }
 
-    fun deregisterPlayerFromTournament(tournament: Tournament, player: User): Tournament? {
-        val registration = tournamentRegistrationRepository.findByTournamentAndPlayers(tournament, player) ?: return null
-        registration.players.remove(player)
-        tournamentRegistrationRepository.save(registration)
-        return tournamentRepository.save(tournament)
+    fun deregisterPlayerFromTournament(tournamentRegistration: TournamentRegistration, player: User): TournamentRegistration? {
+        tournamentRegistration.players.remove(player)
+        return tournamentRegistrationRepository.save(tournamentRegistration)
     }
 
-    fun deregisterTeamFromTournament(tournament: Tournament, team: Team): Tournament? {
-        val registration = tournamentRegistrationRepository.findByTournamentAndTeam(tournament, team) ?: return null
-        registration.tournament = null
-        tournament.tournamentRegistrations.remove(registration)
-        return tournamentRepository.save(tournament)
+    fun softDeleteTournamentRegistration(tournamentRegistration: TournamentRegistration): TournamentRegistration? {
+        tournamentRegistration.deletedTs = LocalDateTime.now(ZoneOffset.UTC)
+        return tournamentRegistrationRepository.save(tournamentRegistration)
     }
 
     fun registerPlayer(tournamentRegistration: TournamentRegistration, player: User) {

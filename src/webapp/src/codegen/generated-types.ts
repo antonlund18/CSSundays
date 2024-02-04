@@ -183,8 +183,8 @@ export type Mutation = {
   declineInvitation?: Maybe<InviteToTeam>;
   deletePicture?: Maybe<User>;
   deleteUser?: Maybe<Scalars['Int']>;
-  deregisterPlayerFromTournament?: Maybe<Tournament>;
-  deregisterTeamFromTournament?: Maybe<Tournament>;
+  deregisterPlayerFromTournament?: Maybe<TournamentRegistration>;
+  deregisterTeamFromTournament?: Maybe<TournamentRegistration>;
   generateBracket?: Maybe<Tournament>;
   handleMatchFinished?: Maybe<Match>;
   incrementLosses?: Maybe<Team>;
@@ -284,13 +284,12 @@ export type MutationDeleteUserArgs = {
 
 export type MutationDeregisterPlayerFromTournamentArgs = {
   playerId: Scalars['Int'];
-  tournamentId: Scalars['Int'];
+  tournamentRegistrationId: Scalars['Int'];
 };
 
 
 export type MutationDeregisterTeamFromTournamentArgs = {
-  teamId: Scalars['Int'];
-  tournamentId: Scalars['Int'];
+  tournamentRegistrationId: Scalars['Int'];
 };
 
 
@@ -590,6 +589,7 @@ export type TournamentRegistration = {
   __typename?: 'TournamentRegistration';
   captain: User;
   createdTs: Scalars['LocalDateTime'];
+  deletedTs?: Maybe<Scalars['LocalDateTime']>;
   id?: Maybe<Scalars['Int']>;
   players: Array<User>;
   team: Team;
@@ -763,6 +763,21 @@ export type RegisterTeamOrPlayerMutationVariables = Exact<{
 
 export type RegisterTeamOrPlayerMutation = { __typename?: 'Mutation', registerTeamOrPlayer?: { __typename?: 'Tournament', id?: number, tournamentRegistrations: Array<{ __typename?: 'TournamentRegistration', id?: number, captain: { __typename?: 'User', id?: number, playertag: string, picture?: string }, team: { __typename?: 'Team', id?: number, name: string } }> } };
 
+export type DeregisterTeamFromTournamentMutationVariables = Exact<{
+  tournamentRegistrationId: Scalars['Int'];
+}>;
+
+
+export type DeregisterTeamFromTournamentMutation = { __typename?: 'Mutation', deregisterTeamFromTournament?: { __typename?: 'TournamentRegistration', id?: number, team: { __typename?: 'Team', id?: number, name: string, picture?: string }, players: Array<{ __typename?: 'User', id?: number, playertag: string, picture?: string }> } };
+
+export type DeregisterPlayerFromTournamentMutationVariables = Exact<{
+  tournamentRegistrationId: Scalars['Int'];
+  playerId: Scalars['Int'];
+}>;
+
+
+export type DeregisterPlayerFromTournamentMutation = { __typename?: 'Mutation', deregisterPlayerFromTournament?: { __typename?: 'TournamentRegistration', id?: number, team: { __typename?: 'Team', id?: number, name: string, picture?: string }, players: Array<{ __typename?: 'User', id?: number, playertag: string, picture?: string }> } };
+
 export type GetAllTeamsQueryVariables = Exact<{ [key: string]: never; }>;
 
 
@@ -858,22 +873,6 @@ export type GetTournamentRegistrationByTeamQueryVariables = Exact<{
 
 
 export type GetTournamentRegistrationByTeamQuery = { __typename?: 'Query', getTournamentRegistrationByTeam?: { __typename?: 'TournamentRegistration', id?: number, team: { __typename?: 'Team', id?: number }, captain: { __typename?: 'User', id?: number, playertag: string, picture?: string }, players: Array<{ __typename?: 'User', id?: number, deletedTs?: any }> } };
-
-export type DeregisterTeamFromTournamentMutationVariables = Exact<{
-  tournamentId: Scalars['Int'];
-  teamId: Scalars['Int'];
-}>;
-
-
-export type DeregisterTeamFromTournamentMutation = { __typename?: 'Mutation', deregisterTeamFromTournament?: { __typename?: 'Tournament', id?: number, tournamentRegistrations: Array<{ __typename?: 'TournamentRegistration', id?: number, team: { __typename?: 'Team', id?: number, name: string, picture?: string }, players: Array<{ __typename?: 'User', id?: number, playertag: string, picture?: string }> }> } };
-
-export type DeregisterPlayerFromTournamentMutationVariables = Exact<{
-  tournamentId: Scalars['Int'];
-  playerId: Scalars['Int'];
-}>;
-
-
-export type DeregisterPlayerFromTournamentMutation = { __typename?: 'Mutation', deregisterPlayerFromTournament?: { __typename?: 'Tournament', id?: number, tournamentRegistrations: Array<{ __typename?: 'TournamentRegistration', id?: number, team: { __typename?: 'Team', id?: number, name: string, picture?: string }, players: Array<{ __typename?: 'User', id?: number, playertag: string, picture?: string }> }> } };
 
 export type StartTournamentMutationVariables = Exact<{
   tournamentId: Scalars['Int'];
@@ -2057,6 +2056,98 @@ export function useRegisterTeamOrPlayerMutation(baseOptions?: Apollo.MutationHoo
 export type RegisterTeamOrPlayerMutationHookResult = ReturnType<typeof useRegisterTeamOrPlayerMutation>;
 export type RegisterTeamOrPlayerMutationResult = Apollo.MutationResult<RegisterTeamOrPlayerMutation>;
 export type RegisterTeamOrPlayerMutationOptions = Apollo.BaseMutationOptions<RegisterTeamOrPlayerMutation, RegisterTeamOrPlayerMutationVariables>;
+export const DeregisterTeamFromTournamentDocument = gql`
+    mutation deregisterTeamFromTournament($tournamentRegistrationId: Int!) {
+  deregisterTeamFromTournament(
+    tournamentRegistrationId: $tournamentRegistrationId
+  ) {
+    id
+    team {
+      id
+      name
+      picture
+    }
+    players {
+      id
+      playertag
+      picture
+    }
+  }
+}
+    `;
+export type DeregisterTeamFromTournamentMutationFn = Apollo.MutationFunction<DeregisterTeamFromTournamentMutation, DeregisterTeamFromTournamentMutationVariables>;
+
+/**
+ * __useDeregisterTeamFromTournamentMutation__
+ *
+ * To run a mutation, you first call `useDeregisterTeamFromTournamentMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useDeregisterTeamFromTournamentMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [deregisterTeamFromTournamentMutation, { data, loading, error }] = useDeregisterTeamFromTournamentMutation({
+ *   variables: {
+ *      tournamentRegistrationId: // value for 'tournamentRegistrationId'
+ *   },
+ * });
+ */
+export function useDeregisterTeamFromTournamentMutation(baseOptions?: Apollo.MutationHookOptions<DeregisterTeamFromTournamentMutation, DeregisterTeamFromTournamentMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<DeregisterTeamFromTournamentMutation, DeregisterTeamFromTournamentMutationVariables>(DeregisterTeamFromTournamentDocument, options);
+      }
+export type DeregisterTeamFromTournamentMutationHookResult = ReturnType<typeof useDeregisterTeamFromTournamentMutation>;
+export type DeregisterTeamFromTournamentMutationResult = Apollo.MutationResult<DeregisterTeamFromTournamentMutation>;
+export type DeregisterTeamFromTournamentMutationOptions = Apollo.BaseMutationOptions<DeregisterTeamFromTournamentMutation, DeregisterTeamFromTournamentMutationVariables>;
+export const DeregisterPlayerFromTournamentDocument = gql`
+    mutation deregisterPlayerFromTournament($tournamentRegistrationId: Int!, $playerId: Int!) {
+  deregisterPlayerFromTournament(
+    tournamentRegistrationId: $tournamentRegistrationId
+    playerId: $playerId
+  ) {
+    id
+    team {
+      id
+      name
+      picture
+    }
+    players {
+      id
+      playertag
+      picture
+    }
+  }
+}
+    `;
+export type DeregisterPlayerFromTournamentMutationFn = Apollo.MutationFunction<DeregisterPlayerFromTournamentMutation, DeregisterPlayerFromTournamentMutationVariables>;
+
+/**
+ * __useDeregisterPlayerFromTournamentMutation__
+ *
+ * To run a mutation, you first call `useDeregisterPlayerFromTournamentMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useDeregisterPlayerFromTournamentMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [deregisterPlayerFromTournamentMutation, { data, loading, error }] = useDeregisterPlayerFromTournamentMutation({
+ *   variables: {
+ *      tournamentRegistrationId: // value for 'tournamentRegistrationId'
+ *      playerId: // value for 'playerId'
+ *   },
+ * });
+ */
+export function useDeregisterPlayerFromTournamentMutation(baseOptions?: Apollo.MutationHookOptions<DeregisterPlayerFromTournamentMutation, DeregisterPlayerFromTournamentMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<DeregisterPlayerFromTournamentMutation, DeregisterPlayerFromTournamentMutationVariables>(DeregisterPlayerFromTournamentDocument, options);
+      }
+export type DeregisterPlayerFromTournamentMutationHookResult = ReturnType<typeof useDeregisterPlayerFromTournamentMutation>;
+export type DeregisterPlayerFromTournamentMutationResult = Apollo.MutationResult<DeregisterPlayerFromTournamentMutation>;
+export type DeregisterPlayerFromTournamentMutationOptions = Apollo.BaseMutationOptions<DeregisterPlayerFromTournamentMutation, DeregisterPlayerFromTournamentMutationVariables>;
 export const GetAllTeamsDocument = gql`
     query getAllTeams {
   getAllTeams {
@@ -2754,100 +2845,6 @@ export function useGetTournamentRegistrationByTeamLazyQuery(baseOptions?: Apollo
 export type GetTournamentRegistrationByTeamQueryHookResult = ReturnType<typeof useGetTournamentRegistrationByTeamQuery>;
 export type GetTournamentRegistrationByTeamLazyQueryHookResult = ReturnType<typeof useGetTournamentRegistrationByTeamLazyQuery>;
 export type GetTournamentRegistrationByTeamQueryResult = Apollo.QueryResult<GetTournamentRegistrationByTeamQuery, GetTournamentRegistrationByTeamQueryVariables>;
-export const DeregisterTeamFromTournamentDocument = gql`
-    mutation deregisterTeamFromTournament($tournamentId: Int!, $teamId: Int!) {
-  deregisterTeamFromTournament(tournamentId: $tournamentId, teamId: $teamId) {
-    id
-    tournamentRegistrations {
-      id
-      team {
-        id
-        name
-        picture
-      }
-      players {
-        id
-        playertag
-        picture
-      }
-    }
-  }
-}
-    `;
-export type DeregisterTeamFromTournamentMutationFn = Apollo.MutationFunction<DeregisterTeamFromTournamentMutation, DeregisterTeamFromTournamentMutationVariables>;
-
-/**
- * __useDeregisterTeamFromTournamentMutation__
- *
- * To run a mutation, you first call `useDeregisterTeamFromTournamentMutation` within a React component and pass it any options that fit your needs.
- * When your component renders, `useDeregisterTeamFromTournamentMutation` returns a tuple that includes:
- * - A mutate function that you can call at any time to execute the mutation
- * - An object with fields that represent the current status of the mutation's execution
- *
- * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
- *
- * @example
- * const [deregisterTeamFromTournamentMutation, { data, loading, error }] = useDeregisterTeamFromTournamentMutation({
- *   variables: {
- *      tournamentId: // value for 'tournamentId'
- *      teamId: // value for 'teamId'
- *   },
- * });
- */
-export function useDeregisterTeamFromTournamentMutation(baseOptions?: Apollo.MutationHookOptions<DeregisterTeamFromTournamentMutation, DeregisterTeamFromTournamentMutationVariables>) {
-        const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useMutation<DeregisterTeamFromTournamentMutation, DeregisterTeamFromTournamentMutationVariables>(DeregisterTeamFromTournamentDocument, options);
-      }
-export type DeregisterTeamFromTournamentMutationHookResult = ReturnType<typeof useDeregisterTeamFromTournamentMutation>;
-export type DeregisterTeamFromTournamentMutationResult = Apollo.MutationResult<DeregisterTeamFromTournamentMutation>;
-export type DeregisterTeamFromTournamentMutationOptions = Apollo.BaseMutationOptions<DeregisterTeamFromTournamentMutation, DeregisterTeamFromTournamentMutationVariables>;
-export const DeregisterPlayerFromTournamentDocument = gql`
-    mutation deregisterPlayerFromTournament($tournamentId: Int!, $playerId: Int!) {
-  deregisterPlayerFromTournament(tournamentId: $tournamentId, playerId: $playerId) {
-    id
-    tournamentRegistrations {
-      id
-      team {
-        id
-        name
-        picture
-      }
-      players {
-        id
-        playertag
-        picture
-      }
-    }
-  }
-}
-    `;
-export type DeregisterPlayerFromTournamentMutationFn = Apollo.MutationFunction<DeregisterPlayerFromTournamentMutation, DeregisterPlayerFromTournamentMutationVariables>;
-
-/**
- * __useDeregisterPlayerFromTournamentMutation__
- *
- * To run a mutation, you first call `useDeregisterPlayerFromTournamentMutation` within a React component and pass it any options that fit your needs.
- * When your component renders, `useDeregisterPlayerFromTournamentMutation` returns a tuple that includes:
- * - A mutate function that you can call at any time to execute the mutation
- * - An object with fields that represent the current status of the mutation's execution
- *
- * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
- *
- * @example
- * const [deregisterPlayerFromTournamentMutation, { data, loading, error }] = useDeregisterPlayerFromTournamentMutation({
- *   variables: {
- *      tournamentId: // value for 'tournamentId'
- *      playerId: // value for 'playerId'
- *   },
- * });
- */
-export function useDeregisterPlayerFromTournamentMutation(baseOptions?: Apollo.MutationHookOptions<DeregisterPlayerFromTournamentMutation, DeregisterPlayerFromTournamentMutationVariables>) {
-        const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useMutation<DeregisterPlayerFromTournamentMutation, DeregisterPlayerFromTournamentMutationVariables>(DeregisterPlayerFromTournamentDocument, options);
-      }
-export type DeregisterPlayerFromTournamentMutationHookResult = ReturnType<typeof useDeregisterPlayerFromTournamentMutation>;
-export type DeregisterPlayerFromTournamentMutationResult = Apollo.MutationResult<DeregisterPlayerFromTournamentMutation>;
-export type DeregisterPlayerFromTournamentMutationOptions = Apollo.BaseMutationOptions<DeregisterPlayerFromTournamentMutation, DeregisterPlayerFromTournamentMutationVariables>;
 export const StartTournamentDocument = gql`
     mutation startTournament($tournamentId: Int!) {
   startTournament(tournamentId: $tournamentId) {
@@ -3408,6 +3405,8 @@ export const ListAllOperations = {
     markAllNotificationsAsSeenForUser: 'markAllNotificationsAsSeenForUser',
     setPictureAndGetPresignedRequest: 'setPictureAndGetPresignedRequest',
     registerTeamOrPlayer: 'registerTeamOrPlayer',
+    deregisterTeamFromTournament: 'deregisterTeamFromTournament',
+    deregisterPlayerFromTournament: 'deregisterPlayerFromTournament',
     incrementWins: 'incrementWins',
     incrementLosses: 'incrementLosses',
     createTeam: 'createTeam',
@@ -3415,8 +3414,6 @@ export const ListAllOperations = {
     generateBracket: 'generateBracket',
     publishTournament: 'publishTournament',
     removePublicationFromTournament: 'removePublicationFromTournament',
-    deregisterTeamFromTournament: 'deregisterTeamFromTournament',
-    deregisterPlayerFromTournament: 'deregisterPlayerFromTournament',
     startTournament: 'startTournament',
     createUser: 'createUser',
     loginUser: 'loginUser',

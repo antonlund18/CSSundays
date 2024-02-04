@@ -32,8 +32,7 @@ export const TournamentRegistrationDialogAlreadyRegistered = (props: TournamentR
         if (isCaptain && props.tournamentRegistration.team.id) {
             deregisterTeam({
                     variables: {
-                        tournamentId: props.tournamentRegistration.tournament.id,
-                        teamId: props.tournamentRegistration.team.id
+                        tournamentRegistrationId: props.tournamentRegistration.id ?? -1,
                     },
                     refetchQueries: [
                         GetTournamentRegistrationByPlayerDocument,
@@ -46,7 +45,7 @@ export const TournamentRegistrationDialogAlreadyRegistered = (props: TournamentR
         if (!isCaptain && props.currentUser.id) {
             deregisterPlayer({
                 variables: {
-                    tournamentId: props.tournamentRegistration.tournament.id,
+                    tournamentRegistrationId: props.tournamentRegistration.id ?? -1,
                     playerId: props.currentUser.id
                 },
                 refetchQueries: [

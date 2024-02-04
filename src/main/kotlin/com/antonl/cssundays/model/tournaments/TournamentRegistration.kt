@@ -35,5 +35,8 @@ class TournamentRegistration(
         val players: MutableList<User> = mutableListOf(captain),
 
         @GeneratedValue
-        val createdTs: LocalDateTime = LocalDateTime.now(ZoneOffset.UTC)
+        val createdTs: LocalDateTime = LocalDateTime.now(ZoneOffset.UTC),
+
+        @GeneratedValue
+        var deletedTs: LocalDateTime? = null
 )
