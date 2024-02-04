@@ -39,6 +39,7 @@ gql`
                 users {
                     playertag
                 }
+                deletedTs
             }
             deletedTs
         }

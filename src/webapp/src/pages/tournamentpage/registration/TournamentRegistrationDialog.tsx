@@ -40,7 +40,7 @@ export const TournamentRegistrationDialog = (props: TournamentRegistrationDialog
         return <></>
     }
 
-    const userHasTeams = currentUser.teams.length > 0
+    const userHasTeams = currentUser.teams.filter(team => team.deletedTs === null).length > 0
 
     return <Dialog open={props.open} onClose={() => props.setOpen(false)} maxWidth={"xl"}>
         <DialogTitle><Typography variant={"h2"} style={{textTransform: "none"}}>Tilmeld

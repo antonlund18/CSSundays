@@ -3,7 +3,8 @@ import {useMemo, useState} from "react"
 import {TournamentRegistration} from "../../../codegen/generated-types"
 import {TeamRow} from "./TeamRow";
 import {
-    Grid, InputAdornment,
+    Grid,
+    InputAdornment,
     Table,
     TableBody,
     TableCell,
@@ -64,9 +65,11 @@ export const TeamsTab = (props: TeamsTabProps): JSX.Element => {
     ]
 
     const tournamentRegistrationEntries = useMemo(() => {
-        return props.tournamentRegistrations.map((registration, index) => {
-            return {registration: registration, number: index + 1}
-        })
+        return props.tournamentRegistrations
+            .filter(registration => registration.team.deletedTs === null)
+            .map((registration, index) => {
+                return {registration: registration, number: index + 1}
+            })
     }, [props.tournamentRegistrations])
 
     const filteredRegistrationEntries = useMemo(() => {

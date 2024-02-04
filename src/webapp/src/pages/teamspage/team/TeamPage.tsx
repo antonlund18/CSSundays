@@ -4,18 +4,25 @@ import {CenteredPage} from "../../../components/CenteredPage";
 import {Grid, Typography} from "@mui/material";
 import {Divider as CSDivider} from "../../../components/Divider";
 import {useGetTeamById} from "../../../hooks/api/useTeam";
-import {useGetCurrentUser} from "../../../hooks/api/useUser";
 import {TeamInfo} from "./TeamInfo";
 import {TeamPlayersContainer} from "./TeamPlayersContainer";
 import {TeamStatsContainer} from "./TeamStatsContainer";
+import {Error404} from "../../Error404";
+import {UserRole} from "../../../codegen/generated-types";
+import {useGetCurrentUser} from "../../../hooks/api/useUser";
 
 export const TeamPage = (): JSX.Element => {
     const urlParams = useParams();
 
-    const {team} = useGetTeamById(parseInt(urlParams.teamId ?? ""))
+    const {team, loading} = useGetTeamById(parseInt(urlParams.teamId ?? ""))
+    const {currentUser} = useGetCurrentUser()
 
-    if (team === null) {
+    if (loading) {
         return <CenteredPage/>
+    }
+
+    if (!team || (team.deletedTs && currentUser?.role !== UserRole.Admin)) {
+        return <Error404/>
     }
 
     return <CenteredPage>

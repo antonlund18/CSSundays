@@ -8,10 +8,11 @@ import {
     useDeregisterTeamFromTournamentMutation,
     User
 } from "../../../codegen/generated-types";
-import {CheckCircle} from "@mui/icons-material";
+import {CheckCircle, Error} from "@mui/icons-material";
 import {Button, CircularProgress, Typography} from "@mui/material";
 import {getPictureLinkFromKey} from "../../../util/StorageHelper";
 import {PlayerPicture} from "../../teamspage/team/PlayerPicture";
+import {useMemo} from "react";
 
 type TournamentRegistrationDialogAlreadyRegisteredProps = {
     tournamentRegistration: TournamentRegistration
@@ -55,15 +56,21 @@ export const TournamentRegistrationDialogAlreadyRegistered = (props: TournamentR
         }
     }
 
+    const team = props.tournamentRegistration.team
+    const registeredPlayers = props.tournamentRegistration.players.filter(player => player.deletedTs === null)
+    const renderedPlayers = registeredPlayers.filter(user => user.deletedTs === null).concat(new Array(5 - registeredPlayers.length).fill(null))
+
+    const validationFailed = useMemo(() => {
+        return registeredPlayers.filter(player => player.steamId).length !== 5
+    }, [registeredPlayers])
+
     if (loading) {
-        return <div style={{height: "100%", width: "100%", display: "flex", alignItems: "center", justifyContent: "center"}}>
+        return <div
+            style={{height: "100%", width: "100%", display: "flex", alignItems: "center", justifyContent: "center"}}>
             <CircularProgress/>
         </div>
     }
 
-    const team = props.tournamentRegistration.team
-    const registeredPlayers = props.tournamentRegistration.players
-    const renderedPlayers = registeredPlayers.concat(new Array(5 - registeredPlayers.length).fill(null))
 
     return <div style={{
         display: "flex",
@@ -72,17 +79,24 @@ export const TournamentRegistrationDialogAlreadyRegistered = (props: TournamentR
         justifyContent: "center",
         height: "100%"
     }}>
-        <CheckCircle style={{fontSize: "100px", color: "green"}}/>
-        <Typography variant={"h4"}>Du er tilmeldt</Typography>
+        {!validationFailed ? <CheckCircle style={{fontSize: "100px", color: "green"}}/> :
+            <>
+                <Error style={{fontSize: "100px", color: "#ffae37"}}/>
+                <div style={{width: "80%", textAlign: "center"}}>
+                    <Typography>Dit hold er tilmeldt, men i er enten ikke nok spillere, eller nogle spillere mangler at
+                        verificere med Steam</Typography>
+                </div>
+            </>
+        }
         <div style={{display: "flex", alignItems: "center", marginTop: "16px"}}>
             <img src={getPictureLinkFromKey(team.picture ?? "", ObjectType.Team)}
                  style={{width: "80px", aspectRatio: "1/1"}}/>
             <Typography variant={"h1"} style={{marginLeft: "16px"}}>{team.name}</Typography>
         </div>
-        <div style={{display: "flex"}}>
+        <div style={{display: "flex", marginTop: "16px"}}>
             {renderedPlayers.map(player => {
                 return player ?
-                    <PlayerPicture player={player} style={{width: "80px"}}/> :
+                    <PlayerPicture player={player} showSteamVerification style={{width: "80px"}}/> :
                     <div style={{width: "80px", padding: "8px"}}>
                         <img
                             src={"https://static.vecteezy.com/system/resources/previews/007/126/739/non_2x/question-mark-icon-free-vector.jpg"}

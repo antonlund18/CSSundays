@@ -45,9 +45,7 @@ export const PlayerPage = (): JSX.Element => {
     };
 
     if (loading) {
-        return <CenteredPage>
-
-        </CenteredPage>
+        return <CenteredPage/>
     }
 
     if (!user || (user.deletedTs && currentUser?.role !== UserRole.Admin)) {

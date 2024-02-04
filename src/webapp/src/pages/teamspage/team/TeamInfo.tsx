@@ -8,6 +8,7 @@ import {useSharedTeamAndUser} from "../../../hooks/api/useSharedTeamAndUser";
 import {useDateFormatter} from "../../../hooks/useDateFormatter";
 import {useNavigate} from "react-router-dom";
 import {useGetCurrentUser} from "../../../hooks/api/useUser";
+import {Warning} from "@mui/icons-material";
 
 interface StylesProps {
     isCurrentUserOwner: boolean
@@ -78,6 +79,11 @@ export const TeamInfo = (props: TeamInfoProps): JSX.Element => {
             <Tooltip title={"Upload billede"} disableHoverListener={!isCurrentUserOwner} arrow>
                 <div className={classes.teamPicture} onClick={handleFileSelect}/>
             </Tooltip>
+            {props.team.deletedTs &&
+                <Grid item xs={12} style={{display: "flex", alignItems: "center", marginTop: "16px"}}>
+                    <Warning color={"error"} style={{display: "inline-flex"}}/>
+                    <Typography color={"error"} style={{display: "inline-flex", marginLeft: "8px"}}>{`Dette hold blev slettet d. ${formatDate(props.team.deletedTs)}`}</Typography>
+                </Grid>}
         </Grid>
         <Grid item style={{width: "100%"}}>
             <div className={classes.teamInfoContainer}>

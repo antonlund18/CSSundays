@@ -127,7 +127,11 @@ export const PlayerEditTabContent = (props: PlayerEditTabContentProps): JSX.Elem
     }
 
     const handleDeleteUser = () => {
-        if (window.confirm("Er du sikker på, at du vil slette denne bruger?")) {
+        if (window.confirm(
+            "Er du sikker på, at du vil slette din bruger?\n\n" +
+            "Alle hold og turneringstilmeldelser, hvor du er kaptajn, vil også blive slettet.\n\n" +
+            "Når først din bruger er slettet, kan den ikke gendannes igen."
+        )) {
             deleteUser({
                 variables: {
                     userId: props.player.id ?? -1

@@ -36,6 +36,7 @@ export const TeamPlayersContainer = (props: TeamPlayersContainerProps): JSX.Elem
     return <div className={classes.playersContainer}>
         <div style={{display: "flex"}}>
             {team?.users?.slice(0, 5).map(user => {
+                if (user.deletedTs) return <></>
                 return <PlayerPicture player={user}/>
             })}
         </div>

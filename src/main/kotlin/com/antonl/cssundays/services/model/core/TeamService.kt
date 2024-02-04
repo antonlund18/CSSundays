@@ -6,6 +6,8 @@ import com.antonl.cssundays.model.core.User
 import com.antonl.cssundays.repositories.TeamRepository
 import com.antonl.cssundays.services.storage.TeamStorageService
 import org.springframework.stereotype.Service
+import java.time.LocalDateTime
+import java.time.ZoneOffset
 import java.util.*
 import javax.transaction.Transactional
 
@@ -82,7 +84,7 @@ class TeamService(val teamRepository: TeamRepository) {
     }
 
     suspend fun softDeleteTeam(team: Team): Team? {
-        team.deletedTs = null
+        team.deletedTs = LocalDateTime.now(ZoneOffset.UTC)
         saveTeam(team)
         return team
     }

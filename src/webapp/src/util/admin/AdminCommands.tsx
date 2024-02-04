@@ -6,6 +6,7 @@ import {AdminCommandChangeMatchPhase} from "./AdminCommandChangeMatchPhase";
 import {AdminCommandCreateTestData} from "./AdminCommandCreateTestData";
 import {AdminCommandStartTournament} from "./AdminCommandStartTournament";
 import {AdminCommandHandleMatchFinished} from "./AdminCommandHandleMatchFinished";
+import { AdminCommandDeleteUser } from "./AdminCommandDeleteUser";
 
 
 export const AdminCommands = (props: React.PropsWithChildren<any>) => {
@@ -23,7 +24,8 @@ export const AdminCommands = (props: React.PropsWithChildren<any>) => {
         changeMatchPhase: <AdminCommandChangeMatchPhase/>,
         createTestData: <AdminCommandCreateTestData/>,
         startTournament: <AdminCommandStartTournament/>,
-        handleMatchFinished: <AdminCommandHandleMatchFinished/>
+        handleMatchFinished: <AdminCommandHandleMatchFinished/>,
+        deleteUser: <AdminCommandDeleteUser closeAdminCommands={() => setOpen(false)}/>,
     }
     const possibleCommands = Object.keys(Commands)
 

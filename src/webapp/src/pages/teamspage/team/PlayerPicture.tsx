@@ -1,10 +1,11 @@
 import * as React from "react"
+import {CSSProperties} from "react"
 import {ObjectType, User} from "../../../codegen/generated-types";
 import {Box, Theme} from "@mui/material";
 import {getPictureLinkFromKey} from "../../../util/StorageHelper";
 import {useNavigate} from "react-router-dom";
 import {makeStyles} from "@mui/styles"
-import {CSSProperties} from "react";
+import {Check, Close} from "@mui/icons-material";
 
 type StylesProps = {
     playerPictureURL: string
@@ -14,6 +15,7 @@ type StylesProps = {
 
 const useStyles = makeStyles<Theme, StylesProps>(theme => ({
     playerContainer: props => ({
+        position: "relative",
         cursor: "pointer",
         textAlign: "center",
         justifyContent: "center",
@@ -49,10 +51,11 @@ const useStyles = makeStyles<Theme, StylesProps>(theme => ({
 
 export type PlayerPictureProps = {
     player: User | null
+    showSteamVerification?: boolean
     style?: CSSProperties
 }
 
-export const PlayerPicture = (props: PlayerPictureProps): JSX. Element => {
+export const PlayerPicture = (props: PlayerPictureProps): JSX.Element => {
     const {player} = props
     const navigate = useNavigate();
     const playerPictureURL = getPictureLinkFromKey(player?.picture ?? null, ObjectType.User)
@@ -63,8 +66,49 @@ export const PlayerPicture = (props: PlayerPictureProps): JSX. Element => {
         return <></>
     }
 
+    const isSteamVerificed = !!player.steamId
+
     return <div key={player.playertag} className={classes.playerContainer}
                 onClick={() => navigate("/players/" + player.id)}>
         <Box boxShadow={1} className={classes.playerPicture}/>
+        {props.showSteamVerification &&
+            <div>
+                <img
+                    src={"https://upload.wikimedia.org/wikipedia/commons/thumb/8/83/Steam_icon_logo.svg/512px-Steam_icon_logo.svg.png"}
+                    style={{
+                        position: "absolute",
+                        width: "24px",
+                        aspectRatio: "1/1",
+                        top: 0,
+                        right: 0,
+                    }}/>
+                {isSteamVerificed ?
+                    <Check
+                        style={{
+                            fontSize: "12px",
+                            backgroundColor: "green",
+                            position: "absolute",
+                            top: 0,
+                            right: 12,
+                            color: "white",
+                            stroke: "white",
+                            strokeWidth: "1px",
+                            borderRadius: "50%",
+                        }}/> :
+                    <Close
+                        style={{
+                            fontSize: "12px",
+                            backgroundColor: "red",
+                            position: "absolute",
+                            top: 0,
+                            right: 12,
+                            color: "white",
+                            stroke: "white",
+                            strokeWidth: "1px",
+                            borderRadius: "50%",
+                        }}/>
+                }
+            </div>
+        }
     </div>
 }

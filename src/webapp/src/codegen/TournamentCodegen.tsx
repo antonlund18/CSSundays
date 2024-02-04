@@ -120,6 +120,7 @@ gql`
                     id,
                     name
                     picture
+                    deletedTs
                 },
                 players {
                     id,
@@ -234,6 +235,7 @@ gql`
                     playertag
                     picture
                 }
+                deletedTs
             },
             tournament {
                 id
@@ -245,6 +247,7 @@ gql`
                 id
                 playertag
                 picture
+                deletedTs
             }
         }
     }
@@ -261,6 +264,10 @@ gql`
                 id
                 playertag
                 picture
+            },
+            players {
+                id
+                deletedTs
             }
         }
     }

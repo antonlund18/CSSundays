@@ -18,15 +18,17 @@ export const TournamentRegistrationDialogNewRegistration = (props: TournamentReg
         </div>
     }
 
+    const teams = props.currentUser.teams.filter(team => team.deletedTs === null)
+
     return <div style={{height: "100%", padding: "16px"}}>
-        {props.currentUser.teams.map((team, index) => {
+        {teams.map((team, index) => {
             return <TournamentRegistrationDialogNewRegistrationTeamRow
                 key={index}
                 registerMutation={registerMutation}
                 tournament={props.tournament}
                 team={team}
                 currentUser={props.currentUser}
-                includeDivider={index !== props.currentUser.teams.length - 1}/>
+                includeDivider={index !== teams.length - 1}/>
         })}
     </div>
 }

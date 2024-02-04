@@ -7,8 +7,8 @@ import {
     useGetTournamentRegistrationByTeamQuery,
     User
 } from "../../../codegen/generated-types";
-import {Button, CircularProgress, Divider, Typography} from "@mui/material";
-import {useTournaments} from "../../../hooks/api/useTournament";
+import {Button, Divider, Typography} from "@mui/material";
+import {useMemo} from "react";
 
 type TournamentRegistrationDialogNewRegistrationTeamRowProps = {
     tournament: Tournament
@@ -35,6 +35,14 @@ export const TournamentRegistrationDialogNewRegistrationTeamRow = (props: Tourna
         props.registerMutation.register(props.tournament.id, team.id, props.currentUser.id)
     }
 
+    const teamIsFull = useMemo(() => {
+        if (isRegistered && data?.getTournamentRegistrationByTeam?.players.length === 5) {
+            const players = data?.getTournamentRegistrationByTeam?.players.filter(player => player.deletedTs === null)
+            return players.length === 5
+        }
+        return false
+    }, [data?.getTournamentRegistrationByTeam])
+
     return <>
         <div
             style={{display: "flex", justifyContent: "space-between", alignItems: "center"}}>
@@ -48,7 +56,7 @@ export const TournamentRegistrationDialogNewRegistrationTeamRow = (props: Tourna
                                 style={{marginLeft: "16px", textTransform: "none", color: isRegistered ? "green" : "red"}}>{isRegistered ? "Tilmeldt" : "Ikke tilmeldt"}</Typography>
                 </div>
             </div>
-            <Button onClick={() => handleRegister(props.team)}>Tilmeld</Button>
+            <Button onClick={() => handleRegister(props.team)} disabled={teamIsFull}>{teamIsFull ? "Fuld" : "Tilmeld"}</Button>
         </div>
         {props.includeDivider &&
             <Divider sx={{marginTop: "8px", marginBottom: "8px"}}/>}

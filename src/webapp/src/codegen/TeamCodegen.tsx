@@ -31,7 +31,9 @@ gql`
                 id,
                 playertag,
                 picture
+                deletedTs
             }
+            deletedTs
         }
     }
 `;

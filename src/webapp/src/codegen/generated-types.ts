@@ -554,6 +554,7 @@ export type SubscriptionOnNewNotificationArgs = {
 export type Team = {
   __typename?: 'Team';
   createdTs: Scalars['LocalDateTime'];
+  deletedTs?: Maybe<Scalars['LocalDateTime']>;
   id?: Maybe<Scalars['Int']>;
   losses: Scalars['Int'];
   name: Scalars['String'];
@@ -605,7 +606,7 @@ export enum TournamentStatus {
 export type User = {
   __typename?: 'User';
   createdTs: Scalars['LocalDateTime'];
-  deletedTs: Scalars['LocalDateTime'];
+  deletedTs?: Maybe<Scalars['LocalDateTime']>;
   description: Scalars['String'];
   email: Scalars['String'];
   id?: Maybe<Scalars['Int']>;
@@ -772,7 +773,7 @@ export type GetTeamByIdQueryVariables = Exact<{
 }>;
 
 
-export type GetTeamByIdQuery = { __typename?: 'Query', getTeamById?: { __typename?: 'Team', id?: number, name: string, picture?: string, wins: number, losses: number, createdTs: any, owner: { __typename?: 'User', id?: number, playertag: string, picture?: string }, users: Array<{ __typename?: 'User', id?: number, playertag: string, picture?: string }> } };
+export type GetTeamByIdQuery = { __typename?: 'Query', getTeamById?: { __typename?: 'Team', id?: number, name: string, picture?: string, wins: number, losses: number, createdTs: any, deletedTs?: any, owner: { __typename?: 'User', id?: number, playertag: string, picture?: string }, users: Array<{ __typename?: 'User', id?: number, playertag: string, picture?: string, deletedTs?: any }> } };
 
 export type IncrementWinsMutationVariables = Exact<{
   teamId: Scalars['Int'];
@@ -826,7 +827,7 @@ export type GetTournamentByIdQueryVariables = Exact<{
 }>;
 
 
-export type GetTournamentByIdQuery = { __typename?: 'Query', getTournamentById?: { __typename?: 'Tournament', id?: number, name: string, picture?: string, description: string, format: TournamentFormat, rules: string, startDateAndTime: any, numberOfTeamsAllowed: number, tournamentRegistrations: Array<{ __typename?: 'TournamentRegistration', id?: number, createdTs: any, captain: { __typename?: 'User', id?: number, playertag: string, picture?: string }, team: { __typename?: 'Team', id?: number, name: string, picture?: string }, players: Array<{ __typename?: 'User', id?: number, playertag: string, picture?: string }> }>, bracket?: { __typename?: 'Bracket', id?: number, root?: { __typename?: 'Match', id?: number, tournamentRegistration1?: { __typename?: 'TournamentRegistration', team: { __typename?: 'Team', id?: number, name: string, picture?: string }, players: Array<{ __typename?: 'User', id?: number, playertag: string, picture?: string }> }, tournamentRegistration2?: { __typename?: 'TournamentRegistration', team: { __typename?: 'Team', id?: number, name: string, picture?: string }, players: Array<{ __typename?: 'User', id?: number, playertag: string, picture?: string }> }, currentPhase: { __typename?: 'MatchPhase', id: number, phaseType: MatchPhaseType, createdTs: any, endTs?: any, match?: { __typename?: 'Match', id?: number }, state?: { __typename: 'MatchFinishedPhaseState', id: number, winTeamOne: boolean } | { __typename: 'MatchInProgressPhaseState', id: number, map?: CsMap } | { __typename: 'MatchPickAndBanPhaseState', id: number, firstTeamToBan: number, votingTimeInSeconds: number, actions: Array<{ __typename?: 'MatchPickAndBanPhaseAction', id?: number, ban: CsMap, captain: { __typename?: 'User', id?: number } }> } | { __typename: 'MatchReadyCheckPhaseState', id: number, teamOneAction: { __typename?: 'MatchReadyCheckPhaseCaptainPerTeamAction', ready: boolean }, teamTwoAction: { __typename?: 'MatchReadyCheckPhaseCaptainPerTeamAction', ready: boolean } } } } } } };
+export type GetTournamentByIdQuery = { __typename?: 'Query', getTournamentById?: { __typename?: 'Tournament', id?: number, name: string, picture?: string, description: string, format: TournamentFormat, rules: string, startDateAndTime: any, numberOfTeamsAllowed: number, tournamentRegistrations: Array<{ __typename?: 'TournamentRegistration', id?: number, createdTs: any, captain: { __typename?: 'User', id?: number, playertag: string, picture?: string }, team: { __typename?: 'Team', id?: number, name: string, picture?: string, deletedTs?: any }, players: Array<{ __typename?: 'User', id?: number, playertag: string, picture?: string }> }>, bracket?: { __typename?: 'Bracket', id?: number, root?: { __typename?: 'Match', id?: number, tournamentRegistration1?: { __typename?: 'TournamentRegistration', team: { __typename?: 'Team', id?: number, name: string, picture?: string }, players: Array<{ __typename?: 'User', id?: number, playertag: string, picture?: string }> }, tournamentRegistration2?: { __typename?: 'TournamentRegistration', team: { __typename?: 'Team', id?: number, name: string, picture?: string }, players: Array<{ __typename?: 'User', id?: number, playertag: string, picture?: string }> }, currentPhase: { __typename?: 'MatchPhase', id: number, phaseType: MatchPhaseType, createdTs: any, endTs?: any, match?: { __typename?: 'Match', id?: number }, state?: { __typename: 'MatchFinishedPhaseState', id: number, winTeamOne: boolean } | { __typename: 'MatchInProgressPhaseState', id: number, map?: CsMap } | { __typename: 'MatchPickAndBanPhaseState', id: number, firstTeamToBan: number, votingTimeInSeconds: number, actions: Array<{ __typename?: 'MatchPickAndBanPhaseAction', id?: number, ban: CsMap, captain: { __typename?: 'User', id?: number } }> } | { __typename: 'MatchReadyCheckPhaseState', id: number, teamOneAction: { __typename?: 'MatchReadyCheckPhaseCaptainPerTeamAction', ready: boolean }, teamTwoAction: { __typename?: 'MatchReadyCheckPhaseCaptainPerTeamAction', ready: boolean } } } } } } };
 
 export type PublishTournamentMutationVariables = Exact<{
   tournamentId: Scalars['Int'];
@@ -848,7 +849,7 @@ export type GetTournamentRegistrationByPlayerQueryVariables = Exact<{
 }>;
 
 
-export type GetTournamentRegistrationByPlayerQuery = { __typename?: 'Query', getTournamentRegistrationByPlayer?: { __typename?: 'TournamentRegistration', id?: number, team: { __typename?: 'Team', id?: number, name: string, picture?: string, users: Array<{ __typename?: 'User', id?: number, playertag: string, picture?: string }> }, tournament?: { __typename?: 'Tournament', id?: number }, captain: { __typename?: 'User', id?: number }, players: Array<{ __typename?: 'User', id?: number, playertag: string, picture?: string }> } };
+export type GetTournamentRegistrationByPlayerQuery = { __typename?: 'Query', getTournamentRegistrationByPlayer?: { __typename?: 'TournamentRegistration', id?: number, team: { __typename?: 'Team', id?: number, name: string, picture?: string, deletedTs?: any, users: Array<{ __typename?: 'User', id?: number, playertag: string, picture?: string }> }, tournament?: { __typename?: 'Tournament', id?: number }, captain: { __typename?: 'User', id?: number }, players: Array<{ __typename?: 'User', id?: number, playertag: string, picture?: string, deletedTs?: any }> } };
 
 export type GetTournamentRegistrationByTeamQueryVariables = Exact<{
   tournamentId: Scalars['Int'];
@@ -856,7 +857,7 @@ export type GetTournamentRegistrationByTeamQueryVariables = Exact<{
 }>;
 
 
-export type GetTournamentRegistrationByTeamQuery = { __typename?: 'Query', getTournamentRegistrationByTeam?: { __typename?: 'TournamentRegistration', id?: number, team: { __typename?: 'Team', id?: number }, captain: { __typename?: 'User', id?: number, playertag: string, picture?: string } } };
+export type GetTournamentRegistrationByTeamQuery = { __typename?: 'Query', getTournamentRegistrationByTeam?: { __typename?: 'TournamentRegistration', id?: number, team: { __typename?: 'Team', id?: number }, captain: { __typename?: 'User', id?: number, playertag: string, picture?: string }, players: Array<{ __typename?: 'User', id?: number, deletedTs?: any }> } };
 
 export type DeregisterTeamFromTournamentMutationVariables = Exact<{
   tournamentId: Scalars['Int'];
@@ -893,14 +894,14 @@ export type GetUserByIdQueryVariables = Exact<{
 }>;
 
 
-export type GetUserByIdQuery = { __typename?: 'Query', getUserById?: { __typename?: 'User', id?: number, playertag: string, email: string, role: UserRole, description: string, picture?: string, createdTs: any, steamId?: string, deletedTs: any, teams: Array<{ __typename?: 'Team', id?: number, name: string, picture?: string, users: Array<{ __typename?: 'User', playertag: string }> }> } };
+export type GetUserByIdQuery = { __typename?: 'Query', getUserById?: { __typename?: 'User', id?: number, playertag: string, email: string, role: UserRole, description: string, picture?: string, createdTs: any, steamId?: string, deletedTs?: any, teams: Array<{ __typename?: 'Team', id?: number, name: string, picture?: string, users: Array<{ __typename?: 'User', playertag: string }> }> } };
 
 export type GetCurrentUserQueryVariables = Exact<{
   token: Scalars['String'];
 }>;
 
 
-export type GetCurrentUserQuery = { __typename?: 'Query', getCurrentUser?: { __typename?: 'User', id?: number, playertag: string, email: string, role: UserRole, picture?: string, deletedTs: any, teams: Array<{ __typename?: 'Team', id?: number, name: string, picture?: string, users: Array<{ __typename?: 'User', playertag: string }> }> } };
+export type GetCurrentUserQuery = { __typename?: 'Query', getCurrentUser?: { __typename?: 'User', id?: number, playertag: string, email: string, role: UserRole, picture?: string, deletedTs?: any, teams: Array<{ __typename?: 'Team', id?: number, name: string, picture?: string, deletedTs?: any, users: Array<{ __typename?: 'User', playertag: string }> }> } };
 
 export type CreateUserMutationVariables = Exact<{
   playertag: Scalars['String'];
@@ -2113,7 +2114,9 @@ export const GetTeamByIdDocument = gql`
       id
       playertag
       picture
+      deletedTs
     }
+    deletedTs
   }
 }
     `;
@@ -2462,6 +2465,7 @@ export const GetTournamentByIdDocument = gql`
         id
         name
         picture
+        deletedTs
       }
       players {
         id
@@ -2656,6 +2660,7 @@ export const GetTournamentRegistrationByPlayerDocument = gql`
         playertag
         picture
       }
+      deletedTs
     }
     tournament {
       id
@@ -2667,6 +2672,7 @@ export const GetTournamentRegistrationByPlayerDocument = gql`
       id
       playertag
       picture
+      deletedTs
     }
   }
 }
@@ -2711,6 +2717,10 @@ export const GetTournamentRegistrationByTeamDocument = gql`
       id
       playertag
       picture
+    }
+    players {
+      id
+      deletedTs
     }
   }
 }
@@ -2973,6 +2983,7 @@ export const GetCurrentUserDocument = gql`
       users {
         playertag
       }
+      deletedTs
     }
     deletedTs
   }
