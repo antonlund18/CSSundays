@@ -1,0 +1,30 @@
+{
+  "$schema": "https://turborepo.com/schema.json",
+  "ui": "tui",
+  "tasks": {
+    "generate": {
+      "inputs": ["prisma/schema.prisma"],
+      "outputs": ["src/generated/**"]
+    },
+    "dev": {
+      "dependsOn": ["generate"],
+      "cache": false,
+      "persistent": true
+    },
+    "build": {
+      "dependsOn": ["generate"],
+      "inputs": ["$TURBO_DEFAULT$", ".env*"],
+      "env": ["VITE_*"],
+      "outputs": ["dist/**", "src/generated/**"]
+    },
+    "typecheck": {
+      "dependsOn": ["generate"]
+    },
+    "lint": {},
+    "test": {
+      "dependsOn": ["generate"],
+      "passThroughEnv": ["DATABASE_URL", "TEST_DATABASE_URL"],
+      "cache": false
+    }
+  }
+}

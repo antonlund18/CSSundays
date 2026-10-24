@@ -1,16 +1,16 @@
-version: '3.8'
+# Local Postgres for development and tests. Production uses Neon.
 services:
-  backend:
-    build:
-      dockerfile: image-backend.dockerfile
-  frontend:
-    build:
-      dockerfile: image-frontend.dockerfile
+  postgres:
+    image: postgres:17-alpine
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: cssundays
     ports:
-      - "3000:3000"
-  proxy:
-    image: nginx:1.17
-    ports:
-      - "8080:80"
+      - "5432:5432"
     volumes:
-      - ./nginx/default.conf/
+      - pgdata:/var/lib/postgresql/data
+      - ./server/prisma/init-test-db.sql:/docker-entrypoint-initdb.d/init-test-db.sql:ro
+
+volumes:
+  pgdata:
