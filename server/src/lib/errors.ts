@@ -44,7 +44,12 @@ export type ErrorCode =
   | "TOURNAMENT_NOT_STARTED"
   | "INVALID_IMAGE"
   | "STEAM_VERIFICATION_FAILED"
-  | "STEAM_ALREADY_LINKED";
+  | "STEAM_ALREADY_LINKED"
+  | "SERVERS_NOT_CONFIGURED"
+  | "NO_FREE_SERVER"
+  | "TEST_SERVER_RUNNING"
+  | "SERVER_START_FAILED"
+  | "STEAM_REQUIRED";
 
 export class AppError extends GraphQLError {
   constructor(public readonly code: ErrorCode) {

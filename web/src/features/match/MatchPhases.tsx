@@ -166,6 +166,12 @@ function PickAndBan({ match }: { match: MatchDetails }) {
   );
 }
 
+function serverWaitingText(status: MatchDetails["serverStatus"]) {
+  if (status === "STARTING") return "Jeres server bliver oprettet. Det tager typisk under et minut.";
+  if (status === "FAILED") return "Serveren kunne ikke startes. En arrangør hjælper jer videre.";
+  return "Serveren er ved at blive klargjort. IP-adressen vises her.";
+}
+
 function InProgress({ match, isParticipant }: { match: MatchDetails; isParticipant: boolean }) {
   const { isStaff } = useMatchActions();
   const { data: maps = [] } = useQuery(mapsQuery());
@@ -182,6 +188,13 @@ function InProgress({ match, isParticipant }: { match: MatchDetails; isParticipa
   return (
     <div className="mx-auto flex max-w-md flex-col items-center gap-4 py-4 text-center">
       <p className="heading text-2xl">Kamp i gang</p>
+      {match.score1 !== null && match.score2 !== null && (
+        <p className="heading text-3xl tabular-nums" aria-label="Stilling">
+          <span className="text-primary">{match.score1}</span>
+          <span className="mx-2 text-muted">–</span>
+          <span className="text-accent-light">{match.score2}</span>
+        </p>
+      )}
       <div
         className="relative aspect-video w-full overflow-hidden rounded-xl border-2 border-white/10 bg-surface-3 bg-cover bg-center motion-safe:animate-map-reveal"
         style={map?.imageUrl ? { backgroundImage: `url(${map.imageUrl})` } : undefined}
@@ -204,7 +217,7 @@ function InProgress({ match, isParticipant }: { match: MatchDetails; isParticipa
             </Button>
           </div>
         ) : (
-          <p className="text-sm text-muted">Serveren er ved at blive klargjort. IP-adressen vises her.</p>
+          <p className="text-sm text-muted">{serverWaitingText(match.serverStatus)}</p>
         )
       ) : (
         <p className="text-sm text-muted">Server-IP vises kun for holdene i kampen.</p>

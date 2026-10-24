@@ -1,5 +1,5 @@
 import { Link, createFileRoute } from "@tanstack/react-router";
-import { Map, Swords, Trophy, Users } from "lucide-react";
+import { Map, Server, Swords, Trophy, Users } from "lucide-react";
 import { useAuth } from "@/auth/AuthProvider";
 import { Page, PageTitle } from "@/components/layout";
 
@@ -7,7 +7,7 @@ export const Route = createFileRoute("/admin/")({
   component: AdminPage,
 });
 
-function Tile({ to, title, icon, position }: { to: "/admin/tournaments" | "/admin/players" | "/admin/maps" | "/admin/match-test"; title: string; icon: React.ReactNode; position: string }) {
+function Tile({ to, title, icon, position }: { to: "/admin/tournaments" | "/admin/players" | "/admin/maps" | "/admin/match-test" | "/admin/servers"; title: string; icon: React.ReactNode; position: string }) {
   return (
     <Link to={to} className="group relative block overflow-hidden rounded-xl border border-border">
       <div
@@ -32,6 +32,7 @@ function AdminPage() {
         <Tile to="/admin/maps" title="Kort" icon={<Map />} position="50% 50%" />
         {isAdmin && <Tile to="/admin/players" title="Spillere" icon={<Users />} position="100% 50%" />}
         <Tile to="/admin/match-test" title="Test kamp" icon={<Swords />} position="75% 50%" />
+        <Tile to="/admin/servers" title="Servere" icon={<Server />} position="25% 50%" />
       </div>
     </Page>
   );

@@ -31,6 +31,11 @@ const messages: Record<string, string> = {
   TOURNAMENT_NOT_STARTED: "Turneringen er ikke startet.",
   STEAM_VERIFICATION_FAILED: "Steam verifikation mislykkedes.",
   STEAM_ALREADY_LINKED: "Denne Steam-konto er allerede knyttet til en anden bruger.",
+  SERVERS_NOT_CONFIGURED: "Automatiske servere er ikke sat op (DatHost).",
+  NO_FREE_SERVER: "Alle servere er optaget lige nu.",
+  TEST_SERVER_RUNNING: "Der kører allerede en test-server.",
+  SERVER_START_FAILED: "Serveren kunne ikke startes. Se API-loggen for detaljer.",
+  STEAM_REQUIRED: "Du skal forbinde din Steam-konto, før du kan tilmelde dig.",
   // Accounts
   INVALID_INPUT: "Ugyldige oplysninger.",
   INVALID_CREDENTIALS: "Forkert e-mail eller kodeord. Prøv igen.",

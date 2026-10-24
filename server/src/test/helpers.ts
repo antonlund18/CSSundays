@@ -86,3 +86,12 @@ export async function createTournamentWithTeams(teams: number, maxTeams = 64) {
   }
   return { tournament, captains };
 }
+
+let steamCounter = 0;
+
+/** Gives the user a (fake) linked Steam account, which tournament registration requires. */
+export async function linkTestSteam(userId: string) {
+  const steamId = String(76561190000000000n + BigInt(++steamCounter));
+  await prisma.user.update({ where: { id: userId }, data: { steamId } });
+  return steamId;
+}

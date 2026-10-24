@@ -16,6 +16,7 @@ import { Button } from "@/components/ui/button";
 import { Dialog, DialogBody, DialogContent } from "@/components/ui/dialog";
 import { Badge, EmptyState, PageSpinner } from "@/components/ui/misc";
 import { errorMessage } from "@/lib/errors";
+import { startSteamLink } from "@/lib/steam";
 
 const ROSTER_SIZE = 5;
 
@@ -73,6 +74,18 @@ function AlreadyRegistered({ tournament, userId }: { tournament: TournamentDetai
         </Button>
       )}
     </div>
+  );
+}
+
+/** Match servers let players in by Steam id, so registration needs a linked Steam account. */
+function SteamRequired() {
+  return (
+    <EmptyState title="Forbind din Steam-konto">
+      <p>Du skal forbinde din Steam-konto, før du kan tilmelde dig. Kampserveren lukker kun spillere ind via deres Steam-konto.</p>
+      <Button className="mt-4 bg-[#171a21] text-white hover:bg-[#2a475e]" onClick={startSteamLink}>
+        Forbind Steam
+      </Button>
+    </EmptyState>
   );
 }
 
@@ -144,7 +157,7 @@ export function RegistrationDialog({
   open: boolean;
   onOpenChange: (open: boolean) => void;
 }) {
-  const { userId } = useAuth();
+  const { userId, profile } = useAuth();
   const [createTeamOpen, setCreateTeamOpen] = useState(false);
   const { data: registration, isPending } = useQuery({
     ...myRegistrationQuery(tournament.id, userId ?? ""),
@@ -162,6 +175,8 @@ export function RegistrationDialog({
               <PageSpinner />
             ) : registration ? (
               <AlreadyRegistered tournament={tournament} userId={userId} />
+            ) : !profile?.steamId ? (
+              <SteamRequired />
             ) : (
               <ChooseTeam
                 tournament={tournament}

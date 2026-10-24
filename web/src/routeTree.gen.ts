@@ -18,6 +18,7 @@ import { Route as AdminIndexRouteImport } from './routes/admin/index'
 import { Route as AdminMapsRouteImport } from './routes/admin/maps'
 import { Route as AdminMatchTestRouteImport } from './routes/admin/match-test'
 import { Route as AdminPlayersRouteImport } from './routes/admin/players'
+import { Route as AdminServersRouteImport } from './routes/admin/servers'
 import { Route as MatchesMatchIdRouteImport } from './routes/matches/$matchId'
 import { Route as PlayersPlayertagRouteImport } from './routes/players/$playertag'
 import { Route as SteamCallbackRouteImport } from './routes/steam/callback'
@@ -72,6 +73,11 @@ const AdminMatchTestRoute = AdminMatchTestRouteImport.update({
 const AdminPlayersRoute = AdminPlayersRouteImport.update({
   id: '/players',
   path: '/players',
+  getParentRoute: () => AdminRouteRoute,
+} as any)
+const AdminServersRoute = AdminServersRouteImport.update({
+  id: '/servers',
+  path: '/servers',
   getParentRoute: () => AdminRouteRoute,
 } as any)
 const MatchesMatchIdRoute = MatchesMatchIdRouteImport.update({
@@ -135,6 +141,7 @@ export interface FileRoutesByFullPath {
   '/admin/maps': typeof AdminMapsRoute
   '/admin/match-test': typeof AdminMatchTestRoute
   '/admin/players': typeof AdminPlayersRoute
+  '/admin/servers': typeof AdminServersRoute
   '/matches/$matchId': typeof MatchesMatchIdRoute
   '/players/$playertag': typeof PlayersPlayertagRoute
   '/steam/callback': typeof SteamCallbackRoute
@@ -155,6 +162,7 @@ export interface FileRoutesByTo {
   '/admin/maps': typeof AdminMapsRoute
   '/admin/match-test': typeof AdminMatchTestRoute
   '/admin/players': typeof AdminPlayersRoute
+  '/admin/servers': typeof AdminServersRoute
   '/matches/$matchId': typeof MatchesMatchIdRoute
   '/players/$playertag': typeof PlayersPlayertagRoute
   '/steam/callback': typeof SteamCallbackRoute
@@ -177,6 +185,7 @@ export interface FileRoutesById {
   '/admin/maps': typeof AdminMapsRoute
   '/admin/match-test': typeof AdminMatchTestRoute
   '/admin/players': typeof AdminPlayersRoute
+  '/admin/servers': typeof AdminServersRoute
   '/matches/$matchId': typeof MatchesMatchIdRoute
   '/players/$playertag': typeof PlayersPlayertagRoute
   '/steam/callback': typeof SteamCallbackRoute
@@ -200,6 +209,7 @@ export interface FileRouteTypes {
     | '/admin/maps'
     | '/admin/match-test'
     | '/admin/players'
+    | '/admin/servers'
     | '/matches/$matchId'
     | '/players/$playertag'
     | '/steam/callback'
@@ -220,6 +230,7 @@ export interface FileRouteTypes {
     | '/admin/maps'
     | '/admin/match-test'
     | '/admin/players'
+    | '/admin/servers'
     | '/matches/$matchId'
     | '/players/$playertag'
     | '/steam/callback'
@@ -241,6 +252,7 @@ export interface FileRouteTypes {
     | '/admin/maps'
     | '/admin/match-test'
     | '/admin/players'
+    | '/admin/servers'
     | '/matches/$matchId'
     | '/players/$playertag'
     | '/steam/callback'
@@ -334,6 +346,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminPlayersRouteImport
       parentRoute: typeof AdminRouteRoute
     }
+    '/admin/servers': {
+      id: '/admin/servers'
+      path: '/servers'
+      fullPath: '/admin/servers'
+      preLoaderRoute: typeof AdminServersRouteImport
+      parentRoute: typeof AdminRouteRoute
+    }
     '/matches/$matchId': {
       id: '/matches/$matchId'
       path: '/matches/$matchId'
@@ -411,6 +430,7 @@ interface AdminRouteRouteChildren {
   AdminMapsRoute: typeof AdminMapsRoute
   AdminMatchTestRoute: typeof AdminMatchTestRoute
   AdminPlayersRoute: typeof AdminPlayersRoute
+  AdminServersRoute: typeof AdminServersRoute
   AdminIndexRoute: typeof AdminIndexRoute
   AdminTournamentsTournamentIdRoute: typeof AdminTournamentsTournamentIdRoute
   AdminTournamentsNewRoute: typeof AdminTournamentsNewRoute
@@ -421,6 +441,7 @@ const AdminRouteRouteChildren: AdminRouteRouteChildren = {
   AdminMapsRoute: AdminMapsRoute,
   AdminMatchTestRoute: AdminMatchTestRoute,
   AdminPlayersRoute: AdminPlayersRoute,
+  AdminServersRoute: AdminServersRoute,
   AdminIndexRoute: AdminIndexRoute,
   AdminTournamentsTournamentIdRoute: AdminTournamentsTournamentIdRoute,
   AdminTournamentsNewRoute: AdminTournamentsNewRoute,

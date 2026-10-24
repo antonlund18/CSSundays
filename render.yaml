@@ -39,3 +39,13 @@ services:
         sync: false
       - key: IMAGE_BASE_URL
         sync: false # public URL of the R2 bucket
+      - key: DATHOST_EMAIL
+        sync: false # optional: automatic match servers
+      - key: DATHOST_PASSWORD
+        sync: false
+      - key: DATHOST_LOCATION
+        sync: false # e.g. copenhagen
+      - key: DATHOST_WEBHOOK_URL
+        sync: false # e.g. https://api.cssundays.dk/webhooks/dathost
+      - key: DATHOST_WEBHOOK_SECRET
+        generateValue: true

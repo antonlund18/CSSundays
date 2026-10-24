@@ -59,6 +59,18 @@ enum MatchPhase {
   CANCELLED
 }
 
+/// State of a match's automatically hosted (DatHost) game server.
+enum ServerStatus {
+  /// A DatHost server is being created for the match.
+  STARTING
+  /// A DatHost match is running on the match's own server (`gameServerId`).
+  ACTIVE
+  /// Starting the server failed or the match was cancelled on the server; staff take over.
+  FAILED
+  /// The match is over and its server has been deleted.
+  ENDED
+}
+
 model User {
   id              String    @id @default(uuid()) @db.Uuid
   /// Always stored lower-cased.
@@ -241,6 +253,8 @@ model GameMap {
   slug      String  @id
   name      String
   imageUrl  String? @map("image_url")
+  /// The map name the game server loads, e.g. de_dust2.
+  serverMap String? @map("server_map")
   active    Boolean @default(true)
   sortOrder Int     @default(0) @map("sort_order")
 
@@ -253,23 +267,30 @@ model GameMap {
 /// Brackets are complete binary trees with heap numbering: the final is
 /// position 1 and the children of position p are 2p (left) and 2p + 1 (right).
 model Match {
-  id              Int        @id @default(autoincrement())
-  tournamentId    Int        @map("tournament_id")
+  id              Int           @id @default(autoincrement())
+  tournamentId    Int           @map("tournament_id")
   position        Int
-  registration1Id Int?       @map("registration1_id")
-  registration2Id Int?       @map("registration2_id")
-  phase           MatchPhase @default(WAITING_FOR_TEAMS)
-  phaseStartedAt  DateTime   @default(now()) @map("phase_started_at")
+  registration1Id Int?          @map("registration1_id")
+  registration2Id Int?          @map("registration2_id")
+  phase           MatchPhase    @default(WAITING_FOR_TEAMS)
+  phaseStartedAt  DateTime      @default(now()) @map("phase_started_at")
   /// Deadline of the current ready check / ban turn.
-  phaseEndsAt     DateTime?  @map("phase_ends_at")
-  team1Ready      Boolean    @default(false) @map("team1_ready")
-  team2Ready      Boolean    @default(false) @map("team2_ready")
-  firstBanTeam    Int?       @map("first_ban_team")
-  mapSlug         String?    @map("map")
+  phaseEndsAt     DateTime?     @map("phase_ends_at")
+  team1Ready      Boolean       @default(false) @map("team1_ready")
+  team2Ready      Boolean       @default(false) @map("team2_ready")
+  firstBanTeam    Int?          @map("first_ban_team")
+  mapSlug         String?       @map("map")
   winner          Int?
   /// Only shown to the two teams and staff.
-  serverAddress   String?    @map("server_address")
-  updatedAt       DateTime   @updatedAt @map("updated_at")
+  serverAddress   String?       @map("server_address")
+  /// Null when servers are not hosted automatically (DatHost not configured).
+  serverStatus    ServerStatus? @map("server_status")
+  gameServerId    String?       @map("game_server_id")
+  dathostMatchId  String?       @unique @map("dathost_match_id")
+  /// Live round score reported by the game server.
+  score1          Int?
+  score2          Int?
+  updatedAt       DateTime      @updatedAt @map("updated_at")
 
   tournament    Tournament              @relation(fields: [tournamentId], references: [id], onDelete: Cascade)
   registration1 TournamentRegistration? @relation("Registration1", fields: [registration1Id], references: [id], onDelete: SetNull)

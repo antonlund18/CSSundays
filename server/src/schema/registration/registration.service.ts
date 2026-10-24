@@ -7,6 +7,8 @@ import { inTournament, playerIds, tournamentChanged } from "../tournament/tourna
 
 /** The first team member to register becomes captain; teammates join the same registration. */
 export async function registerForTournament(user: User, tournamentId: number, teamId: number) {
+  // Match servers only let in players by Steam id.
+  if (!user.steamId) fail("STEAM_REQUIRED");
   return inTournament(tournamentId, async () => {
     const result = await prisma.$transaction(async (tx) => {
       const tournament = await tx.tournament.findUnique({ where: { id: tournamentId } });

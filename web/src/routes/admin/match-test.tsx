@@ -8,7 +8,9 @@ import { Page, PageTitle, Panel, SectionTitle } from "@/components/layout";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/misc";
+import type { TestServer } from "@/api/servers";
 import { MatchActionsContext, MatchPhase, type MatchActions } from "@/features/match/MatchPhases";
+import { TestServerPanel } from "@/features/match/TestServerPanel";
 import { banTurn } from "@/lib/bracket";
 import { ApiError } from "@/lib/graphql";
 import { cn } from "@/lib/utils";
@@ -47,6 +49,9 @@ function initialMatch(): MatchDetails {
     mapSlug: null,
     winner: null,
     serverAddress: null,
+    serverStatus: null,
+    score1: null,
+    score2: null,
     tournament: { id: -1, name: "Testturnering", status: "IN_PROGRESS" },
     registration1: side(1, "Testhold A", CAPTAIN_1, ["Kaptajn A", "Spiller A2", "Spiller A3"]),
     registration2: side(2, "Testhold B", CAPTAIN_2, ["Kaptajn B", "Spiller B2", "Spiller B3"]),
@@ -150,6 +155,38 @@ function MatchTestPage() {
     [settings],
   );
 
+  // A running DatHost test server stands in for the match's server: its address and score show in the match.
+  const applyTestServer = useCallback(
+    (server: TestServer | null) =>
+      setState((state) => {
+        const current = state.match;
+        const next = server
+          ? { serverAddress: server.address ?? current.serverAddress, serverStatus: "ACTIVE" as const, score1: server.score1, score2: server.score2 }
+          : current.serverStatus === "ACTIVE"
+            ? { serverAddress: null, serverStatus: null, score1: null, score2: null }
+            : null;
+        if (
+          !next ||
+          (current.serverAddress === next.serverAddress &&
+            current.serverStatus === next.serverStatus &&
+            current.score1 === next.score1 &&
+            current.score2 === next.score2)
+        ) {
+          return state;
+        }
+        const line = server
+          ? current.serverStatus === "ACTIVE"
+            ? `Test-server: ${server.score1 ?? 0}–${server.score2 ?? 0}`
+            : `Test-server kører på ${server.map}${server.address ? ` (${server.address})` : ""}`
+          : "Test-serveren er stoppet";
+        return {
+          match: { ...current, ...next },
+          log: [`${new Date().toLocaleTimeString("da-DK")}  ${line}`, ...state.log].slice(0, 50),
+        };
+      }),
+    [],
+  );
+
   // One timer per deadline, like armTimer() on the server.
   useEffect(() => {
     if (!match.phaseEndsAt) return;
@@ -218,7 +255,16 @@ function MatchTestPage() {
       label: "Nulstil",
       icon: <RotateCcw />,
       enabled: true,
-      step: (current) => [{ ...initialMatch(), serverAddress: current.serverAddress }, "Kampen er nulstillet"],
+      step: (current) => [
+        {
+          ...initialMatch(),
+          serverAddress: current.serverAddress,
+          serverStatus: current.serverStatus,
+          score1: current.score1,
+          score2: current.score2,
+        },
+        "Kampen er nulstillet",
+      ],
     },
   ];
 
@@ -275,6 +321,8 @@ function MatchTestPage() {
               ))}
             </div>
           </Panel>
+
+          <TestServerPanel maps={maps} defaultMap={match.mapSlug} onChange={applyTestServer} />
 
           <Panel className="flex flex-col gap-3 p-4">
             <SectionTitle className="mb-0">Indstillinger</SectionTitle>

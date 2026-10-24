@@ -24,6 +24,7 @@ type GameMap {
   active: Boolean!
   imageUrl: String
   name: String!
+  serverMap: String
   slug: ID!
   sortOrder: Int!
 }
@@ -59,7 +60,10 @@ type Match {
   registration1Id: Int
   registration2: Registration
   registration2Id: Int
+  score1: Int
+  score2: Int
   serverAddress: String
+  serverStatus: ServerStatus
   team1Ready: Boolean!
   team2Ready: Boolean!
   tournament: Tournament!
@@ -86,8 +90,19 @@ enum MatchPhase {
   WAITING_TO_START
 }
 
+type MatchServer {
+  address: String
+  booting: Boolean!
+  gameServerId: String!
+  isTestServer: Boolean!
+  match: Match
+  name: String!
+  on: Boolean!
+  playersOnline: Int
+}
+
 type Mutation {
-  addMap(imageUrl: String, name: String!): GameMap!
+  addMap(imageUrl: String, name: String!, serverMap: String): GameMap!
   banMap(map: String!, matchId: Int!): Boolean!
   changeEmail(email: String!, password: String!): User!
   changePassword(currentPassword: String!, newPassword: String!): Boolean!
@@ -112,14 +127,30 @@ type Mutation {
   resetPassword(password: String!, token: String!): Boolean!
   respondToInvite(accept: Boolean!, inviteId: Int!): TeamInvite!
   restartMatch(matchId: Int!): Boolean!
+
+  """
+  Starts a server again after a failure, or re-reads the state of the running one.
+  """
+  retryMatchServer(matchId: Int!): Boolean!
   sendChatMessage(matchId: Int!, message: String!): ChatMessage!
   setMatchServer(address: String, matchId: Int!): Boolean!
   setTournamentPublished(id: Int!, published: Boolean!): Tournament!
   setUserRole(role: UserRole!, userId: ID!): User!
   signUp(email: String!, password: String!, playertag: String!): AuthPayload!
+
+  """
+  Starts a DatHost match on a free pool server; the given Steam ids may join.
+  """
+  startTestServer(map: String!, steamIds: [String!]!): TestServer
   startTournament(tournamentId: Int!): Boolean!
+
+  """
+  Cancels what runs on the server and deletes it; a match using it is marked FAILED.
+  """
+  stopMatchServer(gameServerId: String!): Boolean!
+  stopTestServer: Boolean!
   unlinkSteam: User!
-  updateMap(active: Boolean, imageUrl: String, slug: String!): GameMap!
+  updateMap(active: Boolean, imageUrl: String, serverMap: String, slug: String!): GameMap!
   updateProfile(description: String!): User!
   updateTournament(id: Int!, input: TournamentInput!): Tournament!
 
@@ -147,6 +178,12 @@ type Query {
   maps: [GameMap!]!
   match(id: Int!): Match
   matchChat(matchId: Int!): [ChatMessage!]!
+
+  """
+  This deployment's servers on DatHost, with the match each one belongs to.
+  """
+  matchServers: [MatchServer!]!
+  matchServersEnabled: Boolean!
   me: User
   myActiveRegistrations: [Registration!]!
   myRegistration(tournamentId: Int!): Registration
@@ -158,6 +195,7 @@ type Query {
   search(query: String!, type: SearchType = ALL): SearchResult!
   team(id: Int!): Team
   teams: [Team!]!
+  testServer: TestServer
   tournament(id: Int!): Tournament
   tournaments: [Tournament!]!
 }
@@ -184,6 +222,13 @@ enum SearchType {
   PLAYERS
   TEAMS
   TOURNAMENTS
+}
+
+enum ServerStatus {
+  ACTIVE
+  ENDED
+  FAILED
+  STARTING
 }
 
 type Subscription {
@@ -214,6 +259,18 @@ type TeamInvite {
   sender: User!
   status: InviteStatus!
   team: Team!
+}
+
+type TestServer {
+  address: String
+  cancelReason: String
+  dathostMatchId: String!
+  finished: Boolean!
+  gameServerId: String!
+  map: String!
+  score1: Int
+  score2: Int
+  startedAt: DateTime!
 }
 
 type Tournament {

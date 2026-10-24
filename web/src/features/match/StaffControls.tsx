@@ -1,12 +1,19 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { RotateCcw, Server, Trophy } from "lucide-react";
+import { RefreshCw, RotateCcw, Server, Trophy } from "lucide-react";
 import { useState, type FormEvent } from "react";
 import { toast } from "sonner";
-import { reportWinner, restartMatch, setMatchServer, type MatchDetails } from "@/api/matches";
+import { reportWinner, restartMatch, retryMatchServer, setMatchServer, type MatchDetails } from "@/api/matches";
 import { Panel } from "@/components/layout";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { errorMessage } from "@/lib/errors";
+
+const SERVER_STATUS: Record<NonNullable<MatchDetails["serverStatus"]>, string> = {
+  STARTING: "starter",
+  ACTIVE: "kører",
+  FAILED: "fejlet",
+  ENDED: "slettet",
+};
 
 /** Arranger tools on the match page (replaces the old Ctrl+Shift+A command palette). */
 export function StaffControls({ match }: { match: MatchDetails }) {
@@ -45,6 +52,15 @@ export function StaffControls({ match }: { match: MatchDetails }) {
     onError,
   });
 
+  const retryServer = useMutation({
+    mutationFn: () => retryMatchServer(match.id),
+    onSuccess: () => {
+      toast.success("Serveren er opdateret");
+      refresh();
+    },
+    onError,
+  });
+
   const playable = !!match.registration1 && !!match.registration2 && match.phase !== "FINISHED" && match.phase !== "CANCELLED";
   const live = match.phase === "READY_CHECK" || match.phase === "PICK_AND_BAN" || match.phase === "IN_PROGRESS";
 
@@ -77,6 +93,12 @@ export function StaffControls({ match }: { match: MatchDetails }) {
           <Button variant="ghost" size="sm" disabled={!live || restart.isPending} onClick={() => restart.mutate()}>
             <RotateCcw /> Genstart klar-tjek
           </Button>
+          {match.serverStatus && match.phase === "IN_PROGRESS" && (
+            <Button variant="ghost" size="sm" disabled={retryServer.isPending} onClick={() => retryServer.mutate()}>
+              <RefreshCw /> {match.serverStatus === "ACTIVE" ? "Tjek server" : "Start server igen"}
+              <span className="text-muted">({SERVER_STATUS[match.serverStatus]})</span>
+            </Button>
+          )}
         </div>
         <form onSubmit={submitServer} className="flex flex-1 gap-2">
           <Input

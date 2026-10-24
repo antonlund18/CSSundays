@@ -36,6 +36,10 @@ import "./match/match.queries.js";
 import "./match/match.mutations.js";
 import "./match/match.subscriptions.js";
 
+import "./match-server/match-server.model.js";
+import "./match-server/match-server.queries.js";
+import "./match-server/match-server.mutations.js";
+
 import "./chat/chat.model.js";
 import "./chat/chat.queries.js";
 import "./chat/chat.mutations.js";

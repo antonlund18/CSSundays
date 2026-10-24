@@ -1,6 +1,6 @@
 import { beforeAll, describe, expect, it } from "vitest";
 import { prisma } from "../../db.js";
-import { createTeam, createUser, ok, rejects } from "../../test/helpers.js";
+import { createTeam, createUser, linkTestSteam, ok, rejects } from "../../test/helpers.js";
 
 describe("teams, invites and registration", () => {
   let alice: { token: string; user: { id: string } };
@@ -45,6 +45,9 @@ describe("teams, invites and registration", () => {
 
   it("registers a team, adds teammates and enforces the rules", async () => {
     const register = `mutation ($t: Int!, $team: Int!) { registerForTournament(tournamentId: $t, teamId: $team) { id } }`;
+    await rejects("STEAM_REQUIRED", register, { t: tournamentId, team: teamId }, alice.token);
+    for (const player of [alice, bob, carol]) await linkTestSteam(player.user.id);
+
     await rejects("NOT_TEAM_MEMBER", register, { t: tournamentId, team: teamId }, carol.token);
     await ok(register, { t: tournamentId, team: teamId }, alice.token);
     await rejects("ALREADY_REGISTERED", register, { t: tournamentId, team: teamId }, alice.token);
@@ -55,9 +58,11 @@ describe("teams, invites and registration", () => {
 
     // Fill the second slot, then a third team does not fit.
     const dave = await createUser("dave");
+    await linkTestSteam(dave.user.id);
     await createTeam("Dave Team", [dave.user.id]);
     await ok(register, { t: tournamentId, team: (await prisma.team.findFirstOrThrow({ where: { name: "Dave Team" } })).id }, dave.token);
     const erin = await createUser("erin");
+    await linkTestSteam(erin.user.id);
     const erinTeam = await createTeam("Erin Team", [erin.user.id]);
     await rejects("TOURNAMENT_FULL", register, { t: tournamentId, team: erinTeam.id }, erin.token);
   });

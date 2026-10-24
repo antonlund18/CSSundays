@@ -165,3 +165,34 @@ DATABASE_URL="<neon direct url>" npx prisma db execute --stdin <<< "update users
 ```
 
 Admins can hand out the organizer/admin roles at `/admin/players` afterwards.
+
+### 7. Automatic match servers: DatHost (optional, paid)
+
+Without this, staff paste a server address into each match by hand. With it, the API creates a
+new CS2 server on [DatHost](https://dathost.net) as soon as a match's veto is done, starts the
+match on it, shows the live score, records the winner and advances the bracket – and deletes the
+server again when the match is over (or restarted, or settled by staff). DatHost bills while a
+server runs, so test with a small amount of credit first.
+
+1. Set `DATHOST_EMAIL` and `DATHOST_PASSWORD` (the API uses your account login) and optionally
+   `DATHOST_LOCATION` (e.g. `copenhagen`, see DatHost's
+   [location ids](https://dathost.readme.io/reference/server-locations-mapping)).
+2. In production, set `DATHOST_WEBHOOK_URL` to the webhook's fixed URL, e.g.
+   `https://api.cssundays.dk/webhooks/dathost`, and `DATHOST_WEBHOOK_SECRET` (Render generates
+   one). In development webhooks are ignored – no tunnel needed – and the API polls DatHost for
+   results every 15 seconds instead.
+3. Players must link their Steam account before they can register for a tournament; the server
+   only lets in rostered players by Steam id.
+4. At `/admin/maps`, each map has a **server map** (e.g. `de_dust2`): the name the game server
+   loads. Left empty, `de_<slug>` is used.
+5. Check the setup at `/admin/match-test` → **DatHost test-server**: it creates a server, starts a
+   match on the chosen map for the listed Steam ids and shows its address and live score. Stopping
+   it deletes the server.
+
+Servers are named `cssundays-match-<id>` in production and `cssundays-development-match-<id>`
+locally, so both can share one DatHost account. On every start the API deletes servers with its own
+prefix that no running match uses (e.g. after a crash, or a forgotten test server), and catches up on
+results it missed while it was asleep. Don't give your own DatHost servers names with these prefixes.
+
+If a server can't start, or DatHost cancels the match, the match page tells the players and staff
+get a **Start server igen** button; reporting the winner by hand always works.

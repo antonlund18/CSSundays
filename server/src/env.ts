@@ -34,6 +34,13 @@ const schema = z.object({
   UPLOAD_DIR: z.string().default("uploads"),
   /** Public URL of this API, used for locally stored images. */
   PUBLIC_API_URL: optional,
+  /** DatHost account used to host match servers. Without it, staff enter server addresses by hand. */
+  DATHOST_EMAIL: optional,
+  DATHOST_PASSWORD: optional,
+  /** Fixed URL DatHost posts results to, e.g. https://api.cssundays.dk/webhooks/dathost. Not used in development. */
+  DATHOST_WEBHOOK_URL: optional,
+  /** Shared secret DatHost sends back in the Authorization header of its webhooks. */
+  DATHOST_WEBHOOK_SECRET: optional,
 });
 
 export const env = schema.parse(process.env);

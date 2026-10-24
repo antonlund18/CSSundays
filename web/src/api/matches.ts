@@ -33,6 +33,7 @@ const MatchQuery = graphql(
   query Match($id: Int!) {
     match(id: $id) {
       id tournamentId position phase phaseEndsAt team1Ready team2Ready firstBanTeam mapSlug winner serverAddress
+      serverStatus score1 score2
       tournament { id name status }
       registration1 { ...SideFields }
       registration2 { ...SideFields }
@@ -50,7 +51,7 @@ export const matchQuery = (id: number) =>
   queryOptions({ queryKey: ["match", id], queryFn: async () => (await request(MatchQuery, { id })).match });
 
 const MapsQuery = graphql(`
-  query Maps { maps { slug name imageUrl active sortOrder } }
+  query Maps { maps { slug name imageUrl serverMap active sortOrder } }
 `);
 
 export type GameMap = ResultOf<typeof MapsQuery>["maps"][number];
@@ -109,14 +110,26 @@ export async function setMatchServer(matchId: number, address: string) {
   await request(SetServerMutation, { matchId, address });
 }
 
-const AddMapMutation = graphql(`mutation AddMap($name: String!, $imageUrl: String) { addMap(name: $name, imageUrl: $imageUrl) { slug } }`);
-export async function addMap(name: string, imageUrl: string) {
-  await request(AddMapMutation, { name, imageUrl: imageUrl || null });
+const RetryServerMutation = graphql(`mutation RetryMatchServer($matchId: Int!) { retryMatchServer(matchId: $matchId) }`);
+export async function retryMatchServer(matchId: number) {
+  await request(RetryServerMutation, { matchId });
+}
+
+const AddMapMutation = graphql(`
+  mutation AddMap($name: String!, $imageUrl: String, $serverMap: String) {
+    addMap(name: $name, imageUrl: $imageUrl, serverMap: $serverMap) { slug }
+  }
+`);
+export async function addMap(name: string, imageUrl: string, serverMap: string) {
+  await request(AddMapMutation, { name, imageUrl: imageUrl || null, serverMap: serverMap || null });
 }
 
 const UpdateMapMutation = graphql(`
-  mutation UpdateMap($slug: String!, $active: Boolean, $imageUrl: String) { updateMap(slug: $slug, active: $active, imageUrl: $imageUrl) { slug } }
+  mutation UpdateMap($slug: String!, $active: Boolean, $imageUrl: String, $serverMap: String) {
+    updateMap(slug: $slug, active: $active, imageUrl: $imageUrl, serverMap: $serverMap) { slug }
+  }
 `);
-export async function updateMap(slug: string, changes: { active?: boolean; imageUrl?: string }) {
-  await request(UpdateMapMutation, { slug, active: changes.active ?? null, imageUrl: changes.imageUrl ?? null });
+/** Only the given fields change; leaving one out keeps its value (an explicit null would clear it). */
+export async function updateMap(slug: string, changes: { active?: boolean; imageUrl?: string; serverMap?: string }) {
+  await request(UpdateMapMutation, { slug, ...changes });
 }

@@ -5,6 +5,7 @@ import { fail } from "../../lib/errors.js";
 import { withLock } from "../../lib/lock.js";
 import { events } from "../../lib/pubsub.js";
 import { isStaff } from "../auth/auth.service.js";
+import { syncMatchServers } from "../match-server/match-server.service.js";
 
 export const READY_CHECK_SECONDS = 60;
 export const BAN_SECONDS = 30;
@@ -53,15 +54,22 @@ export function stopTimers() {
   timers.clear();
 }
 
-/** Call after a transaction commits: re-arms timers and notifies subscribers. */
+/** Call after a transaction commits: re-arms timers, notifies subscribers and starts or releases game servers. */
 async function afterChange(matchIds: Iterable<number>) {
-  for (const id of new Set(matchIds)) {
+  const ids = [...new Set(matchIds)];
+  for (const id of ids) {
     const match = await prisma.match.findUnique({ where: { id }, select: { id: true, phase: true, phaseEndsAt: true, tournamentId: true } });
     if (!match) continue;
     armTimer(match);
-    events.matchChanged(match.id, match.tournamentId);
-    events.activity(await matchPlayerIds(match.id));
+    await notifyMatchChanged(match);
   }
+  syncMatchServers(ids);
+}
+
+/** Tells the match page, the bracket and the players' activity sidebars that a match changed. */
+export async function notifyMatchChanged(match: { id: number; tournamentId: number }) {
+  events.matchChanged(match.id, match.tournamentId);
+  events.activity(await matchPlayerIds(match.id));
 }
 
 async function matchPlayerIds(matchId: number) {
@@ -100,6 +108,8 @@ export async function beginReadyCheck(tx: Tx, matchId: number) {
       firstBanTeam: null,
       mapSlug: null,
       winner: null,
+      score1: null,
+      score2: null,
     },
   });
 }
@@ -256,6 +266,14 @@ export async function isParticipant(userId: string, match: Pick<Match, "registra
   const ids = [match.registration1Id, match.registration2Id].filter((id): id is number => id !== null);
   if (ids.length === 0) return false;
   return !!(await prisma.registrationPlayer.findFirst({ where: { registrationId: { in: ids }, userId } }));
+}
+
+/** Records the result reported by the game server. Does nothing if staff already settled the match. */
+export async function reportServerResult(matchId: number, winner: 1 | 2) {
+  await mutate(matchId, async (tx, match) => {
+    if (match.phase !== "IN_PROGRESS") return [];
+    return finishMatch(tx, match, winner);
+  });
 }
 
 // --- Staff actions -------------------------------------------------------------------
